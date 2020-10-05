@@ -63,24 +63,6 @@ To support our desired feature list, there are several approaches to consider (s
 
 ## Related Work
 
-SK- Remove the following
-### [Arbitrum](https://github.com/OffchainLabs/arbitrum)
-
-This is a tree-based, staked optimistic rollup with a dispute period and movable stakes down a tree. Such capabilities enable for different levels of trust, from staker-based 1-confirmation transactions, consensus-based transaction confirmations, and Layer 1-based transaction confirmations.  
-
-### [Optimism](https://github.com/ethereum-optimism/optimism-monorepo)
-
-The Optimism Medium [article](https://medium.com/plasma-group/ethereum-smart-contracts-in-l2-optimistic-rollup-2c1cef2ec537) article shows a figure which seems to show that tail call semantics are not supported.  
-
-An interesting [article](https://medium.com/plasma-group/introducing-the-ovm-db253287af50) about the Optimism Virtual Machine (OVM); as well, there are some mathematical forms specified.
- 
- 
-### Scalable Smart Contracts
-
-Nick Mudge, "EIP-2535: Diamond Standard [DRAFT]," Ethereum Improvement Proposals, no. 2535, February 2020. [Online serial]. Available: https://eips.ethereum.org/EIPS/eip-2535.
-
----
-
 ### Virtual Machines
 
 Yunhe Shi, Kevin Casey, M. Anton Ertl, and David Gregg. 2008. Virtual machine showdown: Stack versus registers. ACM Trans. Archit. Code Optim. 4, 4, Article 2 (January 2008), 36 pages. Available via [Usenix](https://www.usenix.org/events%2Fvee05%2Ffull_papers/p153-yunhe.pdf). DOI: https://doi.org/10.1145/1328195.1328197.
