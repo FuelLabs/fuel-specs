@@ -14,7 +14,7 @@ We aim to provide a custom Fuel VM environment with the following features:
 * novel and extensible smart contract mechanisms
 
 The Fuel VM's use of the above VM features enables support for the following technical requirements:
-* [MAST (Merkleized Alternative Script Tree)](https://bitcoinops.org/en/topics/mast/)
+* [MAST (Merkleized Alternative Script Tree)](https://github.com/bitcoin/bips/blob/master/bip-0114.mediawiki)
 * Ethereum smart contracts
 * [UTXO data model](https://en.bitcoin.it/wiki/Transaction)
 * [Covenants](https://fc16.ifca.ai/bitcoin/papers/MES16.pdf)
