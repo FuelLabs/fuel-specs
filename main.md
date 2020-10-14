@@ -17,6 +17,26 @@ Many opcodes are derived from the EVM opcodes specified in the [Ethereum Yellow 
 Additional opcodes are defined for the support of optimistic rollups and performance optimizations.
 
 
+## Format 
+
+The instruction format is defined as follows:
+
+* opcode: 8 bits
+* destination register: 4 bits
+* source register: 4 bits
+* source register: 4 bits
+* immediate values: 16 bits
+
+In addition, there are some special registers defined as follows:
+
+* $z: zero-containing register
+* $hi: register containing high bits of multiplication/division result; remainder in div
+* $lo: register containing low bits of multiplication/division result; divisor in div
+* $of: bit-sized register indicating overflow
+* $uf: bit-sized register indicating underflow
+* $state: 2-bit sized register indicating statemachine status: RUNNING, HALTED
+
+
 ### Stop Operations
 
 | Opcode | Inputs | Outputs | Semantics |
@@ -125,6 +145,17 @@ Additional opcodes are defined for the support of optimistic rollups and perform
 | JUMPI | 2 | 0 | Takes first two register values. If the second value is non-zero, then set the program counter to the first value, else, continue as before. Note: for this operand, the Yellow Paper explicitly indicates the incrementing of the program counter; however this explicit increment is unnecessary since the operand doesn't demand special execution semantics.
 | PC | 0 | 1 | Sets the first register value to the program counter value (prior to completing this operand). Note that the program counter is only incremented after successful evaluation of an operand.
 | JUMPDEST | 0 | 0 | Mark a valid destination for jumps. This operand has no effect on machine state during execution.
+
+
+#### Push & Pop & Duplication & Exchange Operations
+
+| Opcode | Inputs | Outputs | Semantics |
+|---|---|---|---|
+| POP | 0 | 1 | Pops a value from the stack.
+| | | | |
+| PUSHX | 0 | 1 | Pushes a X-byte value on to the stack, where X is between 1 and 32 inclusive, e.g., PUSH1 pushes a 1-byte value onto the stack. The byte values are obtained from the bytes following the current instruction in the program's code byte array.
+| DUPX | 1 | 1 | Sets the X-byte value of the 1st stack item, where X is between 1 and 16 inclusive, e.g., PUSH1 pushes a 1-byte value onto the stack. Byte values are obtained from the bytes following the current instruction in the program's code byte array. Note that we opt to define the input as 1 and the output as one since the stack is not pushed. The Yellow Paper defines the number of input parameters and output parameters as X and X+1, respectively; the semantics of this interpretation is defined by the size of memory vs the number of changes to the stack.  
+| SWAPX | 2 | 2 | Exchanges the 1st and Xth values on the stack, where X is between 1 and 16 inclusive, e.g., PUSH1 pushes 1 value onto the stack. The values pushes are obtained from the bytes following the current instruction in the program's code byte array. Note that we define the numbers of input and output parameters as based on the number of changes to the stack (instead of by the size of memory).
 
 
 #### Logging Operations
