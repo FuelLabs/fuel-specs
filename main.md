@@ -16,6 +16,7 @@ Many opcodes are derived from the EVM opcodes specified in the [Ethereum Yellow 
 
 Additional opcodes are defined for the support of optimistic rollups and performance optimizations.
 
+[STOP](#op-STOP)
 
 ## Format 
 
@@ -37,7 +38,7 @@ In addition, there are some special registers defined as follows:
 * $state: 2-bit sized register indicating statemachine status: RUNNING, HALTED
 
 
-##### STOP: stop
+##### <a name='op-STOP'/>STOP: stop
 
 | | |
 |---|---|
