@@ -24,12 +24,14 @@ Fuel instructions are 64 bits wide with the following two types:
 
 In addition, there are some special registers defined as follows:
 
-* $z: zero-containing register (convenience register frequently found in register machines)
-* $hi: register containing high bits of multiplication/division result; remainder in div
-* $lo: register containing low bits of multiplication/division result; divisor in div
-* $of: bit-sized register indicating overflow of signed operation
-* $uf: bit-sized register indicating underflow of signed operation
-* $state: 2-bit sized register indicating statemachine status: RUNNING, HALTED
+| register | name | Description |
+| ---|---|---|
+| $z | zero | zero-containing register (convenience register frequently found in register machines) |
+| $hi | hi | register containing high bits of multiplication/division result; remainder in div |
+| $lo | lo | register containing low bits of multiplication/division result; divisor in div |
+| $of | overflow | bit-sized register indicating overflow of signed operation |
+| $uf | underflow | bit-sized register indicating underflow of signed operation |
+| $state | state | 2-bit sized register indicating statemachine status: RUNNING, HALTED |
 
 Default Values:
 
@@ -65,6 +67,15 @@ Fuel VM opcodes derive from the MIPS instruction set, and from the [Ethereum Yel
 Additionally, the Fuel VM defines opcodes in support of optimistic rollups and specialized performance optimizations.
 
 A complete list of opcodes in the Fuel VM is [documented](opcodes.md).
+
+The opcodes cover the following features:
+* [EIP-615: Subroutines and Static Jumps](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-615.md)
+* [EIP-616: SIMD Operations](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-616.md)
+* [EIP-616: SIMD Operations](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-616.md)
+
+Although currently all opcodes are of fixed-width, the Fuel VM interpreter is designed to support variable-width instruction sets, such as for supporting [efficient cryptography](https://notes.ethereum.org/@axic/evm384).
+  
+ 
 
 
 <!--
