@@ -136,8 +136,15 @@
   * [`SIMDINDEX`](#op-SIMDINDEX)
   * [`SIMDSHUFFLE`](#op-SIMDSHUFFLE)
 
-* [Bitcoin: Proof mechanisms for MAST and Covenants](#op-group-id-140)
+* [MAST Proof mechanisms](#op-group-id-140)
   * [`CHECKPROOF`](#op-CHECKPROOF)
+
+* [Covenants: Template-checking mechanisms](#op-group-id-143)
+  * [`CHECKTEMPLATE`](#op-CHECKTEMPLATE)
+
+
+
+
 
 
 
@@ -1533,5 +1540,18 @@
 | Operation: | `pre-compile` |
 | Syntax: | `checkproof $rd, n, $rs, index, $rt` |
 | Encoding: | `11001101 rd rs rt nnniii - -` |
+| Notes: |  |
+
+
+
+#### <a name='op-group-id-143'/>Covenants: Template-checking mechanisms
+##### <a name='op-CHECKTEMPLATE'/>CHECKTEMPLATE: Checks a memory region against a template mask.
+
+| | |
+|---|---|
+| Description: | Verifies an input value $rs based on mask $rt in memory with size imm, and a root hash $ru, and stores the verification result to $rd. As the immediate value can take 18 bits, the width is sufficient to represent a 32MB template. To support larger templates, additional instructions with additional templates can be encoded statically at compile-time. |
+| Operation: | `if ($rs & $rt == 0) { $rd = 1; } else { $rd = 0; } advance_pc();` |
+| Syntax: | `checktemplate $rd, $rs, imm, $rt` |
+| Encoding: | `11001110 rd rs rt i i i` |
 | Notes: |  |
 
