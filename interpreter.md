@@ -21,18 +21,11 @@ The Fuel VM's use of the above VM features enables support for the following tec
 
 Essential reading:
 
-[BIP 116: MERKLEBRANCHVERIFY](https://github.com/bitcoin/bips/blob/master/bip-0116.mediawiki#motivation)
-
-[Accounts, Strict Access Lists, and UTXOs](https://hackmd.io/KOJdKANHSvaGC_8IugEAJA#)
-
-[Segregated Witness](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki)
-
-[Fast Merkle Trees](https://github.com/bitcoin/bips/blob/master/bip-0098.mediawiki); this reference's description of Merkle tree inclusion proofs is relevant.
-
-[BIP 117: Tail Call Execution Semantics](https://github.com/bitcoin/bips/blob/master/bip-0117.mediawiki)
-
-
-
+* [BIP 98: Fast Merkle Trees](https://github.com/bitcoin/bips/blob/master/bip-0098.mediawiki); this reference's description of Merkle tree inclusion proofs is relevant.
+* [BIP 116: MERKLEBRANCHVERIFY](https://github.com/bitcoin/bips/blob/master/bip-0116.mediawiki#motivation)
+* [BIP 117: Tail Call Execution Semantics](https://github.com/bitcoin/bips/blob/master/bip-0117.mediawiki)
+* [BIP 141: Segregated Witness](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki)
+* [Accounts, Strict Access Lists, and UTXOs](https://hackmd.io/KOJdKANHSvaGC_8IugEAJA#)
 
 
 ## Techniques 
