@@ -937,20 +937,20 @@
 
 | | |
 |---|---|
-| Description: | Message call into an account where the register values are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value 1 is set as the $rd register's value if the call completes successfully. |
+| Description: | Message call into an account where $rs points to a sequence of words in memory that are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value 1 is set as the $rd register's value if the call completes successfully. |
 | Operation: | ```pre-compile``` |
-| Syntax: | `call $rd, $rs, $rt, $ru, $rv, $rw, $rx, $ry` |
-| Encoding: | `10010111 ** rd rs rt ru rv rw rx ry` |
+| Syntax: | `call $rd, $rs` |
+| Encoding: | `10010111 rd rs - - - -` |
 | Notes: | EVM component |
 
 ##### <a name='op-CALLCODE'/>CALLCODE: 
 
 | | |
 |---|---|
-| Description: | Message call into an account with the current account's code where the register values are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value 1 is set as the $rd register's value if the call completes successfully. |
+| Description: | Message call into an account with the current account's code where $rs points to a sequence of words in memory that are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value 1 is set as the $rd register's value if the call completes successfully. |
 | Operation: | ```pre-compile``` |
-| Syntax: | `callcode $rd, $rs, $rt, $ru, $rv, $rw, $rx, $ry` |
-| Encoding: | `10011000 ** rd rs rt ru rv rw rx ry` |
+| Syntax: | `callcode $rd, $rs` |
+| Encoding: | `10011000 rd rs - - - -` |
 | Notes: | EVM component |
 
 ##### <a name='op-DELEGATECALL'/>DELEGATECALL: 
@@ -959,8 +959,8 @@
 |---|---|
 | Description: | Message-call into this account with an alternative account's code, but persisting the current values for sender and value. |
 | Operation: | ```pre-compile``` |
-| Syntax: | `delegatecall $rd, $rs, $rt, $ru, $rv, $rw, $rx` |
-| Encoding: | `10011001 ** rd rs rt ru rv rw rx` |
+| Syntax: | `delegatecall $rd, $rs` |
+| Encoding: | `10011001 rd rs - - - -` |
 | Notes: | EVM component |
 
 ##### <a name='op-STATICCALL'/>STATICCALL: 
@@ -969,8 +969,8 @@
 |---|---|
 | Description: | Static message-call into an account. |
 | Operation: | ```pre-compile``` |
-| Syntax: | `staticcall $rd, $rs, $rt, $ru, $rv, $rw, $rx` |
-| Encoding: | `10011010 ** rd rs rt ru rv rw rx` |
+| Syntax: | `staticcall $rd, $rs` |
+| Encoding: | `10011010 rd rs - - - -` |
 | Notes: | EVM component |
 
 ##### <a name='op-RETURN'/>RETURN: 
@@ -1018,7 +1018,7 @@
 | | |
 |---|---|
 | Description: | Takes $rs and $rt register values and records a log entry with no topics based on the memory offset of the $rs value, with a length given by the $rt value. |
-| Operation: | ```$log.push(: + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
+| Operation: | ```$log.push(':' + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
 | Syntax: | `log0 $rs, $rt` |
 | Encoding: | `10011111 rs rt - - - -` |
 | Notes: | EVM component |
@@ -1028,7 +1028,7 @@
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru value.  |
-| Operation: | ```$log.push($ru + : + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
+| Operation: | ```$log.push($ru + ':' + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
 | Syntax: | `log1 $rs, $rt, $ru` |
 | Encoding: | `10100000 rs rt ru - - -` |
 | Notes: | EVM component |
@@ -1038,7 +1038,7 @@
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru, $rv values.  |
-| Operation: | ```$log.push($ru + $rv + : + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
+| Operation: | ```$log.push($ru + $rv + ':' + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
 | Syntax: | `log2 $rs, $rt, $ru, $rv` |
 | Encoding: | `10100001 rs rt ru rv - -` |
 | Notes: | EVM component |
@@ -1048,7 +1048,7 @@
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru, $rv, $rw values.  |
-| Operation: | ```$log.push($ru + $rv + $rw + : + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
+| Operation: | ```$log.push($ru + $rv + $rw + ':' + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
 | Syntax: | `log3 $rs, $rt, $ru, $rv, $rw` |
 | Encoding: | `10100010 rs rt ru rv rw -` |
 | Notes: | EVM component |
@@ -1058,7 +1058,7 @@
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru, $rv, $rw, $rx values.  |
-| Operation: | ```$log.push($ru + $rv + $rw + $rx + : + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
+| Operation: | ```$log.push($ru + $rv + $rw + $rx + ':' + MEM[$rs..$rs+$rt]);```<br>```advance_pc();``` |
 | Syntax: | `log4 $rs, $rt, $ru, $rv, $rw, $rx` |
 | Encoding: | `10100011 rs rt ru rv rw rx` |
 | Notes: | EVM component |
