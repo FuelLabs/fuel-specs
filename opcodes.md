@@ -1549,7 +1549,7 @@
 
 | | |
 |---|---|
-| Description: | Verifies an input value $rs based on mask $rt in memory with size imm, and a root hash $ru, and stores the verification result to $rd. As the immediate value can take 18 bits, the width is sufficient to represent a 32MB template. To support larger templates, additional instructions with additional templates can be encoded statically at compile-time. |
+| Description: | Verifies an input value $rs based on mask $rt in memory with size imm, and a root hash $ru, and stores the verification result to $rd. As the immediate value can take 18 bits, the width is sufficient to represent a 32MB template. To support larger templates, additional instructions with additional templates can be encoded statically at compile-time. Also referred to as opcode CheckOutputVerify; we choose a different term as the Fuel VM operates on types other than UTXO outputs. In our implementation, we do not expect a value to be ascribed to be delivered (as would be the case with an output-based tx). An index is provided with the original specification of CheckOutputVerify, however, the output index may vary in the interpreter due to features such as parallelism. |
 | Operation: | `if ($rs & $rt == 0) { $rd = 1; } else { $rd = 0; } advance_pc();` |
 | Syntax: | `checktemplate $rd, $rs, imm, $rt` |
 | Encoding: | `11001110 rd rs rt i i i` |
