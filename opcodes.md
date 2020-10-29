@@ -1074,7 +1074,7 @@
 | Description: | Use immediate addressing for static analysis. |
 | Operation: | `nPC = imm;` |
 | Syntax: | `jumpto imm` |
-| Encoding: | `10101010 ` |
+| Encoding: | `10101010 - - i i i i` |
 | Notes: |  |
 
 ##### <a name='op-JUMPIF'/>JUMPIF: Jump to a specific code address if $compare flag is set
@@ -1084,7 +1084,7 @@
 | Description: | Use immediate addressing for static analysis. Depends on special flags for jump. |
 | Operation: | `if ($compare == 1)`<br>`  nPC = imm;`<br>`else advance_pc();` |
 | Syntax: | `jumpif imm` |
-| Encoding: | `10101011 ` |
+| Encoding: | `10101011 - - i i i i` |
 | Notes: |  |
 
 ##### <a name='op-JUMPV'/>JUMPV: Jumps to destination specified as zero-based BEGINDATA offset of destination vectors, where offset is given by $rs
@@ -1094,7 +1094,7 @@
 | Description: | Use immediate addressing for static analysis. Depends on BEGINDATA operation for specifying vector of destinations.  |
 | Operation: | `if ($rs >= n)`<br>`  nPC = DATA[v_data_offset+n-1]; `<br>`else nPC = DATA[v_data_offset+$rs]; ` |
 | Syntax: | `jumpv n, v_data_offset, $rs` |
-| Encoding: | `10101100 ` |
+| Encoding: | `10101100 rs n i i i i` |
 | Notes: |  |
 
 ##### <a name='op-JUMPSUB'/>JUMPSUB: Jumps to labeled subroutine
@@ -1104,7 +1104,7 @@
 | Description: | Use immediate addressing for static analysis. Depends on prior declaration of BEGINSUB for destination to be considered valid, and BEGINSUB declarations for all address must be validated at compile-time.  |
 | Operation: | `$callstack.push(nPC);`<br>`nPC = imm; ` |
 | Syntax: | `jumpsub imm` |
-| Encoding: | `10101101 ` |
+| Encoding: | `10101101 - - i i i i` |
 | Notes: |  |
 
 ##### <a name='op-JUMPSUBV'/>JUMPSUBV: Jumps to destination specified as zero-based BEGINDATA offset of BEGINSUB vectors, where offset is given by $rs
@@ -1114,7 +1114,7 @@
 | Description: | Use immediate addressing for static analysis. Depends on prior declaration of BEGINSUB for destination to be considered valid, and BEGINSUB declarations for all address must be validated at compile-time. Depends on BEGINDATA operation for specifying vector of destinations.  |
 | Operation: | `if ($rs >= n) { `<br>`  $callstack.push(nPC);`<br>`  nPC = DATA[v_data_offset+n-1];`<br>`} else { `<br>`  $callstack.push(nPC);`<br>`  nPC = DATA[v_data_offset+$rs];`<br>`} ` |
 | Syntax: | `jumpsubv n, v_data_offset, $rs` |
-| Encoding: | `10101110 ` |
+| Encoding: | `10101110 rs n i i i i` |
 | Notes: |  |
 
 ##### <a name='op-RETURNSUB'/>RETURNSUB: Returns from subroutine execution to instruction following subroutine call.
@@ -1124,7 +1124,7 @@
 | Description: | Use a call stack to track jump addresses and return addresses. Return variables are stored in registers or memory as needed by the subroutine. Unlike stack-based approach, since return sub continues execution at instruction following subroutine call, code can undergo static analysis. |
 | Operation: | `nPC = $callstack.pop();` |
 | Syntax: | `returnsub` |
-| Encoding: | `10101111 ` |
+| Encoding: | `10101111 - - - - - -` |
 | Notes: |  |
 
 ##### <a name='op-GETLOCAL'/>GETLOCAL: Get local variable value
@@ -1134,7 +1134,7 @@
 | Description: | Allocate local variables in memory and use a memory pointer for access. This overlaps with SB/SW and LB/LW (store/load byte/word) opcodes from above (and MIPS), but this can be an offset into memory addressing used for local variables. |
 | Operation: | `$rs = MEM[$subroutinemarker+n];`<br>`advance_pc();` |
 | Syntax: | `getlocal $rd, n` |
-| Encoding: | `10110000 ` |
+| Encoding: | `10110000 rd - i i i i` |
 | Notes: |  |
 
 ##### <a name='op-PUTLOCAL'/>PUTLOCAL: Sets local variable value
@@ -1144,7 +1144,7 @@
 | Description: | Allocate local variables in memory and use a memory pointer for access. This overlaps with SB/SW and LB/LW (store/load byte/word) opcodes from above (and MIPS), but this can be an offset into memory addressing used for local variables. |
 | Operation: | `MEM[$subroutinemarker+n] = $rs;`<br>`advance_pc();` |
 | Syntax: | `putlocal $rs, n` |
-| Encoding: | `10110001 ` |
+| Encoding: | `10110001 rd - i i i i` |
 | Notes: |  |
 
 ##### <a name='op-BEGINSUB'/>BEGINSUB: Subroutine label declaration
@@ -1154,7 +1154,7 @@
 | Description: | Required to declare subroutines, which are then used for checking validity of subroutine-based jump operations. Updates execution context but oes not change state. |
 | Operation: | `SUBS.push(PC);`<br>`advance_pc();` |
 | Syntax: | `beginsub n_args, n_returns` |
-| Encoding: | `10110010 ` |
+| Encoding: | `10110010 - - - - args returns` |
 | Notes: |  |
 
 ##### <a name='op-BEGINDATA'/>BEGINDATA: Data label declaration
