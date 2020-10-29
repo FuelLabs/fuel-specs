@@ -164,7 +164,7 @@
 | | |
 |---|---|
 | Description: | Adds two registers and stores the result in a register. |
-| Operation: | `$rd = $rs + $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs + $rt;`<br>`advance_pc();` |
 | Syntax: | `add $rd, $rs, $rt` |
 | Encoding: | `00000001 rd rs rt - - -` |
 | Notes: | w overflow |
@@ -174,7 +174,7 @@
 | | |
 |---|---|
 | Description: | Adds a register and a sign-extended immediate value and stores the result in a register. |
-| Operation: | `$rt = $rs + imm;<br>advance_pc();` |
+| Operation: | `$rt = $rs + imm;`<br>`advance_pc();` |
 | Syntax: | `addi $rd, $rs, immediate` |
 | Encoding: | `00000010 rs rt i i i i` |
 | Notes: | w overflow |
@@ -184,7 +184,7 @@
 | | |
 |---|---|
 | Description: | Adds a register and a sign-extended immediate value and stores the result in a register. |
-| Operation: | `$rt = $rs + imm;<br>advance_pc();` |
+| Operation: | `$rt = $rs + imm;`<br>`advance_pc();` |
 | Syntax: | `addiu $rd, $rs, immediate` |
 | Encoding: | `00000011 rs rt i i i i` |
 | Notes: | no overflow |
@@ -194,7 +194,7 @@
 | | |
 |---|---|
 | Description: | Adds two registers and stores the result in a register. |
-| Operation: | `$rd = $rs + $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs + $rt;`<br>`advance_pc();` |
 | Syntax: | `add $rd, $rs, $rt` |
 | Encoding: | `00000100 rd rs rt - - -` |
 | Notes: | no overflow |
@@ -204,7 +204,7 @@
 | | |
 |---|---|
 | Description: | Bitwise ands two registers and stores the result in a register. |
-| Operation: | `$rd = $rs & $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs & $rt;`<br>`advance_pc();` |
 | Syntax: | `and $rd, $rs, $rt` |
 | Encoding: | `00000101 rd rs rt - - -` |
 | Notes: |  |
@@ -214,7 +214,7 @@
 | | |
 |---|---|
 | Description: | Bitwise ands a register and an immediate value and stores the result in a register. |
-| Operation: | `$rd = $rs & imm;<br>advance_pc();` |
+| Operation: | `$rd = $rs & imm;`<br>`advance_pc();` |
 | Syntax: | `andi $rd, $rs, imm` |
 | Encoding: | `00000110 rd rs i i i i` |
 | Notes: |  |
@@ -224,7 +224,7 @@
 | | |
 |---|---|
 | Description: | Branches if the two registers are equal. |
-| Operation: | `if $rs == $rt<br>  advance_pc(offset << 2);<br>else advance_pc();` |
+| Operation: | `if $rs == $rt`<br>`  advance_pc(offset << 2);`<br>`else advance_pc();` |
 | Syntax: | `beq $rs, $rt, offset ` |
 | Encoding: | `00000111 rs rt i i i i` |
 | Notes: |  |
@@ -234,7 +234,7 @@
 | | |
 |---|---|
 | Description: | Branches if the register is greater than or equal to zero. |
-| Operation: | `if $rs >= 0<br>  advance_pc(offset << 2);<br>else advance_pc();` |
+| Operation: | `if $rs >= 0`<br>`  advance_pc(offset << 2);`<br>`else advance_pc();` |
 | Syntax: | `bgez $rs, offset ` |
 | Encoding: | `00001000 rs - i i i i` |
 | Notes: |  |
@@ -244,7 +244,7 @@
 | | |
 |---|---|
 | Description: | Branches if the register is greater than or equal to zero and saves the return address in $31. |
-| Operation: | `if $rs >= 0 { <br>  $31 = PC + 12 (or nPC + 8);<br>  advance_pc(offset << 2));<br>} else advance_pc();` |
+| Operation: | `if $rs >= 0 { `<br>`  $31 = PC + 12 (or nPC + 8);`<br>`  advance_pc(offset << 2));`<br>`} else advance_pc();` |
 | Syntax: | `bgezal $rs, offset ` |
 | Encoding: | `00001001 rs - i i i i` |
 | Notes: |  |
@@ -254,7 +254,7 @@
 | | |
 |---|---|
 | Description: | Branches if the register is greater than zero. |
-| Operation: | `if $rs > 0<br>  advance_pc(offset << 2);<br>else advance_pc();` |
+| Operation: | `if $rs > 0`<br>`  advance_pc(offset << 2);`<br>`else advance_pc();` |
 | Syntax: | `bgtz $rs, offset ` |
 | Encoding: | `00001010 rs - i i i i` |
 | Notes: |  |
@@ -264,7 +264,7 @@
 | | |
 |---|---|
 | Description: | Branches if the register is less than or equal to zero. |
-| Operation: | `if $rs <= 0<br>  advance_pc(offset << 2);<br>else advance_pc();` |
+| Operation: | `if $rs <= 0`<br>`  advance_pc(offset << 2);`<br>`else advance_pc();` |
 | Syntax: | `blez $rs, offset ` |
 | Encoding: | `00001011 rs - i i i i` |
 | Notes: |  |
@@ -274,7 +274,7 @@
 | | |
 |---|---|
 | Description: | Branches if the register is less than zero. |
-| Operation: | `if $rs < 0<br>  advance_pc(offset << 2);<br>else advance_pc();` |
+| Operation: | `if $rs < 0`<br>`  advance_pc(offset << 2);`<br>`else advance_pc();` |
 | Syntax: | `bltz $rs, offset ` |
 | Encoding: | `00001100 rs - i i i i` |
 | Notes: |  |
@@ -284,7 +284,7 @@
 | | |
 |---|---|
 | Description: | Branches if the register is less than zero and saves the return address in $31. |
-| Operation: | `if $rs < 0 {<br>  $31 = PC + 12 (or nPC + 8);<br>  advance_pc(offset << 2);<br>} else advance_pc();` |
+| Operation: | `if $rs < 0 {`<br>`  $31 = PC + 12 (or nPC + 8);`<br>`  advance_pc(offset << 2);`<br>`} else advance_pc();` |
 | Syntax: | `bltzal $rs, offset ` |
 | Encoding: | `00001101 rs - i i i i` |
 | Notes: |  |
@@ -294,7 +294,7 @@
 | | |
 |---|---|
 | Description: | Branches if the two registers are not equal. |
-| Operation: | `if $rs != $rt<br>  advance_pc (offset << 2);<br>else advance_pc();` |
+| Operation: | `if $rs != $rt`<br>`  advance_pc (offset << 2);`<br>`else advance_pc();` |
 | Syntax: | `bne $rs, $rt, offset ` |
 | Encoding: | `00001110 rs rt i i i i` |
 | Notes: |  |
@@ -304,7 +304,7 @@
 | | |
 |---|---|
 | Description: | Divides $rs by $rt and stores the quotient in $lo and the remainder in $hi. |
-| Operation: | `$lo = $rs / $rt;<br>$hi = $rs % $rt;<br>advance_pc();` |
+| Operation: | `$lo = $rs / $rt;`<br>`$hi = $rs % $rt;`<br>`advance_pc();` |
 | Syntax: | `div $rs, $rt` |
 | Encoding: | `00001111 rs rt - - - -` |
 | Notes: |  |
@@ -314,7 +314,7 @@
 | | |
 |---|---|
 | Description: | Divides $rs by $rt and stores the quotient in $lo and the remainder in $hi. |
-| Operation: | `$lo = $rs / $rt;<br>$hi = $rs % $rt;<br>advance_pc();` |
+| Operation: | `$lo = $rs / $rt;`<br>`$hi = $rs % $rt;`<br>`advance_pc();` |
 | Syntax: | `divu $rs, $rt` |
 | Encoding: | `00010000 rs rt - - - -` |
 | Notes: |  |
@@ -324,7 +324,7 @@
 | | |
 |---|---|
 | Description: | Jumps to the calculated address. |
-| Operation: | `PC = nPC;<br>nPC = (PC & 0xf0000000) | (target << 2);` |
+| Operation: | `PC = nPC;`<br>`nPC = (PC & 0xf0000000) | (target << 2);` |
 | Syntax: | `j target` |
 | Encoding: | `00010001 i i i i i i` |
 | Notes: |  |
@@ -334,7 +334,7 @@
 | | |
 |---|---|
 | Description: | Jumps to the calculated address and stores the return address in $31. |
-| Operation: | `$31 = PC + 8 (or nPC + 4);<br>PC = nPC;<br>nPC = (PC & 0xf0000000) | (target << 2);` |
+| Operation: | `$31 = PC + 8 (or nPC + 4);`<br>`PC = nPC;`<br>`nPC = (PC & 0xf0000000) | (target << 2);` |
 | Syntax: | `jal target` |
 | Encoding: | `00010010 i i i i i i` |
 | Notes: | register $31 used as link target |
@@ -344,7 +344,7 @@
 | | |
 |---|---|
 | Description: | Jump to the address contained in register $rs. |
-| Operation: | `PC = nPC;<br>nPC = $rs; ` |
+| Operation: | `PC = nPC;`<br>`nPC = $rs; ` |
 | Syntax: | `jr $rs` |
 | Encoding: | `00010011 rs - - - - -` |
 | Notes: |  |
@@ -354,7 +354,7 @@
 | | |
 |---|---|
 | Description: | A byte is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation: | `$rd = MEM[$rs + offset];<br>advance_pc();` |
+| Operation: | `$rd = MEM[$rs + offset];`<br>`advance_pc();` |
 | Syntax: | `lb $rd, offset($rs)` |
 | Encoding: | `00010100 rd rs i i i i` |
 | Notes: |  |
@@ -364,7 +364,7 @@
 | | |
 |---|---|
 | Description: | The immediate value is shifted left 16 bits and stored in the register. The lower 16 bits are zeroes. |
-| Operation: | `$rd = (imm << 16);<br>advance_pc();` |
+| Operation: | `$rd = (imm << 16);`<br>`advance_pc();` |
 | Syntax: | `lui $rd, imm` |
 | Encoding: | `00010101 rd - i i i i` |
 | Notes: |  |
@@ -374,7 +374,7 @@
 | | |
 |---|---|
 | Description: | A word is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation: | `$rd = MEM[$rs + offset];<br>advance_pc();` |
+| Operation: | `$rd = MEM[$rs + offset];`<br>`advance_pc();` |
 | Syntax: | `lw $rd, offset($rs)` |
 | Encoding: | `00010110 rd rs i i i i` |
 | Notes: |  |
@@ -384,7 +384,7 @@
 | | |
 |---|---|
 | Description: | The contents of register $hi are moved to the specified register.  |
-| Operation: | `$rd = $hi;<br>advance_pc();` |
+| Operation: | `$rd = $hi;`<br>`advance_pc();` |
 | Syntax: | `mfhi $rd` |
 | Encoding: | `00010111 rd - - - - -` |
 | Notes: |  |
@@ -394,7 +394,7 @@
 | | |
 |---|---|
 | Description: | The contents of register $lo are moved to the specified register. |
-| Operation: | `$rd = $lo;<br>advance_pc();` |
+| Operation: | `$rd = $lo;`<br>`advance_pc();` |
 | Syntax: | `mflo $rd` |
 | Encoding: | `00011000 rd - - - - -` |
 | Notes: |  |
@@ -404,7 +404,7 @@
 | | |
 |---|---|
 | Description: | Multiplies $rs by $rt and stores the result in $lo.  |
-| Operation: | `$rd = $rs * $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs * $rt;`<br>`advance_pc();` |
 | Syntax: | `mult $rd, $rs, $rt` |
 | Encoding: | `00011001 rd rs rt - - -` |
 | Notes: | with overflow |
@@ -414,7 +414,7 @@
 | | |
 |---|---|
 | Description: | Multiplies $rs by $rt and stores the result in $lo.  |
-| Operation: | `$rd = $rs * $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs * $rt;`<br>`advance_pc();` |
 | Syntax: | `mult $rd, $rs, $rt` |
 | Encoding: | `00011010 rd rs rt - - -` |
 | Notes: | no overflow |
@@ -434,7 +434,7 @@
 | | |
 |---|---|
 | Description: | Bitwise logical ors registers given by $rs and $rt and stores the result in $rd register. |
-| Operation: | `$rd = $rs | $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs | $rt;`<br>`advance_pc();` |
 | Syntax: | `or $rd, $rs, $rt` |
 | Encoding: | `00011100 rd rs rt - - -` |
 | Notes: |  |
@@ -444,7 +444,7 @@
 | | |
 |---|---|
 | Description: | Bitwise ors register $rs and an immediate value and stores the result in $rd register |
-| Operation: | `$rd = $rs | imm;<br>advance_pc();` |
+| Operation: | `$rd = $rs | imm;`<br>`advance_pc();` |
 | Syntax: | `ori $rd, $rs, imm` |
 | Encoding: | `00011101 rd rs i i i i` |
 | Notes: |  |
@@ -454,7 +454,7 @@
 | | |
 |---|---|
 | Description: | The least significant byte of $rt is stored at the specified address at an offset given by the immediate value.  |
-| Operation: | `MEM[$rs + offset] = (0xff & $rt);<br>advance_pc();` |
+| Operation: | `MEM[$rs + offset] = (0xff & $rt);`<br>`advance_pc();` |
 | Syntax: | `sb $rt, offset($rs)` |
 | Encoding: | `00011110 rs rt i i i i` |
 | Notes: |  |
@@ -464,7 +464,7 @@
 | | |
 |---|---|
 | Description: | Shifts $rs register value left by the shift amount imm and places the result in $rd register. Zeroes are shifted in. |
-| Operation: | `$rd = $rs << imm;<br>advance_pc(); ` |
+| Operation: | `$rd = $rs << imm;`<br>`advance_pc(); ` |
 | Syntax: | `sll $rd, $rs, imm` |
 | Encoding: | `00011111 rd rs i i i i` |
 | Notes: |  |
@@ -474,7 +474,7 @@
 | | |
 |---|---|
 | Description: | Shifts $rs register value left by the value in $rt register and places the result in $rd. Zeroes are shifted in.  |
-| Operation: | `$rd = $rs << $rt;<br>advance_pc(); ` |
+| Operation: | `$rd = $rs << $rt;`<br>`advance_pc(); ` |
 | Syntax: | `sllv $rd, $rs, $rt` |
 | Encoding: | `00100000 rd rs rt - - -` |
 | Notes: |  |
@@ -484,7 +484,7 @@
 | | |
 |---|---|
 | Description: | If $rs is less than $rt, $rd is set to one. It gets zero otherwise.  |
-| Operation: | `if $rs < $rt<br>  $rd = 1; <br>else $rd = 0;<br>advance_pc();` |
+| Operation: | `if $rs < $rt`<br>`  $rd = 1; `<br>`else $rd = 0;`<br>`advance_pc();` |
 | Syntax: | `slt $rd, $rs, $rt` |
 | Encoding: | `00100001 rd rs rt - - -` |
 | Notes: |  |
@@ -494,7 +494,7 @@
 | | |
 |---|---|
 | Description: | If $rs is less than immediate, $rd is set to one. It gets zero otherwise.  |
-| Operation: | `if $rs < imm <br>  $rt = 1;<br>else $rt = 0;<br>advance_pc(); ` |
+| Operation: | `if $rs < imm `<br>`  $rt = 1;`<br>`else $rt = 0;`<br>`advance_pc(); ` |
 | Syntax: | `slti $rd, $rs, imm` |
 | Encoding: | `00100010 rd rs i i i i` |
 | Notes: |  |
@@ -504,7 +504,7 @@
 | | |
 |---|---|
 | Description: | If $rs is less than the unsigned immediate, $rd is set to one. It gets zero otherwise.  |
-| Operation: | `if $rs < imm <br>  $rt = 1;<br>else $rt = 0;<br>advance_pc();` |
+| Operation: | `if $rs < imm `<br>`  $rt = 1;`<br>`else $rt = 0;`<br>`advance_pc();` |
 | Syntax: | `sltiu $rd, $rt, imm` |
 | Encoding: | `00100011 rd rs i i i i` |
 | Notes: |  |
@@ -514,7 +514,7 @@
 | | |
 |---|---|
 | Description: | If $rs is less than $rt, $rd is set to one. It gets zero otherwise.  |
-| Operation: | `if $rs < $rt<br>  $rd = 1;<br>else $rd = 0;<br>advance_pc();` |
+| Operation: | `if $rs < $rt`<br>`  $rd = 1;`<br>`else $rd = 0;`<br>`advance_pc();` |
 | Syntax: | `sltu $rd, $rs, $rt` |
 | Encoding: | `00100100 rd rs rt - - -` |
 | Notes: |  |
@@ -524,7 +524,7 @@
 | | |
 |---|---|
 | Description: | Shifts a register value right by the shift amount (imm) and places the value in the destination register. The sign bit is shifted in.  |
-| Operation: | `$rd = $rs >> imm;<br>advance_pc();` |
+| Operation: | `$rd = $rs >> imm;`<br>`advance_pc();` |
 | Syntax: | `sra $rd, $rs, imm` |
 | Encoding: | `00100101 rd rs i i i i` |
 | Notes: | signed, sign bit is shifted in. MIPS uses shamt field in instruction instead of imm. |
@@ -534,7 +534,7 @@
 | | |
 |---|---|
 | Description: | Shifts a register value right by the shift amount (imm) and places the value in the destination register. Zeroes are shifted in.  |
-| Operation: | `$rd = $rs >> imm;<br>advance_pc();` |
+| Operation: | `$rd = $rs >> imm;`<br>`advance_pc();` |
 | Syntax: | `srl $rd, $rs, imm` |
 | Encoding: | `00100110 rd rs i i i i` |
 | Notes: | unsigned, zero is shifted in. MIPS uses shamt field in instruction instead of imm. |
@@ -544,7 +544,7 @@
 | | |
 |---|---|
 | Description: | Shifts a register value right by the amount specified in $rs and places the value in the destination register. Zeroes are shifted in.  |
-| Operation: | `$rd = $rs >> $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs >> $rt;`<br>`advance_pc();` |
 | Syntax: | `srlv $rd, $rs, $rt` |
 | Encoding: | `00100111 rd rs rt - - -` |
 | Notes: | unsigned, zero is shifted in |
@@ -554,7 +554,7 @@
 | | |
 |---|---|
 | Description: | Shifts a register value right by the amount specified in $rs and places the value in the destination register. The sign bit is shifted in.  |
-| Operation: | `$rd = $rs >> $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs >> $rt;`<br>`advance_pc();` |
 | Syntax: | `srav $rd, $rs, $rt` |
 | Encoding: | `00101000 rd rs rt - - -` |
 | Notes: | signed, sign bit is shifted in. Not part of MIPS instructions. |
@@ -564,7 +564,7 @@
 | | |
 |---|---|
 | Description: | Subtracts two registers and stores the result in a register. |
-| Operation: | `$rd = $rs - $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs - $rt;`<br>`advance_pc();` |
 | Syntax: | `sub $rd, $rs, $rt` |
 | Encoding: | `00101001 rd rs rt - - -` |
 | Notes: |  |
@@ -574,7 +574,7 @@
 | | |
 |---|---|
 | Description: | Subtracts two registers and stores the result in a register. |
-| Operation: | `$rd = $rs - $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs - $rt;`<br>`advance_pc();` |
 | Syntax: | `subu $rd, $rs, $rt` |
 | Encoding: | `00101010 rd rs rt - - -` |
 | Notes: |  |
@@ -584,7 +584,7 @@
 | | |
 |---|---|
 | Description: | The contents of $rt is stored at the specified address using the offset given by the immediate value.  |
-| Operation: | `MEM[$rs + offset] = $rt;<br>advance_pc();` |
+| Operation: | `MEM[$rs + offset] = $rt;`<br>`advance_pc();` |
 | Syntax: | `sw $rt, offset($rs)` |
 | Encoding: | `00101011 rs rt i i i i` |
 | Notes: |  |
@@ -604,7 +604,7 @@
 | | |
 |---|---|
 | Description: | Exclusive ors two registers and stores the result in a register. |
-| Operation: | `$rd = $rs ^ $rt;<br>advance_pc();` |
+| Operation: | `$rd = $rs ^ $rt;`<br>`advance_pc();` |
 | Syntax: | `xor $rd, $rs, $rt ` |
 | Encoding: | `00101101 rd rs rt - - -` |
 | Notes: |  |
@@ -614,7 +614,7 @@
 | | |
 |---|---|
 | Description: | Bitwise exclusive ors a register and an immediate value and stores the result in a register. |
-| Operation: | `$rd = $rs ^ imm;<br>advance_pc();` |
+| Operation: | `$rd = $rs ^ imm;`<br>`advance_pc();` |
 | Syntax: | `xori $rt, $rs, imm ` |
 | Encoding: | `00101110 rs rt i i i i` |
 | Notes: |  |
@@ -624,7 +624,7 @@
 | | |
 |---|---|
 | Description: | Modulo remainder of $rs by $rt and sets $rd to result. |
-| Operation: | `div $rs, $rt;<br>mfhi $rd;<br>advance_pc();` |
+| Operation: | `div $rs, $rt;`<br>`mfhi $rd;`<br>`advance_pc();` |
 | Syntax: | `mod $rd, $rs, $rt` |
 | Encoding: | `00101111 rd rs rt - - -` |
 | Notes: | Special EVM op |
@@ -634,7 +634,7 @@
 | | |
 |---|---|
 | Description: | Signed modulo remainder of $rs by $rt and sets $rd to result. |
-| Operation: | `sdiv $rs, $rt;<br>mfhi $rd;<br>advance_pc();` |
+| Operation: | `sdiv $rs, $rt;`<br>`mfhi $rd;`<br>`advance_pc();` |
 | Syntax: | `smod $rd, $rs, $rt` |
 | Encoding: | `00110000 rd rs rt - - -` |
 | Notes: | Special EVM op |
@@ -644,7 +644,7 @@
 | | |
 |---|---|
 | Description: | Takes $rs and $rt register values, adds them, then takes the modulo of that result using the $ru register value. Sets the $rd register value to the result. |
-| Operation: | `add $rd, $rs, $rt;<br>div $rd, $ru;<br>mfhi $rd;<br>advance_pc();` |
+| Operation: | `add $rd, $rs, $rt;`<br>`div $rd, $ru;`<br>`mfhi $rd;`<br>`advance_pc();` |
 | Syntax: | `addmod $rd, $rs, $rt, $ru` |
 | Encoding: | `00110001 rd rs rt ru - -` |
 | Notes: | Special EVM op |
@@ -654,7 +654,7 @@
 | | |
 |---|---|
 | Description: | Takes $rs and $rt register values, multiplies them, then takes the modula of that result using $ru. Sets $rd register value to the result. |
-| Operation: | `mul $rd, $rs, $rt;<br>div $rd, $ru;<br>mfhi $rd;<br>advance_pc();` |
+| Operation: | `mul $rd, $rs, $rt;`<br>`div $rd, $ru;`<br>`mfhi $rd;`<br>`advance_pc();` |
 | Syntax: | `mulmod $rd, $rs, $rt, $ru` |
 | Encoding: | `00110010 rd rs rt ru - -` |
 | Notes: | Special EVM op |
@@ -664,7 +664,7 @@
 | | |
 |---|---|
 | Description: | Takes $rs and $rt register values, then sets $rd register value to the result of $rs taken to the power of $rt. |
-| Operation: | `for (int i = 0; i < $rt) <br>  mul $rd, $rd, $rs;<br>advance_pc();` |
+| Operation: | `for (int i = 0; i < $rt) `<br>`  mul $rd, $rd, $rs;`<br>`advance_pc();` |
 | Syntax: | `exp $rd, $rs, $rt` |
 | Encoding: | `00110011 rd rs rt - - -` |
 | Notes: | Special EVM op |
@@ -674,7 +674,7 @@
 | | |
 |---|---|
 | Description: | Modulo remainder of $rs using immediate value and places result in $rd. |
-| Operation: | `div $rs, imm;<br>mfhi $rd;<br>advance_pc();` |
+| Operation: | `div $rs, imm;`<br>`mfhi $rd;`<br>`advance_pc();` |
 | Syntax: | `modi $rd, $rs, imm` |
 | Encoding: | `00110100 rd rs i i i i` |
 | Notes: | Special EVM op |
@@ -684,7 +684,7 @@
 | | |
 |---|---|
 | Description: | Signed modulo remainder of $rs using immediate value and places result in $rd. |
-| Operation: | `sdiv $rs, imm;<br>mfhi $rd;<br>advance_pc();` |
+| Operation: | `sdiv $rs, imm;`<br>`mfhi $rd;`<br>`advance_pc();` |
 | Syntax: | `smodi $rd, $rs, imm` |
 | Encoding: | `00110101 rd rs i i i i` |
 | Notes: | Special EVM op |
@@ -694,7 +694,7 @@
 | | |
 |---|---|
 | Description: | Takes $rs value, then sets $rd register value to the result of $rs taken to the power of imm. |
-| Operation: | `for (int i = 0; i < $rt) <br>  mul $rd, $rd, imm;<br>advance_pc();` |
+| Operation: | `for (int i = 0; i < $rt) `<br>`  mul $rd, $rd, imm;`<br>`advance_pc();` |
 | Syntax: | `expi $rd, $rs, imm` |
 | Encoding: | `00110110 rd rt i i i i` |
 | Notes: | Special EVM op |
@@ -708,7 +708,7 @@
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the numeric value of gas remaining. |
-| Operation: | `$rd = $gas;<br>advance_pc();` |
+| Operation: | `$rd = $gas;`<br>`advance_pc();` |
 | Syntax: | `gas $rd` |
 | Encoding: | `10000000 rd - - - - -` |
 | Notes: | EVM component |
@@ -1478,7 +1478,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Verifies an input value $rs based on mask $rt in memory with size imm, and a root hash $ru, and stores the verification result to $rd.  |
-| Operation: | `if $rs & $rt == 0<br>  $rd = 1;<br>else $rd = 0;<br>advance_pc();` |
+| Operation: | `if $rs & $rt == 0`<br>`  $rd = 1;`<br>`else $rd = 0;`<br>`advance_pc();` |
 | Syntax: | `checktemplate $rd, $rs, imm, $rt` |
 | Encoding: | `11001110 rd rs rt i i i` |
 | Notes: | As the immediate value can take 18 bits, the width is sufficient to represent a 32MB template. To support larger templates, additional instructions with additional templates can be encoded statically at compile-time. Also referred to as opcode CheckOutputVerify; we choose a different term as the Fuel VM operates on types other than UTXO outputs. In our implementation, we do not expect a value to be ascribed to be delivered (as would be the case with an output-based tx). An index is provided with the original specification of CheckOutputVerify, however, the output index may vary in the interpreter due to features such as parallelism. |
