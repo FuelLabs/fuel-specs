@@ -1,7 +1,7 @@
-
 # Fuel VM Opcodes
 
 ## Table of Contents
+
 
 * [Arithmetic/Logic (ALU) Operands](#op-group-id-7)
   * [`STOP`](#op-STOP)
@@ -718,8 +718,7 @@
 | | |
 |---|---|
 | Description: | Sets $rd register value to the block's gas limit (as set by the client). |
-| Operation: | `$rd = $gaslimit;
-advance_pc();` |
+| Operation: | `$rd = $gaslimit;`<br>`advance_pc();` |
 | Syntax: | `gaslimit $rd` |
 | Encoding: | `10001011 rd - - - - -` |
 | Notes: | EVM component |
@@ -729,8 +728,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the gas price that was set in the originating transaction. |
-| Operation: | `$rd = $gasprice;
-advance_pc();` |
+| Operation: | `$rd = $gasprice;`<br>`advance_pc();` |
 | Syntax: | `gasprice $rd` |
 | Encoding: | `10001100 rd - - - - -` |
 | Notes: | EVM component |
@@ -740,8 +738,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Takes the $rs register value, which is an address, and then sets the $rd register value to the balance of given address. |
-| Operation: | `$rd = $balance[$rs];
-advance_pc();` |
+| Operation: | `$rd = $balance[$rs];`<br>`advance_pc();` |
 | Syntax: | `balance $rd, $rs` |
 | Encoding: | `10000001 rd rs - - - -` |
 | Notes: | EVM component |
@@ -751,8 +748,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the address of the currently executing account. |
-| Operation: | `$rd = $address;
-advance_pc();` |
+| Operation: | `$rd = $address;`<br>`advance_pc();` |
 | Syntax: | `address $rd` |
 | Encoding: | `10000010 rd - - - - -` |
 | Notes: | EVM component |
@@ -762,8 +758,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the execution origin address. This is the sender of the original transaction. Note: it is never an account with non-empty associated code. |
-| Operation: | `$rd = $origin;
-advance_pc();` |
+| Operation: | `$rd = $origin;`<br>`advance_pc();` |
 | Syntax: | `origin $rd` |
 | Encoding: | `10000011 rd - - - - -` |
 | Notes: | EVM component |
@@ -773,8 +768,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the address of the account that is directly responsible for this execution. |
-| Operation: | `$rd = $caller;
-advance_pc();` |
+| Operation: | `$rd = $caller;`<br>`advance_pc();` |
 | Syntax: | `caller $rd` |
 | Encoding: | `10000100 rd - - - - -` |
 | Notes: | EVM component |
@@ -784,8 +778,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the value deposited by the instruction/transaction responsible for this execution. |
-| Operation: | `$rd = $value;
-advance_pc();` |
+| Operation: | `$rd = $value;`<br>`advance_pc();` |
 | Syntax: | `callvalue $rd` |
 | Encoding: | `10000101 rd - - - - -` |
 | Notes: | EVM component |
@@ -795,8 +788,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Takes 64-bit block number value from memory at address given by register $rs, and sets $rd register value to the hash of the block that at that block number. |
-| Operation: | `$rd = $blockhash(MEM[$rs..$rs+8]);
-advance_pc();` |
+| Operation: | `$rd = $blockhash(MEM[$rs..$rs+8]);`<br>`advance_pc();` |
 | Syntax: | `blockhash $rd, $rs` |
 | Encoding: | `10000110 rd rs - - - -` |
 | Notes: | EVM component |
@@ -806,8 +798,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets $rd register value to the beneficiary address (as set by the client). |
-| Operation: | `$rd = $coinbase;
-advance_pc();` |
+| Operation: | `$rd = $coinbase;`<br>`advance_pc();` |
 | Syntax: | `coinbase $rd` |
 | Encoding: | `10000111 rd - - - - -` |
 | Notes: | EVM component |
@@ -817,8 +808,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets $rd register value to the block's timestamp (as set by the client). |
-| Operation: | `$rd = $timestamp;
-advance_pc();` |
+| Operation: | `$rd = $timestamp;`<br>`advance_pc();` |
 | Syntax: | `timestamp $rd` |
 | Encoding: | `10001000 rd - - - - -` |
 | Notes: | EVM component |
@@ -828,8 +818,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets $rd register value to the block's number (as set by the client). |
-| Operation: | `$rd = $number;
-advance_pc();` |
+| Operation: | `$rd = $number;`<br>`advance_pc();` |
 | Syntax: | `number $rd` |
 | Encoding: | `10001001 rd - - - - -` |
 | Notes: | EVM component |
@@ -839,8 +828,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets $rd register value to the block's difficulty (as set by the client). |
-| Operation: | `$rd = $difficulty;
-advance_pc();` |
+| Operation: | `$rd = $difficulty;`<br>`advance_pc();` |
 | Syntax: | `difficulty $rd` |
 | Encoding: | `10001010 rd - - - - -` |
 | Notes: | EVM component |
@@ -850,8 +838,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the size of a message call's input data. |
-| Operation: | `$rd = size($calldata);
-advance_pc();` |
+| Operation: | `$rd = size($calldata);`<br>`advance_pc();` |
 | Syntax: | `calldatasize $rd` |
 | Encoding: | `10001101 rd - - - - -` |
 | Notes: | EVM component |
@@ -861,8 +848,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Takes the $rs register value, which represents the byte offset of a message call's input data, and sets the $rd register value to the 256-bit value at that offset of the calldata. |
-| Operation: | `$rd = $calldata[$rs];
-advance_pc();` |
+| Operation: | `$rd = $calldata[$rs];`<br>`advance_pc();` |
 | Syntax: | `calldataload $rd, $rs` |
 | Encoding: | `10001110 rd rs - - - -` |
 | Notes: | EVM component |
@@ -872,8 +858,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Copy calldata into memory. The $rs value represents the offset in memory to start copying values from the call data which is offset by the $rd value. The number of bytes copied is equal to the $rt value. |
-| Operation: | `MEM[$rd] = $calldata[$rs..$rs+$rt];
-advance_pc();` |
+| Operation: | `MEM[$rd] = $calldata[$rs..$rs+$rt];`<br>`advance_pc();` |
 | Syntax: | `calldatacopy $rd, $rs, $rt` |
 | Encoding: | `10001111 rd rs rt - - -` |
 | Notes: | EVM component |
@@ -883,8 +868,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the size of the code being executed. |
-| Operation: | `$rd = $codesize($address);
-advance_pc();` |
+| Operation: | `$rd = $codesize($address);`<br>`advance_pc();` |
 | Syntax: | `codesize $rd` |
 | Encoding: | `10010000 rd - - - - -` |
 | Notes: | EVM component |
@@ -894,8 +878,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Copy code currently being executed into memory. The $rs value represents the offset in memory to start copying values from the code data which is $rd by the second value. The number of bytes copied is equal to the $rt value. |
-| Operation: | `MEM[$rd] = $code[$rs..$rs+$rt];
-advance_pc();` |
+| Operation: | `MEM[$rd] = $code[$rs..$rs+$rt];`<br>`advance_pc();` |
 | Syntax: | `codecopy $rd, $rs, $rt` |
 | Encoding: | `10010001 rd rs rt - - -` |
 | Notes: | EVM component |
@@ -905,8 +888,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Takes the $rs register value, an account address, and sets the $rd register value to the size of the code at that address. |
-| Operation: | `$rd = $codesize($rs);
-advance_pc();` |
+| Operation: | `$rd = $codesize($rs);`<br>`advance_pc();` |
 | Syntax: | `extcodesize $rd, $rs` |
 | Encoding: | `10010010 rd rs - - - -` |
 | Notes: | EVM component |
@@ -916,8 +898,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Takes $rs register value, the address, and sets $rd register value to the hash of the code at that address, else set it to 0. |
-| Operation: | `$rd = $codehash[$rs];
-advance_pc();` |
+| Operation: | `$rd = $codehash[$rs];`<br>`advance_pc();` |
 | Syntax: | `extcodehash $rd, $rs` |
 | Encoding: | `10010011 rd rs - - - -` |
 | Notes: | EVM component |
@@ -927,8 +908,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Like CODECOPY, but the $ru parameter for this operation is the account to copy the code of. |
-| Operation: | `MEM[$rd] = $code[$ru][$rs..$rs+$rt];
-advance_pc();` |
+| Operation: | `MEM[$rd] = $code[$ru][$rs..$rs+$rt];`<br>`advance_pc();` |
 | Syntax: | `extcodecopy $rd, $ru, $rs, $rt` |
 | Encoding: | `10010100 rd rs rt ru - -` |
 | Notes: | EVM component |
@@ -938,8 +918,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Sets the $rd register value to the size of the returned data from the last call in the current execution. |
-| Operation: | `$rd = size($returndata);
-advance_pc();` |
+| Operation: | `$rd = size($returndata);`<br>`advance_pc();` |
 | Syntax: | `returndatasize $rd` |
 | Encoding: | `10010101 rd - - - - -` |
 | Notes: | EVM component |
@@ -949,8 +928,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Copies the return data into memory. $rs value specifies the address offset of the return data, the $rd value specifies the offset in memory to copy the data to, and the $rt value gives the number of bytes to copy. |
-| Operation: | `MEM[$rd] = $returndata[$rs..$rs+$rt];
-advance_pc();` |
+| Operation: | `MEM[$rd] = $returndata[$rs..$rs+$rt];`<br>`advance_pc();` |
 | Syntax: | `returndatacopy $rd, $rs, $rt` |
 | Encoding: | `10010110 rd rs rt - - -` |
 | Notes: | EVM component |
@@ -1030,8 +1008,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Keccak-256 hash. Takes $rs and $rt register values, values which represent the range of at least one item in memory to compute the Keccak-256 hash of. The $rs value is inclusive and the $rt value is exclusive; this means that the $rt value must be greater than the $rs value. The $rd register value is set to the hash value. Note: that this opcode mnemonic differs from the SHA3 opcode as specified in the yellow paper because SHA3 is not the same as Keccak. We do this to allow proper SHA3 operations in the Fuel VM.  |
-| Operation: | `$rd = keccak(MEM[$rs:$rt]);
-advance_pc(); ` |
+| Operation: | `$rd = keccak(MEM[$rs:$rt]);`<br>`advance_pc(); ` |
 | Syntax: | `keccak $rd, $rs, $rt` |
 | Encoding: | `10011110 rd rs rt - - -` |
 | Notes: |  |
@@ -1041,8 +1018,7 @@ advance_pc(); ` |
 | | |
 |---|---|
 | Description: | Takes $rs and $rt register values and records a log entry with no topics based on the memory offset of the $rs value, with a length given by the $rt value. |
-| Operation: | `$log.push(: + MEM[$rs..$rs+$rt]);
-advance_pc();` |
+| Operation: | `$log.push(: + MEM[$rs..$rs+$rt]);`<br>`advance_pc();` |
 | Syntax: | `log0 $rs, $rt` |
 | Encoding: | `10011111 rs rt - - - -` |
 | Notes: | EVM component |
@@ -1052,8 +1028,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru value.  |
-| Operation: | `$log.push($ru + : + MEM[$rs..$rs+$rt]);
-advance_pc();` |
+| Operation: | `$log.push($ru + : + MEM[$rs..$rs+$rt]);`<br>`advance_pc();` |
 | Syntax: | `log1 $rs, $rt, $ru` |
 | Encoding: | `10100000 rs rt ru - - -` |
 | Notes: | EVM component |
@@ -1063,8 +1038,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru, $rv values.  |
-| Operation: | `$log.push($ru + $rv + : + MEM[$rs..$rs+$rt]);
-advance_pc();` |
+| Operation: | `$log.push($ru + $rv + : + MEM[$rs..$rs+$rt]);`<br>`advance_pc();` |
 | Syntax: | `log2 $rs, $rt, $ru, $rv` |
 | Encoding: | `10100001 rs rt ru rv - -` |
 | Notes: | EVM component |
@@ -1074,8 +1048,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru, $rv, $rw values.  |
-| Operation: | `$log.push($ru + $rv + $rw + : + MEM[$rs..$rs+$rt]);
-advance_pc();` |
+| Operation: | `$log.push($ru + $rv + $rw + : + MEM[$rs..$rs+$rt]);`<br>`advance_pc();` |
 | Syntax: | `log3 $rs, $rt, $ru, $rv, $rw` |
 | Encoding: | `10100010 rs rt ru rv rw -` |
 | Notes: | EVM component |
@@ -1085,8 +1058,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Take $rs and $rt register values and records a log entry with data copied from memory at an offset given by $rs, whose length is given by $rt. The topic of the log entry is given by the $ru, $rv, $rw, $rx values.  |
-| Operation: | `$log.push($ru + $rv + $rw + $rx + : + MEM[$rs..$rs+$rt]);
-advance_pc();` |
+| Operation: | `$log.push($ru + $rv + $rw + $rx + : + MEM[$rs..$rs+$rt]);`<br>`advance_pc();` |
 | Syntax: | `log4 $rs, $rt, $ru, $rv, $rw, $rx` |
 | Encoding: | `10100011 rs rt ru rv rw rx` |
 | Notes: | EVM component |
@@ -1110,9 +1082,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Use immediate addressing for static analysis. Depends on special flags for jump. |
-| Operation: | `if ($compare == 1)
-  nPC = imm;
-else advance_pc();` |
+| Operation: | `if ($compare == 1)`<br>`  nPC = imm;`<br>`else advance_pc();` |
 | Syntax: | `jumpif imm` |
 | Encoding: | `10101011 ` |
 | Notes: |  |
@@ -1122,9 +1092,7 @@ else advance_pc();` |
 | | |
 |---|---|
 | Description: | Use immediate addressing for static analysis. Depends on BEGINDATA operation for specifying vector of destinations.  |
-| Operation: | `if ($rs >= n)
-  nPC = DATA[v_data_offset+n-1]; 
-else nPC = DATA[v_data_offset+$rs]; ` |
+| Operation: | `if ($rs >= n)`<br>`  nPC = DATA[v_data_offset+n-1]; `<br>`else nPC = DATA[v_data_offset+$rs]; ` |
 | Syntax: | `jumpv n, v_data_offset, $rs` |
 | Encoding: | `10101100 ` |
 | Notes: |  |
@@ -1134,8 +1102,7 @@ else nPC = DATA[v_data_offset+$rs]; ` |
 | | |
 |---|---|
 | Description: | Use immediate addressing for static analysis. Depends on prior declaration of BEGINSUB for destination to be considered valid, and BEGINSUB declarations for all address must be validated at compile-time.  |
-| Operation: | `$callstack.push(nPC);
-nPC = imm; ` |
+| Operation: | `$callstack.push(nPC);`<br>`nPC = imm; ` |
 | Syntax: | `jumpsub imm` |
 | Encoding: | `10101101 ` |
 | Notes: |  |
@@ -1145,13 +1112,7 @@ nPC = imm; ` |
 | | |
 |---|---|
 | Description: | Use immediate addressing for static analysis. Depends on prior declaration of BEGINSUB for destination to be considered valid, and BEGINSUB declarations for all address must be validated at compile-time. Depends on BEGINDATA operation for specifying vector of destinations.  |
-| Operation: | `if ($rs >= n) { 
-  $callstack.push(nPC);
-  nPC = DATA[v_data_offset+n-1];
-} else { 
-  $callstack.push(nPC);
-  nPC = DATA[v_data_offset+$rs];
-} ` |
+| Operation: | `if ($rs >= n) { `<br>`  $callstack.push(nPC);`<br>`  nPC = DATA[v_data_offset+n-1];`<br>`} else { `<br>`  $callstack.push(nPC);`<br>`  nPC = DATA[v_data_offset+$rs];`<br>`} ` |
 | Syntax: | `jumpsubv n, v_data_offset, $rs` |
 | Encoding: | `10101110 ` |
 | Notes: |  |
@@ -1171,8 +1132,7 @@ nPC = imm; ` |
 | | |
 |---|---|
 | Description: | Allocate local variables in memory and use a memory pointer for access. This overlaps with SB/SW and LB/LW (store/load byte/word) opcodes from above (and MIPS), but this can be an offset into memory addressing used for local variables. |
-| Operation: | `$rs = MEM[$subroutinemarker+n];
-advance_pc();` |
+| Operation: | `$rs = MEM[$subroutinemarker+n];`<br>`advance_pc();` |
 | Syntax: | `getlocal $rd, n` |
 | Encoding: | `10110000 ` |
 | Notes: |  |
@@ -1182,8 +1142,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Allocate local variables in memory and use a memory pointer for access. This overlaps with SB/SW and LB/LW (store/load byte/word) opcodes from above (and MIPS), but this can be an offset into memory addressing used for local variables. |
-| Operation: | `MEM[$subroutinemarker+n] = $rs;
-advance_pc();` |
+| Operation: | `MEM[$subroutinemarker+n] = $rs;`<br>`advance_pc();` |
 | Syntax: | `putlocal $rs, n` |
 | Encoding: | `10110001 ` |
 | Notes: |  |
@@ -1193,8 +1152,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Required to declare subroutines, which are then used for checking validity of subroutine-based jump operations. Updates execution context but oes not change state. |
-| Operation: | `SUBS.push(PC);
-advance_pc();` |
+| Operation: | `SUBS.push(PC);`<br>`advance_pc();` |
 | Syntax: | `beginsub n_args, n_returns` |
 | Encoding: | `10110010 ` |
 | Notes: |  |
@@ -1438,8 +1396,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | Extracts a word at a given immediate index, given the lane width and count in the context byte. |
-| Operation: | `$rd = MEM[$rs+imm];
-advance_pc();` |
+| Operation: | `$rd = MEM[$rs+imm];`<br>`advance_pc();` |
 | Syntax: | `simdindex $rd, $rs, imm` |
 | Encoding: | `11001010 C rd rs rt - -` |
 | Notes: |  |
@@ -1449,8 +1406,7 @@ advance_pc();` |
 | | |
 |---|---|
 | Description: | The mask must have integral type, and the same number of elements as the source vector. |
-| Operation: | `MEM[$rd] = MEM[$rs[rt[0]]...$rs[rt[rt.length()-1]]];
-advance_pc();` |
+| Operation: | `MEM[$rd] = MEM[$rs[rt[0]]...$rs[rt[rt.length()-1]]];`<br>`advance_pc();` |
 | Syntax: | `simdshuffle $rd, $rs, $rt` |
 | Encoding: | `11001100 C rd rs rt - -` |
 | Notes: |  |
