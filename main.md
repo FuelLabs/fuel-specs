@@ -11,27 +11,21 @@ The specification covers the types, opcodes, and execution semantics.
 
 ## Semantics
 
-Fuel instructions are 64 bits wide with the following two types:
-
-1. Arithmetic/Logic Unit-based (ALU) opcodes:
-   * Opcode: 8 bits, start with 0 in MSB
-   * Register identifier: 6 bits 
-   * Immediate values: 32 bits
-1. Ethereum-related opcodes:
-   * Opcode: 8 bits, start with 1 in MSB
-   * Register identifier: 6 bits 
-   * Immediate values: no Ethereum-related opcodes use immediate values
+Fuel instructions are 64 bits wide and comprise of:
+* Opcode: 8 bits
+* Register identifier: 6 bits 
+* Immediate values: 32 bits
 
 In addition, there are some special registers defined as follows:
 
 | register | name | Description |
 | ---|---|---|
-| $z | zero | zero-containing register (convenience register frequently found in register machines) |
-| $hi | hi | register containing high bits of multiplication/division result; remainder in div |
-| $lo | lo | register containing low bits of multiplication/division result; divisor in div |
-| $of | overflow | bit-sized register indicating overflow of signed operation |
-| $uf | underflow | bit-sized register indicating underflow of signed operation |
-| $state | state | 2-bit sized register indicating statemachine status: RUNNING, HALTED |
+| `$z` | zero | zero-containing register (convenience register frequently found in register machines) |
+| `$hi` | hi | register containing high bits of multiplication/division result; remainder in div |
+| `$lo` | lo | register containing low bits of multiplication/division result; divisor in div |
+| `$of` | overflow | bit-sized register indicating overflow of signed operation |
+| `$uf` | underflow | bit-sized register indicating underflow of signed operation |
+| `$state` | state | 2-bit sized register indicating statemachine status: RUNNING, HALTED |
 
 Default Values:
 
@@ -49,14 +43,11 @@ Fuel VM opcodes belong to one of two types: ALU opcodes, which represent arithme
 ALU opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 in-memory registers, and 32-bit wide immediate values.
 Ethereum opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 in-memory registers (and _no_ immediate values).
 
-By default, registers reference 64-bit wide values stored in main-memory, unless explicitly defined to alternative widths, such as to improve performance of cryptography operations. 
+By default, registers reference 64-bit wide values stored in main-memory in big-endian, unless explicitly defined to alternative widths, such as to improve performance of cryptography operations. 
 
 The Fuel VM does not serialize/deserialize data to/from disk, only main-memory, thus the specification does not define an explicit storage model.
 
-
-
 Ethereum-related registers, e.g., gas, are defined in the execution context using memory-mapped variables. The implication is that a smart contract executing in a Fuel VM can write to less than 32MB of memory.
-
 
 ## Opcodes
 
@@ -75,9 +66,6 @@ The opcodes cover the following features:
 
 Although currently all opcodes are of fixed-width, the Fuel VM interpreter is designed to support variable-width instruction sets, such as for supporting [efficient cryptography](https://notes.ethereum.org/@axic/evm384).
   
- 
-
-
 <!--
 ## Implementation
 
@@ -88,7 +76,6 @@ An Ethereum 1x on-chain implementation of a Fuel VM interpreter will be availabl
 ### Optimizations
 
 This section defines optimizations that are applicable to the Fuel VM.
-
 
 #### On-chain optimizations
 
@@ -109,5 +96,4 @@ Potential topics:
 * compression
 * indexing
 * parallelism
-
 -->
