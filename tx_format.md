@@ -82,6 +82,7 @@ enum  OutputType : uint8 {
 | -------------------- | ------- | ------------------------------------------------------- |
 | `inputIndex`         | `uint8` | Index of input contract.                                |
 | `amountWitnessIndex` | `uint8` | Index of witness for amount of coins owned by contract. |
+| `stateWitnessIndex`  | `uint8` | Index of witness for state root of contract.            |
 
 ## Witness
 
