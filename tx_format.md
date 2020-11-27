@@ -22,7 +22,7 @@
 | `outputsCount`   | `uint8`                 | Number of outputs.         |
 | `outputs`        | [Output](#output)`[]`   | List of outputs.           |
 | `witnessesCount` | `uint8`                 | Number of witnesses.       |
-| `witnesses`      | [Witness](#witness)`[]` | List of witneses.          |
+| `witnesses`      | [Witness](#witness)`[]` | List of witnesses.         |
 
 ## Input
 
