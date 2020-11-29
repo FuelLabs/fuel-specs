@@ -205,7 +205,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                        |
 | ----------- | ---------------------- |
 | Description | Performs no operation. |
-| Operation   | ```advance_pc();```    |
+| Operation   |                        |
 | Syntax      | `noop`                 |
 | Encoding    | `00011011 - - - -`     |
 | Notes       |                        |
@@ -235,7 +235,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                   |
 | ----------- | --------------------------------------------------------------------------------- |
 | Description | Shifts `$rs` left by `$rt` and places the result in `$rd`. Zeroes are shifted in. |
-| Operation   | ```$rd = $rs << $rt;```<br>```advance_pc(); ```                                   |
+| Operation   | ```$rd = $rs << $rt;```                                                           |
 | Syntax      | `sll $rd, $rs, $rt`                                                               |
 | Encoding    | `00100000 rd rs rt -`                                                             |
 | Notes       |                                                                                   |
@@ -245,7 +245,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                   |
 | ----------- | --------------------------------------------------------------------------------- |
 | Description | Shifts `$rs` left by `imm` and places the result in `$rd`. Zeroes are shifted in. |
-| Operation   | ```$rd = $rs << imm;```<br>```advance_pc(); ```                                   |
+| Operation   | ```$rd = $rs << imm;```                                                           |
 | Syntax      | `slli $rd, $rs, imm`                                                              |
 | Encoding    | `00011111 rd rs i i`                                                              |
 | Notes       |                                                                                   |
