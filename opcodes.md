@@ -449,7 +449,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                                                                                  |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Description | Copy `$ru` bytes of code starting at `$rt` for contract with ID equal to the 32 bytes in memory starting at `$rs` into memory starting at `$rd`. |
-| Operation   | ```MEM[$rd..$rd+$rt] = code($rs, $rt, $ru);```                                                                                                   |
+| Operation   | ```MEM[$rd..$rd+$ru-1] = code($rs, $rt, $ru);```                                                                                                 |
 | Syntax      | `codecopy $rs, $rs, $rt, $ru`                                                                                                                    |
 | Encoding    | `10010100 rd rs rt ru`                                                                                                                           |
 | Notes       | If `$rt` is greater than the code size, zero bytes are filled in.                                                                                |
@@ -459,7 +459,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                                                                              |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Description | Set the 32 bytes in memory starting at `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
-| Operation   | ```MEM[$rd..$rd+32] = coderoot(MEM[$rs..$rs+32]);```                                                                                         |
+| Operation   | ```MEM[$rd..$rd+31] = coderoot(MEM[$rs..$rs+31]);```                                                                                         |
 | Syntax      | `codehash $rd, $rs`                                                                                                                          |
 | Encoding    | `10010011 rd rs - -`                                                                                                                         |
 | Notes       |                                                                                                                                              |
@@ -469,7 +469,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                                           |
 | ----------- | --------------------------------------------------------------------------------------------------------- |
 | Description | Set `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
-| Operation   | ```$rd = codesize(MEM[$rs..$rs+32]);```                                                                   |
+| Operation   | ```$rd = codesize(MEM[$rs..$rs+31]);```                                                                   |
 | Syntax      | `codesize $rd, $rs`                                                                                       |
 | Encoding    | `10010010 rd rs - -`                                                                                      |
 | Notes       |                                                                                                           |
@@ -499,7 +499,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                             |
 | ----------- | --------------------------------------------------------------------------- |
 | Description | The keccak-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
-| Operation   | ```$rd = keccak(MEM[$rs..$rs+$rt]);```<br>```advance_pc(); ```              |
+| Operation   | ```$rd = keccak(MEM[$rs..$rs+$rt-1]);```                                    |
 | Syntax      | `keccak $rd, $rs, $rt`                                                      |
 | Encoding    | `10011110 rd rs rt -`                                                       |
 | Notes       |                                                                             |
@@ -509,7 +509,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                                                                                                     |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Description | Takes `$rs` and `$rt` register values and records a log entry with no topics based on the memory offset of the `$rs` value, with a length given by the `$rt` value. |
-| Operation   | ```$log.push(':' + MEM[$rs..$rs+$rt]);```                                                                                                                           |
+| Operation   | ```$log.push(':' + MEM[$rs..$rs+$rt-1]);```                                                                                                                         |
 | Syntax      | `log $rs, $rt`                                                                                                                                                      |
 | Encoding    | `10011111 rs rt - -`                                                                                                                                                |
 | Notes       |                                                                                                                                                                     |
@@ -539,7 +539,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                   |
 | ----------- | ------------------------------------------------- |
 | Description | A word is read from the current contract's state. |
-| Operation   | ```$rd = STATE[MEM[$rs]][0..7];```                |
+| Operation   | ```$rd = STATE[MEM[$rs..$rs+31]][0..7];```        |
 | Syntax      | `srw $rd, $rs`                                    |
 | Encoding    | `00010100 rd rs - -`                              |
 | Notes       | Returns zero if the state element does not exist. |
@@ -549,7 +549,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                     |
 | ----------- | --------------------------------------------------- |
 | Description | 32 bytes is read from the current contract's state. |
-| Operation   | ```MEM[$rd] = STATE[MEM[$rs]];```                   |
+| Operation   | ```MEM[$rd..$rd+31] = STATE[MEM[$rs..$rs+31]];```   |
 | Syntax      | `srwx $rd, $rs`                                     |
 | Encoding    | `00010100 rd rs - -`                                |
 | Notes       | Returns zero if the state element does not exist.   |
@@ -559,7 +559,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                    |
 | ----------- | -------------------------------------------------- |
 | Description | A word is written to the current contract's state. |
-| Operation   | ```STATE[MEM[$rd]] = $rs;```                       |
+| Operation   | ```STATE[MEM[$rd..$rd+31]][0..7] = $rs;```         |
 | Syntax      | `sww $rd $rs`                                      |
 | Encoding    | `00010100 rd rs - -`                               |
 | Notes       |                                                    |
@@ -569,7 +569,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                      |
 | ----------- | ---------------------------------------------------- |
 | Description | 32 bytes is written to the current contract's state. |
-| Operation   | ```STATE[MEM[$rd]] = MEM[$rs];```                    |
+| Operation   | ```STATE[MEM[$rd..$rd+31]] = MEM[$rs..$rs+31];```    |
 | Syntax      | `swwx $rd, $rs`                                      |
 | Encoding    | `00010100 rd rs - -`                                 |
 | Notes       |                                                      |
