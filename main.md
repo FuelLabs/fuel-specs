@@ -28,6 +28,7 @@ In addition, there are some special registers defined as follows:
 | `$z`     | zero            | Zero-containing register (convenience register frequently found in register machines).                                 |
 | `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
 | `$pc`    | program counter | The program counter.                                                                                                   |
+| `$err`   | error           | Error codes for particular operations.                                                                                 |
 | `$gas`   | gas             | Remaining gas.                                                                                                         |
 
 We assume that a FuelVM can start if it has the capability of (potentially dynamically) allocating up to `VM_MAX_RAM` of main memory; we also depend on a simple assumption that a Fuel VM does not deallocate memory.
