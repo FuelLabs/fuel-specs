@@ -34,8 +34,6 @@ In addition, there are some special registers defined as follows:
 | `$err`   | error           | Error codes for particular operations.                                                                                 |
 | `$gas`   | gas             | Remaining gas.                                                                                                         |
 
-We assume that a FuelVM can start if it has the capability of (potentially dynamically) allocating up to `VM_MAX_RAM` of main memory; we also depend on a simple assumption that a Fuel VM does not deallocate memory.
-
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
 Registers are 64 bits (8 bytes) wide. Words are the same width as registers.
@@ -48,7 +46,19 @@ A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 
 ## Transaction Execution
 
-If script bytecode is present, transaction validation requires execution. The [transaction](./tx_format.md) is placed in memory starting at address `0`. `$pc` is initialized to the start of the script bytecode and execution begins.
+If script bytecode is present, transaction validation requires execution.
+
+A single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
+
+Before execution begins, the following is placed on the stack sequentially:
+1. Block number (word-aligned).
+1. Block producer address (word-aligned).
+1. Block gas limit (word-aligned).
+1. Transaction hash (word-aligned).
+1. Block hash for the previous 256 blocks (word-aligned).
+1. The [transaction](./tx_format.md).
+
+`$pc` is initialized to the start of the transaction's script bytecode and execution begins.
 
 ## Call Frames
 
