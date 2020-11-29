@@ -391,7 +391,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                                         |
 | ----------- | ------------------------------------------------------------------------------------------------------- |
 | Description | A byte is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation   | ```$rd = MEM[$rs + offset];```                                                                          |
+| Operation   | ```$rd = (0xff & MEM[$rs + offset]);```                                                                 |
 | Syntax      | `lb $rd, $rs, offset`                                                                                   |
 | Encoding    | `00010100 rd rs i i`                                                                                    |
 | Notes       |                                                                                                         |
