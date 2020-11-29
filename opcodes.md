@@ -17,6 +17,7 @@
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MUL: Multiply](#mul-multiply)
   - [NOOP: No operation](#noop-no-operation)
+  - [NEG: Negation](#neg-negation)
   - [OR: OR](#or-or)
   - [ORI: OR immediate](#ori-or-immediate)
   - [SLL: Shift left logical](#sll-shift-left-logical)
@@ -220,6 +221,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `noop`                 |
 | Encoding    | `00011011 - - - -`     |
 | Notes       |                        |
+
+### NEG: Negation
+
+|             |                      |
+| ----------- | -------------------- |
+| Description | Negates a register.  |
+| Operation   | ```$rd = -$rs```     |
+| Syntax      | `neg $rd, $rs`       |
+| Encoding    | `00011011 rd rs - -` |
+| Notes       |                      |
 
 ### OR: OR
 
