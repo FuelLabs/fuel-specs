@@ -35,7 +35,7 @@ We assume that a FuelVM can start if it has the capability of (potentially dynam
 
 Arithmetic opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 registers, and 12-bit immediate values. Ethereum-style opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 in-memory registers (and no immediate values).
 
-Integers are represented in [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) [big-endian](https://en.wikipedia.org/wiki/Endianness) format.
+Integers are represented in [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) [big-endian](https://en.wikipedia.org/wiki/Endianness) format. Boolean `false` is `0` and Boolean `true` is `1`.
 
 Registers are 64 bits (8 bytes) wide.
 
