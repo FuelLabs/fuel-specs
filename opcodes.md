@@ -526,13 +526,13 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### REVERT: Revert
 
-|             |                                                                      |
-| ----------- | -------------------------------------------------------------------- |
-| Description | Halt execution, reverting state changes and returning data in `$rs`. |
-| Operation   | ```revert $rs;```                                                    |
-| Syntax      | `revert $rs`                                                         |
-| Encoding    | `10011101 rs - - -`                                                  |
-| Notes       |                                                                      |
+|             |                                                                       |
+| ----------- | --------------------------------------------------------------------- |
+| Description | Halt execution, reverting state changes and returning value in `$rs`. |
+| Operation   | ```revert $rs;```                                                     |
+| Syntax      | `revert $rs`                                                          |
+| Encoding    | `10011101 rs - - -`                                                   |
+| Notes       |                                                                       |
 
 ### SRW: State read word
 
