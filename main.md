@@ -50,7 +50,7 @@ If script bytecode is present, transaction validation requires execution.
 
 A single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
 
-Before execution begins, the following is placed on the stack sequentially:
+Before execution begins, the following is pushed on the stack sequentially:
 1. Block number (word-aligned).
 1. Block producer address (word-aligned).
 1. Block gas limit (word-aligned).
