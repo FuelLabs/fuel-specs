@@ -1,99 +1,64 @@
 # Fuel VM Specification
 
-This document gives the Fuel VM specification. 
+- [Introduction](#introduction)
+- [Parameters](#parameters)
+- [Semantics](#semantics)
+- [Opcodes](#opcodes)
+- [Transaction Execution](#transaction-execution)
+- [Call Frames](#call-frames)
 
-The specification covers the types, opcodes, and execution semantics.
+## Introduction
 
-## Table of Contents
+This document provides the specification for the Fuel Virtual Machine (FuelVM). The specification covers the types, opcodes, and execution semantics.
 
-* [Semantics](#semantics)
-* [Opcodes](#opcodes)
+## Parameters
+
+| name         | type     | value   | note   |
+| ------------ | -------- | ------- | ------ |
+| `VM_MAX_RAM` | `uint64` | `2**20` | 1 MiB. |
 
 ## Semantics
 
-Fuel instructions are 64 bits wide and comprise of:
+Fuel instructions are 32 bits wide (4 bytes) and comprise of:
 * Opcode: 8 bits
-* Register identifier: 6 bits 
-* Immediate values: 32 bits
+* Register identifier: 6 bits
+* Immediate value: 12 or 24 bits, depending on operation
 
 In addition, there are some special registers defined as follows:
+| register | name            | description                                                                                                            |
+| -------- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `$z`     | zero            | Zero-containing register (convenience register frequently found in register machines).                                 |
+| `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
+| `$pc`    | program counter | The program counter.                                                                                                   |
+| `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                                     |
+| `$err`   | error           | Error codes for particular operations.                                                                                 |
+| `$gas`   | gas             | Remaining gas.                                                                                                         |
 
-| register | name | Description |
-| ---|---|---|
-| `$z` | zero | zero-containing register (convenience register frequently found in register machines) |
-| `$hi` | hi | register containing high bits of multiplication/division result; remainder in div |
-| `$lo` | lo | register containing low bits of multiplication/division result; divisor in div |
-| `$of` | overflow | bit-sized register indicating overflow of signed operation |
-| `$uf` | underflow | bit-sized register indicating underflow of signed operation |
-| `$state` | state | 2-bit sized register indicating statemachine status: RUNNING, HALTED |
+Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
-Default Values:
+Registers are 64 bits (8 bytes) wide. Words are the same width as registers.
 
-* VM_MAX_RAM: 32MB
-
-We assume that a Fuel VM can start if it has the capability of (potentially dynamically) allocating up to VM_MAX_RAM of main memory; we also depend on a simple assumption that a Fuel VM does not deallocate memory. 
-Allocations/reading/writing of memory take place by instructing the underlying operating system, implemented by the Fuel VM smart contract compiler and interpreter.
-
-A register machine executes on commodity hardware by reading sequences of bytecodes that represent instructions and corresponding input into an instruction register. 
-
-A Fuel VM interpreter reads the instruction register to first determine the opcode, by which to then interpret the input to the opcode.
-
-Fuel VM opcodes belong to one of two types: ALU opcodes, which represent arithmetic and logic operations, and Ethereum opcodes, which represent blockchain-related opcodes.
-
-ALU opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 in-memory registers, and 32-bit wide immediate values.
-Ethereum opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 in-memory registers (and _no_ immediate values).
-
-By default, registers reference 64-bit wide values stored in main-memory in big-endian, unless explicitly defined to alternative widths, such as to improve performance of cryptography operations. 
-
-The Fuel VM does not serialize/deserialize data to/from disk, only main-memory, thus the specification does not define an explicit storage model.
-
-Ethereum-related registers, e.g., gas, are defined in the execution context using memory-mapped variables. The implication is that a smart contract executing in a Fuel VM can write to less than 32MB of memory.
+Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-byte values. Each contract has its own persistent state that is independent of other contracts. This is committed to in a Sparse Binary Merkle Tree.
 
 ## Opcodes
 
-This section describes the Fuel VM's opcodes. 
+A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 
-Fuel VM opcodes derive from the MIPS instruction set, and from the [Ethereum Yellow Paper](https://github.com/ethereum/yellowpaper).
+## Transaction Execution
 
-Additionally, the Fuel VM defines opcodes in support of optimistic rollups and specialized performance optimizations.
+If script bytecode is present, transaction validation requires execution.
 
-A complete list of opcodes in the Fuel VM is [documented](opcodes.md).
+A single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
 
-The opcodes cover the following features:
-* [EIP-615: Subroutines and Static Jumps](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-615.md)
-* [EIP-616: SIMD Operations](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-616.md)
-* [EIP-616: SIMD Operations](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-616.md)
+Before execution begins, the following is pushed on the stack sequentially:
+1. Block number (word-aligned).
+1. Block producer address (word-aligned).
+1. Block gas limit (word-aligned).
+1. Transaction hash (word-aligned).
+1. Block hash for the previous 256 blocks (word-aligned).
+1. The [transaction](./tx_format.md).
 
-Although currently all opcodes are of fixed-width, the Fuel VM interpreter is designed to support variable-width instruction sets, such as for supporting [efficient cryptography](https://notes.ethereum.org/@axic/evm384).
-  
-<!--
-## Implementation
+`$pc` is initialized to the start of the transaction's script bytecode and execution begins.
 
-This section describes the implementation of the opcodes. 
+## Call Frames
 
-An Ethereum 1x on-chain implementation of a Fuel VM interpreter will be available [here](https://github.com/FuelLabs/fuel-vm-evm).
-
-### Optimizations
-
-This section defines optimizations that are applicable to the Fuel VM.
-
-#### On-chain optimizations
-
-In this section, we describe on-chain optimizations.
-
-Potential topics:
-
-* smart contract patterns
-* compression
-* passthrough
-* client implementations
-
-#### Off-chain optimizations
-
-In this section, we describe the off-chain optimizations. 
-
-Potential topics: 
-* compression
-* indexing
-* parallelism
--->
