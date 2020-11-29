@@ -4,6 +4,7 @@
 - [Parameters](#parameters)
 - [Semantics](#semantics)
 - [Opcodes](#opcodes)
+- [Transaction Execution](#transaction-execution)
 - [Call Frames](#call-frames)
 
 ## Introduction
@@ -44,6 +45,10 @@ The FuelVM does not serialize/deserialize data to/from disk, only main memory, t
 ## Opcodes
 
 A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
+
+## Transaction Execution
+
+
 
 ## Call Frames
 
