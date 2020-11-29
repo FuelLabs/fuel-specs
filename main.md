@@ -20,7 +20,7 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 Fuel instructions are 32 bits wide (4 bytes) and comprise of:
 * Opcode: 8 bits
 * Register identifier: 6 bits
-* Immediate value: 12 bits
+* Immediate value: 12 or 24 bits, depending on operation
 
 In addition, there are some special registers defined as follows:
 | register | name            | description                                                                                                            |
@@ -37,7 +37,7 @@ Arithmetic opcodes have operands that use 6-bit register identifiers, permitting
 
 Integers are represented in [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) [big-endian](https://en.wikipedia.org/wiki/Endianness) format. Boolean `false` is `0` and Boolean `true` is `1`.
 
-Registers are 64 bits (8 bytes) wide.
+Registers are 64 bits (8 bytes) wide. Words are the same width as registers.
 
 The FuelVM does not serialize/deserialize data to/from disk, only main memory, thus the specification does not define an explicit persistent storage implementation.
 
