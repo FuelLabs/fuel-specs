@@ -40,19 +40,16 @@
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
 - [Ethereum-style Opcodes](#ethereum-style-opcodes)
-  - [GAS: Remaining gas](#gas-remaining-gas)
-  - [CALLDATASIZE:](#calldatasize)
-  - [CALLDATALOAD:](#calldataload)
-  - [CODESIZE:](#codesize)
-  - [CODEROOT:](#coderoot)
-  - [CODECOPY:](#codecopy)
-  - [RETURNDATASIZE:](#returndatasize)
   - [CALL: Call contract](#call-call-contract)
-  - [RETURN: Return from call](#return-return-from-call)
+  - [CODECOPY: Code copy](#codecopy-code-copy)
+  - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
+  - [CODESIZE: Code size](#codesize-code-size)
   - [CREATE: Create contract](#create-create-contract)
-  - [REVERT: Revert](#revert-revert)
+  - [GAS: Remaining gas](#gas-remaining-gas)
   - [KECCAK256: keccak-256](#keccak256-keccak-256)
   - [LOG: Log event](#log-log-event)
+  - [RETURN: Return from call](#return-return-from-call)
+  - [REVERT: Revert](#revert-revert)
 
 ## Arithmetic/Logic (ALU) Opcodes
 
@@ -428,6 +425,56 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
+### CALL: Call contract
+
+|             |                                                                                                                                                                                                                                                                |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Description | Message call into an account where `$rs` points to a sequence of words in memory that are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value `1` is set as the `$rd` register's value if the call completes successfully. |
+| Operation   |                                                                                                                                                                                                                                                                |
+| Syntax      | `call $rd, $rs`                                                                                                                                                                                                                                                |
+| Encoding    | `10010111 rd rs - -`                                                                                                                                                                                                                                           |
+| Notes       |                                                                                                                                                                                                                                                                |
+
+### CODECOPY: Code copy
+
+|             |                                                                                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Description | Copy `$ru` bytes of code starting at `$rt` for contract with ID equal to the 32 bytes in memory starting at `$rs` into memory starting at `$rd`. |
+| Operation   | ```MEM[$rd..$rd+$rt] = code($rs, $rt, $ru);```                                                                                                   |
+| Syntax      | `codecopy $rs, $rs, $rt, $ru`                                                                                                                    |
+| Encoding    | `10010100 rd rs rt ru`                                                                                                                           |
+| Notes       | If `$rt` is greater than the code size, zero bytes are filled in.                                                                                |
+
+### CODEROOT: Code Merkle root
+
+|             |                                                                                                                                              |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Description | Set the 32 bytes in memory starting at `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
+| Operation   | ```MEM[$rd..$rd+32] = coderoot(MEM[$rs..$rs+32]);```                                                                                         |
+| Syntax      | `codehash $rd, $rs`                                                                                                                          |
+| Encoding    | `10010011 rd rs - -`                                                                                                                         |
+| Notes       |                                                                                                                                              |
+
+### CODESIZE: Code size
+
+|             |                                                                                                           |
+| ----------- | --------------------------------------------------------------------------------------------------------- |
+| Description | Set `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
+| Operation   | ```$rd = codesize(MEM[$rs..$rs+32]);```                                                                   |
+| Syntax      | `codesize $rd, $rs`                                                                                       |
+| Encoding    | `10010010 rd rs - -`                                                                                      |
+| Notes       |                                                                                                           |
+
+### CREATE: Create contract
+
+|             |                                                                    |
+| ----------- | ------------------------------------------------------------------ |
+| Description | Create a new account, using the salt of the fourth register value. |
+| Operation   |                                                                    |
+| Syntax      | `create $rd`                                                       |
+| Encoding    | `10011100 rd - - -`                                                |
+| Notes       |                                                                    |
+
 ### GAS: Remaining gas
 
 |             |                                                       |
@@ -437,106 +484,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `gas $rd`                                             |
 | Encoding    | `10000000 rd - - -`                                   |
 | Notes       |                                                       |
-
-### CALLDATASIZE: 
-
-|             |                                                                           |
-| ----------- | ------------------------------------------------------------------------- |
-| Description | Sets the `$rd` register value to the size of a message call's input data. |
-| Operation   | ```$rd = size($calldata);```                                              |
-| Syntax      | `calldatasize $rd`                                                        |
-| Encoding    | `10001101 rd - - - -`                                                     |
-| Notes       |                                                                           |
-
-### CALLDATALOAD: 
-
-|             |                                                                                                                                                                                         |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Takes the `$rs` register value, which represents the byte offset of a message call's input data, and sets the `$rd` register value to the 256-bit value at that offset of the calldata. |
-| Operation   | ```$rd = $calldata[$rs];```                                                                                                                                                             |
-| Syntax      | `calldataload $rd, $rs`                                                                                                                                                                 |
-| Encoding    | `10001110 rd rs - -`                                                                                                                                                                    |
-| Notes       |                                                                                                                                                                                         |
-
-### CODESIZE: 
-
-|             |                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Description | Takes the `$rs` register value, an account address, and sets the `$rd` register value to the size of the code at that address. |
-| Operation   | ```$rd = $codesize($rs);```                                                                                                    |
-| Syntax      | `extcodesize $rd, $rs`                                                                                                         |
-| Encoding    | `10010010 rd rs - -`                                                                                                           |
-| Notes       |                                                                                                                                |
-
-### CODEROOT: 
-
-|             |                                                                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Takes `$rs` register value, the address, and sets `$rd` register value to the hash of the code at that address, else set it to `0`. |
-| Operation   | ```$rd = $codehash[$rs];```                                                                                                         |
-| Syntax      | `extcodehash $rd, $rs`                                                                                                              |
-| Encoding    | `10010011 rd rs - -`                                                                                                                |
-| Notes       |                                                                                                                                     |
-
-### CODECOPY: 
-
-|             |                                                                                               |
-| ----------- | --------------------------------------------------------------------------------------------- |
-| Description | Like CODECOPY, but the `$ru` parameter for this operation is the account to copy the code of. |
-| Operation   | ```MEM[$rd] = $code[$ru][$rs..$rs+$rt];```                                                    |
-| Syntax      | `extcodecopy $rd, $ru, $rs, $rt`                                                              |
-| Encoding    | `10010100 rd rs rt ru`                                                                        |
-| Notes       |                                                                                               |
-
-### RETURNDATASIZE: 
-
-|             |                                                                                                             |
-| ----------- | ----------------------------------------------------------------------------------------------------------- |
-| Description | Sets the `$rd` register value to the size of the returned data from the last call in the current execution. |
-| Operation   | ```$rd = size($returndata);```                                                                              |
-| Syntax      | `returndatasize $rd`                                                                                        |
-| Encoding    | `10010101 rd - - -`                                                                                         |
-| Notes       |                                                                                                             |
-
-### CALL: Call contract
-
-|             |                                                                                                                                                                                                                                                                |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Message call into an account where `$rs` points to a sequence of words in memory that are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value `1` is set as the `$rd` register's value if the call completes successfully. |
-| Operation   | ```pre-compile```                                                                                                                                                                                                                                              |
-| Syntax      | `call $rd, $rs`                                                                                                                                                                                                                                                |
-| Encoding    | `10010111 rd rs - -`                                                                                                                                                                                                                                           |
-| Notes       |                                                                                                                                                                                                                                                                |
-
-### RETURN: Return from call
-
-|             |                                                                                                                                                        |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Description | Returns values from memory using first register value as memory offset whose size is given by the second register value. Program execution then halts. |
-| Operation   | ```pre-compile```                                                                                                                                      |
-| Syntax      | `return $rs, $rt`                                                                                                                                      |
-| Encoding    | `10011011 rs rt - -`                                                                                                                                   |
-| Notes       |                                                                                                                                                        |
-
-### CREATE: Create contract
-
-|             |                                                                    |
-| ----------- | ------------------------------------------------------------------ |
-| Description | Create a new account, using the salt of the fourth register value. |
-| Operation   | ``````                                                             |
-| Syntax      | `create $rd`                                                       |
-| Encoding    | `10011100 rd - - -`                                                |
-| Notes       |                                                                    |
-
-### REVERT: Revert
-
-|             |                                                                      |
-| ----------- | -------------------------------------------------------------------- |
-| Description | Halt execution, reverting state changes and returning data in `$rs`. |
-| Operation   | ```revert $rs;```                                                    |
-| Syntax      | `revert $rs`                                                         |
-| Encoding    | `10011101 rs - - -`                                                  |
-| Notes       |                                                                      |
 
 ### KECCAK256: keccak-256
 
@@ -557,3 +504,23 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `log $rs, $rt`                                                                                                                                                      |
 | Encoding    | `10011111 rs rt - -`                                                                                                                                                |
 | Notes       |                                                                                                                                                                     |
+
+### RETURN: Return from call
+
+|             |                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Description | Returns values from memory using first register value as memory offset whose size is given by the second register value. |
+| Operation   |                                                                                                                          |
+| Syntax      | `return $rs, $rt`                                                                                                        |
+| Encoding    | `10011011 rs rt - -`                                                                                                     |
+| Notes       |                                                                                                                          |
+
+### REVERT: Revert
+
+|             |                                                                      |
+| ----------- | -------------------------------------------------------------------- |
+| Description | Halt execution, reverting state changes and returning data in `$rs`. |
+| Operation   | ```revert $rs;```                                                    |
+| Syntax      | `revert $rs`                                                         |
+| Encoding    | `10011101 rs - - -`                                                  |
+| Notes       |                                                                      |
