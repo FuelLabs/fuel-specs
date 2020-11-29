@@ -15,6 +15,7 @@
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MUL: Multiply](#mul-multiply)
+  - [MULI: Multiply immediate](#muli-multiply-immediate)
   - [NOOP: No operation](#noop-no-operation)
   - [OR: OR](#or-or)
   - [ORI: OR immediate](#ori-or-immediate)
@@ -198,6 +199,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs * $rt;```                                              |
 | Syntax      | `mul $rd, $rs, $rt`                                                 |
 | Encoding    | `00011010 rd rs rt -`                                               |
+| Notes       | `$of` is assigned the overflow of the operation.                    |
+
+### MULI: Multiply immediate
+
+|             |                                                                     |
+| ----------- | ------------------------------------------------------------------- |
+| Description | Multiplies `$rs` by `imm` and stores the result in `$rd` and `$of`. |
+| Operation   | ```$rd = $rs * imm;```                                              |
+| Syntax      | `mul $rd, $rs, imm`                                                 |
+| Encoding    | `00011010 rd rs i i`                                                |
 | Notes       | `$of` is assigned the overflow of the operation.                    |
 
 ### NOOP: No operation
