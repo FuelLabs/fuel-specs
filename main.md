@@ -48,7 +48,7 @@ A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 
 ## Transaction Execution
 
-
+If script bytecode is present, transaction validation requires execution. The [transaction](./tx_format.md) is placed in memory starting at address `0`. `$pc` is initialized to the start of the script bytecode and execution begins.
 
 ## Call Frames
 
