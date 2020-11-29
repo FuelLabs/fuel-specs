@@ -36,6 +36,8 @@ Arithmetic opcodes have operands that use 6-bit register identifiers, permitting
 
 Integers are represented in [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) [big-endian](https://en.wikipedia.org/wiki/Endianness) format.
 
+Registers are 64 bits (8 bytes) wide.
+
 The FuelVM does not serialize/deserialize data to/from disk, only main memory, thus the specification does not define an explicit persistent storage implementation.
 
 ## Opcodes
