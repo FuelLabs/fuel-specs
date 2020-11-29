@@ -12,18 +12,14 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
-  - [GTS: Greater than signed](#gts-greater-than-signed)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MUL: Multiply](#mul-multiply)
   - [NOOP: No operation](#noop-no-operation)
-  - [NEG: Negation](#neg-negation)
   - [OR: OR](#or-or)
   - [ORI: OR immediate](#ori-or-immediate)
   - [SLL: Shift left logical](#sll-shift-left-logical)
   - [SLLI: Shift left logical immediate](#slli-shift-left-logical-immediate)
-  - [SRA: Shift right arithmetic](#sra-shift-right-arithmetic)
-  - [SRAI: Shift right arithmetic immediate](#srai-shift-right-arithmetic-immediate)
   - [SRL: Shift right logical](#srl-shift-right-logical)
   - [SRLI: Shift right logical immediate](#srli-shift-right-logical-immediate)
   - [SUB: Subtract](#sub-subtract)
@@ -73,13 +69,13 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### ADDI: Add immediate
 
-|             |                                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------ |
-| Description | Adds a register and an immediate value and stores the result in a register.                |
-| Operation   | ```$rt = $rs + imm;```                                                                     |
-| Syntax      | `addi $rd, $rs, immediate`                                                                 |
-| Encoding    | `00000010 rs rt i i`                                                                       |
-| Notes       | Immediate value sign extended to 64 bits. `$of` is assigned the overflow of the operation. |
+|             |                                                                             |
+| ----------- | --------------------------------------------------------------------------- |
+| Description | Adds a register and an immediate value and stores the result in a register. |
+| Operation   | ```$rt = $rs + imm;```                                                      |
+| Syntax      | `addi $rd, $rs, immediate`                                                  |
+| Encoding    | `00000010 rs rt i i`                                                        |
+| Notes       | `$of` is assigned the overflow of the operation.                            |
 
 ### AND: AND
 
@@ -99,7 +95,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs & imm;```                                                              |
 | Syntax      | `andi $rd, $rs, imm`                                                                |
 | Encoding    | `00000110 rd rs i i`                                                                |
-| Notes       | Immediate value not sign extended. `$of` is cleared.                                |
+| Notes       | `$of` is cleared.                                                                   |
 
 ### CPSR: Copy from special register
 
@@ -129,7 +125,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;```                                    |
 | Syntax      | `divi $rd, $rs, imm`                                                                |
 | Encoding    | `00010000 rd rs rt -`                                                               |
-| Notes       | Immediate value sign extended to 64 bits.                                           |
+| Notes       |                                                                                     |
 
 ### EQ: Equals
 
@@ -149,7 +145,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ** $rt;```                                                                           |
 | Syntax      | `exp $rd, $rs, $rt`                                                                               |
 | Encoding    | `00110011 rd rs rt -`                                                                             |
-| Notes       | Exponent is unsigned.                                                                             |
+| Notes       |                                                                                                   |
 
 ### EXPI: Exponentiate immediate
 
@@ -159,27 +155,17 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ** imm;```                                                                |
 | Syntax      | `expi $rd, $rs, imm`                                                                   |
 | Encoding    | `00110110 rd rt i i`                                                                   |
-| Notes       | Exponent is unsigned.                                                                  |
+| Notes       |                                                                                        |
 
 ### GT: Greater than
 
-|             |                                                                                 |
-| ----------- | ------------------------------------------------------------------------------- |
-| Description | Assigns if a register is greater than another register to a register, unsigned. |
-| Operation   | ```$rd = $rs > $rt;```                                                          |
-| Syntax      | `gt $rd, $rs, $rt`                                                              |
-| Encoding    | `00001010 rd rs rt -`                                                           |
-| Notes       |                                                                                 |
-
-### GTS: Greater than signed
-
-|             |                                                                               |
-| ----------- | ----------------------------------------------------------------------------- |
-| Description | Assigns if a register is greater than another register to a register, signed. |
-| Operation   | ```$rd = $rs > $rt;```                                                        |
-| Syntax      | `gts $rd, $rs, $rt`                                                           |
-| Encoding    | `00001010 rd rs rt -`                                                         |
-| Notes       |                                                                               |
+|             |                                                                       |
+| ----------- | --------------------------------------------------------------------- |
+| Description | Assigns if a register is greater than another register to a register. |
+| Operation   | ```$rd = $rs > $rt;```                                                |
+| Syntax      | `gt $rd, $rs, $rt`                                                    |
+| Encoding    | `00001010 rd rs rt -`                                                 |
+| Notes       |                                                                       |
 
 ### MOD: Modulus
 
@@ -221,16 +207,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `00011011 - - - -`     |
 | Notes       |                        |
 
-### NEG: Negation
-
-|             |                      |
-| ----------- | -------------------- |
-| Description | Negates a register.  |
-| Operation   | ```$rd = -$rs```     |
-| Syntax      | `neg $rd, $rs`       |
-| Encoding    | `00011011 rd rs - -` |
-| Notes       |                      |
-
 ### OR: OR
 
 |             |                                                                       |
@@ -270,26 +246,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `slli $rd, $rs, imm`                                                              |
 | Encoding    | `00011111 rd rs i i`                                                              |
 | Notes       |                                                                                   |
-
-### SRA: Shift right arithmetic
-
-|             |                                                                                                                  |
-| ----------- | ---------------------------------------------------------------------------------------------------------------- |
-| Description | Shifts a register value right by the amount specified in `$rs` and places the value in the destination register. |
-| Operation   | ```$rd = $rs >> $rt;```                                                                                          |
-| Syntax      | `sra $rd, $rs, $rt`                                                                                              |
-| Encoding    | `00101000 rd rs rt -`                                                                                            |
-| Notes       | The sign bit is shifted in.                                                                                      |
-
-### SRAI: Shift right arithmetic immediate
-
-|             |                                                                                                           |
-| ----------- | --------------------------------------------------------------------------------------------------------- |
-| Description | Shifts a register value right by the shift amount (imm) and places the value in the destination register. |
-| Operation   | ```$rd = $rs >> imm;```                                                                                   |
-| Syntax      | `srai $rd, $rs, imm`                                                                                      |
-| Encoding    | `00100101 rd rs i i`                                                                                      |
-| Notes       | The sign bit is shifted in.                                                                               |
 
 ### SRL: Shift right logical
 
@@ -349,7 +305,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ^ imm;```                                                              |
 | Syntax      | `xori $rt, $rs, imm `                                                               |
 | Encoding    | `00101110 rs rt i i`                                                                |
-| Notes       | Immediate value not sign extended. `$of` is cleared.                                |
+| Notes       | `$of` is cleared.                                                                   |
 
 ## Combination Arithmetic Opcodes
 
