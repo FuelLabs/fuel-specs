@@ -51,6 +51,10 @@
   - [LOG: Log event](#log-log-event)
   - [RETURN: Return from call](#return-return-from-call)
   - [REVERT: Revert](#revert-revert)
+  - [SRW: State read word](#srw-state-read-word)
+  - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
+  - [SWW: State write word](#sww-state-write-word)
+  - [SWWX: State write 32 bytes](#swwx-state-write-32-bytes)
 
 ## Arithmetic/Logic (ALU) Opcodes
 
@@ -529,3 +533,43 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `revert $rs`                                                         |
 | Encoding    | `10011101 rs - - -`                                                  |
 | Notes       |                                                                      |
+
+### SRW: State read word
+
+|             |                                                   |
+| ----------- | ------------------------------------------------- |
+| Description | A word is read from the current contract's state. |
+| Operation   | ```$rd = STATE[MEM[$rs]][0..7];```                |
+| Syntax      | `srw $rd, $rs`                                    |
+| Encoding    | `00010100 rd rs - -`                              |
+| Notes       | Returns zero if the state element does not exist. |
+
+### SRWX: State read 32 bytes
+
+|             |                                                     |
+| ----------- | --------------------------------------------------- |
+| Description | 32 bytes is read from the current contract's state. |
+| Operation   | ```MEM[$rd] = STATE[MEM[$rs]];```                   |
+| Syntax      | `srwx $rd, $rs`                                     |
+| Encoding    | `00010100 rd rs - -`                                |
+| Notes       | Returns zero if the state element does not exist.   |
+
+### SWW: State write word
+
+|             |                                                    |
+| ----------- | -------------------------------------------------- |
+| Description | A word is written to the current contract's state. |
+| Operation   | ```STATE[MEM[$rd]] = $rs;```                       |
+| Syntax      | `sww $rd $rs`                                      |
+| Encoding    | `00010100 rd rs - -`                               |
+| Notes       |                                                    |
+
+### SWWX: State write 32 bytes
+
+|             |                                                      |
+| ----------- | ---------------------------------------------------- |
+| Description | 32 bytes is written to the current contract's state. |
+| Operation   | ```STATE[MEM[$rd]] = MEM[$rs];```                    |
+| Syntax      | `swwx $rd, $rs`                                      |
+| Encoding    | `00010100 rd rs - -`                                 |
+| Notes       |                                                      |
