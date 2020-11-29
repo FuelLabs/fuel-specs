@@ -4,6 +4,7 @@
 - [Parameters](#parameters)
 - [Semantics](#semantics)
 - [Opcodes](#opcodes)
+- [Call Frames](#call-frames)
 
 ## Introduction
 
@@ -11,9 +12,9 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 
 ## Parameters
 
-| name         | type     | value   | note    |
-| ------------ | -------- | ------- | ------- |
-| `VM_MAX_RAM` | `uint64` | `2**25` | 32 MiB. |
+| name         | type     | value   | note   |
+| ------------ | -------- | ------- | ------ |
+| `VM_MAX_RAM` | `uint64` | `2**20` | 1 MiB. |
 
 ## Semantics
 
@@ -43,3 +44,6 @@ The FuelVM does not serialize/deserialize data to/from disk, only main memory, t
 ## Opcodes
 
 A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
+
+## Call Frames
+
