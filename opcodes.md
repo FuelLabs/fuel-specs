@@ -44,7 +44,6 @@
   - [CODESIZE: Code size](#codesize-code-size)
   - [CREATE: Create contract](#create-create-contract)
   - [GAS: Remaining gas](#gas-remaining-gas)
-  - [KECCAK256: keccak-256](#keccak256-keccak-256)
   - [LOG: Log event](#log-log-event)
   - [RETURN: Return from call](#return-return-from-call)
   - [REVERT: Revert](#revert-revert)
@@ -52,6 +51,10 @@
   - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWX: State write 32 bytes](#swwx-state-write-32-bytes)
+- [Cryptographic Opcodes](#cryptographic-opcodes)
+  - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
+  - [KECCAK256: keccak-256](#keccak256-keccak-256)
+  - [SHA256: SHA-2-256](#sha256-sha-2-256)
 
 ## Arithmetic/Logic (ALU) Opcodes
 
@@ -461,16 +464,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `10000000 rd - - -`                                   |
 | Notes       |                                                       |
 
-### KECCAK256: keccak-256
-
-|             |                                                                             |
-| ----------- | --------------------------------------------------------------------------- |
-| Description | The keccak-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
-| Operation   | ```$rd = keccak(MEM[$rs, $rt]);```                                          |
-| Syntax      | `keccak $rd, $rs, $rt`                                                      |
-| Encoding    | `10011110 rd rs rt -`                                                       |
-| Notes       |                                                                             |
-
 ### LOG: Log event
 
 |             |                                                                                                                                                                     |
@@ -540,3 +533,35 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `swwx $rd, $rs`                                      |
 | Encoding    | `00010100 rd rs - -`                                 |
 | Notes       |                                                      |
+
+## Cryptographic Opcodes
+
+### ECRECOVER: Signature recovery
+
+|             |                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Description | The hash of the public key recovered from 64-byte signature starting at `$rs` on 32-byte message hash starting at `$rt`. |
+| Operation   | ```MEM[$rd, 32] = ecrecover(MEM[$rs, 64], MEM[$rt, 32]);```                                                              |
+| Syntax      | `ecrecover $rd, $rs, $rt`                                                                                                |
+| Encoding    | `10011110 rd rs rt -`                                                                                                    |
+| Notes       |                                                                                                                          |
+
+### KECCAK256: keccak-256
+
+|             |                                                                             |
+| ----------- | --------------------------------------------------------------------------- |
+| Description | The keccak-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
+| Operation   | ```$rd = keccak256(MEM[$rs, $rt]);```                                       |
+| Syntax      | `keccak256 $rd, $rs, $rt`                                                   |
+| Encoding    | `10011110 rd rs rt -`                                                       |
+| Notes       |                                                                             |
+
+### SHA256: SHA-2-256
+
+|             |                                                                            |
+| ----------- | -------------------------------------------------------------------------- |
+| Description | The SHA-2-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
+| Operation   | ```$rd = sha256(MEM[$rs, $rt]);```                                         |
+| Syntax      | `sha256 $rd, $rs, $rt`                                                     |
+| Encoding    | `10011110 rd rs rt -`                                                      |
+| Notes       |                                                                            |
