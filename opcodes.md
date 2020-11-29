@@ -149,7 +149,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ** $rt;```                                                                           |
 | Syntax      | `exp $rd, $rs, $rt`                                                                               |
 | Encoding    | `00110011 rd rs rt -`                                                                             |
-| Notes       |                                                                                                   |
+| Notes       | Exponent is unsigned.                                                                             |
 
 ### EXPI: Exponentiate immediate
 
@@ -159,7 +159,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ** imm;```                                                                |
 | Syntax      | `expi $rd, $rs, imm`                                                                   |
 | Encoding    | `00110110 rd rt i i`                                                                   |
-| Notes       |                                                                                        |
+| Notes       | Exponent is unsigned.                                                                  |
 
 ### GT: Greater than
 
