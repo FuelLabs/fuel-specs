@@ -28,6 +28,7 @@ In addition, there are some special registers defined as follows:
 | `$z`     | zero            | Zero-containing register (convenience register frequently found in register machines).                                 |
 | `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
 | `$pc`    | program counter | The program counter.                                                                                                   |
+| `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                                     |
 | `$err`   | error           | Error codes for particular operations.                                                                                 |
 | `$gas`   | gas             | Remaining gas.                                                                                                         |
 
