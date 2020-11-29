@@ -12,15 +12,12 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
-  - [LB: Load byte](#lb-load-byte)
-  - [LW: Load word](#lw-load-word)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MUL: Multiply](#mul-multiply)
   - [NOOP: No operation](#noop-no-operation)
   - [OR: OR](#or-or)
   - [ORI: OR immediate](#ori-or-immediate)
-  - [SB: Store byte](#sb-store-byte)
   - [SLL: Shift left logical](#sll-shift-left-logical)
   - [SLLI: Shift left logical immediate](#slli-shift-left-logical-immediate)
   - [SRA: Shift right arithmetic](#sra-shift-right-arithmetic)
@@ -29,7 +26,6 @@
   - [SRLI: Shift right logical immediate](#srli-shift-right-logical-immediate)
   - [SUB: Subtract](#sub-subtract)
   - [SUBI: Subtract immediate](#subi-subtract-immediate)
-  - [SW: Store word](#sw-store-word)
   - [SYSCALL: System call](#syscall-system-call)
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
@@ -39,6 +35,11 @@
 - [Control Flow Opcodes](#control-flow-opcodes)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
+- [Memory Opcodes](#memory-opcodes)
+  - [LB: Load byte](#lb-load-byte)
+  - [LW: Load word](#lw-load-word)
+  - [SB: Store byte](#sb-store-byte)
+  - [SW: Store word](#sw-store-word)
 - [Ethereum-style Opcodes](#ethereum-style-opcodes)
   - [CALL: Call contract](#call-call-contract)
   - [CODECOPY: Code copy](#codecopy-code-copy)
@@ -165,26 +166,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `00001010 rd rs rt -`                                                 |
 | Notes       |                                                                       |
 
-### LB: Load byte
-
-|             |                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Description | A byte is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation   | ```$rd = MEM[$rs + offset];```                                                                          |
-| Syntax      | `lb $rd, $rs, offset`                                                                                   |
-| Encoding    | `00010100 rd rs i i`                                                                                    |
-| Notes       |                                                                                                         |
-
-### LW: Load word
-
-|             |                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Description | A word is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation   | ```$rd = MEM[$rs + offset];```                                                                          |
-| Syntax      | `lw $rd, $rs, offset`                                                                                   |
-| Encoding    | `00010110 rd rs i i`                                                                                    |
-| Notes       |                                                                                                         |
-
 ### MOD: Modulus
 
 |             |                                                              |
@@ -244,16 +225,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `ori $rd, $rs, imm`                                                               |
 | Encoding    | `00011101 rd rs i i`                                                              |
 | Notes       | `$of` is cleared.                                                                 |
-
-### SB: Store byte
-
-|             |                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------------------------------- |
-| Description | The least significant byte of `$rt` is stored at the specified address at an offset given by the immediate value. |
-| Operation   | ```MEM[$rs + offset] = (0xff & $rt);```                                                                           |
-| Syntax      | `sb $rt, $rs, offset`                                                                                             |
-| Encoding    | `00011110 rs rt i i`                                                                                              |
-| Notes       |                                                                                                                   |
 
 ### SLL: Shift left logical
 
@@ -335,16 +306,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `00101010 rd rs rt -`                                                            |
 | Notes       | `$of` is assigned the overflow of the operation.                                 |
 
-### SW: Store word
-
-|             |                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Description | The contents of `$rt` is stored at the specified address using the offset given by the immediate value. |
-| Operation   | ```MEM[$rs + offset] = $rt;```                                                                          |
-| Syntax      | `sw $rt, $rs, offset`                                                                                   |
-| Encoding    | `00101011 rs rt i i`                                                                                    |
-| Notes       |                                                                                                         |
-
 ### SYSCALL: System call
 
 |             |                          |
@@ -420,6 +381,50 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `ji imm`              |
 | Encoding    | `00010001 i i i i`    |
 | Notes       |                       |
+
+## Memory Opcodes
+
+All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
+### LB: Load byte
+
+|             |                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| Description | A byte is loaded into a register from the specified address at the offset given by the immediate value. |
+| Operation   | ```$rd = MEM[$rs + offset];```                                                                          |
+| Syntax      | `lb $rd, $rs, offset`                                                                                   |
+| Encoding    | `00010100 rd rs i i`                                                                                    |
+| Notes       |                                                                                                         |
+
+### LW: Load word
+
+|             |                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| Description | A word is loaded into a register from the specified address at the offset given by the immediate value. |
+| Operation   | ```$rd = MEM[$rs + offset];```                                                                          |
+| Syntax      | `lw $rd, $rs, offset`                                                                                   |
+| Encoding    | `00010110 rd rs i i`                                                                                    |
+| Notes       |                                                                                                         |
+
+### SB: Store byte
+
+|             |                                                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------------- |
+| Description | The least significant byte of `$rt` is stored at the specified address at an offset given by the immediate value. |
+| Operation   | ```MEM[$rs + offset] = (0xff & $rt);```                                                                           |
+| Syntax      | `sb $rt, $rs, offset`                                                                                             |
+| Encoding    | `00011110 rs rt i i`                                                                                              |
+| Notes       |                                                                                                                   |
+
+### SW: Store word
+
+|             |                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| Description | The contents of `$rt` is stored at the specified address using the offset given by the immediate value. |
+| Operation   | ```MEM[$rs + offset] = $rt;```                                                                          |
+| Syntax      | `sw $rt, $rs, offset`                                                                                   |
+| Encoding    | `00101011 rs rt i i`                                                                                    |
+| Notes       |                                                                                                         |
 
 ## Ethereum-style Opcodes
 
