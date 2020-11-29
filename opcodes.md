@@ -28,7 +28,6 @@
   - [SRLI: Shift right logical immediate](#srli-shift-right-logical-immediate)
   - [SUB: Subtract](#sub-subtract)
   - [SUBI: Subtract immediate](#subi-subtract-immediate)
-  - [SYSCALL: System call](#syscall-system-call)
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Combination Arithmetic Opcodes](#combination-arithmetic-opcodes)
@@ -331,16 +330,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `subi $rd, $rs, $rt`                                                             |
 | Encoding    | `00101010 rd rs rt -`                                                            |
 | Notes       | `$of` is assigned the overflow of the operation.                                 |
-
-### SYSCALL: System call
-
-|             |                          |
-| ----------- | ------------------------ |
-| Description | Noop for the time being. |
-| Operation   | ```advance_pc();```      |
-| Syntax      | `syscall`                |
-| Encoding    | `00101100 - - - -`       |
-| Notes       |                          |
 
 ### XOR: XOR
 
