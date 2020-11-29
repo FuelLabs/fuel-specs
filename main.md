@@ -38,7 +38,7 @@ Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endiannes
 
 Registers are 64 bits (8 bytes) wide. Words are the same width as registers.
 
-The FuelVM does not serialize/deserialize data to/from disk, only main memory, thus the specification does not define an explicit persistent storage implementation.
+Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-byte values. Each contract has its own persistent state that is independent of other contracts. This is committed to in a Sparse Binary Merkle Tree.
 
 ## Opcodes
 
