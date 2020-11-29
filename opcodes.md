@@ -37,7 +37,7 @@
   - [LW: Load word](#lw-load-word)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
-- [Ethereum-style Opcodes](#ethereum-style-opcodes)
+- [Contract Opcodes](#contract-opcodes)
   - [CALL: Call contract](#call-call-contract)
   - [CODECOPY: Code copy](#codecopy-code-copy)
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
@@ -397,7 +397,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `00101011 rs rt i i`                                                                                    |
 | Notes       |                                                                                                         |
 
-## Ethereum-style Opcodes
+## Contract Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
