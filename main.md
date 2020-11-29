@@ -33,7 +33,7 @@ In addition, there are some special registers defined as follows:
 
 We assume that a FuelVM can start if it has the capability of (potentially dynamically) allocating up to `VM_MAX_RAM` of main memory; we also depend on a simple assumption that a Fuel VM does not deallocate memory.
 
-Arithmetic opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 registers, and 12-bit immediate values. Ethereum-style opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 in-memory registers (and no immediate values).
+Arithmetic and logic opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 registers, and 12-bit immediate values. Control flow opcodes are similar to arithmetic operands, but support 24-bit immediate values. Ethereum-style opcodes have operands that use 6-bit register identifiers, permitting access to up to 64 registers (and no immediate values).
 
 Integers are represented in [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) [big-endian](https://en.wikipedia.org/wiki/Endianness) format. Boolean `false` is `0` and Boolean `true` is `1`.
 
