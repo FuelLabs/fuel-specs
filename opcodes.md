@@ -12,6 +12,7 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
+  - [GTS: Greater than signed](#gts-greater-than-signed)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MUL: Multiply](#mul-multiply)
@@ -162,13 +163,23 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### GT: Greater than
 
-|             |                                                                       |
-| ----------- | --------------------------------------------------------------------- |
-| Description | Assigns if a register is greater than another register to a register. |
-| Operation   | ```$rd = $rs > $rd;```                                                |
-| Syntax      | `gt $rd, $rs, $rd`                                                    |
-| Encoding    | `00001010 rd rs rt -`                                                 |
-| Notes       |                                                                       |
+|             |                                                                                 |
+| ----------- | ------------------------------------------------------------------------------- |
+| Description | Assigns if a register is greater than another register to a register, unsigned. |
+| Operation   | ```$rd = $rs > $rt;```                                                          |
+| Syntax      | `gt $rd, $rs, $rt`                                                              |
+| Encoding    | `00001010 rd rs rt -`                                                           |
+| Notes       |                                                                                 |
+
+### GTS: Greater than signed
+
+|             |                                                                               |
+| ----------- | ----------------------------------------------------------------------------- |
+| Description | Assigns if a register is greater than another register to a register, signed. |
+| Operation   | ```$rd = $rs > $rt;```                                                        |
+| Syntax      | `gts $rd, $rs, $rt`                                                           |
+| Encoding    | `00001010 rd rs rt -`                                                         |
+| Notes       |                                                                               |
 
 ### MOD: Modulus
 
