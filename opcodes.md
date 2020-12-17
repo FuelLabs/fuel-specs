@@ -38,6 +38,7 @@
   - [CFS: Shrink call frame](#cfs-shrink-call-frame)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
+  - [MALLOC: Allocate memory](#malloc-allocate-memory)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
@@ -412,6 +413,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `lw $rd, $rs, offset`                                                                                   |
 | Encoding    | `00010110 rd rs i i`                                                                                    |
 | Notes       |                                                                                                         |
+
+### MALLOC: Allocate memory
+
+|             |                                                            |
+| ----------- | ---------------------------------------------------------- |
+| Description | Allocate a number of bytes from the heap.                  |
+| Operation   | ```alloc MEM[$hp - $rs, $rs];```<br>```$hp = $hp - $rs;``` |
+| Syntax      | `malloc $rs`                                               |
+| Encoding    | `00000000 rs - - -`                                        |
+| Notes       | Does not initialize memory.                                |
 
 ### SB: Store byte
 
