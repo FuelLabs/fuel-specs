@@ -33,6 +33,7 @@
 - [Control Flow Opcodes](#control-flow-opcodes)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
+  - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
 - [Memory Opcodes](#memory-opcodes)
   - [CFE: Extend call frame](#cfe-extend-call-frame)
   - [CFS: Shrink call frame](#cfs-shrink-call-frame)
@@ -369,6 +370,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `ji imm`              |
 | Encoding    | `00010001 i i i i`    |
 | Notes       |                       |
+
+### JNZ: Jump if not zero
+
+|             |                                                                              |
+| ----------- | ---------------------------------------------------------------------------- |
+| Description | Jump to the address contained in register `$rs` if `$rt` is not zero.        |
+| Operation   | ```if $rt != 0:```<br>```  $pc = $rs;```<br>```else:```<br>```  $pc += 4;``` |
+| Syntax      | `jnz $rs, $rt`                                                               |
+| Encoding    | `00000000 rs rt - -`                                                         |
+| Notes       |                                                                              |
 
 ## Memory Opcodes
 
