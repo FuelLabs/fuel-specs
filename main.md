@@ -22,7 +22,7 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 Fuel instructions are 32 bits wide (4 bytes) and comprise of:
 * Opcode: 8 bits
 * Register identifier: 6 bits
-* Immediate value: 12 or 24 bits, depending on operation
+* Immediate value: 12, 18, or 24 bits, depending on operation
 
 In addition, there are some special registers defined as follows:
 | register | name            | description                                                                                                            |
