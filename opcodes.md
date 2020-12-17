@@ -34,6 +34,7 @@
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
+  - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
 - [Memory Opcodes](#memory-opcodes)
   - [CFE: Extend call frame](#cfe-extend-call-frame)
   - [CFS: Shrink call frame](#cfs-shrink-call-frame)
@@ -379,6 +380,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```if $rt != 0:```<br>```  $pc = $rs;```<br>```else:```<br>```  $pc += 4;``` |
 | Syntax      | `jnz $rs, $rt`                                                               |
 | Encoding    | `00000000 rs rt - -`                                                         |
+| Notes       |                                                                              |
+
+### JNZI: Jump if not zero immediate
+
+|             |                                                                              |
+| ----------- | ---------------------------------------------------------------------------- |
+| Description | Jump to the address if `$rs` is not zero.                                    |
+| Operation   | ```if $rs != 0:```<br>```  $pc = imm;```<br>```else:```<br>```  $pc += 4;``` |
+| Syntax      | `jnzi $rs`                                                                   |
+| Encoding    | `00000000 rs i i i`                                                          |
 | Notes       |                                                                              |
 
 ## Memory Opcodes
