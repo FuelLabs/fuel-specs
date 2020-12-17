@@ -34,6 +34,8 @@
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
 - [Memory Opcodes](#memory-opcodes)
+  - [CFE: Extend call frame](#cfe-extend-call-frame)
+  - [CFS: Shrink call frame](#cfs-shrink-call-frame)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
   - [SB: Store byte](#sb-store-byte)
@@ -370,6 +372,26 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 ## Memory Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
+### CFE: Extend call frame
+
+|             |                                                      |
+| ----------- | ---------------------------------------------------- |
+| Description | Extend the current call frame's stack.               |
+| Operation   | ```extend MEM[$hp, $rs];```<br>```$fp = $fp + $rs``` |
+| Syntax      | `cfe $rs`                                            |
+| Encoding    | `00000000 rs - - -`                                  |
+| Notes       | Does not initialize memory.                          |
+
+### CFS: Shrink call frame
+
+|             |                                                            |
+| ----------- | ---------------------------------------------------------- |
+| Description | Shrink the current call frame's stack.                     |
+| Operation   | ```shrink MEM[$hp - $rs, $rs];```<br>```$fp = $fp - $rs``` |
+| Syntax      | `cfs $rs`                                                  |
+| Encoding    | `00000000 rs - - -`                                        |
+| Notes       | Does not clear memory.                                     |
 
 ### LB: Load byte
 

@@ -31,6 +31,9 @@ In addition, there are some special registers defined as follows:
 | `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
 | `$pc`    | program counter | The program counter.                                                                                                   |
 | `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                                     |
+| `$fpp`   | prev frame ptr  | Previous call frame's frame pointer.                                                                                   |
+| `$hp`    | heap pointer    | Memory address of the current bottom of the heap.                                                                      |
+| `$hpp`   | prev heap ptr   | Previous call frame's heap pointer.                                                                                    |
 | `$err`   | error           | Error codes for particular operations.                                                                                 |
 | `$gas`   | gas             | Remaining gas.                                                                                                         |
 
