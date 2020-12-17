@@ -41,6 +41,8 @@
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
   - [MALLOC: Allocate memory](#malloc-allocate-memory)
+  - [MEMEQ: Memory equality](#memeq-memory-equality)
+  - [MEMCP: Memory copy](#memcp-memory-copy)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
@@ -445,6 +447,26 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `malloc $rs`                                               |
 | Encoding    | `00000000 rs - - -`                                        |
 | Notes       | Does not initialize memory.                                |
+
+### MEMEQ: Memory equality
+
+|             |                                             |
+| ----------- | ------------------------------------------- |
+| Description | Compare memory bytes.                       |
+| Operation   | ```$rd = MEM[$rs, $ru] == MEM[$rt, $ru];``` |
+| Syntax      | `memeq $rd, $rs, $rt, $ru`                  |
+| Encoding    | `00000000 rd rs rt ru`                      |
+| Notes       |                                             |
+
+### MEMCP: Memory copy
+
+|             |                                      |
+| ----------- | ------------------------------------ |
+| Description | Copy memory bytes.                   |
+| Operation   | ```MEM[$rd, $rt] = MEM[$rs, $rt];``` |
+| Syntax      | `memcp $rd, $rs, $rt`                |
+| Encoding    | `00000000 rd rs rt -`                |
+| Notes       |                                      |
 
 ### SB: Store byte
 
