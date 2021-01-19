@@ -54,12 +54,12 @@ If script bytecode is present, transaction validation requires execution.
 A single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
 
 Before execution begins, the following is pushed on the stack sequentially:
-1. Block number (word-aligned).
-1. Block producer address (word-aligned).
-1. Block gas limit (word-aligned).
-1. Transaction hash (word-aligned).
-1. Block hash for the previous 256 blocks (word-aligned).
-1. The [transaction](./tx_format.md).
+1. Fuel block height (`uint64`, word-aligned).
+1. Block producer address (`byte[32]`, word-aligned).
+1. Transaction gas limit (`uint64`, word-aligned).
+1. Transaction hash (`uint64`, word-aligned).
+1. Block hash for the previous 256 blocks, starting from the previous block (`byte[32][256]`, word-aligned). Block hash is `0x00**32` if block height is <= 256.
+1. The [transaction, serialized](./tx_format.md).
 
 `$pc` is initialized to the start of the transaction's script bytecode and execution begins.
 
