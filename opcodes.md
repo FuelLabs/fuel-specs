@@ -1,5 +1,6 @@
 # FuelVM Opcodes
 
+- [Reading Guide](#reading-guide)
 - [Arithmetic/Logic (ALU) Opcodes](#arithmeticlogic-alu-opcodes)
   - [ADD: Add](#add-add)
   - [ADDI: Add immediate](#addi-add-immediate)
@@ -63,6 +64,10 @@
   - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
   - [KECCAK256: keccak-256](#keccak256-keccak-256)
   - [SHA256: SHA-2-256](#sha256-sha-2-256)
+
+## Reading Guide
+
+This page provides a description of all opcodes for the FuelVM. Encoding should be read as a sequence of one 8 bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value and  `i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
 ## Arithmetic/Logic (ALU) Opcodes
 
