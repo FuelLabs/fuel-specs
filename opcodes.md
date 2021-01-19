@@ -339,51 +339,51 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### ADDMOD: Addition then modulus
 
-|             |                                                                                                                                 |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Takes `$rs` and `$rt`, adds them, then takes the modulo of that result with `$ru`. Sets the `$rd` register value to the result. |
-| Operation   | ```$rd = ($rs + $rt) % $ru```                                                                                                   |
-| Syntax      | `addmod $rd, $rs, $rt, $ru`                                                                                                     |
-| Encoding    | `0x00 rd rs rt ru`                                                                                                              |
-| Notes       |                                                                                                                                 |
+|             |                               |
+| ----------- | ----------------------------- |
+| Description | Modular addition.             |
+| Operation   | ```$rd = ($rs + $rt) % $ru``` |
+| Syntax      | `addmod $rd, $rs, $rt, $ru`   |
+| Encoding    | `0x00 rd rs rt ru`            |
+| Notes       |                               |
 
 ### MULMOD: Multiply then modulus
 
-|             |                                                                                                                                   |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Takes `$rs` and `$rt`, multiplies them, then takes the modulo of that result with `$ru`. Sets `$rd` register value to the result. |
-| Operation   | ```$rd = ($rs * $rt) % $ru```                                                                                                     |
-| Syntax      | `mulmod $rd, $rs, $rt, $ru`                                                                                                       |
-| Encoding    | `0x00 rd rs rt ru`                                                                                                                |
-| Notes       |                                                                                                                                   |
+|             |                               |
+| ----------- | ----------------------------- |
+| Description | Modular multiplication.       |
+| Operation   | ```$rd = ($rs * $rt) % $ru``` |
+| Syntax      | `mulmod $rd, $rs, $rt, $ru`   |
+| Encoding    | `0x00 rd rs rt ru`            |
+| Notes       |                               |
 
 ## Control Flow Opcodes
 
 ### J: Jump
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Jump to the address contained in register `$rs`. |
-| Operation   | ```$pc = $rs;```                                 |
-| Syntax      | `j $rs`                                          |
-| Encoding    | `0x00 rs - - -`                                  |
-| Notes       |                                                  |
+|             |                            |
+| ----------- | -------------------------- |
+| Description | Jump to the address `$rs`. |
+| Operation   | ```$pc = $rs;```           |
+| Syntax      | `j $rs`                    |
+| Encoding    | `0x00 rs - - -`            |
+| Notes       |                            |
 
 ### JI: Jump immediate
 
-|             |                       |
-| ----------- | --------------------- |
-| Description | Jumps to the address. |
-| Operation   | ```$pc = imm;```      |
-| Syntax      | `ji imm`              |
-| Encoding    | `0x00 i i i i`        |
-| Notes       |                       |
+|             |                                       |
+| ----------- | ------------------------------------- |
+| Description | Jumps to the immediate address `imm`. |
+| Operation   | ```$pc = imm;```                      |
+| Syntax      | `ji imm`                              |
+| Encoding    | `0x00 i i i i`                        |
+| Notes       |                                       |
 
 ### JNZ: Jump if not zero
 
 |             |                                                                              |
 | ----------- | ---------------------------------------------------------------------------- |
-| Description | Jump to the address contained in register `$rs` if `$rt` is not zero.        |
+| Description | Jump to the address `$rs` if `$rt` is not zero.                              |
 | Operation   | ```if $rt != 0:```<br>```  $pc = $rs;```<br>```else:```<br>```  $pc += 4;``` |
 | Syntax      | `jnz $rs, $rt`                                                               |
 | Encoding    | `0x00 rs rt - -`                                                             |
@@ -393,7 +393,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 |             |                                                                              |
 | ----------- | ---------------------------------------------------------------------------- |
-| Description | Jump to the address if `$rs` is not zero.                                    |
+| Description | Jump to the immediate address `imm` if `$rs` is not zero.                    |
 | Operation   | ```if $rs != 0:```<br>```  $pc = imm;```<br>```else:```<br>```  $pc += 4;``` |
 | Syntax      | `jnzi $rs`                                                                   |
 | Encoding    | `0x00 rs i i i`                                                              |
@@ -425,23 +425,23 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### LB: Load byte
 
-|             |                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Description | A byte is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation   | ```$rd = MEM[$rs + offset, 1];```                                                                       |
-| Syntax      | `lb $rd, $rs, offset`                                                                                   |
-| Encoding    | `0x00 rd rs i i`                                                                                        |
-| Notes       |                                                                                                         |
+|             |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| Description | A byte is loaded from the specified address offset by `imm`. |
+| Operation   | ```$rd = MEM[$rs + imm, 1];```                               |
+| Syntax      | `lb $rd, $rs, imm`                                           |
+| Encoding    | `0x00 rd rs i i`                                             |
+| Notes       |                                                              |
 
 ### LW: Load word
 
-|             |                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Description | A word is loaded into a register from the specified address at the offset given by the immediate value. |
-| Operation   | ```$rd = MEM[$rs + offset, 8];```                                                                       |
-| Syntax      | `lw $rd, $rs, offset`                                                                                   |
-| Encoding    | `0x00 rd rs i i`                                                                                        |
-| Notes       |                                                                                                         |
+|             |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| Description | A word is loaded from the specified address offset by `imm`. |
+| Operation   | ```$rd = MEM[$rs + imm, 8];```                               |
+| Syntax      | `lw $rd, $rs, imm`                                           |
+| Encoding    | `0x00 rd rs i i`                                             |
+| Notes       |                                                              |
 
 ### MALLOC: Allocate memory
 
@@ -457,7 +457,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 |             |                                             |
 | ----------- | ------------------------------------------- |
-| Description | Compare memory bytes.                       |
+| Description | Compare bytes in memory.                    |
 | Operation   | ```$rd = MEM[$rs, $ru] == MEM[$rt, $ru];``` |
 | Syntax      | `memeq $rd, $rs, $rt, $ru`                  |
 | Encoding    | `0x00 rd rs rt ru`                          |
@@ -467,7 +467,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 |             |                                      |
 | ----------- | ------------------------------------ |
-| Description | Copy memory bytes.                   |
+| Description | Copy bytes in memory.                |
 | Operation   | ```MEM[$rd, $rt] = MEM[$rs, $rt];``` |
 | Syntax      | `memcp $rd, $rs, $rt`                |
 | Encoding    | `0x00 rd rs rt -`                    |
@@ -475,23 +475,23 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### SB: Store byte
 
-|             |                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------------------------------- |
-| Description | The least significant byte of `$rt` is stored at the specified address at an offset given by the immediate value. |
-| Operation   | ```MEM[$rs + offset, 1] = $rt[0, 1];```                                                                           |
-| Syntax      | `sb $rt, $rs, offset`                                                                                             |
-| Encoding    | `0x00 rs rt i i`                                                                                                  |
-| Notes       |                                                                                                                   |
+|             |                                                                               |
+| ----------- | ----------------------------------------------------------------------------- |
+| Description | The least significant byte of `$rt` is stored at the address offset by `imm`. |
+| Operation   | ```MEM[$rs + offset, 1] = $rt[0, 1];```                                       |
+| Syntax      | `sb $rt, $rs, offset`                                                         |
+| Encoding    | `0x00 rs rt i i`                                                              |
+| Notes       |                                                                               |
 
 ### SW: Store word
 
-|             |                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| Description | The contents of `$rt` is stored at the specified address using the offset given by the immediate value. |
-| Operation   | ```MEM[$rs + offset, 8] = $rt;```                                                                       |
-| Syntax      | `sw $rt, $rs, offset`                                                                                   |
-| Encoding    | `0x00 rs rt i i`                                                                                        |
-| Notes       |                                                                                                         |
+|             |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| Description | The value of `$rt` is stored at the address offset by `imm`. |
+| Operation   | ```MEM[$rs + offset, 8] = $rt;```                            |
+| Syntax      | `sw $rt, $rs, offset`                                        |
+| Encoding    | `0x00 rs rt i i`                                             |
+| Notes       |                                                              |
 
 ## Contract Opcodes
 
@@ -539,23 +539,23 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### CREATE: Create contract
 
-|             |                                                                    |
-| ----------- | ------------------------------------------------------------------ |
-| Description | Create a new account, using the salt of the fourth register value. |
-| Operation   |                                                                    |
-| Syntax      | `create $rd`                                                       |
-| Encoding    | `0x00 rd - - -`                                                    |
-| Notes       |                                                                    |
+|             |                        |
+| ----------- | ---------------------- |
+| Description | Create a new contract. |
+| Operation   |                        |
+| Syntax      | `create $rd`           |
+| Encoding    | `0x00 rd - - -`        |
+| Notes       |                        |
 
 ### GAS: Remaining gas
 
-|             |                                                       |
-| ----------- | ----------------------------------------------------- |
-| Description | Sets the `$rd` to the numeric value of gas remaining. |
-| Operation   | ```$rd = $gas;```                                     |
-| Syntax      | `gas $rd`                                             |
-| Encoding    | `0x00 rd - - -`                                       |
-| Notes       |                                                       |
+|             |                                                   |
+| ----------- | ------------------------------------------------- |
+| Description | Sets `$rd` to the numeric value of gas remaining. |
+| Operation   | ```$rd = $gas;```                                 |
+| Syntax      | `gas $rd`                                         |
+| Encoding    | `0x00 rd - - -`                                   |
+| Notes       |                                                   |
 
 ### LOG: Log event
 
@@ -641,20 +641,20 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### KECCAK256: keccak-256
 
-|             |                                                                             |
-| ----------- | --------------------------------------------------------------------------- |
-| Description | The keccak-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
-| Operation   | ```$rd = keccak256(MEM[$rs, $rt]);```                                       |
-| Syntax      | `keccak256 $rd, $rs, $rt`                                                   |
-| Encoding    | `0x00 rd rs rt -`                                                           |
-| Notes       |                                                                             |
+|             |                                                       |
+| ----------- | ----------------------------------------------------- |
+| Description | The keccak-256 hash of `$rt` bytes starting at `$rs`. |
+| Operation   | ```$rd = keccak256(MEM[$rs, $rt]);```                 |
+| Syntax      | `keccak256 $rd, $rs, $rt`                             |
+| Encoding    | `0x00 rd rs rt -`                                     |
+| Notes       |                                                       |
 
 ### SHA256: SHA-2-256
 
-|             |                                                                            |
-| ----------- | -------------------------------------------------------------------------- |
-| Description | The SHA-2-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
-| Operation   | ```$rd = sha256(MEM[$rs, $rt]);```                                         |
-| Syntax      | `sha256 $rd, $rs, $rt`                                                     |
-| Encoding    | `0x00 rd rs rt -`                                                          |
-| Notes       |                                                                            |
+|             |                                                      |
+| ----------- | ---------------------------------------------------- |
+| Description | The SHA-2-256 hash of `$rt` bytes starting at `$rs`. |
+| Operation   | ```$rd = sha256(MEM[$rs, $rt]);```                   |
+| Syntax      | `sha256 $rd, $rs, $rt`                               |
+| Encoding    | `0x00 rd rs rt -`                                    |
+| Notes       |                                                      |
