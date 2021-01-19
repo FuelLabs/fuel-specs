@@ -26,9 +26,9 @@
 | `witnesses`      | [Witness](#witness)`[]` | List of witnesses.               |
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
-1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 4 bytes.
+1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
 1. `byte[32]`: as-is.
-1. `byte[]`: as-is, with padding zeroes aligned to 4 bytes.
+1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
 
 ## Input
 
