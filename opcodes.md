@@ -75,7 +75,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Adds two registers and stores the result in a register. |
 | Operation   | ```$rd = $rs + $rt;```                                  |
 | Syntax      | `add $rd, $rs, $rt`                                     |
-| Encoding    | `00000001 rd rs rt -`                                   |
+| Encoding    | `0x00 rd rs rt -`                                       |
 | Notes       | `$of` is assigned the overflow of the operation.        |
 
 ### ADDI: Add immediate
@@ -85,7 +85,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Adds a register and an immediate value and stores the result in a register. |
 | Operation   | ```$rt = $rs + imm;```                                                      |
 | Syntax      | `addi $rd, $rs, immediate`                                                  |
-| Encoding    | `00000010 rs rt i i`                                                        |
+| Encoding    | `0x00 rs rt i i`                                                            |
 | Notes       | `$of` is assigned the overflow of the operation.                            |
 
 ### AND: AND
@@ -95,7 +95,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Bitwise ANDs two registers and stores the result in a register. |
 | Operation   | ```$rd = $rs & $rt;```                                          |
 | Syntax      | `and $rd, $rs, $rt`                                             |
-| Encoding    | `00000101 rd rs rt -`                                           |
+| Encoding    | `0x00 rd rs rt -`                                               |
 | Notes       | `$of` is cleared.                                               |
 
 ### ANDI: AND immediate
@@ -105,7 +105,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Bitwise ANDs a register and an immediate value and stores the result in a register. |
 | Operation   | ```$rd = $rs & imm;```                                                              |
 | Syntax      | `andi $rd, $rs, imm`                                                                |
-| Encoding    | `00000110 rd rs i i`                                                                |
+| Encoding    | `0x00 rd rs i i`                                                                    |
 | Notes       | `$of` is cleared.                                                                   |
 
 ### CPSR: Copy from special register
@@ -115,7 +115,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | The contents of special register `$rs` are moved to the specified register. |
 | Operation   | ```$rd = $rs;```                                                            |
 | Syntax      | `cpsr $rd, $rs`                                                             |
-| Encoding    | `00010111 rd rs - -`                                                        |
+| Encoding    | `0x00 rd rs - -`                                                            |
 | Notes       |                                                                             |
 
 ### DIV: Divide
@@ -125,7 +125,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Divides `$rs` by `$rt` and stores the quotient in `$rd` and the remainder in `$of`. |
 | Operation   | ```$rd = $rs / $rt;```<br>```$of = $rs % $rt;```                                    |
 | Syntax      | `div $rd, $rs, $rt`                                                                 |
-| Encoding    | `00001111 rd rs rt -`                                                               |
+| Encoding    | `0x00 rd rs rt -`                                                                   |
 | Notes       |                                                                                     |
 
 ### DIVI: Divide immediate
@@ -135,7 +135,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Divides `$rs` by `imm` and stores the quotient in `$rd` and the remainder in `$of`. |
 | Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;```                                    |
 | Syntax      | `divi $rd, $rs, imm`                                                                |
-| Encoding    | `00010000 rd rs rt -`                                                               |
+| Encoding    | `0x00 rd rs rt -`                                                                   |
 | Notes       |                                                                                     |
 
 ### EQ: Equals
@@ -145,7 +145,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Assigns if two registers are equal to a register. |
 | Operation   | ```$rd = $rs == $rt;```                           |
 | Syntax      | `eq $rd, $rs, $rt`                                |
-| Encoding    | `00000111 rd rs rt -`                             |
+| Encoding    | `0x00 rd rs rt -`                                 |
 | Notes       |                                                   |
 
 ### EXP: Exponentiate
@@ -155,7 +155,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Takes `$rs` and `$rt` values, then sets `$rd` to the result of `$rs` taken to the power of `$rt`. |
 | Operation   | ```$rd = $rs ** $rt;```                                                                           |
 | Syntax      | `exp $rd, $rs, $rt`                                                                               |
-| Encoding    | `00110011 rd rs rt -`                                                                             |
+| Encoding    | `0x00 rd rs rt -`                                                                                 |
 | Notes       |                                                                                                   |
 
 ### EXPI: Exponentiate immediate
@@ -165,7 +165,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Takes `$rs` value, then sets `$rd` to the result of `$rs` taken to the power of `imm`. |
 | Operation   | ```$rd = $rs ** imm;```                                                                |
 | Syntax      | `expi $rd, $rs, imm`                                                                   |
-| Encoding    | `00110110 rd rt i i`                                                                   |
+| Encoding    | `0x00 rd rt i i`                                                                       |
 | Notes       |                                                                                        |
 
 ### GT: Greater than
@@ -175,7 +175,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Assigns if a register is greater than another register to a register. |
 | Operation   | ```$rd = $rs > $rt;```                                                |
 | Syntax      | `gt $rd, $rs, $rt`                                                    |
-| Encoding    | `00001010 rd rs rt -`                                                 |
+| Encoding    | `0x00 rd rs rt -`                                                     |
 | Notes       |                                                                       |
 
 ### MOD: Modulus
@@ -185,7 +185,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Modulo remainder of `$rs` by `$rt` and sets `$rd` to result. |
 | Operation   | ```$rd = $rs % $rt;```                                       |
 | Syntax      | `mod $rd, $rs, $rt`                                          |
-| Encoding    | `00101111 rd rs rt -`                                        |
+| Encoding    | `0x00 rd rs rt -`                                            |
 | Notes       |                                                              |
 
 ### MODI: Modulus immediate
@@ -195,7 +195,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Modulo remainder of `$rs` using immediate value and places result in `$rd`. |
 | Operation   | ```$rd = $rs % imm;```                                                      |
 | Syntax      | `modi $rd, $rs, imm`                                                        |
-| Encoding    | `00110100 rd rs i i`                                                        |
+| Encoding    | `0x00 rd rs i i`                                                            |
 | Notes       |                                                                             |
 
 ### MUL: Multiply
@@ -205,7 +205,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Multiplies `$rs` by `$rt` and stores the result in `$rd` and `$of`. |
 | Operation   | ```$rd = $rs * $rt;```                                              |
 | Syntax      | `mul $rd, $rs, $rt`                                                 |
-| Encoding    | `00011010 rd rs rt -`                                               |
+| Encoding    | `0x00 rd rs rt -`                                                   |
 | Notes       | `$of` is assigned the overflow of the operation.                    |
 
 ### MULI: Multiply immediate
@@ -215,7 +215,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Multiplies `$rs` by `imm` and stores the result in `$rd` and `$of`. |
 | Operation   | ```$rd = $rs * imm;```                                              |
 | Syntax      | `mul $rd, $rs, imm`                                                 |
-| Encoding    | `00011010 rd rs i i`                                                |
+| Encoding    | `0x00 rd rs i i`                                                    |
 | Notes       | `$of` is assigned the overflow of the operation.                    |
 
 ### NOOP: No operation
@@ -225,7 +225,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Performs no operation. |
 | Operation   |                        |
 | Syntax      | `noop`                 |
-| Encoding    | `00011011 - - - -`     |
+| Encoding    | `0x00 - - - -`         |
 | Notes       |                        |
 
 ### OR: OR
@@ -235,7 +235,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Bitwise ORs registers `$rs` and `$rt` and stores the result in `$rd`. |
 | Operation   | ```$rd = $rs | $rt;```                                                |
 | Syntax      | `or $rd, $rs, $rt`                                                    |
-| Encoding    | `00011100 rd rs rt -`                                                 |
+| Encoding    | `0x00 rd rs rt -`                                                     |
 | Notes       | `$of` is cleared.                                                     |
 
 ### ORI: OR immediate
@@ -245,7 +245,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Bitwise ORs register `$rs` and an immediate value and stores the result in `$rd`. |
 | Operation   | ```$rd = $rs | imm;```                                                            |
 | Syntax      | `ori $rd, $rs, imm`                                                               |
-| Encoding    | `00011101 rd rs i i`                                                              |
+| Encoding    | `0x00 rd rs i i`                                                                  |
 | Notes       | `$of` is cleared.                                                                 |
 
 ### SLL: Shift left logical
@@ -255,7 +255,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Shifts `$rs` left by `$rt` and places the result in `$rd`. Zeroes are shifted in. |
 | Operation   | ```$rd = $rs << $rt;```                                                           |
 | Syntax      | `sll $rd, $rs, $rt`                                                               |
-| Encoding    | `00100000 rd rs rt -`                                                             |
+| Encoding    | `0x00 rd rs rt -`                                                                 |
 | Notes       |                                                                                   |
 
 ### SLLI: Shift left logical immediate
@@ -265,7 +265,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Shifts `$rs` left by `imm` and places the result in `$rd`. Zeroes are shifted in. |
 | Operation   | ```$rd = $rs << imm;```                                                           |
 | Syntax      | `slli $rd, $rs, imm`                                                              |
-| Encoding    | `00011111 rd rs i i`                                                              |
+| Encoding    | `0x00 rd rs i i`                                                                  |
 | Notes       |                                                                                   |
 
 ### SRL: Shift right logical
@@ -275,7 +275,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Shifts a register value right by the amount specified in `$rs` and places the value in the destination register. |
 | Operation   | ```$rd = $rs >> $rt;```                                                                                          |
 | Syntax      | `srl $rd, $rs, $rt`                                                                                              |
-| Encoding    | `00100111 rd rs rt -`                                                                                            |
+| Encoding    | `0x00 rd rs rt -`                                                                                                |
 | Notes       | Zeroes are shifted in.                                                                                           |
 
 ### SRLI: Shift right logical immediate
@@ -285,7 +285,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Shifts a register value right by the shift amount `imm` and places the value in the destination register. |
 | Operation   | ```$rd = $rs >> imm;```                                                                                   |
 | Syntax      | `srli $rd, $rs, imm`                                                                                      |
-| Encoding    | `00100110 rd rs i i`                                                                                      |
+| Encoding    | `0x00 rd rs i i`                                                                                          |
 | Notes       | Zeroes are shifted in.                                                                                    |
 
 ### SUB: Subtract
@@ -295,7 +295,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Subtracts two registers and stores the result in a register. |
 | Operation   | ```$rd = $rs - $rt;```                                       |
 | Syntax      | `sub $rd, $rs, $rt`                                          |
-| Encoding    | `00101001 rd rs rt -`                                        |
+| Encoding    | `0x00 rd rs rt -`                                            |
 | Notes       | `$of` is assigned the overflow of the operation.             |
 
 ### SUBI: Subtract immediate
@@ -305,7 +305,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Subtracts a register and an immediate value and stores the result in a register. |
 | Operation   | ```$rd = $rs - $rt;```                                                           |
 | Syntax      | `subi $rd, $rs, $rt`                                                             |
-| Encoding    | `00101010 rd rs rt -`                                                            |
+| Encoding    | `0x00 rd rs rt -`                                                                |
 | Notes       | `$of` is assigned the overflow of the operation.                                 |
 
 ### XOR: XOR
@@ -315,7 +315,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Bitwise XORs two registers and stores the result in a register. |
 | Operation   | ```$rd = $rs ^ $rt;```                                          |
 | Syntax      | `xor $rd, $rs, $rt `                                            |
-| Encoding    | `00101101 rd rs rt -`                                           |
+| Encoding    | `0x00 rd rs rt -`                                               |
 | Notes       | `$of` is cleared.                                               |
 
 ### XORI: XOR immediate
@@ -325,7 +325,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Bitwise XORs a register and an immediate value and stores the result in a register. |
 | Operation   | ```$rd = $rs ^ imm;```                                                              |
 | Syntax      | `xori $rt, $rs, imm `                                                               |
-| Encoding    | `00101110 rs rt i i`                                                                |
+| Encoding    | `0x00 rs rt i i`                                                                    |
 | Notes       | `$of` is cleared.                                                                   |
 
 ## Combination Arithmetic Opcodes
@@ -339,7 +339,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Takes `$rs` and `$rt`, adds them, then takes the modulo of that result with `$ru`. Sets the `$rd` register value to the result. |
 | Operation   | ```$rd = ($rs + $rt) % $ru```                                                                                                   |
 | Syntax      | `addmod $rd, $rs, $rt, $ru`                                                                                                     |
-| Encoding    | `00110001 rd rs rt ru`                                                                                                          |
+| Encoding    | `0x00 rd rs rt ru`                                                                                                              |
 | Notes       |                                                                                                                                 |
 
 ### MULMOD: Multiply then modulus
@@ -349,7 +349,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Takes `$rs` and `$rt`, multiplies them, then takes the modulo of that result with `$ru`. Sets `$rd` register value to the result. |
 | Operation   | ```$rd = ($rs * $rt) % $ru```                                                                                                     |
 | Syntax      | `mulmod $rd, $rs, $rt, $ru`                                                                                                       |
-| Encoding    | `00110010 rd rs rt ru`                                                                                                            |
+| Encoding    | `0x00 rd rs rt ru`                                                                                                                |
 | Notes       |                                                                                                                                   |
 
 ## Control Flow Opcodes
@@ -361,7 +361,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Jump to the address contained in register `$rs`. |
 | Operation   | ```$pc = $rs;```                                 |
 | Syntax      | `j $rs`                                          |
-| Encoding    | `00010011 rs - - -`                              |
+| Encoding    | `0x00 rs - - -`                                  |
 | Notes       |                                                  |
 
 ### JI: Jump immediate
@@ -371,7 +371,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Jumps to the address. |
 | Operation   | ```$pc = imm;```      |
 | Syntax      | `ji imm`              |
-| Encoding    | `00010001 i i i i`    |
+| Encoding    | `0x00 i i i i`        |
 | Notes       |                       |
 
 ### JNZ: Jump if not zero
@@ -381,7 +381,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Jump to the address contained in register `$rs` if `$rt` is not zero.        |
 | Operation   | ```if $rt != 0:```<br>```  $pc = $rs;```<br>```else:```<br>```  $pc += 4;``` |
 | Syntax      | `jnz $rs, $rt`                                                               |
-| Encoding    | `00000000 rs rt - -`                                                         |
+| Encoding    | `0x00 rs rt - -`                                                             |
 | Notes       |                                                                              |
 
 ### JNZI: Jump if not zero immediate
@@ -391,7 +391,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Jump to the address if `$rs` is not zero.                                    |
 | Operation   | ```if $rs != 0:```<br>```  $pc = imm;```<br>```else:```<br>```  $pc += 4;``` |
 | Syntax      | `jnzi $rs`                                                                   |
-| Encoding    | `00000000 rs i i i`                                                          |
+| Encoding    | `0x00 rs i i i`                                                              |
 | Notes       |                                                                              |
 
 ## Memory Opcodes
@@ -405,7 +405,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Extend the current call frame's stack.               |
 | Operation   | ```extend MEM[$hp, $rs];```<br>```$fp = $fp + $rs``` |
 | Syntax      | `cfe $rs`                                            |
-| Encoding    | `00000000 rs - - -`                                  |
+| Encoding    | `0x00 rs - - -`                                      |
 | Notes       | Does not initialize memory.                          |
 
 ### CFS: Shrink call frame
@@ -415,7 +415,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Shrink the current call frame's stack.                     |
 | Operation   | ```shrink MEM[$hp - $rs, $rs];```<br>```$fp = $fp - $rs``` |
 | Syntax      | `cfs $rs`                                                  |
-| Encoding    | `00000000 rs - - -`                                        |
+| Encoding    | `0x00 rs - - -`                                            |
 | Notes       | Does not clear memory.                                     |
 
 ### LB: Load byte
@@ -425,7 +425,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | A byte is loaded into a register from the specified address at the offset given by the immediate value. |
 | Operation   | ```$rd = MEM[$rs + offset, 1];```                                                                       |
 | Syntax      | `lb $rd, $rs, offset`                                                                                   |
-| Encoding    | `00010100 rd rs i i`                                                                                    |
+| Encoding    | `0x00 rd rs i i`                                                                                        |
 | Notes       |                                                                                                         |
 
 ### LW: Load word
@@ -435,7 +435,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | A word is loaded into a register from the specified address at the offset given by the immediate value. |
 | Operation   | ```$rd = MEM[$rs + offset, 8];```                                                                       |
 | Syntax      | `lw $rd, $rs, offset`                                                                                   |
-| Encoding    | `00010110 rd rs i i`                                                                                    |
+| Encoding    | `0x00 rd rs i i`                                                                                        |
 | Notes       |                                                                                                         |
 
 ### MALLOC: Allocate memory
@@ -445,7 +445,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Allocate a number of bytes from the heap.                  |
 | Operation   | ```alloc MEM[$hp - $rs, $rs];```<br>```$hp = $hp - $rs;``` |
 | Syntax      | `malloc $rs`                                               |
-| Encoding    | `00000000 rs - - -`                                        |
+| Encoding    | `0x00 rs - - -`                                            |
 | Notes       | Does not initialize memory.                                |
 
 ### MEMEQ: Memory equality
@@ -455,7 +455,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Compare memory bytes.                       |
 | Operation   | ```$rd = MEM[$rs, $ru] == MEM[$rt, $ru];``` |
 | Syntax      | `memeq $rd, $rs, $rt, $ru`                  |
-| Encoding    | `00000000 rd rs rt ru`                      |
+| Encoding    | `0x00 rd rs rt ru`                          |
 | Notes       |                                             |
 
 ### MEMCP: Memory copy
@@ -465,7 +465,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Copy memory bytes.                   |
 | Operation   | ```MEM[$rd, $rt] = MEM[$rs, $rt];``` |
 | Syntax      | `memcp $rd, $rs, $rt`                |
-| Encoding    | `00000000 rd rs rt -`                |
+| Encoding    | `0x00 rd rs rt -`                    |
 | Notes       |                                      |
 
 ### SB: Store byte
@@ -475,7 +475,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | The least significant byte of `$rt` is stored at the specified address at an offset given by the immediate value. |
 | Operation   | ```MEM[$rs + offset, 1] = $rt[0, 1];```                                                                           |
 | Syntax      | `sb $rt, $rs, offset`                                                                                             |
-| Encoding    | `00011110 rs rt i i`                                                                                              |
+| Encoding    | `0x00 rs rt i i`                                                                                                  |
 | Notes       |                                                                                                                   |
 
 ### SW: Store word
@@ -485,7 +485,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | The contents of `$rt` is stored at the specified address using the offset given by the immediate value. |
 | Operation   | ```MEM[$rs + offset, 8] = $rt;```                                                                       |
 | Syntax      | `sw $rt, $rs, offset`                                                                                   |
-| Encoding    | `00101011 rs rt i i`                                                                                    |
+| Encoding    | `0x00 rs rt i i`                                                                                        |
 | Notes       |                                                                                                         |
 
 ## Contract Opcodes
@@ -499,7 +499,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Message call into an account where `$rs` points to a sequence of words in memory that are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value `1` is set as the `$rd` register's value if the call completes successfully. |
 | Operation   |                                                                                                                                                                                                                                                                |
 | Syntax      | `call $rd, $rs`                                                                                                                                                                                                                                                |
-| Encoding    | `10010111 rd rs - -`                                                                                                                                                                                                                                           |
+| Encoding    | `0x00 rd rs - -`                                                                                                                                                                                                                                               |
 | Notes       |                                                                                                                                                                                                                                                                |
 
 ### CODECOPY: Code copy
@@ -509,7 +509,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Copy `$ru` bytes of code starting at `$rt` for contract with ID equal to the 32 bytes in memory starting at `$rs` into memory starting at `$rd`. |
 | Operation   | ```MEM[$rd, $ru] = code($rs, $rt, $ru);```                                                                                                       |
 | Syntax      | `codecopy $rs, $rs, $rt, $ru`                                                                                                                    |
-| Encoding    | `10010100 rd rs rt ru`                                                                                                                           |
+| Encoding    | `0x00 rd rs rt ru`                                                                                                                               |
 | Notes       | If `$rt` is greater than the code size, zero bytes are filled in.                                                                                |
 
 ### CODEROOT: Code Merkle root
@@ -519,7 +519,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Set the 32 bytes in memory starting at `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
 | Operation   | ```MEM[$rd, 32] = coderoot(MEM[$rs, 32]);```                                                                                                 |
 | Syntax      | `codehash $rd, $rs`                                                                                                                          |
-| Encoding    | `10010011 rd rs - -`                                                                                                                         |
+| Encoding    | `0x00 rd rs - -`                                                                                                                             |
 | Notes       |                                                                                                                                              |
 
 ### CODESIZE: Code size
@@ -529,7 +529,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Set `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
 | Operation   | ```$rd = codesize(MEM[$rs, 32]);```                                                                       |
 | Syntax      | `codesize $rd, $rs`                                                                                       |
-| Encoding    | `10010010 rd rs - -`                                                                                      |
+| Encoding    | `0x00 rd rs - -`                                                                                          |
 | Notes       |                                                                                                           |
 
 ### CREATE: Create contract
@@ -539,7 +539,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Create a new account, using the salt of the fourth register value. |
 | Operation   |                                                                    |
 | Syntax      | `create $rd`                                                       |
-| Encoding    | `10011100 rd - - -`                                                |
+| Encoding    | `0x00 rd - - -`                                                    |
 | Notes       |                                                                    |
 
 ### GAS: Remaining gas
@@ -549,7 +549,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Sets the `$rd` to the numeric value of gas remaining. |
 | Operation   | ```$rd = $gas;```                                     |
 | Syntax      | `gas $rd`                                             |
-| Encoding    | `10000000 rd - - -`                                   |
+| Encoding    | `0x00 rd - - -`                                       |
 | Notes       |                                                       |
 
 ### LOG: Log event
@@ -559,7 +559,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Takes `$rs` and `$rt` register values and records a log entry with no topics based on the memory offset of the `$rs` value, with a length given by the `$rt` value. |
 | Operation   | ```$log.push(':' + MEM[$rs, $rt]);```                                                                                                                               |
 | Syntax      | `log $rs, $rt`                                                                                                                                                      |
-| Encoding    | `10011111 rs rt - -`                                                                                                                                                |
+| Encoding    | `0x00 rs rt - -`                                                                                                                                                    |
 | Notes       |                                                                                                                                                                     |
 
 ### RETURN: Return from call
@@ -569,7 +569,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Returns values from memory using first register value as memory offset whose size is given by the second register value. |
 | Operation   |                                                                                                                          |
 | Syntax      | `return $rs, $rt`                                                                                                        |
-| Encoding    | `10011011 rs rt - -`                                                                                                     |
+| Encoding    | `0x00 rs rt - -`                                                                                                         |
 | Notes       |                                                                                                                          |
 
 ### REVERT: Revert
@@ -579,7 +579,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | Halt execution, reverting state changes and returning value in `$rs`. |
 | Operation   | ```revert $rs;```                                                     |
 | Syntax      | `revert $rs`                                                          |
-| Encoding    | `10011101 rs - - -`                                                   |
+| Encoding    | `0x00 rs - - -`                                                       |
 | Notes       |                                                                       |
 
 ### SRW: State read word
@@ -589,7 +589,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | A word is read from the current contract's state. |
 | Operation   | ```$rd = STATE[MEM[$rs, 32]][0, 8];```            |
 | Syntax      | `srw $rd, $rs`                                    |
-| Encoding    | `00010100 rd rs - -`                              |
+| Encoding    | `0x00 rd rs - -`                                  |
 | Notes       | Returns zero if the state element does not exist. |
 
 ### SRWX: State read 32 bytes
@@ -599,7 +599,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | 32 bytes is read from the current contract's state. |
 | Operation   | ```MEM[$rd, 32] = STATE[MEM[$rs, 32]];```           |
 | Syntax      | `srwx $rd, $rs`                                     |
-| Encoding    | `00010100 rd rs - -`                                |
+| Encoding    | `0x00 rd rs - -`                                    |
 | Notes       | Returns zero if the state element does not exist.   |
 
 ### SWW: State write word
@@ -609,7 +609,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | A word is written to the current contract's state. |
 | Operation   | ```STATE[MEM[$rd, 32]][0, 8] = $rs;```             |
 | Syntax      | `sww $rd $rs`                                      |
-| Encoding    | `00010100 rd rs - -`                               |
+| Encoding    | `0x00 rd rs - -`                                   |
 | Notes       |                                                    |
 
 ### SWWX: State write 32 bytes
@@ -619,7 +619,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | 32 bytes is written to the current contract's state. |
 | Operation   | ```STATE[MEM[$rd, 32]] = MEM[$rs, 32];```            |
 | Syntax      | `swwx $rd, $rs`                                      |
-| Encoding    | `00010100 rd rs - -`                                 |
+| Encoding    | `0x00 rd rs - -`                                     |
 | Notes       |                                                      |
 
 ## Cryptographic Opcodes
@@ -631,7 +631,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | The hash of the public key recovered from 64-byte signature starting at `$rs` on 32-byte message hash starting at `$rt`. |
 | Operation   | ```MEM[$rd, 32] = ecrecover(MEM[$rs, 64], MEM[$rt, 32]);```                                                              |
 | Syntax      | `ecrecover $rd, $rs, $rt`                                                                                                |
-| Encoding    | `10011110 rd rs rt -`                                                                                                    |
+| Encoding    | `0x00 rd rs rt -`                                                                                                        |
 | Notes       |                                                                                                                          |
 
 ### KECCAK256: keccak-256
@@ -641,7 +641,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | The keccak-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
 | Operation   | ```$rd = keccak256(MEM[$rs, $rt]);```                                       |
 | Syntax      | `keccak256 $rd, $rs, $rt`                                                   |
-| Encoding    | `10011110 rd rs rt -`                                                       |
+| Encoding    | `0x00 rd rs rt -`                                                           |
 | Notes       |                                                                             |
 
 ### SHA256: SHA-2-256
@@ -651,5 +651,5 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Description | The SHA-2-256 hash of `$rt` bytes starting at `$rs` are assigned to `$rd`. |
 | Operation   | ```$rd = sha256(MEM[$rs, $rt]);```                                         |
 | Syntax      | `sha256 $rd, $rs, $rt`                                                     |
-| Encoding    | `10011110 rd rs rt -`                                                      |
+| Encoding    | `0x00 rd rs rt -`                                                          |
 | Notes       |                                                                            |
