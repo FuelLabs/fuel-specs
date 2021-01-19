@@ -75,153 +75,153 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### ADD: Add
 
-|             |                                                         |
-| ----------- | ------------------------------------------------------- |
-| Description | Adds two registers and stores the result in a register. |
-| Operation   | ```$rd = $rs + $rt;```                                  |
-| Syntax      | `add $rd, $rs, $rt`                                     |
-| Encoding    | `0x00 rd rs rt -`                                       |
-| Notes       | `$of` is assigned the overflow of the operation.        |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Adds two registers.                              |
+| Operation   | ```$rd = $rs + $rt;```                           |
+| Syntax      | `add $rd, $rs, $rt`                              |
+| Encoding    | `0x00 rd rs rt -`                                |
+| Notes       | `$of` is assigned the overflow of the operation. |
 
 ### ADDI: Add immediate
 
-|             |                                                                             |
-| ----------- | --------------------------------------------------------------------------- |
-| Description | Adds a register and an immediate value and stores the result in a register. |
-| Operation   | ```$rt = $rs + imm;```                                                      |
-| Syntax      | `addi $rd, $rs, immediate`                                                  |
-| Encoding    | `0x00 rs rt i i`                                                            |
-| Notes       | `$of` is assigned the overflow of the operation.                            |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Adds a register and an immediate value.          |
+| Operation   | ```$rt = $rs + imm;```                           |
+| Syntax      | `addi $rd, $rs, immediate`                       |
+| Encoding    | `0x00 rs rt i i`                                 |
+| Notes       | `$of` is assigned the overflow of the operation. |
 
 ### AND: AND
 
-|             |                                                                 |
-| ----------- | --------------------------------------------------------------- |
-| Description | Bitwise ANDs two registers and stores the result in a register. |
-| Operation   | ```$rd = $rs & $rt;```                                          |
-| Syntax      | `and $rd, $rs, $rt`                                             |
-| Encoding    | `0x00 rd rs rt -`                                               |
-| Notes       | `$of` is cleared.                                               |
+|             |                             |
+| ----------- | --------------------------- |
+| Description | Bitwise ANDs two registers. |
+| Operation   | ```$rd = $rs & $rt;```      |
+| Syntax      | `and $rd, $rs, $rt`         |
+| Encoding    | `0x00 rd rs rt -`           |
+| Notes       | `$of` is cleared.           |
 
 ### ANDI: AND immediate
 
-|             |                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Description | Bitwise ANDs a register and an immediate value and stores the result in a register. |
-| Operation   | ```$rd = $rs & imm;```                                                              |
-| Syntax      | `andi $rd, $rs, imm`                                                                |
-| Encoding    | `0x00 rd rs i i`                                                                    |
-| Notes       | `$of` is cleared.                                                                   |
+|             |                                                 |
+| ----------- | ----------------------------------------------- |
+| Description | Bitwise ANDs a register and an immediate value. |
+| Operation   | ```$rd = $rs & imm;```                          |
+| Syntax      | `andi $rd, $rs, imm`                            |
+| Encoding    | `0x00 rd rs i i`                                |
+| Notes       | `$of` is cleared.                               |
 
 ### CPSR: Copy from special register
 
-|             |                                                                             |
-| ----------- | --------------------------------------------------------------------------- |
-| Description | The contents of special register `$rs` are moved to the specified register. |
-| Operation   | ```$rd = $rs;```                                                            |
-| Syntax      | `cpsr $rd, $rs`                                                             |
-| Encoding    | `0x00 rd rs - -`                                                            |
-| Notes       |                                                                             |
+|             |                                                |
+| ----------- | ---------------------------------------------- |
+| Description | Copies the contents of special register `$rs`. |
+| Operation   | ```$rd = $rs;```                               |
+| Syntax      | `cpsr $rd, $rs`                                |
+| Encoding    | `0x00 rd rs - -`                               |
+| Notes       |                                                |
 
 ### DIV: Divide
 
-|             |                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Description | Divides `$rs` by `$rt` and stores the quotient in `$rd` and the remainder in `$of`. |
-| Operation   | ```$rd = $rs / $rt;```<br>```$of = $rs % $rt;```                                    |
-| Syntax      | `div $rd, $rs, $rt`                                                                 |
-| Encoding    | `0x00 rd rs rt -`                                                                   |
-| Notes       |                                                                                     |
+|             |                                                          |
+| ----------- | -------------------------------------------------------- |
+| Description | Divides two registers.                                   |
+| Operation   | ```$rd = $rs / $rt;```<br>```$of = $rs % $rt;```         |
+| Syntax      | `div $rd, $rs, $rt`                                      |
+| Encoding    | `0x00 rd rs rt -`                                        |
+| Notes       | Stores the quotient in `$rd` and the remainder in `$of`. |
 
 ### DIVI: Divide immediate
 
-|             |                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Description | Divides `$rs` by `imm` and stores the quotient in `$rd` and the remainder in `$of`. |
-| Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;```                                    |
-| Syntax      | `divi $rd, $rs, imm`                                                                |
-| Encoding    | `0x00 rd rs rt -`                                                                   |
-| Notes       |                                                                                     |
+|             |                                                         |
+| ----------- | ------------------------------------------------------- |
+| Description | Divides a register and an immediate value.              |
+| Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;```        |
+| Syntax      | `divi $rd, $rs, imm`                                    |
+| Encoding    | `0x00 rd rs rt -`                                       |
+| Notes       | Stores the quotient in `$rd` and the remainder in `$of` |
 
 ### EQ: Equals
 
-|             |                                                   |
-| ----------- | ------------------------------------------------- |
-| Description | Assigns if two registers are equal to a register. |
-| Operation   | ```$rd = $rs == $rt;```                           |
-| Syntax      | `eq $rd, $rs, $rt`                                |
-| Encoding    | `0x00 rd rs rt -`                                 |
-| Notes       |                                                   |
+|             |                                      |
+| ----------- | ------------------------------------ |
+| Description | Compares two registers for equality. |
+| Operation   | ```$rd = $rs == $rt;```              |
+| Syntax      | `eq $rd, $rs, $rt`                   |
+| Encoding    | `0x00 rd rs rt -`                    |
+| Notes       |                                      |
 
 ### EXP: Exponentiate
 
-|             |                                                                                                   |
-| ----------- | ------------------------------------------------------------------------------------------------- |
-| Description | Takes `$rs` and `$rt` values, then sets `$rd` to the result of `$rs` taken to the power of `$rt`. |
-| Operation   | ```$rd = $rs ** $rt;```                                                                           |
-| Syntax      | `exp $rd, $rs, $rt`                                                                               |
-| Encoding    | `0x00 rd rs rt -`                                                                                 |
-| Notes       |                                                                                                   |
+|             |                                              |
+| ----------- | -------------------------------------------- |
+| Description | Raises one register to the power of another. |
+| Operation   | ```$rd = $rs ** $rt;```                      |
+| Syntax      | `exp $rd, $rs, $rt`                          |
+| Encoding    | `0x00 rd rs rt -`                            |
+| Notes       |                                              |
 
 ### EXPI: Exponentiate immediate
 
-|             |                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------- |
-| Description | Takes `$rs` value, then sets `$rd` to the result of `$rs` taken to the power of `imm`. |
-| Operation   | ```$rd = $rs ** imm;```                                                                |
-| Syntax      | `expi $rd, $rs, imm`                                                                   |
-| Encoding    | `0x00 rd rt i i`                                                                       |
-| Notes       |                                                                                        |
+|             |                                                         |
+| ----------- | ------------------------------------------------------- |
+| Description | Raises one register to the power of an immediate value. |
+| Operation   | ```$rd = $rs ** imm;```                                 |
+| Syntax      | `expi $rd, $rs, imm`                                    |
+| Encoding    | `0x00 rd rt i i`                                        |
+| Notes       |                                                         |
 
 ### GT: Greater than
 
-|             |                                                                       |
-| ----------- | --------------------------------------------------------------------- |
-| Description | Assigns if a register is greater than another register to a register. |
-| Operation   | ```$rd = $rs > $rt;```                                                |
-| Syntax      | `gt $rd, $rs, $rt`                                                    |
-| Encoding    | `0x00 rd rs rt -`                                                     |
-| Notes       |                                                                       |
+|             |                                          |
+| ----------- | ---------------------------------------- |
+| Description | Compares two registers for greater-than. |
+| Operation   | ```$rd = $rs > $rt;```                   |
+| Syntax      | `gt $rd, $rs, $rt`                       |
+| Encoding    | `0x00 rd rs rt -`                        |
+| Notes       |                                          |
 
 ### MOD: Modulus
 
-|             |                                                              |
-| ----------- | ------------------------------------------------------------ |
-| Description | Modulo remainder of `$rs` by `$rt` and sets `$rd` to result. |
-| Operation   | ```$rd = $rs % $rt;```                                       |
-| Syntax      | `mod $rd, $rs, $rt`                                          |
-| Encoding    | `0x00 rd rs rt -`                                            |
-| Notes       |                                                              |
+|             |                                    |
+| ----------- | ---------------------------------- |
+| Description | Modulo remainder of two registers. |
+| Operation   | ```$rd = $rs % $rt;```             |
+| Syntax      | `mod $rd, $rs, $rt`                |
+| Encoding    | `0x00 rd rs rt -`                  |
+| Notes       |                                    |
 
 ### MODI: Modulus immediate
 
-|             |                                                                             |
-| ----------- | --------------------------------------------------------------------------- |
-| Description | Modulo remainder of `$rs` using immediate value and places result in `$rd`. |
-| Operation   | ```$rd = $rs % imm;```                                                      |
-| Syntax      | `modi $rd, $rs, imm`                                                        |
-| Encoding    | `0x00 rd rs i i`                                                            |
-| Notes       |                                                                             |
+|             |                                                        |
+| ----------- | ------------------------------------------------------ |
+| Description | Modulo remainder of a register and an immediate value. |
+| Operation   | ```$rd = $rs % imm;```                                 |
+| Syntax      | `modi $rd, $rs, imm`                                   |
+| Encoding    | `0x00 rd rs i i`                                       |
+| Notes       |                                                        |
 
 ### MUL: Multiply
 
-|             |                                                                     |
-| ----------- | ------------------------------------------------------------------- |
-| Description | Multiplies `$rs` by `$rt` and stores the result in `$rd` and `$of`. |
-| Operation   | ```$rd = $rs * $rt;```                                              |
-| Syntax      | `mul $rd, $rs, $rt`                                                 |
-| Encoding    | `0x00 rd rs rt -`                                                   |
-| Notes       | `$of` is assigned the overflow of the operation.                    |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Multiplies two registers.                        |
+| Operation   | ```$rd = $rs * $rt;```                           |
+| Syntax      | `mul $rd, $rs, $rt`                              |
+| Encoding    | `0x00 rd rs rt -`                                |
+| Notes       | `$of` is assigned the overflow of the operation. |
 
 ### MULI: Multiply immediate
 
-|             |                                                                     |
-| ----------- | ------------------------------------------------------------------- |
-| Description | Multiplies `$rs` by `imm` and stores the result in `$rd` and `$of`. |
-| Operation   | ```$rd = $rs * imm;```                                              |
-| Syntax      | `mul $rd, $rs, imm`                                                 |
-| Encoding    | `0x00 rd rs i i`                                                    |
-| Notes       | `$of` is assigned the overflow of the operation.                    |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Multiplies a register and an immediate value.    |
+| Operation   | ```$rd = $rs * imm;```                           |
+| Syntax      | `mul $rd, $rs, imm`                              |
+| Encoding    | `0x00 rd rs i i`                                 |
+| Notes       | `$of` is assigned the overflow of the operation. |
 
 ### NOOP: No operation
 
@@ -235,103 +235,103 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### OR: OR
 
-|             |                                                                       |
-| ----------- | --------------------------------------------------------------------- |
-| Description | Bitwise ORs registers `$rs` and `$rt` and stores the result in `$rd`. |
-| Operation   | ```$rd = $rs | $rt;```                                                |
-| Syntax      | `or $rd, $rs, $rt`                                                    |
-| Encoding    | `0x00 rd rs rt -`                                                     |
-| Notes       | `$of` is cleared.                                                     |
+|             |                            |
+| ----------- | -------------------------- |
+| Description | Bitwise ORs two registers. |
+| Operation   | ```$rd = $rs | $rt;```     |
+| Syntax      | `or $rd, $rs, $rt`         |
+| Encoding    | `0x00 rd rs rt -`          |
+| Notes       | `$of` is cleared.          |
 
 ### ORI: OR immediate
 
-|             |                                                                                   |
-| ----------- | --------------------------------------------------------------------------------- |
-| Description | Bitwise ORs register `$rs` and an immediate value and stores the result in `$rd`. |
-| Operation   | ```$rd = $rs | imm;```                                                            |
-| Syntax      | `ori $rd, $rs, imm`                                                               |
-| Encoding    | `0x00 rd rs i i`                                                                  |
-| Notes       | `$of` is cleared.                                                                 |
+|             |                                                |
+| ----------- | ---------------------------------------------- |
+| Description | Bitwise ORs a register and an immediate value. |
+| Operation   | ```$rd = $rs | imm;```                         |
+| Syntax      | `ori $rd, $rs, imm`                            |
+| Encoding    | `0x00 rd rs i i`                               |
+| Notes       | `$of` is cleared.                              |
 
 ### SLL: Shift left logical
 
-|             |                                                                                   |
-| ----------- | --------------------------------------------------------------------------------- |
-| Description | Shifts `$rs` left by `$rt` and places the result in `$rd`. Zeroes are shifted in. |
-| Operation   | ```$rd = $rs << $rt;```                                                           |
-| Syntax      | `sll $rd, $rs, $rt`                                                               |
-| Encoding    | `0x00 rd rs rt -`                                                                 |
-| Notes       |                                                                                   |
+|             |                                       |
+| ----------- | ------------------------------------- |
+| Description | Left shifts a register by a register. |
+| Operation   | ```$rd = $rs << $rt;```               |
+| Syntax      | `sll $rd, $rs, $rt`                   |
+| Encoding    | `0x00 rd rs rt -`                     |
+| Notes       | Zeroes are shifted in.                |
 
 ### SLLI: Shift left logical immediate
 
-|             |                                                                                   |
-| ----------- | --------------------------------------------------------------------------------- |
-| Description | Shifts `$rs` left by `imm` and places the result in `$rd`. Zeroes are shifted in. |
-| Operation   | ```$rd = $rs << imm;```                                                           |
-| Syntax      | `slli $rd, $rs, imm`                                                              |
-| Encoding    | `0x00 rd rs i i`                                                                  |
-| Notes       |                                                                                   |
+|             |                                               |
+| ----------- | --------------------------------------------- |
+| Description | Left shifts a register by an immediate value. |
+| Operation   | ```$rd = $rs << imm;```                       |
+| Syntax      | `slli $rd, $rs, imm`                          |
+| Encoding    | `0x00 rd rs i i`                              |
+| Notes       | Zeroes are shifted in.                        |
 
 ### SRL: Shift right logical
 
-|             |                                                                                                                  |
-| ----------- | ---------------------------------------------------------------------------------------------------------------- |
-| Description | Shifts a register value right by the amount specified in `$rs` and places the value in the destination register. |
-| Operation   | ```$rd = $rs >> $rt;```                                                                                          |
-| Syntax      | `srl $rd, $rs, $rt`                                                                                              |
-| Encoding    | `0x00 rd rs rt -`                                                                                                |
-| Notes       | Zeroes are shifted in.                                                                                           |
+|             |                                        |
+| ----------- | -------------------------------------- |
+| Description | Right shifts a register by a register. |
+| Operation   | ```$rd = $rs >> $rt;```                |
+| Syntax      | `srl $rd, $rs, $rt`                    |
+| Encoding    | `0x00 rd rs rt -`                      |
+| Notes       | Zeroes are shifted in.                 |
 
 ### SRLI: Shift right logical immediate
 
-|             |                                                                                                           |
-| ----------- | --------------------------------------------------------------------------------------------------------- |
-| Description | Shifts a register value right by the shift amount `imm` and places the value in the destination register. |
-| Operation   | ```$rd = $rs >> imm;```                                                                                   |
-| Syntax      | `srli $rd, $rs, imm`                                                                                      |
-| Encoding    | `0x00 rd rs i i`                                                                                          |
-| Notes       | Zeroes are shifted in.                                                                                    |
+|             |                                                |
+| ----------- | ---------------------------------------------- |
+| Description | Right shifts a register by an immediate value. |
+| Operation   | ```$rd = $rs >> imm;```                        |
+| Syntax      | `srli $rd, $rs, imm`                           |
+| Encoding    | `0x00 rd rs i i`                               |
+| Notes       | Zeroes are shifted in.                         |
 
 ### SUB: Subtract
 
-|             |                                                              |
-| ----------- | ------------------------------------------------------------ |
-| Description | Subtracts two registers and stores the result in a register. |
-| Operation   | ```$rd = $rs - $rt;```                                       |
-| Syntax      | `sub $rd, $rs, $rt`                                          |
-| Encoding    | `0x00 rd rs rt -`                                            |
-| Notes       | `$of` is assigned the overflow of the operation.             |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Subtracts two registers.                         |
+| Operation   | ```$rd = $rs - $rt;```                           |
+| Syntax      | `sub $rd, $rs, $rt`                              |
+| Encoding    | `0x00 rd rs rt -`                                |
+| Notes       | `$of` is assigned the overflow of the operation. |
 
 ### SUBI: Subtract immediate
 
-|             |                                                                                  |
-| ----------- | -------------------------------------------------------------------------------- |
-| Description | Subtracts a register and an immediate value and stores the result in a register. |
-| Operation   | ```$rd = $rs - $rt;```                                                           |
-| Syntax      | `subi $rd, $rs, $rt`                                                             |
-| Encoding    | `0x00 rd rs rt -`                                                                |
-| Notes       | `$of` is assigned the overflow of the operation.                                 |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Subtracts a register and an immediate value.     |
+| Operation   | ```$rd = $rs - $rt;```                           |
+| Syntax      | `subi $rd, $rs, $rt`                             |
+| Encoding    | `0x00 rd rs rt -`                                |
+| Notes       | `$of` is assigned the overflow of the operation. |
 
 ### XOR: XOR
 
-|             |                                                                 |
-| ----------- | --------------------------------------------------------------- |
-| Description | Bitwise XORs two registers and stores the result in a register. |
-| Operation   | ```$rd = $rs ^ $rt;```                                          |
-| Syntax      | `xor $rd, $rs, $rt `                                            |
-| Encoding    | `0x00 rd rs rt -`                                               |
-| Notes       | `$of` is cleared.                                               |
+|             |                             |
+| ----------- | --------------------------- |
+| Description | Bitwise XORs two registers. |
+| Operation   | ```$rd = $rs ^ $rt;```      |
+| Syntax      | `xor $rd, $rs, $rt `        |
+| Encoding    | `0x00 rd rs rt -`           |
+| Notes       | `$of` is cleared.           |
 
 ### XORI: XOR immediate
 
-|             |                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Description | Bitwise XORs a register and an immediate value and stores the result in a register. |
-| Operation   | ```$rd = $rs ^ imm;```                                                              |
-| Syntax      | `xori $rt, $rs, imm `                                                               |
-| Encoding    | `0x00 rs rt i i`                                                                    |
-| Notes       | `$of` is cleared.                                                                   |
+|             |                                                 |
+| ----------- | ----------------------------------------------- |
+| Description | Bitwise XORs a register and an immediate value. |
+| Operation   | ```$rd = $rs ^ imm;```                          |
+| Syntax      | `xori $rt, $rs, imm `                           |
+| Encoding    | `0x00 rs rt i i`                                |
+| Notes       | `$of` is cleared.                               |
 
 ## Combination Arithmetic Opcodes
 
