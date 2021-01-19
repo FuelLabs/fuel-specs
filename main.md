@@ -25,17 +25,17 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 * Immediate value: 12, 18, or 24 bits, depending on operation
 
 In addition to the 64 registers (6-bit register address space), there are some special registers defined as follows:
-| register | name            | value  | description                                                                                                             |
-| -------- | --------------- | ------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `$z`     | zero            | `0x00` | Zero-containing register (convenience register frequently found in register machines).                                  |
-| `$of`    | overflow        | `0x01` | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction.s |
-| `$pc`    | program counter | `0x02` | The program counter.                                                                                                    |
-| `$fp`    | frame pointer   | `0x03` | Memory address of beginning of current call frame.                                                                      |
-| `$fpp`   | prev frame ptr  | `0x04` | Previous call frame's frame pointer.                                                                                    |
-| `$hp`    | heap pointer    | `0x05` | Memory address of the current bottom of the heap.                                                                       |
-| `$hpp`   | prev heap ptr   | `0x06` | Previous call frame's heap pointer.                                                                                     |
-| `$err`   | error           | `0x07` | Error codes for particular operations.                                                                                  |
-| `$gas`   | gas             | `0x08` | Remaining gas.                                                                                                          |
+| register | name            | value  | description                                                                                                            |
+| -------- | --------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `$z`     | zero            | `0x00` | Zero-containing register (convenience register frequently found in register machines).                                 |
+| `$of`    | overflow        | `0x01` | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
+| `$pc`    | program counter | `0x02` | The program counter.                                                                                                   |
+| `$fp`    | frame pointer   | `0x03` | Memory address of beginning of current call frame.                                                                     |
+| `$fpp`   | prev frame ptr  | `0x04` | Previous call frame's frame pointer.                                                                                   |
+| `$hp`    | heap pointer    | `0x05` | Memory address of the current bottom of the heap.                                                                      |
+| `$hpp`   | prev heap ptr   | `0x06` | Previous call frame's heap pointer.                                                                                    |
+| `$err`   | error           | `0x07` | Error codes for particular operations.                                                                                 |
+| `$gas`   | gas             | `0x08` | Remaining gas.                                                                                                         |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
