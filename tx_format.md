@@ -28,7 +28,7 @@
 ## Input
 
 ```
-enum  InputType : uint8 {
+enum  InputType : uint32 {
     Coin = 0,
     Contract = 1,
 }
@@ -59,7 +59,7 @@ enum  InputType : uint8 {
 ## Output
 
 ```
-enum  OutputType : uint8 {
+enum  OutputType : uint32 {
     Coin = 0,
     Contract = 1,
 }
