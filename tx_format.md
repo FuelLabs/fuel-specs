@@ -14,21 +14,26 @@
 | name             | type                    | description                      |
 | ---------------- | ----------------------- | -------------------------------- |
 | `version`        | `uint32`                | Transaction version. Always `0`. |
-| `scriptLength`   | `uint32`                | Script length, in instructions.  |
+| `scriptLength`   | `uint16`                | Script length, in instructions.  |
 | `gasPrice`       | `uint64`                | Gas price for transaction.       |
 | `gasLimit`       | `uint64`                | Gas limit for transaction.       |
-| `inputsCount`    | `uint32`                | Number of inputs.                |
-| `outputsCount`   | `uint32`                | Number of outputs.               |
-| `witnessesCount` | `uint32`                | Number of witnesses.             |
+| `inputsCount`    | `uint8`                 | Number of inputs.                |
+| `outputsCount`   | `uint8`                 | Number of outputs.               |
+| `witnessesCount` | `uint8`                 | Number of witnesses.             |
 | `script`         | `byte[]`                | Script to execute.               |
 | `inputs`         | [Input](#input)`[]`     | List of inputs.                  |
 | `outputs`        | [Output](#output)`[]`   | List of outputs.                 |
 | `witnesses`      | [Witness](#witness)`[]` | List of witnesses.               |
 
+When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
+1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 4 bytes.
+1. `byte[32]`: as-is.
+1. `byte[]`: as-is, with padding zeroes aligned to 4 bytes.
+
 ## Input
 
 ```
-enum  InputType : uint32 {
+enum  InputType : uint8 {
     Coin = 0,
     Contract = 1,
 }
@@ -45,8 +50,8 @@ enum  InputType : uint32 {
 | name           | type       | description                                         |
 | -------------- | ---------- | --------------------------------------------------- |
 | `utxoID`       | `byte[32]` | UTXO ID.                                            |
-| `dataLength`   | `uint32`   | Length of data, in bytes.                           |
-| `witnessIndex` | `uint32`   | Index of witness that authorizes spending the coin. |
+| `witnessIndex` | `uint8`    | Index of witness that authorizes spending the coin. |
+| `dataLength`   | `uint16`   | Length of data, in bytes.                           |
 | `data`         | `byte[]`   | Data to input into script.                          |
 
 ### InputContract
@@ -79,15 +84,15 @@ enum  OutputType : uint32 {
 
 ### OutputContract
 
-| name                 | type     | description                                             |
-| -------------------- | -------- | ------------------------------------------------------- |
-| `inputIndex`         | `uint32` | Index of input contract.                                |
-| `amountWitnessIndex` | `uint32` | Index of witness for amount of coins owned by contract. |
-| `stateWitnessIndex`  | `uint32` | Index of witness for state root of contract.            |
+| name                 | type    | description                                             |
+| -------------------- | ------- | ------------------------------------------------------- |
+| `inputIndex`         | `uint8` | Index of input contract.                                |
+| `amountWitnessIndex` | `uint8` | Index of witness for amount of coins owned by contract. |
+| `stateWitnessIndex`  | `uint8` | Index of witness for state root of contract.            |
 
 ## Witness
 
 | name         | type     | description                       |
 | ------------ | -------- | --------------------------------- |
-| `dataLength` | `uint32` | Length of witness data, in bytes. |
+| `dataLength` | `uint16` | Length of witness data, in bytes. |
 | `data`       | `byte[]` | Witness data.                     |
