@@ -69,4 +69,22 @@ Cross-contract calls push a _call frame_ onto the stack, similar to a stack fram
 1. Stack frames: store metadata across trusted internal (i.e. intra-contract) function calls. Not supported natively by the FuelVM, but may be used as an abstraction at a higher layer.
 1. Call frames: store metadata across untrusted external (i.e. inter-contract) calls. Supported natively by the FuelVM.
 
-Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: contracts may only write to their own call frame and their own heap.
+Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: the currently-executing contracts may only write to their own call frame, their own heap, and return value ranges assigned to them.
+
+A call frame consists of the following, word-aligned:
+
+| bytes | type                 | value             | description                                                                   |
+| ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
+|       |                      |                   | **Unwritable area begins.**                                                   |
+| 8     | `uint32`             | writable offset   | Offset from start of this call frame to start of writable area, in bytes.     |
+| 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                  |
+| 8     | `uint64`             | gas               | Remaining gas for this call frame.                                            |
+| 32    | `byte[32]`           | to                | Contract ID of this call frame.                                               |
+| 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                     |
+| 1     | `uint8`              | in count          | Number of input values.                                                       |
+| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.               |
+| 1     | `uint8`              | out count         | Number of return values.                                                      |
+| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.              |
+| 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
+|       |                      |                   | **Unwritable area ends.**                                                     |
+| *     |                      |                   | Call frame's stack.                                                           |
