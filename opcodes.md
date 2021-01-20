@@ -511,12 +511,12 @@ Register `$rs` is a memory address from which the following fields are set (word
 
 | bytes | type                 | value             | description                                                      |
 | ----- | -------------------- | ----------------- | ---------------------------------------------------------------- |
-| 4     | `uint64`             | gas               | Amount of gas to forward.                                        |
+| 8     | `uint64`             | gas               | Amount of gas to forward.                                        |
 | 32    | `byte[32]`           | to                | Contract ID to call.                                             |
-| 4     | `uint8`              | out count         | Number of return values.                                         |
-| 8*    | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
-| 4     | `uint8`              | in count          | Number of input values.                                          |
-| 8*    | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
+| 1     | `uint8`              | out count         | Number of return values.                                         |
+| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
+| 1     | `uint8`              | in count          | Number of input values.                                          |
+| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
 If gas is set to an amount greater than the available gas, all available gas is forwarded.
 
