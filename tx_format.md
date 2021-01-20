@@ -14,9 +14,9 @@
 | name             | type                    | description                      |
 | ---------------- | ----------------------- | -------------------------------- |
 | `version`        | `uint32`                | Transaction version. Always `0`. |
-| `scriptLength`   | `uint16`                | Script length, in instructions.  |
 | `gasPrice`       | `uint64`                | Gas price for transaction.       |
 | `gasLimit`       | `uint64`                | Gas limit for transaction.       |
+| `scriptLength`   | `uint16`                | Script length, in instructions.  |
 | `inputsCount`    | `uint8`                 | Number of inputs.                |
 | `outputsCount`   | `uint8`                 | Number of outputs.               |
 | `witnessesCount` | `uint8`                 | Number of witnesses.             |
