@@ -74,27 +74,32 @@ Call frames are needed to ensure that the called contract cannot mutate the runn
 
 A call frame consists of the following, word-aligned:
 
-| bytes | type                 | value             | description                                                                   |
-| ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
-|       |                      |                   | **Unwritable area begins.**                                                   |
-| 8     | `uint32`             | writable offset   | Offset from start of this call frame to start of writable area, in bytes.     |
-| 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                  |
-| 8     | `uint64`             | gas               | Remaining gas for this call frame.                                            |
-| 32    | `byte[32]`           | to                | Contract ID of this call frame.                                               |
-| 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                     |
-| 1     | `uint8`              | in count          | Number of input values.                                                       |
-| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.               |
-| 1     | `uint8`              | out count         | Number of return values.                                                      |
-| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.              |
-| 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
-|       |                      |                   | **Unwritable area ends.**                                                     |
-| *     |                      |                   | Call frame's stack.                                                           |
+| bytes | type                 | value             | description                                                                     |
+| ----- | -------------------- | ----------------- | ------------------------------------------------------------------------------- |
+|       |                      |                   | **Unwritable area begins.**                                                     |
+| 8     | `uint32`             | writable offset   | Offset from start of this call frame to start of writable area, in bytes.       |
+| 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                    |
+| 8     | `uint32`             | code offset       | Offset from start of this call frame to code, in bytes.                         |
+| 8     | `uint64`             | gas               | Gas remaining from previous call frame after forwarding gas to this call frame. |
+| 32    | `byte[32]`           | to                | Contract ID for this call.                                                      |
+| 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                       |
+| 8     | `uint64`             | ppc               | Previous call frame's pc.                                                       |
+| 8     | `uint64`             | pfpp              | Previous call frame's fpp.                                                      |
+| 8     | `uint64`             | phpp              | Previous call frame's hpp.                                                      |
+| 1     | `uint8`              | in count          | Number of input values.                                                         |
+| 1     | `uint8`              | out count         | Number of return values.                                                        |
+| 2     | `uint16`             | code size         | Code size in bytes (not padded to word alignment).                              |
+| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.                 |
+| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.                |
+| 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned.   |
+|       |                      |                   | **Unwritable area ends.**                                                       |
+| *     |                      |                   | Call frame's stack.                                                             |
 
 ## Ownership
 
 Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [`SW`](./opcodes.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./opcodes.md#call-call-contract)), ownership must be checked.
 
 The owned memory range for a call frame is:
-1. `[$fpp + MEM[$fpp], $fp)`: the writable stack area of the call frame.
+1. `[$fpp + MEM[$fpp + 0], $fp)`: the writable stack area of the call frame.
 1. `($hp, $hpp]`: the heap area allocated by this call frame or its children.
 1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, size)`.

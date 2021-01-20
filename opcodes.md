@@ -518,8 +518,8 @@ Register `$rs` is a memory address from which the following fields are set (word
 | 8     | `uint64`             | gas               | Amount of gas to forward.                                        |
 | 32    | `byte[32]`           | to                | Contract ID to call.                                             |
 | 1     | `uint8`              | out count         | Number of return values.                                         |
-| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
 | 1     | `uint8`              | in count          | Number of input values.                                          |
+| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
 If gas is set to an amount greater than the available gas, all available gas is forwarded.
@@ -528,7 +528,12 @@ Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consum
 
 Each output range [is checked for ownership](./main.md#ownership). Any check failing causes a revert, with this instruction consuming TODO gas.
 
-If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$fp`.
+If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$fp`. In addition to filling in the values of the call frame, the following registers are set:
+1. `$fpp = $fp` (on top of the previous call frame is the beginning of this call frame)
+1. `$fp = $fpp + MEM[$fpp + 0]` (first word is offset to free stack)
+1. `$hpp = $hp` (below the previous call frame's heap is the beginning of this call frame's heap)
+1. `$pc = $fpp + MEM[$fpp + 16]` (third word is code offset)
+1. `$gas` = forwarded gas.
 
 ### CODECOPY: Code copy
 
