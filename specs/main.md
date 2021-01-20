@@ -102,4 +102,4 @@ Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [
 The owned memory range for a call frame is:
 1. `[$fpp + MEM[$fpp + 0], $fp)`: the writable stack area of the call frame.
 1. `($hp, $hpp]`: the heap area allocated by this call frame or its children.
-1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, size)`.
+1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, addr + size)`.
