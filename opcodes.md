@@ -530,7 +530,7 @@ Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consum
 | Operation   | ```MEM[$rd, $ru] = code($rs, $rt, $ru);```                                                                                                       |
 | Syntax      | `codecopy $rs, $rs, $rt, $ru`                                                                                                                    |
 | Encoding    | `0x00 rd rs rt ru`                                                                                                                               |
-| Notes       | If `$rt` is greater than the code size, zero bytes are filled in.                                                                                |
+| Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                |
 
 ### CODEROOT: Code Merkle root
 
