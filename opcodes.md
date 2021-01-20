@@ -528,7 +528,7 @@ Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consum
 
 Each output range [is checked for ownership](./main.md#ownership). Any check failing causes a revert, with this instruction consuming TODO gas.
 
-If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$`.
+If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$fp`.
 
 ### CODECOPY: Code copy
 
