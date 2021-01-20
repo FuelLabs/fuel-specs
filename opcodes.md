@@ -405,23 +405,23 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### CFE: Extend call frame
 
-|             |                                                      |
-| ----------- | ---------------------------------------------------- |
-| Description | Extend the current call frame's stack.               |
-| Operation   | ```extend MEM[$hp, $rs];```<br>```$fp = $fp + $rs``` |
-| Syntax      | `cfe $rs`                                            |
-| Encoding    | `0x00 rs - - -`                                      |
-| Notes       | Does not initialize memory.                          |
+|             |                                        |
+| ----------- | -------------------------------------- |
+| Description | Extend the current call frame's stack. |
+| Operation   | ```$fp = $fp + $rs```                  |
+| Syntax      | `cfe $rs`                              |
+| Encoding    | `0x00 rs - - -`                        |
+| Notes       | Does not initialize memory.            |
 
 ### CFS: Shrink call frame
 
-|             |                                                            |
-| ----------- | ---------------------------------------------------------- |
-| Description | Shrink the current call frame's stack.                     |
-| Operation   | ```shrink MEM[$hp - $rs, $rs];```<br>```$fp = $fp - $rs``` |
-| Syntax      | `cfs $rs`                                                  |
-| Encoding    | `0x00 rs - - -`                                            |
-| Notes       | Does not clear memory.                                     |
+|             |                                        |
+| ----------- | -------------------------------------- |
+| Description | Shrink the current call frame's stack. |
+| Operation   | ```$fp = $fp - $rs```                  |
+| Syntax      | `cfs $rs`                              |
+| Encoding    | `0x00 rs - - -`                        |
+| Notes       | Does not clear memory.                 |
 
 ### LB: Load byte
 
@@ -445,13 +445,13 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### MALLOC: Allocate memory
 
-|             |                                                            |
-| ----------- | ---------------------------------------------------------- |
-| Description | Allocate a number of bytes from the heap.                  |
-| Operation   | ```alloc MEM[$hp - $rs, $rs];```<br>```$hp = $hp - $rs;``` |
-| Syntax      | `malloc $rs`                                               |
-| Encoding    | `0x00 rs - - -`                                            |
-| Notes       | Does not initialize memory.                                |
+|             |                                           |
+| ----------- | ----------------------------------------- |
+| Description | Allocate a number of bytes from the heap. |
+| Operation   | ```$hp = $hp - $rs;```                    |
+| Syntax      | `malloc $rs`                              |
+| Encoding    | `0x00 rs - - -`                           |
+| Notes       | Does not initialize memory.               |
 
 ### MEMEQ: Memory equality
 
@@ -475,23 +475,27 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### SB: Store byte
 
-|             |                                                                               |
-| ----------- | ----------------------------------------------------------------------------- |
-| Description | The least significant byte of `$rt` is stored at the address offset by `imm`. |
-| Operation   | ```MEM[$rs + imm, 1] = $rt[0, 1];```                                          |
-| Syntax      | `sb $rt, $rs, imm`                                                            |
-| Encoding    | `0x00 rs rt i i`                                                              |
-| Notes       |                                                                               |
+|             |                                                                                     |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Description | The least significant byte of `$rt` is stored at the address `$rs` offset by `imm`. |
+| Operation   | ```MEM[$rs + imm, 1] = $rt[0, 1];```                                                |
+| Syntax      | `sb $rt, $rs, imm`                                                                  |
+| Encoding    | `0x00 rs rt i i`                                                                    |
+| Notes       |                                                                                     |
+
+The memory range `MEM[$rs + imm, 1]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
 
 ### SW: Store word
 
-|             |                                                              |
-| ----------- | ------------------------------------------------------------ |
-| Description | The value of `$rt` is stored at the address offset by `imm`. |
-| Operation   | ```MEM[$rs + imm, 8] = $rt;```                               |
-| Syntax      | `sw $rt, $rs, imm`                                           |
-| Encoding    | `0x00 rs rt i i`                                             |
-| Notes       |                                                              |
+|             |                                                                    |
+| ----------- | ------------------------------------------------------------------ |
+| Description | The value of `$rt` is stored at the address `$rs` offset by `imm`. |
+| Operation   | ```MEM[$rs + imm, 8] = $rt;```                                     |
+| Syntax      | `sw $rt, $rs, imm`                                                 |
+| Encoding    | `0x00 rs rt i i`                                                   |
+| Notes       |                                                                    |
+
+The memory range `MEM[$rs + imm, 8]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
 
 ## Contract Opcodes
 
@@ -521,6 +525,10 @@ Register `$rs` is a memory address from which the following fields are set (word
 If gas is set to an amount greater than the available gas, all available gas is forwarded.
 
 Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consuming TODO gas.
+
+Each output range [is checked for ownership](./main.md#ownership). Any check failing causes a revert, with this instruction consuming TODO gas.
+
+If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$`.
 
 ### CODECOPY: Code copy
 

@@ -6,6 +6,7 @@
 - [Opcodes](#opcodes)
 - [Transaction Execution](#transaction-execution)
 - [Call Frames](#call-frames)
+- [Ownership](#ownership)
 
 ## Introduction
 
@@ -30,9 +31,9 @@ In addition to the 64 registers (6-bit register address space), there are some s
 | `$z`     | zero            | `0x00` | Zero-containing register (convenience register frequently found in register machines).                                 |
 | `$of`    | overflow        | `0x01` | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
 | `$pc`    | program counter | `0x02` | The program counter. Memory address of the current instruction.                                                        |
-| `$fp`    | frame pointer   | `0x03` | Memory address of beginning of current call frame.                                                                     |
+| `$fp`    | frame pointer   | `0x03` | Memory address on top of current call frame (points to fee memory).                                                    |
 | `$fpp`   | prev frame ptr  | `0x04` | Previous call frame's frame pointer.                                                                                   |
-| `$hp`    | heap pointer    | `0x05` | Memory address of the current bottom of the heap.                                                                      |
+| `$hp`    | heap pointer    | `0x05` | Memory address of the current bottom of the heap (points to free memory).                                              |
 | `$hpp`   | prev heap ptr   | `0x06` | Previous call frame's heap pointer.                                                                                    |
 | `$err`   | error           | `0x07` | Error codes for particular operations.                                                                                 |
 | `$gas`   | gas             | `0x08` | Remaining gas.                                                                                                         |
@@ -88,3 +89,5 @@ A call frame consists of the following, word-aligned:
 | 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
 |       |                      |                   | **Unwritable area ends.**                                                     |
 | *     |                      |                   | Call frame's stack.                                                           |
+
+## Ownership
