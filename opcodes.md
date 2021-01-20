@@ -478,8 +478,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                               |
 | ----------- | ----------------------------------------------------------------------------- |
 | Description | The least significant byte of `$rt` is stored at the address offset by `imm`. |
-| Operation   | ```MEM[$rs + offset, 1] = $rt[0, 1];```                                       |
-| Syntax      | `sb $rt, $rs, offset`                                                         |
+| Operation   | ```MEM[$rs + imm, 1] = $rt[0, 1];```                                          |
+| Syntax      | `sb $rt, $rs, imm`                                                            |
 | Encoding    | `0x00 rs rt i i`                                                              |
 | Notes       |                                                                               |
 
@@ -488,8 +488,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                              |
 | ----------- | ------------------------------------------------------------ |
 | Description | The value of `$rt` is stored at the address offset by `imm`. |
-| Operation   | ```MEM[$rs + offset, 8] = $rt;```                            |
-| Syntax      | `sw $rt, $rs, offset`                                        |
+| Operation   | ```MEM[$rs + imm, 8] = $rt;```                               |
+| Syntax      | `sw $rt, $rs, imm`                                           |
 | Encoding    | `0x00 rs rt i i`                                             |
 | Notes       |                                                              |
 
@@ -499,13 +499,28 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### CALL: Call contract
 
-|             |                                                                                                                                                                                                                                                                |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Message call into an account where `$rs` points to a sequence of words in memory that are ordered as follows: gas, to, value, in offset, in size, out offset, out size. The value `1` is set as the `$rd` register's value if the call completes successfully. |
-| Operation   |                                                                                                                                                                                                                                                                |
-| Syntax      | `call $rd, $rs`                                                                                                                                                                                                                                                |
-| Encoding    | `0x00 rd rs - -`                                                                                                                                                                                                                                               |
-| Notes       |                                                                                                                                                                                                                                                                |
+|             |                  |
+| ----------- | ---------------- |
+| Description | Call contract.   |
+| Operation   |                  |
+| Syntax      | `call $rd, $rs`  |
+| Encoding    | `0x00 rd rs - -` |
+| Notes       |                  |
+
+Register `$rs` is a memory address with the following bytes:
+
+| bytes | type                 | value             | description                                                      |
+| ----- | -------------------- | ----------------- | ---------------------------------------------------------------- |
+| 4     | `uint64`             | gas               | Amount of gas to forward.                                        |
+| 32    | `byte[32]`           | to                | Contract ID to call.                                             |
+| 4     | `uint32`             | out count         | Number of return values.                                         |
+| 8*    | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
+| 4     | `uint32`             | in count          | Number of input values.                                          |
+| 8*    | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
+
+If gas is set to an amount greater than the available gas, all available gas is forwarded.
+
+Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consuming TODO gas.
 
 ### CODECOPY: Code copy
 
