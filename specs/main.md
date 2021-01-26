@@ -104,6 +104,6 @@ A call frame consists of the following, word-aligned:
 Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [`SW`](./opcodes.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./opcodes.md#call-call-contract)), ownership must be checked.
 
 The owned memory range for a call frame is:
-1. `[$fpp + MEM[$fpp + 0], $fp)`: the writable stack area of the call frame.
-1. `($hp, $hpp]`: the heap area allocated by this call frame or its children.
+1. `[$fp + MEM[$fp + 0], $sp)`: the writable stack area of the call frame.
+1. `($hp, $fp->$hp]`: the heap area allocated by this call frame or its children.
 1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, addr + size)`.
