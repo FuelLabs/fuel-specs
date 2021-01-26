@@ -65,7 +65,7 @@ Before execution begins, the following is pushed on the stack sequentially:
 1. Fuel block height (`uint64`, word-aligned).
 1. Block producer address (`byte[32]`, word-aligned).
 1. Transaction gas limit (`uint64`, word-aligned).
-1. Transaction hash (`uint64`, word-aligned).
+1. Transaction hash (`byte[32]`, word-aligned).
 1. Block hash for the previous 256 blocks, starting from the previous block (`byte[32][256]`, word-aligned). Block hash is `0x00**32` if block height is <= 256.
 1. The [transaction, serialized](./tx_format.md).
 
