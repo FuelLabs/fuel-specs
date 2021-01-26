@@ -25,18 +25,25 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 * Register/special register (see below) identifier: 6 bits
 * Immediate value: 12, 18, or 24 bits, depending on operation
 
-In addition to the 64 registers (6-bit register address space), there are some special registers defined as follows:
-| register | name            | value  | description                                                                                                            |
-| -------- | --------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
-| `$z`     | zero            | `0x00` | Zero-containing register (convenience register frequently found in register machines).                                 |
-| `$of`    | overflow        | `0x01` | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
-| `$pc`    | program counter | `0x02` | The program counter. Memory address of the current instruction.                                                        |
-| `$fp`    | frame pointer   | `0x03` | Memory address on top of current call frame (points to fee memory).                                                    |
-| `$fpp`   | prev frame ptr  | `0x04` | Previous call frame's frame pointer.                                                                                   |
-| `$hp`    | heap pointer    | `0x05` | Memory address of the current bottom of the heap (points to free memory).                                              |
-| `$hpp`   | prev heap ptr   | `0x06` | Previous call frame's heap pointer.                                                                                    |
-| `$err`   | error           | `0x07` | Error codes for particular operations.                                                                                 |
-| `$gas`   | gas             | `0x08` | Remaining gas.                                                                                                         |
+Of the 64 registers (6-bit register address space), the first `16` are reserved:
+| value  | register | name            | description                                                                                                            |
+| ------ | -------- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `0x00` | `$z`     | zero            | Zero-containing register (convenience register frequently found in register machines).                                 |
+| `0x01` | `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
+| `0x02` | `$pc`    | program counter | The program counter. Memory address of the current instruction.                                                        |
+| `0x03` | `$fp`    | frame pointer   | Memory address on top of current call frame (points to fee memory).                                                    |
+| `0x04` | `$fpp`   | prev frame ptr  | Previous call frame's frame pointer.                                                                                   |
+| `0x05` | `$hp`    | heap pointer    | Memory address of the current bottom of the heap (points to free memory).                                              |
+| `0x06` | `$hpp`   | prev heap ptr   | Previous call frame's heap pointer.                                                                                    |
+| `0x07` | `$err`   | error           | Error codes for particular operations.                                                                                 |
+| `0x08` | `$gas`   | gas             | Remaining gas.                                                                                                         |
+| `0x09` |          |                 |                                                                                                                        |
+| `0x0A` |          |                 |                                                                                                                        |
+| `0x0B` |          |                 |                                                                                                                        |
+| `0x0C` |          |                 |                                                                                                                        |
+| `0x0D` |          |                 |                                                                                                                        |
+| `0x0E` |          |                 |                                                                                                                        |
+| `0x0F` |          |                 |                                                                                                                        |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
@@ -83,9 +90,6 @@ A call frame consists of the following, word-aligned:
 | 8     | `uint64`             | gas               | Gas remaining from previous call frame after forwarding gas to this call frame. |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                      |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                       |
-| 8     | `uint64`             | ppc               | Previous call frame's pc.                                                       |
-| 8     | `uint64`             | pfpp              | Previous call frame's fpp.                                                      |
-| 8     | `uint64`             | phpp              | Previous call frame's hpp.                                                      |
 | 1     | `uint8`              | in count          | Number of input values.                                                         |
 | 1     | `uint8`              | out count         | Number of return values.                                                        |
 | 2     | `uint16`             | code size         | Code size in bytes (not padded to word alignment).                              |
