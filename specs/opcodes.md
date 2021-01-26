@@ -6,7 +6,6 @@
   - [ADDI: Add immediate](#addi-add-immediate)
   - [AND: AND](#and-and)
   - [ANDI: AND immediate](#andi-and-immediate)
-  - [CPSR: Copy from special register](#cpsr-copy-from-special-register)
   - [DIV: Divide](#div-divide)
   - [DIVI: Divide immediate](#divi-divide-immediate)
   - [EQ: Equals](#eq-equals)
@@ -112,16 +111,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `andi $rd, $rs, imm`                            |
 | Encoding    | `0x00 rd rs i i`                                |
 | Notes       | `$of` is cleared.                               |
-
-### CPSR: Copy from special register
-
-|             |                                                |
-| ----------- | ---------------------------------------------- |
-| Description | Copies the contents of special register `$rs`. |
-| Operation   | ```$rd = $rs;```                               |
-| Syntax      | `cpsr $rd, $rs`                                |
-| Encoding    | `0x00 rd rs - -`                               |
-| Notes       |                                                |
 
 ### DIV: Divide
 
