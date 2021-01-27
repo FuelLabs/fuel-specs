@@ -492,7 +492,7 @@ Each output range [is checked for ownership](./main.md#ownership). Any check fai
 If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. `$sp = $fp + MEM[$fp + 0]` (first word is offset to free stack)
-1. `$pc = $fp + MEM[$fp + 16]` (third word is code offset)
+1. `$pc = $fp + MEM[$fp + 16]` (third word is code offset, pc is not advanced by 4)
 1. `$gas` = forwarded gas.
 
 ### CODECOPY: Code copy
@@ -547,13 +547,19 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### RETURN: Return from call
 
-|             |                                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Description | Returns values from memory using first register value as memory offset whose size is given by the second register value. |
-| Operation   |                                                                                                                          |
-| Syntax      | `return $rs, $rt`                                                                                                        |
-| Encoding    | `0x00 rs rt - -`                                                                                                         |
-| Notes       |                                                                                                                          |
+|             |                             |
+| ----------- | --------------------------- |
+| Description | Returns from contract call. |
+| Operation   |                             |
+| Syntax      | `return`                    |
+| Encoding    | `0x00 - - - -`              |
+| Notes       |                             |
+
+Return from contract call, popping the call frame. Before popping, return the unused forwarded gas to the caller:
+1. `$gas = $gas + MEM[$fp + 24]` (remaining gas from caller is 4th word)
+
+Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
+1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ### REVERT: Revert
 
