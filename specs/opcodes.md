@@ -450,7 +450,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------- |
 | Description | The least significant byte of `$rs` is stored at the address `$rd` offset by `imm`. |
-| Operation   | ```MEM[$rd + imm, 1] = $rs[0, 1];```                                                |
+| Operation   | ```MEM[$rd + imm, 1] = $rs[7, 1];```                                                |
 | Syntax      | `sb $rd, $rs, imm`                                                                  |
 | Encoding    | `0x00 rd rs i i`                                                                    |
 | Notes       |                                                                                     |
