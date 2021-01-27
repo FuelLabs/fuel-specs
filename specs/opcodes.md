@@ -662,7 +662,7 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 |             |                                                       |
 | ----------- | ----------------------------------------------------- |
 | Description | The keccak-256 hash of `$rt` bytes starting at `$rs`. |
-| Operation   | ```$rd = keccak256(MEM[$rs, $rt]);```                 |
+| Operation   | ```MEM[$rd, 32] = keccak256(MEM[$rs, $rt]);```        |
 | Syntax      | `keccak256 $rd, $rs, $rt`                             |
 | Encoding    | `0x00 rd rs rt -`                                     |
 | Notes       |                                                       |
@@ -672,7 +672,7 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 |             |                                                      |
 | ----------- | ---------------------------------------------------- |
 | Description | The SHA-2-256 hash of `$rt` bytes starting at `$rs`. |
-| Operation   | ```$rd = sha256(MEM[$rs, $rt]);```                   |
+| Operation   | ```MEM[$rd, 32] = sha256(MEM[$rs, $rt]);```          |
 | Syntax      | `sha256 $rd, $rs, $rt`                               |
 | Encoding    | `0x00 rd rs rt -`                                    |
 | Notes       |                                                      |
