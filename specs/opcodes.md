@@ -647,13 +647,15 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### ECRECOVER: Signature recovery
 
-|             |                                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Description | The hash of the public key recovered from 64-byte signature starting at `$rs` on 32-byte message hash starting at `$rt`. |
-| Operation   | ```MEM[$rd, 32] = ecrecover(MEM[$rs, 64], MEM[$rt, 32]);```                                                              |
-| Syntax      | `ecrecover $rd, $rs, $rt`                                                                                                |
-| Encoding    | `0x00 rd rs rt -`                                                                                                        |
-| Notes       |                                                                                                                          |
+|             |                                                                                                                             |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rs` on 32-byte message hash starting at `$rt`. |
+| Operation   | ```MEM[$rd, 64] = ecrecover(MEM[$rs, 64], MEM[$rt, 32]);```                                                                 |
+| Syntax      | `ecrecover $rd, $rs, $rt`                                                                                                   |
+| Encoding    | `0x00 rd rs rt -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
 ### KECCAK256: keccak-256
 
