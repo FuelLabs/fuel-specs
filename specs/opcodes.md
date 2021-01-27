@@ -647,20 +647,22 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### ECRECOVER: Signature recovery
 
-|             |                                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Description | The hash of the public key recovered from 64-byte signature starting at `$rs` on 32-byte message hash starting at `$rt`. |
-| Operation   | ```MEM[$rd, 32] = ecrecover(MEM[$rs, 64], MEM[$rt, 32]);```                                                              |
-| Syntax      | `ecrecover $rd, $rs, $rt`                                                                                                |
-| Encoding    | `0x00 rd rs rt -`                                                                                                        |
-| Notes       |                                                                                                                          |
+|             |                                                                                                                             |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rs` on 32-byte message hash starting at `$rt`. |
+| Operation   | ```MEM[$rd, 64] = ecrecover(MEM[$rs, 64], MEM[$rt, 32]);```                                                                 |
+| Syntax      | `ecrecover $rd, $rs, $rt`                                                                                                   |
+| Encoding    | `0x00 rd rs rt -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
 ### KECCAK256: keccak-256
 
 |             |                                                       |
 | ----------- | ----------------------------------------------------- |
 | Description | The keccak-256 hash of `$rt` bytes starting at `$rs`. |
-| Operation   | ```$rd = keccak256(MEM[$rs, $rt]);```                 |
+| Operation   | ```MEM[$rd, 32] = keccak256(MEM[$rs, $rt]);```        |
 | Syntax      | `keccak256 $rd, $rs, $rt`                             |
 | Encoding    | `0x00 rd rs rt -`                                     |
 | Notes       |                                                       |
@@ -670,7 +672,7 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 |             |                                                      |
 | ----------- | ---------------------------------------------------- |
 | Description | The SHA-2-256 hash of `$rt` bytes starting at `$rs`. |
-| Operation   | ```$rd = sha256(MEM[$rs, $rt]);```                   |
+| Operation   | ```MEM[$rd, 32] = sha256(MEM[$rs, $rt]);```          |
 | Syntax      | `sha256 $rd, $rs, $rt`                               |
 | Encoding    | `0x00 rd rs rt -`                                    |
 | Notes       |                                                      |
