@@ -508,13 +508,13 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### CODEROOT: Code Merkle root
 
-|             |                                                                                                                                              |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Set the 32 bytes in memory starting at `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
-| Operation   | ```MEM[$rd, 32] = coderoot(MEM[$rs, 32]);```                                                                                                 |
-| Syntax      | `codehash $rd, $rs`                                                                                                                          |
-| Encoding    | `0x00 rd rs - -`                                                                                                                             |
-| Notes       |                                                                                                                                              |
+|             |                                                                                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Description | Set the 32 bytes in memory starting at `$rd` to the code root for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
+| Operation   | ```MEM[$rd, 32] = coderoot(MEM[$rs, 32]);```                                                                                          |
+| Syntax      | `codehash $rd, $rs`                                                                                                                   |
+| Encoding    | `0x00 rd rs - -`                                                                                                                      |
+| Notes       |                                                                                                                                       |
 
 ### CODESIZE: Code size
 
