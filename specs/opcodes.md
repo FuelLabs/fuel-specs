@@ -556,6 +556,8 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Encoding    | `0x00 rs rt - -`                                                                                                                                                    |
 | Notes       |                                                                                                                                                                     |
 
+<!--TODO-->
+
 ### RETURN: Return from call
 
 |             |                             |
