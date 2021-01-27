@@ -28,6 +28,7 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Opcodes](#control-flow-opcodes)
+  - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
@@ -319,6 +320,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Notes       | `$of` is cleared.                               |
 
 ## Control Flow Opcodes
+
+### HALT: Halt
+
+|             |                                                                         |
+| ----------- | ----------------------------------------------------------------------- |
+| Description | Halt execution, keeping any state changes and returning value in `$rs`. |
+| Operation   | ```revert $rs;```                                                       |
+| Syntax      | `revert $rs`                                                            |
+| Encoding    | `0x00 rs - - -`                                                         |
+| Notes       |                                                                         |
 
 ### J: Jump
 
