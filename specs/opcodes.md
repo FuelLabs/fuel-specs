@@ -27,9 +27,6 @@
   - [SUBI: Subtract immediate](#subi-subtract-immediate)
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
-- [Combination Arithmetic Opcodes](#combination-arithmetic-opcodes)
-  - [ADDMOD: Addition then modulus](#addmod-addition-then-modulus)
-  - [MULMOD: Multiply then modulus](#mulmod-multiply-then-modulus)
 - [Control Flow Opcodes](#control-flow-opcodes)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
@@ -321,30 +318,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `xori $rt, $rs, imm `                           |
 | Encoding    | `0x00 rs rt i i`                                |
 | Notes       | `$of` is cleared.                               |
-
-## Combination Arithmetic Opcodes
-
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
-
-### ADDMOD: Addition then modulus
-
-|             |                               |
-| ----------- | ----------------------------- |
-| Description | Modular addition.             |
-| Operation   | ```$rd = ($rs + $rt) % $ru``` |
-| Syntax      | `addmod $rd, $rs, $rt, $ru`   |
-| Encoding    | `0x00 rd rs rt ru`            |
-| Notes       |                               |
-
-### MULMOD: Multiply then modulus
-
-|             |                               |
-| ----------- | ----------------------------- |
-| Description | Modular multiplication.       |
-| Operation   | ```$rd = ($rs * $rt) % $ru``` |
-| Syntax      | `mulmod $rd, $rs, $rt, $ru`   |
-| Encoding    | `0x00 rd rs rt ru`            |
-| Notes       |                               |
 
 ## Control Flow Opcodes
 
