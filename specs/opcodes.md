@@ -28,6 +28,7 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Opcodes](#control-flow-opcodes)
+  - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
@@ -48,7 +49,6 @@
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
   - [CREATE: Create contract](#create-create-contract)
-  - [GAS: Remaining gas](#gas-remaining-gas)
   - [LOG: Log event](#log-log-event)
   - [RETURN: Return from call](#return-return-from-call)
   - [REVERT: Revert](#revert-revert)
@@ -321,6 +321,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ## Control Flow Opcodes
 
+### HALT: Halt
+
+|             |                                                                         |
+| ----------- | ----------------------------------------------------------------------- |
+| Description | Halt execution, keeping any state changes and returning value in `$rs`. |
+| Operation   | ```revert $rs;```                                                       |
+| Syntax      | `revert $rs`                                                            |
+| Encoding    | `0x00 rs - - -`                                                         |
+| Notes       |                                                                         |
+
 ### J: Jump
 
 |             |                            |
@@ -493,7 +503,7 @@ Each output range [is checked for ownership](./main.md#ownership). Any check fai
 If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. `$sp = $fp + MEM[$fp + 0]` (first word is offset to free stack)
-1. `$pc = $fp + MEM[$fp + 16]` (third word is code offset)
+1. `$pc = $fp + MEM[$fp + 16]` (third word is code offset, pc is not advanced by 4)
 1. `$gas` = forwarded gas.
 
 ### CODECOPY: Code copy
@@ -508,13 +518,13 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### CODEROOT: Code Merkle root
 
-|             |                                                                                                                                              |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Set the 32 bytes in memory starting at `$rd` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
-| Operation   | ```MEM[$rd, 32] = coderoot(MEM[$rs, 32]);```                                                                                                 |
-| Syntax      | `codehash $rd, $rs`                                                                                                                          |
-| Encoding    | `0x00 rd rs - -`                                                                                                                             |
-| Notes       |                                                                                                                                              |
+|             |                                                                                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Description | Set the 32 bytes in memory starting at `$rd` to the code root for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
+| Operation   | ```MEM[$rd, 32] = coderoot(MEM[$rs, 32]);```                                                                                          |
+| Syntax      | `codehash $rd, $rs`                                                                                                                   |
+| Encoding    | `0x00 rd rs - -`                                                                                                                      |
+| Notes       |                                                                                                                                       |
 
 ### CODESIZE: Code size
 
@@ -528,23 +538,13 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### CREATE: Create contract
 
-|             |                        |
-| ----------- | ---------------------- |
-| Description | Create a new contract. |
-| Operation   |                        |
-| Syntax      | `create $rd`           |
-| Encoding    | `0x00 rd - - -`        |
-| Notes       |                        |
-
-### GAS: Remaining gas
-
-|             |                                                   |
-| ----------- | ------------------------------------------------- |
-| Description | Sets `$rd` to the numeric value of gas remaining. |
-| Operation   | ```$rd = $gas;```                                 |
-| Syntax      | `gas $rd`                                         |
-| Encoding    | `0x00 rd - - -`                                   |
-| Notes       |                                                   |
+|             |                                                                       |
+| ----------- | --------------------------------------------------------------------- |
+| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`. |
+| Operation   | ```create(MEM[$rs, $rt])```                                           |
+| Syntax      | `create $rs, $rt`                                                     |
+| Encoding    | `0x00 rs rt - -`                                                      |
+| Notes       |                                                                       |
 
 ### LOG: Log event
 
@@ -556,15 +556,23 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Encoding    | `0x00 rs rt - -`                                                                                                                                                    |
 | Notes       |                                                                                                                                                                     |
 
+<!--TODO-->
+
 ### RETURN: Return from call
 
-|             |                                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Description | Returns values from memory using first register value as memory offset whose size is given by the second register value. |
-| Operation   |                                                                                                                          |
-| Syntax      | `return $rs, $rt`                                                                                                        |
-| Encoding    | `0x00 rs rt - -`                                                                                                         |
-| Notes       |                                                                                                                          |
+|             |                             |
+| ----------- | --------------------------- |
+| Description | Returns from contract call. |
+| Operation   |                             |
+| Syntax      | `return`                    |
+| Encoding    | `0x00 - - - -`              |
+| Notes       |                             |
+
+Return from contract call, popping the call frame. Before popping, return the unused forwarded gas to the caller:
+1. `$gas = $gas + MEM[$fp + 24]` (remaining gas from caller is 4th word)
+
+Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
+1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ### REVERT: Revert
 
