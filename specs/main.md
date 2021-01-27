@@ -31,12 +31,12 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x00` | `$z`     | zero            | Zero-containing register (convenience register frequently found in register machines).                                 |
 | `0x01` | `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
 | `0x02` | `$pc`    | program counter | The program counter. Memory address of the current instruction.                                                        |
-| `0x03` | `$fp`    | frame pointer   | Memory address on top of current call frame (points to fee memory).                                                    |
-| `0x04` | `$fpp`   | prev frame ptr  | Previous call frame's frame pointer.                                                                                   |
-| `0x05` | `$hp`    | heap pointer    | Memory address of the current bottom of the heap (points to free memory).                                              |
-| `0x06` | `$hpp`   | prev heap ptr   | Previous call frame's heap pointer.                                                                                    |
-| `0x07` | `$err`   | error           | Error codes for particular operations.                                                                                 |
-| `0x08` | `$gas`   | gas             | Remaining gas.                                                                                                         |
+| `0x03` | `$sp`    | stack pointer   | Memory address on top of current call frame (points to free memory).                                                   |
+| `0x04` | `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                                     |
+| `0x05` | `$hp`    | heap pointer    | Memory address below the current bottom of the heap (points to free memory).                                           |
+| `0x06` | `$err`   | error           | Error codes for particular operations.                                                                                 |
+| `0x07` | `$gas`   | gas             | Remaining gas.                                                                                                         |
+| `0x08` |          |                 |                                                                                                                        |
 | `0x09` |          |                 |                                                                                                                        |
 | `0x0A` |          |                 |                                                                                                                        |
 | `0x0B` |          |                 |                                                                                                                        |
@@ -104,6 +104,6 @@ A call frame consists of the following, word-aligned:
 Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [`SW`](./opcodes.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./opcodes.md#call-call-contract)), ownership must be checked.
 
 The owned memory range for a call frame is:
-1. `[$fpp + MEM[$fpp + 0], $fp)`: the writable stack area of the call frame.
-1. `($hp, $hpp]`: the heap area allocated by this call frame or its children.
+1. `[$fp + MEM[$fp + 0], $sp)`: the writable stack area of the call frame.
+1. `($hp, $fp->$hp]`: the heap area allocated by this call frame or its children.
 1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, addr + size)`.
