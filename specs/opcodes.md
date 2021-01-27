@@ -48,7 +48,6 @@
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
   - [CREATE: Create contract](#create-create-contract)
-  - [GAS: Remaining gas](#gas-remaining-gas)
   - [LOG: Log event](#log-log-event)
   - [RETURN: Return from call](#return-return-from-call)
   - [REVERT: Revert](#revert-revert)
@@ -535,16 +534,6 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Syntax      | `create $rs, $rt`                                                     |
 | Encoding    | `0x00 rs rt - -`                                                      |
 | Notes       |                                                                       |
-
-### GAS: Remaining gas
-
-|             |                                                   |
-| ----------- | ------------------------------------------------- |
-| Description | Sets `$rd` to the numeric value of gas remaining. |
-| Operation   | ```$rd = $gas;```                                 |
-| Syntax      | `gas $rd`                                         |
-| Encoding    | `0x00 rd - - -`                                   |
-| Notes       |                                                   |
 
 ### LOG: Log event
 
