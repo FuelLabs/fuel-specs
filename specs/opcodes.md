@@ -528,13 +528,13 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 ### CREATE: Create contract
 
-|             |                        |
-| ----------- | ---------------------- |
-| Description | Create a new contract. |
-| Operation   |                        |
-| Syntax      | `create $rd`           |
-| Encoding    | `0x00 rd - - -`        |
-| Notes       |                        |
+|             |                                                                       |
+| ----------- | --------------------------------------------------------------------- |
+| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`. |
+| Operation   | ```create(MEM[$rs, $rt])```                                           |
+| Syntax      | `create $rs, $rt`                                                     |
+| Encoding    | `0x00 rs rt - -`                                                      |
+| Notes       |                                                                       |
 
 ### GAS: Remaining gas
 
