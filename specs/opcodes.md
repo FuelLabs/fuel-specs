@@ -449,25 +449,25 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 |             |                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------- |
-| Description | The least significant byte of `$rt` is stored at the address `$rs` offset by `imm`. |
-| Operation   | ```MEM[$rs + imm, 1] = $rt[0, 1];```                                                |
-| Syntax      | `sb $rt, $rs, imm`                                                                  |
-| Encoding    | `0x00 rs rt i i`                                                                    |
+| Description | The least significant byte of `$rs` is stored at the address `$rd` offset by `imm`. |
+| Operation   | ```MEM[$rd + imm, 1] = $rs[0, 1];```                                                |
+| Syntax      | `sb $rd, $rs, imm`                                                                  |
+| Encoding    | `0x00 rd rs i i`                                                                    |
 | Notes       |                                                                                     |
 
-The memory range `MEM[$rs + imm, 1]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
+The memory range `MEM[$rd + imm, 1]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
 
 ### SW: Store word
 
 |             |                                                                    |
 | ----------- | ------------------------------------------------------------------ |
-| Description | The value of `$rt` is stored at the address `$rs` offset by `imm`. |
-| Operation   | ```MEM[$rs + imm, 8] = $rt;```                                     |
-| Syntax      | `sw $rt, $rs, imm`                                                 |
-| Encoding    | `0x00 rs rt i i`                                                   |
+| Description | The value of `$rs` is stored at the address `$rd` offset by `imm`. |
+| Operation   | ```MEM[$rd + imm, 8] = $rs;```                                     |
+| Syntax      | `sw $rd, $rs, imm`                                                 |
+| Encoding    | `0x00 rd rs i i`                                                   |
 | Notes       |                                                                    |
 
-The memory range `MEM[$rs + imm, 8]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
+The memory range `MEM[$rd + imm, 8]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
 
 ## Contract Opcodes
 
