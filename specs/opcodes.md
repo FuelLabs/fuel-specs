@@ -329,8 +329,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |             |                                                                         |
 | ----------- | ----------------------------------------------------------------------- |
 | Description | Halt execution, keeping any state changes and returning value in `$rs`. |
-| Operation   | ```revert $rs;```                                                       |
-| Syntax      | `revert $rs`                                                            |
+| Operation   | ```halt $rs;```                                                         |
+| Syntax      | `halt $rs`                                                              |
 | Encoding    | `0x00 rs - - -`                                                         |
 | Notes       |                                                                         |
 
