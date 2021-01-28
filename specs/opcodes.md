@@ -337,6 +337,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 If `$rs > blockheight()`, [halt](#halt-halt), returning `false`.
 
+See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki).
+
 ### HALT: Halt
 
 |             |                                                                         |
