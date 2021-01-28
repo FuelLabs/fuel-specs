@@ -73,7 +73,12 @@ To initialize the VM, the following is pushed on the stack sequentially:
 
 Any input of type [`InputType.Coin`](./tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
-For each such input in the transaction, the VM is [initialized](#vm-initialization), then `$pc` is set to the start of the input's `data` field. During predicate mode, hitting any [contract opcode](./opcodes.md#contract-opcodes) causes predicate verification to halt, returning Boolean `false`.
+For each such input in the transaction, the VM is [initialized](#vm-initialization), then `$pc` is set to the start of the input's `data` field. During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
+1. Any [contract opcode](./opcodes.md#contract-opcodes).
+1. [J](./opcodes.md#j-jump) and [JNZ](./opcodes.md#jnz-jump-if-not-zero): these would allow non-deterministic branching.
+1. [JI](./opcodes.md#ji-jump-immediate) and [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with immediate value less than or equal to `$pc` (these would allow loops), or
+
+In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
 A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid.
 
