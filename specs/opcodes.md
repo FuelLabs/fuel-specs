@@ -28,6 +28,7 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Opcodes](#control-flow-opcodes)
+  - [CHECKLOCKTIMEVERIFY: Check lock time verify](#checklocktimeverify-check-lock-time-verify)
   - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
@@ -323,6 +324,18 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Notes       | `$of` is cleared.                               |
 
 ## Control Flow Opcodes
+
+### CHECKLOCKTIMEVERIFY: Check lock time verify
+
+|             |                                                |
+| ----------- | ---------------------------------------------- |
+| Description | Set `$rd` to `true` if `$rs <= blockheight()`. |
+| Operation   | ```$rd = checklocktimeverify($rs);```          |
+| Syntax      | `checklocktimeverify $rd $rs`                  |
+| Encoding    | `0x00 rd - - -`                                |
+| Notes       |                                                |
+
+If `$rs > blockheight()`, [halt](#halt-halt), returning `false`.
 
 ### HALT: Halt
 
