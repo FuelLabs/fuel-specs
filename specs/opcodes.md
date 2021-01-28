@@ -44,10 +44,13 @@
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
+  - [BLOCKHASH: Block hash](#blockhash-block-hash)
+  - [BLOCKHEIGHT: Block height](#blockheight-block-height)
   - [CALL: Call contract](#call-call-contract)
   - [CODECOPY: Code copy](#codecopy-code-copy)
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
+  - [COINBASE](#coinbase)
   - [CREATE: Create contract](#create-create-contract)
   - [LOG: Log event](#log-log-event)
   - [RETURN: Return from call](#return-return-from-call)
@@ -473,6 +476,28 @@ The memory range `MEM[$rd + imm, 8]` [is checked for ownership](./main.md#owners
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
+### BLOCKHASH: Block hash
+
+|             |                                      |
+| ----------- | ------------------------------------ |
+| Description | Get block header hash.               |
+| Operation   | ```MEM[$rd, 32] = blockhash($rs);``` |
+| Syntax      | `blockhash $rd $rs`                  |
+| Encoding    | `0x00 rd rs - -`                     |
+| Notes       |                                      |
+
+Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
+
+### BLOCKHEIGHT: Block height
+
+|             |                            |
+| ----------- | -------------------------- |
+| Description | Get Fuel block height.     |
+| Operation   | ```$rd = blockheight();``` |
+| Syntax      | `blockheight $rd`          |
+| Encoding    | `0x00 rd - - -`            |
+| Notes       |                            |
+
 ### CALL: Call contract
 
 |             |                  |
@@ -535,6 +560,16 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Syntax      | `codesize $rd, $rs`                                                                                       |
 | Encoding    | `0x00 rd rs - -`                                                                                          |
 | Notes       |                                                                                                           |
+
+### COINBASE
+
+|             |                                  |
+| ----------- | -------------------------------- |
+| Description | Get block proposer address.      |
+| Operation   | ```MEM[$rd, 32] = coinbase();``` |
+| Syntax      | `coinbase $rd`                   |
+| Encoding    | `0x00 rd - - -`                  |
+| Notes       |                                  |
 
 ### CREATE: Create contract
 
