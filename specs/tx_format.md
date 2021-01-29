@@ -45,7 +45,6 @@ enum  InputType : uint8 {
 | `type` | `InputType`                                                       | Type of input. |
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
-
 ### InputCoin
 
 | name           | type       | description                                                            |
