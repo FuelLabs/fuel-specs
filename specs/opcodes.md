@@ -342,15 +342,15 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 
 ### CSV: Check sequence verify
 
-|             |                                                                                             |
-| ----------- | ------------------------------------------------------------------------------------------- |
-| Description | Set `$rd` to `true` if the UTXO spent by input `$rs` was created at least `$rt` blocks ago. |
-| Operation   | ```$rd = checksequenceverify($rs, $rt);```                                                  |
-| Syntax      | `csv $rd $rs $rt`                                                                           |
-| Encoding    | `0x00 rd rs rt -`                                                                           |
-| Notes       |                                                                                             |
+|             |                                                             |
+| ----------- | ----------------------------------------------------------- |
+| Description | Set `$rd` to `true` if the `$rt <= tx.input[$rs].sequence`. |
+| Operation   | ```$rd = checksequenceverify($rs, $rt);```                  |
+| Syntax      | `csv $rd $rs $rt`                                           |
+| Encoding    | `0x00 rd rs rt -`                                           |
+| Notes       |                                                             |
 
-If the UTXO spent by input `$rs` was created less than `$rt` blocks ago, [halt](#halt-halt), returning `false`. If the input is not of type [`InputType.Coin`](./tx_format.md), [halt](#halt-halt), returning `false`.
+If `$rt > tx.input[$rs].sequence`, [halt](#halt-halt), returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), [halt](#halt-halt), returning `false`.
 
 See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
 
