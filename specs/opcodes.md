@@ -28,7 +28,8 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Opcodes](#control-flow-opcodes)
-  - [CHECKLOCKTIMEVERIFY: Check lock time verify](#checklocktimeverify-check-lock-time-verify)
+  - [CLTV: Check lock time verify](#cltv-check-lock-time-verify)
+  - [CSV: Check sequence verify](#csv-check-sequence-verify)
   - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
@@ -325,19 +326,33 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ## Control Flow Opcodes
 
-### CHECKLOCKTIMEVERIFY: Check lock time verify
+### CLTV: Check lock time verify
 
-|             |                                                |
-| ----------- | ---------------------------------------------- |
-| Description | Set `$rd` to `true` if `$rs <= blockheight()`. |
-| Operation   | ```$rd = checklocktimeverify($rs);```          |
-| Syntax      | `checklocktimeverify $rd $rs`                  |
-| Encoding    | `0x00 rd - - -`                                |
-| Notes       |                                                |
+|             |                                              |
+| ----------- | -------------------------------------------- |
+| Description | Set `$rd` to `true` if `$rs <= tx.lockTime`. |
+| Operation   | ```$rd = checklocktimeverify($rs);```        |
+| Syntax      | `cltv $rd $rs`                               |
+| Encoding    | `0x00 rd rs - -`                             |
+| Notes       |                                              |
 
-If `$rs > blockheight()`, [halt](#halt-halt), returning `false`.
+If `$rs > tx.lockTime`, [halt](#halt-halt), returning `false`.
 
-See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki).
+See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
+
+### CSV: Check sequence verify
+
+|             |                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| Description | Set `$rd` to `true` if the UTXO spent by input `$rs` was created at least `$rt` blocks ago. |
+| Operation   | ```$rd = checksequenceverify($rs, $rt);```                                                  |
+| Syntax      | `csv $rd $rs $rt`                                                                           |
+| Encoding    | `0x00 rd rs rt -`                                                                           |
+| Notes       |                                                                                             |
+
+If the UTXO spent by input `$rs` was created less than `$rt` blocks ago, [halt](#halt-halt), returning `false`. If the input is not of type [`InputType.Coin`](./tx_format.md), [halt](#halt-halt), returning `false`.
+
+See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
 
 ### HALT: Halt
 
