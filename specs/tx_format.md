@@ -16,7 +16,7 @@
 | `version`        | `uint32`                | Transaction version. Always `0`.         |
 | `gasPrice`       | `uint64`                | Gas price for transaction.               |
 | `gasLimit`       | `uint64`                | Gas limit for transaction.               |
-| `lockTime`       | `uint64`                | Block until which tx cannot be included. |
+| `maturity`       | `uint64`                | Block until which tx cannot be included. |
 | `scriptLength`   | `uint16`                | Script length, in instructions.          |
 | `inputsCount`    | `uint8`                 | Number of inputs.                        |
 | `outputsCount`   | `uint8`                 | Number of outputs.                       |
@@ -26,7 +26,7 @@
 | `outputs`        | [Output](#output)`[]`   | List of outputs.                         |
 | `witnesses`      | [Witness](#witness)`[]` | List of witnesses.                       |
 
-Transaction is invalid if `blockheight() < lockTime`.
+Transaction is invalid if `blockheight() < maturity`.
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
@@ -53,11 +53,11 @@ enum  InputType : uint8 {
 | -------------- | ---------- | ---------------------------------------------------------------------- |
 | `utxoID`       | `byte[32]` | UTXO ID.                                                               |
 | `witnessIndex` | `uint8`    | Index of witness that authorizes spending the coin.                    |
-| `sequence`     | `uint64`   | UTXO being spent must have been created at least this many blocks ago. |
+| `maturity`     | `uint64`   | UTXO being spent must have been created at least this many blocks ago. |
 | `dataLength`   | `uint16`   | Length of data, in bytes.                                              |
 | `data`         | `byte[]`   | Data to input into script.                                             |
 
-If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + sequence`.
+If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
 ### InputContract
 
