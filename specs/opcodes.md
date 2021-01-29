@@ -28,8 +28,8 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Opcodes](#control-flow-opcodes)
-  - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
+  - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
@@ -326,20 +326,6 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ## Control Flow Opcodes
 
-### CTMV: Check transaction maturity verify
-
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Set `$rd` to `true` if `$rs <= tx.maturity`.     |
-| Operation   | ```$rd = checktransactionmaturityverify($rs);``` |
-| Syntax      | `ctmv $rd $rs`                                   |
-| Encoding    | `0x00 rd rs - -`                                 |
-| Notes       |                                                  |
-
-If `$rs > tx.maturity`, [halt](#halt-halt), returning `false`.
-
-See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
-
 ### CIMV: Check input maturity verify
 
 |             |                                                             |
@@ -353,6 +339,20 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 If `$rt > tx.input[$rs].maturity`, [halt](#halt-halt), returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), [halt](#halt-halt), returning `false`.
 
 See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
+
+### CTMV: Check transaction maturity verify
+
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Set `$rd` to `true` if `$rs <= tx.maturity`.     |
+| Operation   | ```$rd = checktransactionmaturityverify($rs);``` |
+| Syntax      | `ctmv $rd $rs`                                   |
+| Encoding    | `0x00 rd rs - -`                                 |
+| Notes       |                                                  |
+
+If `$rs > tx.maturity`, [halt](#halt-halt), returning `false`.
+
+See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
 
 ### HALT: Halt
 
