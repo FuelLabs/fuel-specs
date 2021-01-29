@@ -26,6 +26,8 @@
 | `outputs`        | [Output](#output)`[]`   | List of outputs.                         |
 | `witnesses`      | [Witness](#witness)`[]` | List of witnesses.                       |
 
+Transaction is invalid if `blockheight() < lockTime`.
+
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
 1. `byte[32]`: as-is.
@@ -54,6 +56,8 @@ enum  InputType : uint8 {
 | `sequence`     | `uint64`   | UTXO being spent must have been created at least this many blocks ago. |
 | `dataLength`   | `uint16`   | Length of data, in bytes.                                              |
 | `data`         | `byte[]`   | Data to input into script.                                             |
+
+If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + sequence`.
 
 ### InputContract
 
