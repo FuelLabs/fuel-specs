@@ -4,7 +4,9 @@
 - [Parameters](#parameters)
 - [Semantics](#semantics)
 - [Opcodes](#opcodes)
-- [Transaction Execution](#transaction-execution)
+- [VM Initialization](#vm-initialization)
+- [Predicate Verification](#predicate-verification)
+- [Script Execution](#script-execution)
 - [Call Frames](#call-frames)
 - [Ownership](#ownership)
 
@@ -55,21 +57,32 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 
 A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 
-## Transaction Execution
+## VM Initialization
+
+Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
+
+To initialize the VM, the following is pushed on the stack sequentially:
+1. Transaction hash (`byte[32]`, word-aligned).
+1. The [transaction, serialized](./tx_format.md).
+
+## Predicate Verification
+
+Any input of type [`InputType.Coin`](./tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+
+For each such input in the transaction, the VM is [initialized](#vm-initialization), then `$pc` is set to the start of the input's `data` field. During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
+1. Any [contract opcode](./opcodes.md#contract-opcodes).
+1. [J](./opcodes.md#j-jump) and [JNZ](./opcodes.md#jnz-jump-if-not-zero): these would allow non-deterministic branching.
+1. [JI](./opcodes.md#ji-jump-immediate) and [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with immediate value less than or equal to `$pc` (these would allow loops).
+
+In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
+
+A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
+
+## Script Execution
 
 If script bytecode is present, transaction validation requires execution.
 
-A single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
-
-Before execution begins, the following is pushed on the stack sequentially:
-1. Fuel block height (`uint64`, word-aligned).
-1. Block producer address (`byte[32]`, word-aligned).
-1. Transaction gas limit (`uint64`, word-aligned).
-1. Transaction hash (`byte[32]`, word-aligned).
-1. Block hash for the previous 256 blocks, starting from the previous block (`byte[32][256]`, word-aligned). Block hash is zero (`0x00**32`) for negative block heights.
-1. The [transaction, serialized](./tx_format.md).
-
-`$pc` is initialized to the start of the transaction's script bytecode and execution begins.
+The VM is [initialized](#vm-initialization), then `$pc` is set to the start of the transaction's script bytecode and execution begins.
 
 ## Call Frames
 

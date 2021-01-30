@@ -28,6 +28,8 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Opcodes](#control-flow-opcodes)
+  - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
+  - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
@@ -44,10 +46,13 @@
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
+  - [BLOCKHASH: Block hash](#blockhash-block-hash)
+  - [BLOCKHEIGHT: Block height](#blockheight-block-height)
   - [CALL: Call contract](#call-call-contract)
   - [CODECOPY: Code copy](#codecopy-code-copy)
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
+  - [COINBASE](#coinbase)
   - [CREATE: Create contract](#create-create-contract)
   - [LOG: Log event](#log-log-event)
   - [RETURN: Return from call](#return-return-from-call)
@@ -321,13 +326,41 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ## Control Flow Opcodes
 
+### CIMV: Check input maturity verify
+
+|             |                                                             |
+| ----------- | ----------------------------------------------------------- |
+| Description | Set `$rd` to `true` if the `$rt <= tx.input[$rs].maturity`. |
+| Operation   | ```$rd = checkinputmaturityverify($rs, $rt);```             |
+| Syntax      | `cimv $rd $rs $rt`                                          |
+| Encoding    | `0x00 rd rs rt -`                                           |
+| Notes       |                                                             |
+
+If `$rt > tx.input[$rs].maturity`, [halt](#halt-halt), returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), [halt](#halt-halt), returning `false`.
+
+See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
+
+### CTMV: Check transaction maturity verify
+
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Set `$rd` to `true` if `$rs <= tx.maturity`.     |
+| Operation   | ```$rd = checktransactionmaturityverify($rs);``` |
+| Syntax      | `ctmv $rd $rs`                                   |
+| Encoding    | `0x00 rd rs - -`                                 |
+| Notes       |                                                  |
+
+If `$rs > tx.maturity`, [halt](#halt-halt), returning `false`.
+
+See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
+
 ### HALT: Halt
 
 |             |                                                                         |
 | ----------- | ----------------------------------------------------------------------- |
 | Description | Halt execution, keeping any state changes and returning value in `$rs`. |
-| Operation   | ```revert $rs;```                                                       |
-| Syntax      | `revert $rs`                                                            |
+| Operation   | ```halt $rs;```                                                         |
+| Syntax      | `halt $rs`                                                              |
 | Encoding    | `0x00 rs - - -`                                                         |
 | Notes       |                                                                         |
 
@@ -473,6 +506,28 @@ The memory range `MEM[$rd + imm, 8]` [is checked for ownership](./main.md#owners
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
+### BLOCKHASH: Block hash
+
+|             |                                      |
+| ----------- | ------------------------------------ |
+| Description | Get block header hash.               |
+| Operation   | ```MEM[$rd, 32] = blockhash($rs);``` |
+| Syntax      | `blockhash $rd $rs`                  |
+| Encoding    | `0x00 rd rs - -`                     |
+| Notes       |                                      |
+
+Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
+
+### BLOCKHEIGHT: Block height
+
+|             |                            |
+| ----------- | -------------------------- |
+| Description | Get Fuel block height.     |
+| Operation   | ```$rd = blockheight();``` |
+| Syntax      | `blockheight $rd`          |
+| Encoding    | `0x00 rd - - -`            |
+| Notes       |                            |
+
 ### CALL: Call contract
 
 |             |                  |
@@ -535,6 +590,16 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Syntax      | `codesize $rd, $rs`                                                                                       |
 | Encoding    | `0x00 rd rs - -`                                                                                          |
 | Notes       |                                                                                                           |
+
+### COINBASE
+
+|             |                                  |
+| ----------- | -------------------------------- |
+| Description | Get block proposer address.      |
+| Operation   | ```MEM[$rd, 32] = coinbase();``` |
+| Syntax      | `coinbase $rd`                   |
+| Encoding    | `0x00 rd - - -`                  |
+| Notes       |                                  |
 
 ### CREATE: Create contract
 
