@@ -103,9 +103,9 @@ A call frame consists of the following, word-aligned:
 | 8     | `uint64`             | gas               | Gas remaining from previous call frame after forwarding gas to this call frame. |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                      |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                       |
-| 1     | `uint8`              | in count          | Number of input values.                                                         |
-| 1     | `uint8`              | out count         | Number of return values.                                                        |
-| 2     | `uint16`             | code size         | Code size in bytes (not padded to word alignment).                              |
+| 8     | `uint8`              | in count          | Number of input values.                                                         |
+| 8     | `uint8`              | out count         | Number of return values.                                                        |
+| 8     | `uint16`             | code size         | Code size in bytes (not padded to word alignment).                              |
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.                 |
 | 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.                |
 | 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned.   |
