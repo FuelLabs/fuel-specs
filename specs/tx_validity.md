@@ -12,6 +12,7 @@
     - [Valid Signatures](#valid-signatures)
     - [Predicate Validity](#predicate-validity)
 - [Validity Rules](#validity-rules)
+    - [No Inflation](#no-inflation)
 
 ## Standardness Rules
 
@@ -92,7 +93,7 @@ def sum_inputs(tx) -> int:
     total: int = 0
     for input in tx.inputs:
         if input.type == InputType.Coin:
-            total += state[input.utxoID]
+            total += state[input.utxoID].amount
     return total
 
 def sum_outputs(tx) -> int:
@@ -151,3 +152,27 @@ freeBalance = available_balance(tx) - unavailable_balance(tx)
 ```
 
 The following checks must pass.
+
+### No Inflation
+
+```py
+def sum_all_inputs(tx) -> int:
+    total: int = 0
+    for input in tx.inputs:
+        if input.type == InputType.Coin:
+            total += state[input.utxoID].amount
+        else if input.type == InputType.Contract:
+            total += state[tx.witnesses[input.witnessIndex]].amount
+    return total
+
+def sum_all_outputs(tx) -> int:
+    total: int = 0
+    for output in tx.outputs:
+        if output.type == OutputType.Coin:
+            total += output.amount
+        else if output.type == OutputType.Contract:
+            total += tx.witnesses[output.amountWitnessIndex]
+    return total
+
+return sum_all_inputs(tx) >= sum_all_outputs(tx)
+```
