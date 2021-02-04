@@ -9,6 +9,7 @@
     - [Script Length](#script-length)
     - [Predicate Lengths](#predicate-lengths)
     - [Sufficient Balance](#sufficient-balance)
+    - [Valid Signatures](#valid-signatures)
     - [Predicate Validity](#predicate-validity)
 - [Validity Rules](#validity-rules)
 
@@ -113,6 +114,19 @@ def spendable_balance(tx) -> int:
     return availableBalance - sentBalance - gasBalance - bytesBalance
 
 return spendable_balance(tx) >= 0
+```
+
+### Valid Signatures
+
+```py
+def address_from(pubkey: bytes) -> bytes:
+    return sha256(pubkey)[0:31]
+
+for input in tx.inputs:
+    if input.type == InputType.Coin:
+        if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex])) != state[input.utxoID].owner:
+            return False
+return True
 ```
 
 ### Predicate Validity
