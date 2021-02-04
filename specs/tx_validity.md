@@ -139,3 +139,15 @@ For each input of type `InputType.Coin` and `predicateLength > 0`, [verify its p
 ## Validity Rules
 
 This section defines _validity rules_ for transactions: the requirements for a confirmed transaction to be valid.
+
+Given transaction `tx`, state `state`, and contract set `contracts`:
+
+If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, and no further checks are required. Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.
+
+If `tx.scriptLength > 0`, the script must be executed. The free balance available to be moved around by the script and called contracts is `freeBalance`:
+
+```py
+freeBalance = available_balance(tx) - unavailable_balance(tx)
+```
+
+The following checks must pass.

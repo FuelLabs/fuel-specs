@@ -38,7 +38,7 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x05` | `$hp`    | heap pointer    | Memory address below the current bottom of the heap (points to free memory).                                  |
 | `0x06` | `$err`   | error           | Error codes for particular operations.                                                                        |
 | `0x07` | `$gas`   | gas             | Remaining gas.                                                                                                |
-| `0x08` |          |                 |                                                                                                               |
+| `0x08` | `$bal`   | balance         | Currently available coins.                                                                                    |
 | `0x09` |          |                 |                                                                                                               |
 | `0x0A` |          |                 |                                                                                                               |
 | `0x0B` |          |                 |                                                                                                               |
@@ -81,7 +81,11 @@ A predicate that halts without returning Boolean `true` does not pass verificati
 
 If script bytecode is present, transaction validation requires execution.
 
-The VM is [initialized](#vm-initialization), then `$pc` is set to the start of the transaction's script bytecode and execution begins.
+The VM is [initialized](#vm-initialization), then:
+1. `$pc` is set to the start of the transaction's script bytecode.
+1. `$bal` is set to [the free balance](./tx_validity.md#validity-rules).
+
+Following initialization, execution begins.
 
 ## Call Frames
 
