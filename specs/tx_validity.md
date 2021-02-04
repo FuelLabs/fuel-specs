@@ -102,18 +102,21 @@ def sum_outputs(tx) -> int:
             total += output.amount
     return total
 
-def spendable_balance(tx) -> int:
+def available_balance(tx) -> int:
+    availableBalance = sum_inputs(tx)
+    return availableBalance
+
+def unavailable_balance(tx) -> int:
     """
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of Ethereum calldata more than makes up for this
     """
-    availableBalance = sum_inputs(tx)
     sentBalance = sum_outputs(tx)
     gasBalance = gasPrice * gasLimit
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
-    return availableBalance - sentBalance - gasBalance - bytesBalance
+    return sentBalance + gasBalance + bytesBalance
 
-return spendable_balance(tx) >= 0
+return available_balance(tx) >= unavailable_balance(tx)
 ```
 
 ### Valid Signatures
