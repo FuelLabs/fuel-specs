@@ -28,24 +28,24 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 * Immediate value: 12, 18, or 24 bits, depending on operation
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
-| value  | register | name            | description                                                                                                            |
-| ------ | -------- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `0x00` | `$z`     | zero            | Zero-containing register (convenience register frequently found in register machines).                                 |
-| `0x01` | `$of`    | overflow        | Register containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
-| `0x02` | `$pc`    | program counter | The program counter. Memory address of the current instruction.                                                        |
-| `0x03` | `$sp`    | stack pointer   | Memory address on top of current call frame (points to free memory).                                                   |
-| `0x04` | `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                                     |
-| `0x05` | `$hp`    | heap pointer    | Memory address below the current bottom of the heap (points to free memory).                                           |
-| `0x06` | `$err`   | error           | Error codes for particular operations.                                                                                 |
-| `0x07` | `$gas`   | gas             | Remaining gas.                                                                                                         |
-| `0x08` |          |                 |                                                                                                                        |
-| `0x09` |          |                 |                                                                                                                        |
-| `0x0A` |          |                 |                                                                                                                        |
-| `0x0B` |          |                 |                                                                                                                        |
-| `0x0C` |          |                 |                                                                                                                        |
-| `0x0D` |          |                 |                                                                                                                        |
-| `0x0E` |          |                 |                                                                                                                        |
-| `0x0F` |          |                 |                                                                                                                        |
+| value  | register | name            | description                                                                                                   |
+| ------ | -------- | --------------- | ------------------------------------------------------------------------------------------------------------- |
+| `0x00` | `$z`     | zero            | Contains zero, for convenience.                                                                               |
+| `0x01` | `$of`    | overflow        | Containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
+| `0x02` | `$pc`    | program counter | The program counter. Memory address of the current instruction.                                               |
+| `0x03` | `$sp`    | stack pointer   | Memory address on top of current call frame (points to free memory).                                          |
+| `0x04` | `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                            |
+| `0x05` | `$hp`    | heap pointer    | Memory address below the current bottom of the heap (points to free memory).                                  |
+| `0x06` | `$err`   | error           | Error codes for particular operations.                                                                        |
+| `0x07` | `$gas`   | gas             | Remaining gas.                                                                                                |
+| `0x08` |          |                 |                                                                                                               |
+| `0x09` |          |                 |                                                                                                               |
+| `0x0A` |          |                 |                                                                                                               |
+| `0x0B` |          |                 |                                                                                                               |
+| `0x0C` |          |                 |                                                                                                               |
+| `0x0D` |          |                 |                                                                                                               |
+| `0x0E` |          |                 |                                                                                                               |
+| `0x0F` |          |                 |                                                                                                               |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
