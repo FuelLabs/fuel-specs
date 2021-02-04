@@ -79,10 +79,10 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 ### InputContract
 
-| name         | type       | description  |
-| ------------ | ---------- | ------------ |
-| `utxoID`     | `byte[32]` | UTXO ID.     |
-| `contractID` | `byte[32]` | Contract ID. |
+| name           | type       | description                      |
+| -------------- | ---------- | -------------------------------- |
+| `witnessIndex` | `uint8`    | Index of witness of the UTXO ID. |
+| `contractID`   | `byte[32]` | Contract ID.                     |
 
 ## Output
 

@@ -2,7 +2,7 @@
 
 - [Standardness Rules](#standardness-rules)
     - [Version](#version)
-    - [Spending UTXOs](#spending-utxos)
+    - [Spending UTXOs or Created Contracts](#spending-utxos-or-created-contracts)
     - [Transaction Maturity](#transaction-maturity)
     - [Input Maturity](#input-maturity)
     - [Counts](#counts)
@@ -16,7 +16,7 @@
 
 This section defines _standardness rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool. Chains of unconfirmed transactions are omitted.
 
-For a transaction `tx` and state `state`, the following checks must pass.
+For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
 
 ### Version
 
@@ -24,12 +24,15 @@ For a transaction `tx` and state `state`, the following checks must pass.
 return tx.version == 0
 ```
 
-### Spending UTXOs
+### Spending UTXOs or Created Contracts
 
 ```py
 for input in tx.inputs:
-    if not input.utxoID in state:
-        return False
+    if input.type == InputType.Coin:
+        if not input.utxoID in state:
+            return False
+    if input.type == InputType.Contract:
+        if not input.contractID in contracts:
 return True
 ```
 
@@ -98,13 +101,18 @@ def sum_outputs(tx) -> int:
             total += output.amount
     return total
 
-availableBalance = sum_inputs(tx)
-sentBalance = sum_outputs(tx)
-gasBalance = gasPrice * gasLimit
-bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
-# Note: we don't charge for predicate verification because predicates are
-# monotonic and the cost of Ethereum calldata more than makes up for this
-return availableBalance - sentBalance - gasBalance - bytesBalance >= 0
+def spendable_balance(tx) -> int:
+    """
+    Note: we don't charge for predicate verification because predicates are
+    monotonic and the cost of Ethereum calldata more than makes up for this
+    """
+    availableBalance = sum_inputs(tx)
+    sentBalance = sum_outputs(tx)
+    gasBalance = gasPrice * gasLimit
+    bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
+    return availableBalance - sentBalance - gasBalance - bytesBalance
+
+return spendable_balance(tx) >= 0
 ```
 
 ### Predicate Validity
