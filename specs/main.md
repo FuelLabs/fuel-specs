@@ -71,8 +71,7 @@ Any input of type [`InputType.Coin`](./tx_format.md), a non-zero `dataLength` (a
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then `$pc` is set to the start of the input's `data` field. During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
 1. Any [contract opcode](./opcodes.md#contract-opcodes).
-1. [J](./opcodes.md#j-jump) and [JNZ](./opcodes.md#jnz-jump-if-not-zero): these would allow non-deterministic branching.
-1. [JI](./opcodes.md#ji-jump-immediate) and [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with immediate value less than or equal to `$pc` (these would allow loops).
+1. [J](./opcodes.md#j-jump), [JNZ](./opcodes.md#jnz-jump-if-not-zero), [JI](./opcodes.md#ji-jump-immediate), and [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
