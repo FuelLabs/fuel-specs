@@ -1,5 +1,6 @@
 # Transaction Format
 
+- [Constants](#constants)
 - [Transaction](#transaction)
 - [Input](#input)
     - [InputCoin](#inputcoin)
@@ -8,6 +9,14 @@
     - [OutputCoin](#outputcoin)
     - [OutputContract](#outputcontract)
 - [Witness](#witness)
+
+## Constants
+
+| name            | type     | value | description                  |
+| --------------- | -------- | ----- | ---------------------------- |
+| `MAX_INPUTS`    | `uint64` | `8`   | Maximum number of inputs.    |
+| `MAX_OUTPUTS`   | `uint64` | `8`   | Maximum number of outputs.   |
+| `MAX_WITNESSES` | `uint64` | `16`  | Maximum number of witnesses. |
 
 ## Transaction
 
