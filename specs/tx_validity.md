@@ -2,13 +2,14 @@
 
 - [Standardness Rules](#standardness-rules)
     - [Version](#version)
+    - [Spending UTXOs](#spending-utxos)
     - [Transaction Maturity](#transaction-maturity)
     - [Input Maturity](#input-maturity)
     - [Counts](#counts)
     - [Script Length](#script-length)
     - [Predicate Lengths](#predicate-lengths)
-    - [Spending UTXOs](#spending-utxos)
     - [Sufficient Balance](#sufficient-balance)
+    - [Predicate Validity](#predicate-validity)
 - [Validity Rules](#validity-rules)
 
 ## Standardness Rules
@@ -23,6 +24,15 @@ For a transaction `tx` and state `state`, the following checks must pass.
 return tx.version == 0
 ```
 
+### Spending UTXOs
+
+```py
+for input in tx.inputs:
+    if not input.utxoID in state:
+        return False
+return True
+```
+
 ### Transaction Maturity
 
 ```py
@@ -32,6 +42,11 @@ return blockheight() >= tx.maturity
 ### Input Maturity
 
 ```py
+for input in tx.inputs:
+    if input.type == InputType.Coin:
+        if blockheight() < state[input.utxoID].created + input.maturity:
+            return False
+return True
 ```
 
 ### Counts
@@ -47,7 +62,10 @@ return (
 ### Script Length
 
 ```py
-return scriptLength <= MAX_SCRIPT_LENGTH
+return (
+    scriptLength <= MAX_SCRIPT_LENGTH and
+    scriptDataLength <= MAX_SCRIPT_DATA_LENGTH
+)
 ```
 
 ### Predicate Lengths
@@ -55,17 +73,11 @@ return scriptLength <= MAX_SCRIPT_LENGTH
 ```py
 for input in tx.inputs:
     if input.type == InputType.Coin:
-        if input.dataLength >= MAX_PREDICATE_LENGTH
+        if (
+            input.predicateLength > MAX_PREDICATE_LENGTH or
+            input.predicateDataLength > MAX_PREDICATE_DATA_LENGTH
+        ):
             return False
-return True
-```
-
-### Spending UTXOs
-
-```py
-for input in tx.inputs:
-    if not tx.utxoID in state:
-        return False
 return True
 ```
 
@@ -76,7 +88,7 @@ def sum_inputs(tx) -> int:
     total: int = 0
     for input in tx.inputs:
         if input.type == InputType.Coin:
-            total += state[tx.utxoID]
+            total += state[input.utxoID]
     return total
 
 def sum_outputs(tx) -> int:
@@ -94,6 +106,10 @@ bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
 # monotonic and the cost of Ethereum calldata more than makes up for this
 return availableBalance - sentBalance - gasBalance - bytesBalance >= 0
 ```
+
+### Predicate Validity
+
+For each input of type `InputType.Coin` and `predicateLength > 0`, [verify its predicate](./main.md#predicate-verification).
 
 ## Validity Rules
 
