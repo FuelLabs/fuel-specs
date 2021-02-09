@@ -1,5 +1,6 @@
 # Transaction Format
 
+- [Constants](#constants)
 - [Transaction](#transaction)
 - [Input](#input)
     - [InputCoin](#inputcoin)
@@ -8,6 +9,19 @@
     - [OutputCoin](#outputcoin)
     - [OutputContract](#outputcontract)
 - [Witness](#witness)
+
+## Constants
+
+| name                        | type     | value | description                                   |
+| --------------------------- | -------- | ----- | --------------------------------------------- |
+| `GAS_PER_BYTE`              | `uint64` |       | Gas charged per byte of the transaction.      |
+| `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
+| `MAX_OUTPUTS`               | `uint64` | `8`   | Maximum number of outputs.                    |
+| `MAX_PREDICATE_LENGTH`      | `uint64` |       | Maximum length of predicate, in instructions. |
+| `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate, in bytes.        |
+| `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
+| `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
+| `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
 ## Transaction
 
@@ -65,10 +79,10 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 ### InputContract
 
-| name         | type       | description  |
-| ------------ | ---------- | ------------ |
-| `utxoID`     | `byte[32]` | UTXO ID.     |
-| `contractID` | `byte[32]` | Contract ID. |
+| name           | type       | description                      |
+| -------------- | ---------- | -------------------------------- |
+| `witnessIndex` | `uint8`    | Index of witness of the UTXO ID. |
+| `contractID`   | `byte[32]` | Contract ID.                     |
 
 ## Output
 
