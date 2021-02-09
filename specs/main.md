@@ -42,7 +42,7 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x07` | `$err`   | error           | Error codes for particular operations.                                                                        |
 | `0x08` | `$gas`   | gas             | Remaining gas.                                                                                                |
 | `0x09` | `$bal`   | balance         | Currently available coins.                                                                                    |
-| `0x0A` |          |                 |                                                                                                               |
+| `0x0A` | `$is`    | instrs start    | Pointer to the start of the currently-executing code.                                                         |
 | `0x0B` |          |                 |                                                                                                               |
 | `0x0C` |          |                 |                                                                                                               |
 | `0x0D` |          |                 |                                                                                                               |
@@ -84,7 +84,7 @@ A predicate that halts without returning Boolean `true` does not pass verificati
 If script bytecode is present, transaction validation requires execution.
 
 The VM is [initialized](#vm-initialization), then:
-1. `$pc` is set to the start of the transaction's script bytecode.
+1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
 1. `$bal` is set to [the free balance](./tx_validity.md#validity-rules).
 
 Following initialization, execution begins.
@@ -104,7 +104,6 @@ A call frame consists of the following, word-aligned:
 |       |                      |                   | **Unwritable area begins.**                                                     |
 | 8     | `uint32`             | writable offset   | Offset from start of this call frame to start of writable area, in bytes.       |
 | 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                    |
-| 8     | `uint32`             | code offset       | Offset from start of this call frame to code, in bytes.                         |
 | 8     | `uint64`             | gas               | Gas remaining from previous call frame after forwarding gas to this call frame. |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                      |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                       |

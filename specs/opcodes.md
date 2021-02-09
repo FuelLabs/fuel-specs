@@ -562,7 +562,7 @@ Each output range [is checked for ownership](./main.md#ownership). Any check fai
 If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. `$sp = $fp + MEM[$fp + 0]` (first word is offset to free stack)
-1. `$pc = $fp + MEM[$fp + 16]` (third word is code offset, pc is not advanced by 4)
+1. Set `$pc` and `$is` to the starting address of the code
 1. `$gas` = forwarded gas.
 
 ### CODECOPY: Code copy
@@ -642,7 +642,7 @@ If `$rt > CONTRACT_MAX_SIZE`, revert instead.
 | Notes       |                             |
 
 Return from contract call, popping the call frame. Before popping, return the unused forwarded gas to the caller:
-1. `$gas = $gas + MEM[$fp + 24]` (remaining gas from caller is 4th word)
+1. `$gas = $gas + MEM[$fp + 8*2]` (remaining gas from caller is third word)
 
 Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
 1. `$pc = $pc + 4` (advance program counter from where we called)
