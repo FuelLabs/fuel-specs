@@ -468,6 +468,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt ru`                          |
 | Notes       |                                             |
 
+If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
+
 ### MEMCP: Memory copy
 
 |             |                                      |
@@ -477,6 +479,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `memcp $rd, $rs, $rt`                |
 | Encoding    | `0x00 rd rs rt -`                    |
 | Notes       |                                      |
+
+If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
 
 ### SB: Store byte
 
@@ -571,6 +575,8 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Encoding    | `0x00 rd rs rt ru`                                                                                                                               |
 | Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                |
 
+If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
+
 ### CODEROOT: Code Merkle root
 
 |             |                                                                                                                                       |
@@ -610,6 +616,8 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Syntax      | `create $rs, $rt`                                                     |
 | Encoding    | `0x00 rs rt - -`                                                      |
 | Notes       |                                                                       |
+
+If `$rt > CONTRACT_MAX_SIZE`, revert instead.
 
 ### LOG: Log event
 
@@ -713,6 +721,8 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 | Encoding    | `0x00 rd rs rt -`                                     |
 | Notes       |                                                       |
 
+If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+
 ### SHA256: SHA-2-256
 
 |             |                                                      |
@@ -722,3 +732,5 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 | Syntax      | `sha256 $rd, $rs, $rt`                               |
 | Encoding    | `0x00 rd rs rt -`                                    |
 | Notes       |                                                      |
+
+If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
