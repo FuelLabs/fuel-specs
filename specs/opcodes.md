@@ -17,6 +17,7 @@
   - [MUL: Multiply](#mul-multiply)
   - [MULI: Multiply immediate](#muli-multiply-immediate)
   - [NOOP: No operation](#noop-no-operation)
+  - [NOT: Invert](#not-invert)
   - [OR: OR](#or-or)
   - [ORI: OR immediate](#ori-or-immediate)
   - [SLL: Shift left logical](#sll-shift-left-logical)
@@ -222,6 +223,16 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `noop`                 |
 | Encoding    | `0x00 - - - -`         |
 | Notes       |                        |
+
+### NOT: Invert
+
+|             |                         |
+| ----------- | ----------------------- |
+| Description | Bitwise NOT a register. |
+| Operation   | ```$rd = ~$rs;```       |
+| Syntax      | `not $rd, $rs`          |
+| Encoding    | `0x00 rd rs - -`        |
+| Notes       | `$of` is cleared.       |
 
 ### OR: OR
 
