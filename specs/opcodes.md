@@ -30,7 +30,6 @@
 - [Control Flow Opcodes](#control-flow-opcodes)
   - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
-  - [HALT: Halt](#halt-halt)
   - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
@@ -336,7 +335,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                                           |
 | Notes       |                                                             |
 
-If `$rt > tx.input[$rs].maturity`, [halt](#halt-halt), returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), [halt](#halt-halt), returning `false`.
+If `$rt > tx.input[$rs].maturity`, halt, returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), halt, returning `false`.
 
 See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
 
@@ -350,19 +349,9 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Encoding    | `0x00 rd rs - -`                                 |
 | Notes       |                                                  |
 
-If `$rs > tx.maturity`, [halt](#halt-halt), returning `false`.
+If `$rs > tx.maturity`, halt, returning `false`.
 
 See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
-
-### HALT: Halt
-
-|             |                                                                         |
-| ----------- | ----------------------------------------------------------------------- |
-| Description | Halt execution, keeping any state changes and returning value in `$rs`. |
-| Operation   | ```halt $rs;```                                                         |
-| Syntax      | `halt $rs`                                                              |
-| Encoding    | `0x00 rs - - -`                                                         |
-| Notes       |                                                                         |
 
 ### J: Jump
 
