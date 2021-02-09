@@ -31,9 +31,7 @@
 - [Control Flow Opcodes](#control-flow-opcodes)
   - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
-  - [J: Jump](#j-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
-  - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
 - [Memory Opcodes](#memory-opcodes)
   - [CFE: Extend call frame](#cfe-extend-call-frame)
@@ -364,45 +362,25 @@ If `$rs > tx.maturity`, halt, returning `false`.
 
 See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
 
-### J: Jump
-
-|             |                            |
-| ----------- | -------------------------- |
-| Description | Jump to the address `$rs`. |
-| Operation   | ```$pc = $rs;```           |
-| Syntax      | `j $rs`                    |
-| Encoding    | `0x00 rs - - -`            |
-| Notes       |                            |
-
 ### JI: Jump immediate
 
-|             |                                       |
-| ----------- | ------------------------------------- |
-| Description | Jumps to the immediate address `imm`. |
-| Operation   | ```$pc = imm;```                      |
-| Syntax      | `ji imm`                              |
-| Encoding    | `0x00 i i i i`                        |
-| Notes       |                                       |
-
-### JNZ: Jump if not zero
-
-|             |                                                                              |
-| ----------- | ---------------------------------------------------------------------------- |
-| Description | Jump to the address `$rs` if `$rt` is not zero.                              |
-| Operation   | ```if $rt != 0:```<br>```  $pc = $rs;```<br>```else:```<br>```  $pc += 4;``` |
-| Syntax      | `jnz $rs, $rt`                                                               |
-| Encoding    | `0x00 rs rt - -`                                                             |
-| Notes       |                                                                              |
+|             |                                                |
+| ----------- | ---------------------------------------------- |
+| Description | Jumps to the code instruction offset by `imm`. |
+| Operation   | ```$pc = $is + imm * 4;```                     |
+| Syntax      | `ji imm`                                       |
+| Encoding    | `0x00 i i i i`                                 |
+| Notes       |                                                |
 
 ### JNZI: Jump if not zero immediate
 
-|             |                                                                              |
-| ----------- | ---------------------------------------------------------------------------- |
-| Description | Jump to the immediate address `imm` if `$rs` is not zero.                    |
-| Operation   | ```if $rs != 0:```<br>```  $pc = imm;```<br>```else:```<br>```  $pc += 4;``` |
-| Syntax      | `jnzi $rs`                                                                   |
-| Encoding    | `0x00 rs i i i`                                                              |
-| Notes       |                                                                              |
+|             |                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------- |
+| Description | Jump to the code instruction offset by `imm` if `$rs` is not zero.                     |
+| Operation   | ```if $rs != 0:```<br>```  $pc = $is + imm * 4;```<br>```else:```<br>```  $pc += 4;``` |
+| Syntax      | `jnzi $rs`                                                                             |
+| Encoding    | `0x00 rs i i i`                                                                        |
+| Notes       |                                                                                        |
 
 ## Memory Opcodes
 
