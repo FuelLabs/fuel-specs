@@ -12,6 +12,8 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
+  - [MATHLOG: Math logarithm](#mathlog-math-logarithm)
+  - [MATHROOT: Math root](#mathroot-math-root)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MUL: Multiply](#mul-multiply)
@@ -171,6 +173,26 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `gt $rd, $rs, $rt`                       |
 | Encoding    | `0x00 rd rs rt -`                        |
 | Notes       |                                          |
+
+### MATHLOG: Math logarithm
+
+|             |                                              |
+| ----------- | -------------------------------------------- |
+| Description | The (integer) logarithm base `$rt` of `$rs`. |
+| Operation   | ```$rd = math.floor(math.log($rs, $rt));```  |
+| Syntax      | `mathlog $rd, $rs, $rt`                      |
+| Encoding    | `0x00 rd rs rt -`                            |
+| Notes       | `$of` is cleared.                            |
+
+### MATHROOT: Math root
+
+|             |                                              |
+| ----------- | -------------------------------------------- |
+| Description | The (integer) `$rt`th root of `$rs`.         |
+| Operation   | ```$rd = math.floor(math.root($rs, $rt));``` |
+| Syntax      | `mathroot $rd, $rs, $rt`                     |
+| Encoding    | `0x00 rd rs rt -`                            |
+| Notes       | `$of` is cleared.                            |
 
 ### MOD: Modulus
 
