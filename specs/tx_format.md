@@ -7,6 +7,7 @@
     - [InputContract](#inputcontract)
 - [Output](#output)
     - [OutputCoin](#outputcoin)
+    - [OutputVariable](#outputvariable)
     - [OutputContract](#outputcontract)
 - [Witness](#witness)
 
@@ -91,7 +92,8 @@ Note: when signing a transaction, `utxoID` is set to zero.
 ```
 enum  OutputType : uint8 {
     Coin = 0,
-    Contract = 1,
+    Variable = 1,
+    Contract = 2,
 }
 ```
 
@@ -106,6 +108,19 @@ enum  OutputType : uint8 {
 | -------- | ---------- | --------------------------------- |
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
+
+### OutputVariable
+
+| name     | type       | description                       |
+| -------- | ---------- | --------------------------------- |
+| `to`     | `byte[32]` | Receiving address or script hash. |
+| `amount` | `uint64`   | Amount of coins to send.          |
+
+Note: when signing a transaction, `to` and `amount` are set to zero.
+
+Note: when executing a transaction, `to` and `amount` are set to zero.
+
+This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
 ### OutputContract
 
