@@ -84,6 +84,8 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 | `utxoID`     | `byte[32]` | UTXO ID.     |
 | `contractID` | `byte[32]` | Contract ID. |
 
+Note: when signing a transaction, `utxoID` is set to zero.
+
 ## Output
 
 ```
@@ -112,6 +114,10 @@ enum  OutputType : uint8 {
 | `inputIndex` | `uint8`    | Index of input contract.                                       |
 | `amount`     | `uint64`   | Amount of coins owned by contract after transaction execution. |
 | `stateRoot`  | `byte[32]` | State root of contract after transaction execution.            |
+
+Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
+
+Note: when executing a transaction, `amount` and `stateRoot` are set to zero.
 
 ## Witness
 
