@@ -542,7 +542,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not initialize memory.            |
 
-If `$sp + $rs > VM_MAX_RAM - 1`, panic.
+If `$sp + $rs > $hp`, panic.
 
 ### CFS: Shrink call frame
 
