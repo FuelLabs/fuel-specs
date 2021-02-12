@@ -853,6 +853,7 @@ After a revert:
 Panic if:
 * `$rs + 32` overflows
 * `$rs + 32 > VM_MAX_RAM`
+* `$fp == 0` (in the script context)
 
 ### SRWX: State read 32 bytes
 
@@ -870,6 +871,7 @@ Panic if:
 * `$rd + 32 > VM_MAX_RAM`
 * `$rs + 32 > VM_MAX_RAM`
 * The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* `$fp == 0` (in the script context)
 
 ### SWW: State write word
 
@@ -884,6 +886,7 @@ Panic if:
 Panic if:
 * `$rd + 32` overflows
 * `$rd + 32 > VM_MAX_RAM`
+* `$fp == 0` (in the script context)
 
 ### SWWX: State write 32 bytes
 
@@ -900,6 +903,7 @@ Panic if:
 * `$rs + 32` overflows
 * `$rd + 32 > VM_MAX_RAM`
 * `$rs + 32 > VM_MAX_RAM`
+* `$fp == 0` (in the script context)
 
 ## Cryptographic Opcodes
 
