@@ -707,18 +707,19 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 ### CALL: Call contract
 
-|             |                  |
-| ----------- | ---------------- |
-| Description | Call contract.   |
-| Operation   |                  |
-| Syntax      | `call $rs $rt`   |
-| Encoding    | `0x00 rs rt - -` |
-| Notes       |                  |
+|             |                    |
+| ----------- | ------------------ |
+| Description | Call contract.     |
+| Operation   |                    |
+| Syntax      | `call $rs $rt $ru` |
+| Encoding    | `0x00 rs rt ru -`  |
+| Notes       |                    |
 
 Panic if:
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 * Reading past `MEM[VM_MAX_RAM - 1]`
 * Any output range does not pass [ownership check](./main.md#ownership)
+* `$rt > $bal`
 
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
@@ -730,13 +731,14 @@ Register `$rs` is a memory address from which the following fields are set (word
 | 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
-`$rt` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
+`$ru` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
 A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
 1. Set `$pc` and `$is` to the starting address of the code.
-1. `$gas` = forwarded gas.
+1. `$bal = $rt` (forward coins)
+1. `$gas = $ru` (forward gas)
 
 ### CODECOPY: Code copy
 
