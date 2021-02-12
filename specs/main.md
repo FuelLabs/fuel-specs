@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
 - [Parameters](#parameters)
 - [Semantics](#semantics)
+- [Flags](#flags)
 - [Opcodes](#opcodes)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
@@ -48,13 +49,19 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                                                         |
 | `0x0D` |          |                     |                                                                                                               |
 | `0x0E` |          |                     |                                                                                                               |
-| `0x0F` |          |                     |                                                                                                               |
+| `0x0F` | `$flag`  | flags               | Flags register.                                                                                               |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
 Registers are 64 bits (8 bytes) wide. Words are the same width as registers.
 
 Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-byte values. Each contract has its own persistent state that is independent of other contracts. This is committed to in a Sparse Binary Merkle Tree.
+
+## Flags
+
+| value  | name           | description                                           |
+| ------ | -------------- | ----------------------------------------------------- |
+| `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
 
 ## Opcodes
 

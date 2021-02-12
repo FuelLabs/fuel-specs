@@ -66,6 +66,8 @@
   - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
   - [KECCAK256: keccak-256](#keccak256-keccak-256)
   - [SHA256: SHA-2-256](#sha256-sha-2-256)
+- [Other Opcodes](#other-opcodes)
+  - [FLAG: Set flags](#flag-set-flags)
 
 ## Reading Guide
 
@@ -78,6 +80,8 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 ## Arithmetic/Logic (ALU) Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
+If the `F_UNSAFE` flag is unset, an operation that would have set `$err` to `true` is instead a panic.
 
 ### ADD: Add
 
@@ -999,3 +1003,15 @@ Panic if:
 * `$rs + $rt > VM_MAX_RAM`
 * The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
 * `$rt > MEM_MAX_ACCESS_SIZE`
+
+## Other Opcodes
+
+### FLAG: Set flags
+
+|             |                       |
+| ----------- | --------------------- |
+| Description | Set `$flag` to `$rs`. |
+| Operation   | ```$flag = $rs;```    |
+| Syntax      | `flag $rs`            |
+| Encoding    | `0x00 rs - - -`       |
+| Notes       |                       |
