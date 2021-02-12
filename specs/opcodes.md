@@ -533,10 +533,12 @@ If current context is internal, panic if:
 * `$rt > $bal`
 
 Returns from contract call, popping the call frame. Before popping:
+1. Persist non-returned balance to this contract:
+    * For output with contract ID `MEM[$fp, 32]`, increase `amount` by `$bal - $rt`.
 1. Return the unused forwarded gas to the caller:
     * `$gas = $gas + $fp->$gas` (add remaining gas from previous context to current remaining gas)
 1. Return specified balance to the caller:
-    * `$bal = $bal + $fp->$bal` (add remaining balance from previous context to current remaining balance)
+    * `$bal = $rt + $fp->$bal` (add remaining balance from previous context to current remaining balance)
 
 Then pop the call frame and restoring registers _except_ the `$gas` and `$bal`. Afterwards, set the following registers:
 1. `$pc = $pc + 4` (advance program counter from where we called)
