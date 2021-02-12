@@ -10,6 +10,7 @@
     - [OutputContract](#outputcontract)
     - [OutputChange](#outputchange)
     - [OutputVariable](#outputvariable)
+    - [OutputContractConditional](#outputcontractconditional)
 - [Witness](#witness)
 
 ## Constants
@@ -96,6 +97,7 @@ enum  OutputType : uint8 {
     Contract = 1,
     Change = 2,
     Variable = 3,
+    ContractConditional = 4,
 }
 ```
 
@@ -148,6 +150,20 @@ Note: when signing a transaction, `to` and `amount` are set to zero.
 Note: when executing a transaction, `to` and `amount` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
+
+### OutputContractConditional
+
+| name         | type       | description                                                    |
+| ------------ | ---------- | -------------------------------------------------------------- |
+| `contractID` | `byte[32]` | Contract ID.                                                   |
+| `amount`     | `uint64`   | Amount of coins owned by contract after transaction execution. |
+| `stateRoot`  | `byte[32]` | State root of contract after transaction execution.            |
+
+Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
+
+Note: when executing a transaction, `amount` and `stateRoot` are initialized to zero.
+
+This output type indicates that a new contract may have been created during transaction execution. A `contractID` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
 ## Witness
 
