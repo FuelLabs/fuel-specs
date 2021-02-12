@@ -641,6 +641,7 @@ Panic if:
 * `$rd + $ru > VM_MAX_RAM - 1`
 * `$rs + $ru > VM_MAX_RAM - 1`
 * `$rt > MEM_MAX_ACCESS_SIZE`
+* The memory range `MEM[$rd, $rt]`  does not pass [ownership check](./main.md#ownership)
 
 ### SB: Store byte
 
