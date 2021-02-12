@@ -464,7 +464,10 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                                           |
 | Notes       |                                                             |
 
-If `$rt > tx.input[$rs].maturity`, or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), or if `$rs > tx.inputsCount`, panic.
+Panic if:
+* `$rt > tx.input[$rs].maturity`
+* the input `$rs` is not of type [`InputType.Coin`](./tx_format.md)
+* `$rs > tx.inputsCount`
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -480,7 +483,8 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Encoding    | `0x00 rd rs - -`                                 |
 | Notes       |                                                  |
 
-If `$rs > tx.maturity`, panic.
+Panic if:
+* `$rs > tx.maturity`
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -496,7 +500,8 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Encoding    | `0x00 i i i i`                                 |
 | Notes       |                                                |
 
-If `$is + imm * 4 > VM_MAX_RAM - 1`, panic.
+Panic if:
+* `$is + imm * 4 > VM_MAX_RAM - 1`
 
 ### JNZI: Jump if not zero immediate
 
@@ -508,7 +513,8 @@ If `$is + imm * 4 > VM_MAX_RAM - 1`, panic.
 | Encoding    | `0x00 rs i i i`                                                                        |
 | Notes       |                                                                                        |
 
-If `$is + imm * 4 > VM_MAX_RAM - 1`, panic.
+Panic if:
+* `$is + imm * 4 > VM_MAX_RAM - 1`
 
 ### RETURN: Return from context
 
@@ -542,7 +548,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not initialize memory.            |
 
-If `$sp + $rs > $hp`, panic.
+Panic if:
+- `$sp + $rs` overflows
+- `$sp + $rs > $hp`
 
 ### CFS: Shrink call frame
 
@@ -554,7 +562,9 @@ If `$sp + $rs > $hp`, panic.
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not clear memory.                 |
 
-If `$sp < $ssp + $rs`, panic.
+Panic if:
+- `$sp - $rs` underflows
+- `$sp - $rs < $ssp`
 
 ### LB: Load byte
 
@@ -566,7 +576,9 @@ If `$sp < $ssp + $rs`, panic.
 | Encoding    | `0x00 rd rs i i`                                             |
 | Notes       |                                                              |
 
-If `$rs + imm > VM_MAX_RAM - 1`, panic.
+Panic if:
+- `$rs + imm` overflows
+- `$rs + imm > VM_MAX_RAM - 1`
 
 ### LW: Load word
 
@@ -578,6 +590,10 @@ If `$rs + imm > VM_MAX_RAM - 1`, panic.
 | Encoding    | `0x00 rd rs i i`                                             |
 | Notes       |                                                              |
 
+Panic if:
+- `$rs + imm + 7` overflows
+- `$rs + imm + 7 > VM_MAX_RAM - 1`
+
 ### MALLOC: Allocate memory
 
 |             |                                           |
@@ -587,6 +603,10 @@ If `$rs + imm > VM_MAX_RAM - 1`, panic.
 | Syntax      | `malloc $rs`                              |
 | Encoding    | `0x00 rs - - -`                           |
 | Notes       | Does not initialize memory.               |
+
+Panic if:
+- `$hp - $rs` underflows
+- `$hp - $rs < $sp`
 
 ### MEMEQ: Memory equality
 
@@ -598,7 +618,12 @@ If `$rs + imm > VM_MAX_RAM - 1`, panic.
 | Encoding    | `0x00 rd rs rt ru`                          |
 | Notes       |                                             |
 
-If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rs + $ru` overflows
+* `$rt + $ru` overflows
+* `$rs + $ru > VM_MAX_RAM - 1`
+* `$rt + $ru > VM_MAX_RAM - 1`
+* `$ru > MEM_MAX_ACCESS_SIZE`
 
 ### MEMCP: Memory copy
 
@@ -610,7 +635,12 @@ If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs rt -`                    |
 | Notes       |                                      |
 
-If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + $ru` overflows
+* `$rs + $ru` overflows
+* `$rd + $ru > VM_MAX_RAM - 1`
+* `$rs + $ru > VM_MAX_RAM - 1`
+* `$rt > MEM_MAX_ACCESS_SIZE`
 
 ### SB: Store byte
 
@@ -622,7 +652,10 @@ If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs i i`                                                                    |
 | Notes       |                                                                                     |
 
-The memory range `MEM[$rd + imm, 1]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
+Panic if:
+* `$rd + imm` overflows
+* `$rd + imm > VM_MAX_RAM - 1`
+* The memory range `MEM[$rd + imm, 1]`  does not pass [ownership check](./main.md#ownership)
 
 ### SW: Store word
 
@@ -634,7 +667,10 @@ The memory range `MEM[$rd + imm, 1]` [is checked for ownership](./main.md#owners
 | Encoding    | `0x00 rd rs i i`                                                   |
 | Notes       |                                                                    |
 
-The memory range `MEM[$rd + imm, 8]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
+Panic if:
+* `$rd + imm + 7` overflows
+* `$rd + imm + 7 > VM_MAX_RAM - 1`
+* The memory range `MEM[$rd + imm, 8]`  does not pass [ownership check](./main.md#ownership)
 
 ## Contract Opcodes
 
