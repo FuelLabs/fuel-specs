@@ -492,6 +492,10 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Encoding    | `0x00 i i i i`                                 |
 | Notes       |                                                |
 
+If `$is + imm * 4 > VM_MAX_RAM - 1`:
+- In a predicate context, [return](#return-return-from-context) `false`.
+- In other contexts, [revert](#revert-revert).
+
 ### JNZI: Jump if not zero immediate
 
 |             |                                                                                        |
@@ -501,6 +505,10 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Syntax      | `jnzi $rs`                                                                             |
 | Encoding    | `0x00 rs i i i`                                                                        |
 | Notes       |                                                                                        |
+
+If `$is + imm * 4 > VM_MAX_RAM - 1`:
+- In a predicate context, [return](#return-return-from-context) `false`.
+- In other contexts, [revert](#revert-revert).
 
 ### RETURN: Return from context
 
