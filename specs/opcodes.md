@@ -913,6 +913,15 @@ Panic if:
 | Encoding    | `0x00 rd rs rt -`                                                                                                           |
 | Notes       |                                                                                                                             |
 
+Panic if:
+* `$rd + 64` overflows
+* `$rs + 64` overflows
+* `$rt + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 64 > VM_MAX_RAM`
+* `$rt + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 64]`  does not pass [ownership check](./main.md#ownership)
+
 To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
 ### KECCAK256: keccak-256
@@ -925,7 +934,13 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 | Encoding    | `0x00 rd rs rt -`                                     |
 | Notes       |                                                       |
 
-If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + 64` overflows
+* `$rs + $rt` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + $rt > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* `$rt > MEM_MAX_ACCESS_SIZE`
 
 ### SHA256: SHA-2-256
 
@@ -937,4 +952,10 @@ If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs rt -`                                    |
 | Notes       |                                                      |
 
-If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + 64` overflows
+* `$rs + $rt` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + $rt > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* `$rt > MEM_MAX_ACCESS_SIZE`
