@@ -714,6 +714,11 @@ Block header hashes for blocks with height greater than or equal to current bloc
 | Encoding    | `0x00 rs rt - -` |
 | Notes       |                  |
 
+Panic if:
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
+* Reading past `MEM[VM_MAX_RAM - 1]`
+* Any output range does not pass [ownership check](./main.md#ownership)
+
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
 | bytes | type                 | value             | description                                                      |
@@ -726,14 +731,10 @@ Register `$rs` is a memory address from which the following fields are set (word
 
 `$rt` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
-Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consuming TODO gas.
-
-Each output range [is checked for ownership](./main.md#ownership). Any check failing causes a revert, with this instruction consuming TODO gas.
-
-If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
+A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
-1. Set `$pc` and `$is` to the starting address of the code
+1. Set `$pc` and `$is` to the starting address of the code.
 1. `$gas` = forwarded gas.
 
 ### CODECOPY: Code copy
