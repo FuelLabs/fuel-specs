@@ -76,23 +76,31 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### ADD: Add
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Adds two registers.                              |
-| Operation   | ```$rd = $rs + $rt;```                           |
-| Syntax      | `add $rd, $rs, $rt`                              |
-| Encoding    | `0x00 rd rs rt -`                                |
-| Notes       | `$of` is assigned the overflow of the operation. |
+|             |                        |
+| ----------- | ---------------------- |
+| Description | Adds two registers.    |
+| Operation   | ```$rd = $rs + $rt;``` |
+| Syntax      | `add $rd, $rs, $rt`    |
+| Encoding    | `0x00 rd rs rt -`      |
+| Notes       |                        |
+
+`$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
 
 ### ADDI: Add immediate
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Adds a register and an immediate value.          |
-| Operation   | ```$rt = $rs + imm;```                           |
-| Syntax      | `addi $rd, $rs, immediate`                       |
-| Encoding    | `0x00 rs rt i i`                                 |
-| Notes       | `$of` is assigned the overflow of the operation. |
+|             |                                         |
+| ----------- | --------------------------------------- |
+| Description | Adds a register and an immediate value. |
+| Operation   | ```$rt = $rs + imm;```                  |
+| Syntax      | `addi $rd, $rs, immediate`              |
+| Encoding    | `0x00 rs rt i i`                        |
+| Notes       |                                         |
+
+`$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
 
 ### AND: AND
 
@@ -102,7 +110,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs & $rt;```      |
 | Syntax      | `and $rd, $rs, $rt`         |
 | Encoding    | `0x00 rd rs rt -`           |
-| Notes       | `$of` is cleared.           |
+| Notes       |                             |
+
+`$of` and `$err` are cleared.
 
 ### ANDI: AND immediate
 
@@ -112,27 +122,37 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs & imm;```                          |
 | Syntax      | `andi $rd, $rs, imm`                            |
 | Encoding    | `0x00 rd rs i i`                                |
-| Notes       | `$of` is cleared.                               |
+| Notes       |                                                 |
+
+`$of` and `$err` are cleared.
 
 ### DIV: Divide
 
-|             |                                                          |
-| ----------- | -------------------------------------------------------- |
-| Description | Divides two registers.                                   |
-| Operation   | ```$rd = $rs / $rt;```<br>```$of = $rs % $rt;```         |
-| Syntax      | `div $rd, $rs, $rt`                                      |
-| Encoding    | `0x00 rd rs rt -`                                        |
-| Notes       | Stores the quotient in `$rd` and the remainder in `$of`. |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Divides two registers.                           |
+| Operation   | ```$rd = $rs / $rt;```<br>```$of = $rs % $rt;``` |
+| Syntax      | `div $rd, $rs, $rt`                              |
+| Encoding    | `0x00 rd rs rt -`                                |
+| Notes       |                                                  |
+
+If `$rt == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` is assigned the remainder of the operation and `$err` is cleared.
 
 ### DIVI: Divide immediate
 
-|             |                                                         |
-| ----------- | ------------------------------------------------------- |
-| Description | Divides a register and an immediate value.              |
-| Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;```        |
-| Syntax      | `divi $rd, $rs, imm`                                    |
-| Encoding    | `0x00 rd rs rt -`                                       |
-| Notes       | Stores the quotient in `$rd` and the remainder in `$of` |
+|             |                                                  |
+| ----------- | ------------------------------------------------ |
+| Description | Divides a register and an immediate value.       |
+| Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;``` |
+| Syntax      | `divi $rd, $rs, imm`                             |
+| Encoding    | `0x00 rd rs rt -`                                |
+| Notes       |                                                  |
+
+If `imm == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` is assigned the remainder of the operation and `$err` is cleared.
 
 ### EQ: Equals
 
@@ -144,6 +164,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                    |
 | Notes       |                                      |
 
+`$of` and `$err` are cleared.
+
 ### EXP: Exponentiate
 
 |             |                                              |
@@ -153,6 +175,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `exp $rd, $rs, $rt`                          |
 | Encoding    | `0x00 rd rs rt -`                            |
 | Notes       |                                              |
+
+If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is cleared.
+
+`$err` is cleared.
 
 ### EXPI: Exponentiate immediate
 
@@ -164,6 +190,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rt i i`                                        |
 | Notes       |                                                         |
 
+If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is cleared.
+
+`$err` is cleared.
+
 ### GT: Greater than
 
 |             |                                          |
@@ -174,6 +204,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                        |
 | Notes       |                                          |
 
+`$of` and `$err` are cleared.
+
 ### MATHLOG: Math logarithm
 
 |             |                                              |
@@ -182,7 +214,13 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = math.floor(math.log($rs, $rt));```  |
 | Syntax      | `mathlog $rd, $rs, $rt`                      |
 | Encoding    | `0x00 rd rs rt -`                            |
-| Notes       | `$of` is cleared.                            |
+| Notes       |                                              |
+
+If `$rs == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+If `$rt <= 1`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` and `$err` are cleared.
 
 ### MATHROOT: Math root
 
@@ -192,7 +230,11 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = math.floor(math.root($rs, $rt));``` |
 | Syntax      | `mathroot $rd, $rs, $rt`                     |
 | Encoding    | `0x00 rd rs rt -`                            |
-| Notes       | `$of` is cleared.                            |
+| Notes       |                                              |
+
+If `$rt == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` and `$err` are cleared.
 
 ### MOD: Modulus
 
@@ -204,6 +246,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                  |
 | Notes       |                                    |
 
+If `$rt == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` and `$err` are cleared.
+
 ### MODI: Modulus immediate
 
 |             |                                                        |
@@ -214,25 +260,37 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs i i`                                       |
 | Notes       |                                                        |
 
+If `imm == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` and `$err` are cleared.
+
 ### MUL: Multiply
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Multiplies two registers.                        |
-| Operation   | ```$rd = $rs * $rt;```                           |
-| Syntax      | `mul $rd, $rs, $rt`                              |
-| Encoding    | `0x00 rd rs rt -`                                |
-| Notes       | `$of` is assigned the overflow of the operation. |
+|             |                           |
+| ----------- | ------------------------- |
+| Description | Multiplies two registers. |
+| Operation   | ```$rd = $rs * $rt;```    |
+| Syntax      | `mul $rd, $rs, $rt`       |
+| Encoding    | `0x00 rd rs rt -`         |
+| Notes       |                           |
+
+`$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
 
 ### MULI: Multiply immediate
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Multiplies a register and an immediate value.    |
-| Operation   | ```$rd = $rs * imm;```                           |
-| Syntax      | `mul $rd, $rs, imm`                              |
-| Encoding    | `0x00 rd rs i i`                                 |
-| Notes       | `$of` is assigned the overflow of the operation. |
+|             |                                               |
+| ----------- | --------------------------------------------- |
+| Description | Multiplies a register and an immediate value. |
+| Operation   | ```$rd = $rs * imm;```                        |
+| Syntax      | `mul $rd, $rs, imm`                           |
+| Encoding    | `0x00 rd rs i i`                              |
+| Notes       |                                               |
+
+`$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
 
 ### NOOP: No operation
 
@@ -244,6 +302,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 - - - -`         |
 | Notes       |                        |
 
+`$of` and `$err` are cleared.
+
 ### NOT: Invert
 
 |             |                         |
@@ -252,7 +312,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = ~$rs;```       |
 | Syntax      | `not $rd, $rs`          |
 | Encoding    | `0x00 rd rs - -`        |
-| Notes       | `$of` is cleared.       |
+| Notes       |                         |
+
+`$of` and `$err` are cleared.
 
 ### OR: OR
 
@@ -262,7 +324,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs | $rt;```     |
 | Syntax      | `or $rd, $rs, $rt`         |
 | Encoding    | `0x00 rd rs rt -`          |
-| Notes       | `$of` is cleared.          |
+| Notes       |                            |
+
+`$of` and `$err` are cleared.
 
 ### ORI: OR immediate
 
@@ -272,7 +336,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs | imm;```                         |
 | Syntax      | `ori $rd, $rs, imm`                            |
 | Encoding    | `0x00 rd rs i i`                               |
-| Notes       | `$of` is cleared.                              |
+| Notes       |                                                |
+
+`$of` and `$err` are cleared.
 
 ### SLL: Shift left logical
 
@@ -284,6 +350,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                     |
 | Notes       | Zeroes are shifted in.                |
 
+`$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
+
 ### SLLI: Shift left logical immediate
 
 |             |                                               |
@@ -293,6 +363,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `slli $rd, $rs, imm`                          |
 | Encoding    | `0x00 rd rs i i`                              |
 | Notes       | Zeroes are shifted in.                        |
+
+`$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
 
 ### SRL: Shift right logical
 
@@ -304,6 +378,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                      |
 | Notes       | Zeroes are shifted in.                 |
 
+`$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
+
+`$err` is cleared.
+
 ### SRLI: Shift right logical immediate
 
 |             |                                                |
@@ -313,6 +391,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `srli $rd, $rs, imm`                           |
 | Encoding    | `0x00 rd rs i i`                               |
 | Notes       | Zeroes are shifted in.                         |
+
+`$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
+
+`$err` is cleared.
 
 ### SUB: Subtract
 
@@ -324,6 +406,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                                |
 | Notes       | `$of` is assigned the overflow of the operation. |
 
+`$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
+
+`$err` is cleared.
+
 ### SUBI: Subtract immediate
 
 |             |                                                  |
@@ -334,6 +420,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt -`                                |
 | Notes       | `$of` is assigned the overflow of the operation. |
 
+`$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
+
+`$err` is cleared.
+
 ### XOR: XOR
 
 |             |                             |
@@ -342,7 +432,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ^ $rt;```      |
 | Syntax      | `xor $rd, $rs, $rt `        |
 | Encoding    | `0x00 rd rs rt -`           |
-| Notes       | `$of` is cleared.           |
+| Notes       |                             |
+
+`$of` and `$err` are cleared.
 
 ### XORI: XOR immediate
 
@@ -352,7 +444,9 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Operation   | ```$rd = $rs ^ imm;```                          |
 | Syntax      | `xori $rt, $rs, imm `                           |
 | Encoding    | `0x00 rs rt i i`                                |
-| Notes       | `$of` is cleared.                               |
+| Notes       |                                                 |
+
+`$of` and `$err` are cleared.
 
 ## Control Flow Opcodes
 
