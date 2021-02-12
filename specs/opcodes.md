@@ -639,15 +639,13 @@ If `$rt > CONTRACT_MAX_SIZE`, revert instead.
 
 ### LOG: Log event
 
-|             |                                                                                                                                                                     |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description | Takes `$rs` and `$rt` register values and records a log entry with no topics based on the memory offset of the `$rs` value, with a length given by the `$rt` value. |
-| Operation   | ```$log.push(':' + MEM[$rs, $rt]);```                                                                                                                               |
-| Syntax      | `log $rs, $rt`                                                                                                                                                      |
-| Encoding    | `0x00 rs rt - -`                                                                                                                                                    |
-| Notes       |                                                                                                                                                                     |
-
-<!--TODO-->
+|             |                                |
+| ----------- | ------------------------------ |
+| Description | Log an event. This is a no-op. |
+| Operation   | ```log($rs, $rt, $ru, $rv);``` |
+| Syntax      | `log $rs, $rt, $ru, $rv`       |
+| Encoding    | `0x00 rs rt ru rv`             |
+| Notes       |                                |
 
 ### REVERT: Revert
 
