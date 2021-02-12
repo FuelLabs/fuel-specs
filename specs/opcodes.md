@@ -70,6 +70,10 @@
 
 This page provides a description of all opcodes for the FuelVM. Encoding should be read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
+Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is handled depends on [context](./main.md#contexts):
+- In a predicate context, [return](#return-return-from-context) `false`.
+- In other contexts, [revert](#revert-revert).
+
 ## Arithmetic/Logic (ALU) Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
@@ -460,7 +464,10 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                                           |
 | Notes       |                                                             |
 
-If `$rt > tx.input[$rs].maturity` or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
+Panic if:
+* `$rt > tx.input[$rs].maturity`
+* the input `$rs` is not of type [`InputType.Coin`](./tx_format.md)
+* `$rs > tx.inputsCount`
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -476,7 +483,8 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Encoding    | `0x00 rd rs - -`                                 |
 | Notes       |                                                  |
 
-If `$rs > tx.maturity`, verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
+Panic if:
+* `$rs > tx.maturity`
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -492,6 +500,9 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Encoding    | `0x00 i i i i`                                 |
 | Notes       |                                                |
 
+Panic if:
+* `$is + imm * 4 > VM_MAX_RAM - 1`
+
 ### JNZI: Jump if not zero immediate
 
 |             |                                                                                        |
@@ -501,6 +512,9 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Syntax      | `jnzi $rs`                                                                             |
 | Encoding    | `0x00 rs i i i`                                                                        |
 | Notes       |                                                                                        |
+
+Panic if:
+* `$is + imm * 4 > VM_MAX_RAM - 1`
 
 ### RETURN: Return from context
 
@@ -534,6 +548,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not initialize memory.            |
 
+Panic if:
+- `$sp + $rs` overflows
+- `$sp + $rs > $hp`
+
 ### CFS: Shrink call frame
 
 |             |                                        |
@@ -543,6 +561,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `cfs $rs`                              |
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not clear memory.                 |
+
+Panic if:
+- `$sp - $rs` underflows
+- `$sp - $rs < $ssp`
 
 ### LB: Load byte
 
@@ -554,6 +576,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs i i`                                             |
 | Notes       |                                                              |
 
+Panic if:
+- `$rs + imm + 1` overflows
+- `$rs + imm + 1 > VM_MAX_RAM`
+
 ### LW: Load word
 
 |             |                                                              |
@@ -563,6 +589,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `lw $rd, $rs, imm`                                           |
 | Encoding    | `0x00 rd rs i i`                                             |
 | Notes       |                                                              |
+
+Panic if:
+- `$rs + imm + 8` overflows
+- `$rs + imm + 8 > VM_MAX_RAM`
 
 ### MALLOC: Allocate memory
 
@@ -574,6 +604,10 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rs - - -`                           |
 | Notes       | Does not initialize memory.               |
 
+Panic if:
+- `$hp - $rs` underflows
+- `$hp - $rs < $sp`
+
 ### MEMEQ: Memory equality
 
 |             |                                             |
@@ -584,7 +618,12 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rd rs rt ru`                          |
 | Notes       |                                             |
 
-If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rs + $ru` overflows
+* `$rt + $ru` overflows
+* `$rs + $ru > VM_MAX_RAM`
+* `$rt + $ru > VM_MAX_RAM`
+* `$ru > MEM_MAX_ACCESS_SIZE`
 
 ### MEMCP: Memory copy
 
@@ -596,7 +635,13 @@ If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs rt -`                    |
 | Notes       |                                      |
 
-If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + $rt` overflows
+* `$rs + $rt` overflows
+* `$rd + $rt > VM_MAX_RAM`
+* `$rs + $rt > VM_MAX_RAM`
+* `$rt > MEM_MAX_ACCESS_SIZE`
+* The memory range `MEM[$rd, $rt]`  does not pass [ownership check](./main.md#ownership)
 
 ### SB: Store byte
 
@@ -608,7 +653,10 @@ If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs i i`                                                                    |
 | Notes       |                                                                                     |
 
-The memory range `MEM[$rd + imm, 1]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
+Panic if:
+* `$rd + imm + 1` overflows
+* `$rd + imm + 1 > VM_MAX_RAM`
+* The memory range `MEM[$rd + imm, 1]`  does not pass [ownership check](./main.md#ownership)
 
 ### SW: Store word
 
@@ -620,7 +668,10 @@ The memory range `MEM[$rd + imm, 1]` [is checked for ownership](./main.md#owners
 | Encoding    | `0x00 rd rs i i`                                                   |
 | Notes       |                                                                    |
 
-The memory range `MEM[$rd + imm, 8]` [is checked for ownership](./main.md#ownership). The check failing causes a revert, with this instruction consuming TODO gas.
+Panic if:
+* `$rd + imm + 8` overflows
+* `$rd + imm + 8 > VM_MAX_RAM`
+* The memory range `MEM[$rd + imm, 8]`  does not pass [ownership check](./main.md#ownership)
 
 ## Contract Opcodes
 
@@ -635,6 +686,11 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `blockhash $rd $rs`                  |
 | Encoding    | `0x00 rd rs - -`                     |
 | Notes       |                                      |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
 
@@ -658,6 +714,11 @@ Block header hashes for blocks with height greater than or equal to current bloc
 | Encoding    | `0x00 rs rt - -` |
 | Notes       |                  |
 
+Panic if:
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
+* Reading past `MEM[VM_MAX_RAM - 1]`
+* Any output range does not pass [ownership check](./main.md#ownership)
+
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
 | bytes | type                 | value             | description                                                      |
@@ -670,14 +731,10 @@ Register `$rs` is a memory address from which the following fields are set (word
 
 `$rt` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
-Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consuming TODO gas.
-
-Each output range [is checked for ownership](./main.md#ownership). Any check failing causes a revert, with this instruction consuming TODO gas.
-
-If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
+A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
-1. Set `$pc` and `$is` to the starting address of the code
+1. Set `$pc` and `$is` to the starting address of the code.
 1. `$gas` = forwarded gas.
 
 ### CODECOPY: Code copy
@@ -690,7 +747,14 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Encoding    | `0x00 rd rs rt ru`                                                                                                                               |
 | Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                |
 
-If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + $ru` overflows
+* `$rs + 32` overflows
+* `$rd + $ru > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, $ru]`  does not pass [ownership check](./main.md#ownership)
+* `$ru > MEM_MAX_ACCESS_SIZE`
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
 ### CODEROOT: Code Merkle root
 
@@ -702,6 +766,14 @@ If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs - -`                                                                                                                      |
 | Notes       |                                                                                                                                       |
 
+Panic if:
+* `$rd + 32` overflows
+* `$rs + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
+
 ### CODESIZE: Code size
 
 |             |                                                                                                           |
@@ -711,6 +783,11 @@ If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Syntax      | `codesize $rd, $rs`                                                                                       |
 | Encoding    | `0x00 rd rs - -`                                                                                          |
 | Notes       |                                                                                                           |
+
+Panic if:
+* `$rs + 32` overflows
+* `$rs + 32 > VM_MAX_RAM`
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
 ### COINBASE
 
@@ -722,17 +799,27 @@ If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd - - -`                  |
 | Notes       |                                  |
 
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+
 ### CREATE: Create contract
 
-|             |                                                                       |
-| ----------- | --------------------------------------------------------------------- |
-| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`. |
-| Operation   | ```create(MEM[$rs, $rt])```                                           |
-| Syntax      | `create $rs, $rt`                                                     |
-| Encoding    | `0x00 rs rt - -`                                                      |
-| Notes       |                                                                       |
+|             |                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------- |
+| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`, at output `$rd`. |
+| Operation   | ```create($rd, MEM[$rs, $rt])```                                                       |
+| Syntax      | `create $rd $rs, $rt`                                                                  |
+| Encoding    | `0x00 rs rt - -`                                                                       |
+| Notes       |                                                                                        |
 
-If `$rt > CONTRACT_MAX_SIZE`, revert instead.
+Panic if:
+* `$rs + $rt` overflows
+* `$rs + $rt > VM_MAX_RAM`
+* `$rt > CONTRACT_MAX_SIZE`
+* `tx.outputs[$rd].type != OutputType.ContractConditional`
+* `tx.outputs[$rd].contractID != 0`
 
 ### LOG: Log event
 
@@ -769,6 +856,11 @@ After a revert:
 | Encoding    | `0x00 rd rs - -`                                  |
 | Notes       | Returns zero if the state element does not exist. |
 
+Panic if:
+* `$rs + 32` overflows
+* `$rs + 32 > VM_MAX_RAM`
+* `$fp == 0` (in the script context)
+
 ### SRWX: State read 32 bytes
 
 |             |                                                     |
@@ -778,6 +870,14 @@ After a revert:
 | Syntax      | `srwx $rd, $rs`                                     |
 | Encoding    | `0x00 rd rs - -`                                    |
 | Notes       | Returns zero if the state element does not exist.   |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rs + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* `$fp == 0` (in the script context)
 
 ### SWW: State write word
 
@@ -789,6 +889,11 @@ After a revert:
 | Encoding    | `0x00 rd rs - -`                                   |
 | Notes       |                                                    |
 
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$fp == 0` (in the script context)
+
 ### SWWX: State write 32 bytes
 
 |             |                                                      |
@@ -798,6 +903,13 @@ After a revert:
 | Syntax      | `swwx $rd, $rs`                                      |
 | Encoding    | `0x00 rd rs - -`                                     |
 | Notes       |                                                      |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rs + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* `$fp == 0` (in the script context)
 
 ## Cryptographic Opcodes
 
@@ -811,6 +923,15 @@ After a revert:
 | Encoding    | `0x00 rd rs rt -`                                                                                                           |
 | Notes       |                                                                                                                             |
 
+Panic if:
+* `$rd + 64` overflows
+* `$rs + 64` overflows
+* `$rt + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 64 > VM_MAX_RAM`
+* `$rt + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 64]`  does not pass [ownership check](./main.md#ownership)
+
 To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
 ### KECCAK256: keccak-256
@@ -823,7 +944,13 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 | Encoding    | `0x00 rd rs rt -`                                     |
 | Notes       |                                                       |
 
-If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + 64` overflows
+* `$rs + $rt` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + $rt > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* `$rt > MEM_MAX_ACCESS_SIZE`
 
 ### SHA256: SHA-2-256
 
@@ -835,4 +962,10 @@ If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
 | Encoding    | `0x00 rd rs rt -`                                    |
 | Notes       |                                                      |
 
-If `$rt > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + 64` overflows
+* `$rs + $rt` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + $rt > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* `$rt > MEM_MAX_ACCESS_SIZE`
