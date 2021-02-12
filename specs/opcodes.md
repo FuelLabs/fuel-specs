@@ -748,9 +748,12 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 
 Panic if:
 * `$rd + $ru` overflows
+* `$rs + 32` overflows
 * `$rd + $ru > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
 * The memory range `MEM[$rd, $ru]`  does not pass [ownership check](./main.md#ownership)
 * `$ru > MEM_MAX_ACCESS_SIZE`
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
 ### CODEROOT: Code Merkle root
 
@@ -768,6 +771,7 @@ Panic if:
 * `$rd + 32 > VM_MAX_RAM`
 * `$rs + 32 > VM_MAX_RAM`
 * The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
 ### CODESIZE: Code size
 
@@ -782,6 +786,7 @@ Panic if:
 Panic if:
 * `$rs + 32` overflows
 * `$rs + 32 > VM_MAX_RAM`
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
 ### COINBASE
 
