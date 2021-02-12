@@ -121,7 +121,6 @@ A call frame consists of the following, word-aligned:
 | ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
 |       |                      |                   | **Unwritable area begins.**                                                   |
 | 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                  |
-| 8     | `uint64`             | gas               | Gas remaining from previous context after forwarding gas to this call frame.  |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous  context.                                       |
 | 8     | `uint8`              | in count          | Number of input values.                                                       |

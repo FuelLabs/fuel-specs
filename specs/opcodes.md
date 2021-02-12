@@ -511,7 +511,7 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 If current context is external, cease VM execution and return `$rs`.
 
 If current context is internal, return from contract call, popping the call frame. Before popping, return the unused forwarded gas to the caller:
-1. `$gas = $gas + MEM[$fp + 8*1]` (remaining gas from caller is second word)
+1. `$gas = $gas + $fp->$gas` (add remaining gas from previous context to current remaining gas)
 
 Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
 1. `$pc = $pc + 4` (advance program counter from where we called)
@@ -646,26 +646,25 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 ### CALL: Call contract
 
-|             |                 |
-| ----------- | --------------- |
-| Description | Call contract.  |
-| Operation   |                 |
-| Syntax      | `call $rs`      |
-| Encoding    | `0x00 rs - - -` |
-| Notes       |                 |
+|             |                  |
+| ----------- | ---------------- |
+| Description | Call contract.   |
+| Operation   |                  |
+| Syntax      | `call $rs $rt`   |
+| Encoding    | `0x00 rs rt - -` |
+| Notes       |                  |
 
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
 | bytes | type                 | value             | description                                                      |
 | ----- | -------------------- | ----------------- | ---------------------------------------------------------------- |
-| 8     | `uint64`             | gas               | Amount of gas to forward.                                        |
 | 32    | `byte[32]`           | to                | Contract ID to call.                                             |
 | 8     | `uint8`              | out count         | Number of return values.                                         |
 | 8     | `uint8`              | in count          | Number of input values.                                          |
 | 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
-If gas is set to an amount greater than the available gas, all available gas is forwarded.
+`$rt` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
 Reading past `MEM[VM_MAX_RAM - 1]` causes a revert, with this instruction consuming TODO gas.
 
