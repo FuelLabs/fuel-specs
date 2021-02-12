@@ -460,7 +460,7 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                                           |
 | Notes       |                                                             |
 
-If `$rt > tx.input[$rs].maturity` or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
+If `$rt > tx.input[$rs].maturity`, or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), or if `$rs > tx.inputsCount`, verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
 
 Otherwise, advance the program counter `$pc` by `4`.
 
