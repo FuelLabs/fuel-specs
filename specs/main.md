@@ -43,7 +43,7 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to free memory).                                  |
 | `0x08` | `$err`   | error               | Error codes for particular operations.                                                                        |
 | `0x09` | `$gas`   | gas                 | Remaining gas.                                                                                                |
-| `0x0A` | `$bal`   | balance             | Currently available coins.                                                                                    |
+| `0x0A` | `$bal`   | balance             | Received balance for this context.                                                                            |
 | `0x0B` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                                                         |
 | `0x0C` |          |                     |                                                                                                               |
 | `0x0D` |          |                     |                                                                                                               |
@@ -123,7 +123,6 @@ A call frame consists of the following, word-aligned:
 | bytes | type                 | value             | description                                                                   |
 | ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
 |       |                      |                   | **Unwritable area begins.**                                                   |
-| 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                  |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous context.                                        |
 | 8     | `uint8`              | in count          | Number of input values.                                                       |

@@ -123,7 +123,7 @@ enum  OutputType : uint8 {
 
 Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
 
-Note: when executing a transaction, `amount` and `stateRoot` are initialized to zero.
+Note: when executing a transaction, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
 ### OutputChange
 
