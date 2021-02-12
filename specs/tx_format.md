@@ -8,6 +8,8 @@
 - [Output](#output)
     - [OutputCoin](#outputcoin)
     - [OutputContract](#outputcontract)
+    - [OutputChange](#outputchange)
+    - [OutputVariable](#outputvariable)
 - [Witness](#witness)
 
 ## Constants
@@ -92,13 +94,15 @@ Note: when signing a transaction, `utxoID` is set to zero.
 enum  OutputType : uint8 {
     Coin = 0,
     Contract = 1,
+    Change = 2,
+    Variable = 3,
 }
 ```
 
-| name   | type                                                                  | description     |
-| ------ | --------------------------------------------------------------------- | --------------- |
-| `type` | `OutputType`                                                          | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin) or [OutputContract](#outputcontract) | Output data.    |
+| name   | type                                                                                                                                      | description     |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `type` | `OutputType`                                                                                                                              | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), or [OutputVariable](#outputvariable). | Output data.    |
 
 ### OutputCoin
 
@@ -117,7 +121,33 @@ enum  OutputType : uint8 {
 
 Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
 
-Note: when executing a transaction, `amount` and `stateRoot` are set to zero.
+Note: when executing a transaction, `amount` and `stateRoot` are initialized to zero.
+
+### OutputChange
+
+| name     | type       | description                       |
+| -------- | ---------- | --------------------------------- |
+| `to`     | `byte[32]` | Receiving address or script hash. |
+| `amount` | `uint64`   | Amount of coins to send.          |
+
+Note: when signing a transaction, `amount` is set to zero.
+
+Note: when executing a transaction, `amount` is initialized to zero.
+
+This output type indicates that the output's amount may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
+
+### OutputVariable
+
+| name     | type       | description                       |
+| -------- | ---------- | --------------------------------- |
+| `to`     | `byte[32]` | Receiving address or script hash. |
+| `amount` | `uint64`   | Amount of coins to send.          |
+
+Note: when signing a transaction, `to` and `amount` are set to zero.
+
+Note: when executing a transaction, `to` and `amount` are initialized to zero.
+
+This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
 ## Witness
 
