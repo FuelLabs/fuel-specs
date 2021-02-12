@@ -108,6 +108,8 @@ The VM is [initialized](#vm-initialization), then:
 
 Following initialization, execution begins.
 
+For each instruction, its gas cost `gc` is first computed. If `gc > $gas`, [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction.
+
 ## Call Frames
 
 Cross-contract calls push a _call frame_ onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that target the FuelVM). The distinction is as follows:
