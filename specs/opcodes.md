@@ -460,7 +460,7 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                                           |
 | Notes       |                                                             |
 
-If `$rt > tx.input[$rs].maturity`, halt, returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), halt, returning `false`.
+If `$rt > tx.input[$rs].maturity` or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -476,7 +476,7 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Encoding    | `0x00 rd rs - -`                                 |
 | Notes       |                                                  |
 
-If `$rs > tx.maturity`, halt, returning `false`.
+If `$rs > tx.maturity`, verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
 
 Otherwise, advance the program counter `$pc` by `4`.
 
