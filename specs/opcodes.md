@@ -35,6 +35,7 @@
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
+  - [RETURN: Return from context](#return-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
   - [CFE: Extend call frame](#cfe-extend-call-frame)
   - [CFS: Shrink call frame](#cfs-shrink-call-frame)
@@ -55,7 +56,6 @@
   - [COINBASE](#coinbase)
   - [CREATE: Create contract](#create-create-contract)
   - [LOG: Log event](#log-log-event)
-  - [RETURN: Return from call](#return-return-from-call)
   - [REVERT: Revert](#revert-revert)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
@@ -404,6 +404,24 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Encoding    | `0x00 rs i i i`                                                                        |
 | Notes       |                                                                                        |
 
+### RETURN: Return from context
+
+|             |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| Description | Returns from [context](./main.md#contexts) with value `$rs`. |
+| Operation   | ```return($rs);```                                           |
+| Syntax      | `return $rs`                                                 |
+| Encoding    | `0x00 rs - - -`                                              |
+| Notes       |                                                              |
+
+If current context is external, cease VM execution and return `$rs`.
+
+If current context is internal, return from contract call, popping the call frame. Before popping, return the unused forwarded gas to the caller:
+1. `$gas = $gas + MEM[$fp + 8*1]` (remaining gas from caller is second word)
+
+Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
+1. `$pc = $pc + 4` (advance program counter from where we called)
+
 ## Memory Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
@@ -534,13 +552,13 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 ### CALL: Call contract
 
-|             |                  |
-| ----------- | ---------------- |
-| Description | Call contract.   |
-| Operation   |                  |
-| Syntax      | `call $rd, $rs`  |
-| Encoding    | `0x00 rd rs - -` |
-| Notes       |                  |
+|             |                 |
+| ----------- | --------------- |
+| Description | Call contract.  |
+| Operation   |                 |
+| Syntax      | `call $rs`      |
+| Encoding    | `0x00 rs - - -` |
+| Notes       |                 |
 
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
@@ -548,8 +566,8 @@ Register `$rs` is a memory address from which the following fields are set (word
 | ----- | -------------------- | ----------------- | ---------------------------------------------------------------- |
 | 8     | `uint64`             | gas               | Amount of gas to forward.                                        |
 | 32    | `byte[32]`           | to                | Contract ID to call.                                             |
-| 1     | `uint8`              | out count         | Number of return values.                                         |
-| 1     | `uint8`              | in count          | Number of input values.                                          |
+| 8     | `uint8`              | out count         | Number of return values.                                         |
+| 8     | `uint8`              | in count          | Number of input values.                                          |
 | 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
@@ -561,7 +579,7 @@ Each output range [is checked for ownership](./main.md#ownership). Any check fai
 
 If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
-1. `$sp = $fp + MEM[$fp + 0]` (first word is offset to free stack)
+1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
 1. Set `$pc` and `$is` to the starting address of the code
 1. `$gas` = forwarded gas.
 
@@ -631,31 +649,20 @@ If `$rt > CONTRACT_MAX_SIZE`, revert instead.
 
 <!--TODO-->
 
-### RETURN: Return from call
-
-|             |                             |
-| ----------- | --------------------------- |
-| Description | Returns from contract call. |
-| Operation   |                             |
-| Syntax      | `return`                    |
-| Encoding    | `0x00 - - - -`              |
-| Notes       |                             |
-
-Return from contract call, popping the call frame. Before popping, return the unused forwarded gas to the caller:
-1. `$gas = $gas + MEM[$fp + 8*2]` (remaining gas from caller is third word)
-
-Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
-1. `$pc = $pc + 4` (advance program counter from where we called)
-
 ### REVERT: Revert
 
 |             |                                                                       |
 | ----------- | --------------------------------------------------------------------- |
 | Description | Halt execution, reverting state changes and returning value in `$rs`. |
-| Operation   | ```revert $rs;```                                                     |
+| Operation   | ```revert($rs);```                                                    |
 | Syntax      | `revert $rs`                                                          |
 | Encoding    | `0x00 rs - - -`                                                       |
 | Notes       |                                                                       |
+
+After a revert:
+1. All [OutputContract](./tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as their respective inputs.
+1. All [OutputVariable](./tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
+1. All [OutputContractConditional](./tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
 
 ### SRW: State read word
 

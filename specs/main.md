@@ -5,6 +5,7 @@
 - [Semantics](#semantics)
 - [Opcodes](#opcodes)
 - [VM Initialization](#vm-initialization)
+- [Contexts](#contexts)
 - [Predicate Verification](#predicate-verification)
 - [Script Execution](#script-execution)
 - [Call Frames](#call-frames)
@@ -30,24 +31,24 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 * Immediate value: 12, 18, or 24 bits, depending on operation
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
-| value  | register | name            | description                                                                                                   |
-| ------ | -------- | --------------- | ------------------------------------------------------------------------------------------------------------- |
-| `0x00` | `$zero`  | zero            | Contains zero (`0`), for convenience.                                                                         |
-| `0x01` | `$one`   | one             | Contains one (`1`), for convenience.                                                                          |
-| `0x02` | `$of`    | overflow        | Containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
-| `0x03` | `$pc`    | program counter | The program counter. Memory address of the current instruction.                                               |
-| `0x04` | `$sp`    | stack pointer   | Memory address on top of current call frame (points to free memory).                                          |
-| `0x05` | `$fp`    | frame pointer   | Memory address of beginning of current call frame.                                                            |
-| `0x06` | `$hp`    | heap pointer    | Memory address below the current bottom of the heap (points to free memory).                                  |
-| `0x07` | `$err`   | error           | Error codes for particular operations.                                                                        |
-| `0x08` | `$gas`   | gas             | Remaining gas.                                                                                                |
-| `0x09` | `$bal`   | balance         | Currently available coins.                                                                                    |
-| `0x0A` | `$is`    | instrs start    | Pointer to the start of the currently-executing code.                                                         |
-| `0x0B` |          |                 |                                                                                                               |
-| `0x0C` |          |                 |                                                                                                               |
-| `0x0D` |          |                 |                                                                                                               |
-| `0x0E` |          |                 |                                                                                                               |
-| `0x0F` |          |                 |                                                                                                               |
+| value  | register | name                | description                                                                                                   |
+| ------ | -------- | ------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                                                         |
+| `0x01` | `$one`   | one                 | Contains one (`1`), for convenience.                                                                          |
+| `0x02` | `$of`    | overflow            | Containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
+| `0x03` | `$pc`    | program counter     | The program counter. Memory address of the current instruction.                                               |
+| `0x04` | `$ssp`   | stack start pointer | Memory address of bottom of current writable stack area.                                                      |
+| `0x05` | `$sp`    | stack pointer       | Memory address on top of current writable stack area (points to free memory).                                 |
+| `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                                                            |
+| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to free memory).                                  |
+| `0x08` | `$err`   | error               | Error codes for particular operations.                                                                        |
+| `0x09` | `$gas`   | gas                 | Remaining gas.                                                                                                |
+| `0x0A` | `$bal`   | balance             | Currently available coins.                                                                                    |
+| `0x0B` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                                                         |
+| `0x0C` |          |                     |                                                                                                               |
+| `0x0D` |          |                     |                                                                                                               |
+| `0x0E` |          |                     |                                                                                                               |
+| `0x0F` |          |                     |                                                                                                               |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
@@ -61,17 +62,34 @@ A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 
 ## VM Initialization
 
-Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM-1` and grows downward.
+Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM - 1` and grows downward.
 
 To initialize the VM, the following is pushed on the stack sequentially:
 1. Transaction hash (`byte[32]`, word-aligned).
 1. The [transaction, serialized](./tx_format.md).
 
+Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
+1. `$ssp = 32 + size(tx))`: the writable stack area starts immediately after the transaction in memory.
+1. `$sp = $sp`: writable stack area is empty to start.
+1. `$fp = VM_MAX_RAM - 1`: the heap area begins at the top.
+1. `$hp = $fp`: heap area is empty to start.
+
+## Contexts
+
+There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./opcodes.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal:
+- External: predicate and script. `$fp` will be zero.
+- Internal: call. `$fp` will be non-zero.
+
+[Returning](./opcodes.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
+
 ## Predicate Verification
 
 Any input of type [`InputType.Coin`](./tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
-For each such input in the transaction, the VM is [initialized](#vm-initialization), then `$pc` is set to the start of the input's `data` field. During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
+For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
+1. `$pc`  and `$is` are set to the start of the input's `data` field.
+
+During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
 1. Any [contract opcode](./opcodes.md#contract-opcodes).
 1. [JI](./opcodes.md#ji-jump-immediate) or [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
@@ -99,28 +117,31 @@ Call frames are needed to ensure that the called contract cannot mutate the runn
 
 A call frame consists of the following, word-aligned:
 
-| bytes | type                 | value             | description                                                                     |
-| ----- | -------------------- | ----------------- | ------------------------------------------------------------------------------- |
-|       |                      |                   | **Unwritable area begins.**                                                     |
-| 8     | `uint32`             | writable offset   | Offset from start of this call frame to start of writable area, in bytes.       |
-| 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                    |
-| 8     | `uint64`             | gas               | Gas remaining from previous call frame after forwarding gas to this call frame. |
-| 32    | `byte[32]`           | to                | Contract ID for this call.                                                      |
-| 8*64  | `byte[8][64]`        | regs              | Saved registers from previous call frame.                                       |
-| 8     | `uint8`              | in count          | Number of input values.                                                         |
-| 8     | `uint8`              | out count         | Number of return values.                                                        |
-| 8     | `uint16`             | code size         | Code size in bytes (not padded to word alignment).                              |
-| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.                 |
-| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.                |
-| 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned.   |
-|       |                      |                   | **Unwritable area ends.**                                                       |
-| *     |                      |                   | Call frame's stack.                                                             |
+| bytes | type                 | value             | description                                                                   |
+| ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
+|       |                      |                   | **Unwritable area begins.**                                                   |
+| 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                  |
+| 8     | `uint64`             | gas               | Gas remaining from previous context after forwarding gas to this call frame.  |
+| 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
+| 8*64  | `byte[8][64]`        | regs              | Saved registers from previous  context.                                       |
+| 8     | `uint8`              | in count          | Number of input values.                                                       |
+| 8     | `uint8`              | out count         | Number of return values.                                                      |
+| 8     | `uint16`             | code size         | Code size in bytes (not padded to word alignment).                            |
+| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.               |
+| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.              |
+| 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
+|       |                      |                   | **Unwritable area ends.**                                                     |
+| *     |                      |                   | Call frame's stack.                                                           |
 
 ## Ownership
 
 Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [`SW`](./opcodes.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./opcodes.md#call-call-contract)), ownership must be checked.
 
-The owned memory range for a call frame is:
-1. `[$fp + MEM[$fp + 0], $sp)`: the writable stack area of the call frame.
-1. `($hp, $fp->$hp]`: the heap area allocated by this call frame or its children.
+If the context is external, the owned memory range is:
+1. `[$ssp, $sp)`: the writable stack area.
+1. `($hp, VM_MAX_RAM - 1]`: the heap area allocated by this script or predicate.
+
+If the context is internal, the owned memory range for a call frame is:
+1. `[$ssp, $sp)`: the writable stack area of the call frame.
+1. `($hp, $fp->$hp]`: the heap area allocated by this call frame.
 1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, addr + size)`.
