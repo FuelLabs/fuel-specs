@@ -72,8 +72,8 @@
 This page provides a description of all opcodes for the FuelVM. Encoding should be read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
 Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is handled depends on [context](./main.md#contexts):
-- In a predicate context, [return](#return-return-from-context) `false`.
-- In other contexts, [revert](#revert-revert).
+* In a predicate context, [return](#return-return-from-context) `false`.
+* In other contexts, [revert](#revert-revert).
 
 ## Arithmetic/Logic (ALU) Opcodes
 
@@ -519,28 +519,21 @@ Panic if:
 
 ### RETURN: Return from context
 
-|             |                                                                              |
-| ----------- | ---------------------------------------------------------------------------- |
-| Description | Returns from [context](./main.md#contexts) with value `$rs` and `$rt` coins. |
-| Operation   | ```return($rs, $rt);```                                                      |
-| Syntax      | `return $rs`                                                                 |
-| Encoding    | `0x00 rs - - -`                                                              |
-| Notes       |                                                                              |
+|             |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| Description | Returns from [context](./main.md#contexts) with value `$rs`. |
+| Operation   | ```return($rs);```                                           |
+| Syntax      | `return $rs`                                                 |
+| Encoding    | `0x00 rs - - -`                                              |
+| Notes       |                                                              |
 
 If current context is external, cease VM execution and return `$rs`.
 
-If current context is internal, panic if:
-* `$rt > $bal`
-
 Returns from contract call, popping the call frame. Before popping:
-1. Persist non-returned balance to this contract:
-    * For output with contract ID `MEM[$fp, 32]`, increase `amount` by `$bal - $rt`.
 1. Return the unused forwarded gas to the caller:
     * `$gas = $gas + $fp->$gas` (add remaining gas from previous context to current remaining gas)
-1. Return specified balance to the caller:
-    * `$bal = $rt + $fp->$bal` (add remaining balance from previous context to current remaining balance)
 
-Then pop the call frame and restoring registers _except_ the `$gas` and `$bal`. Afterwards, set the following registers:
+Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ## Memory Opcodes
@@ -727,7 +720,8 @@ Panic if:
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 * Reading past `MEM[VM_MAX_RAM - 1]`
 * Any output range does not pass [ownership check](./main.md#ownership)
-* `$rt > $bal`
+* In an external context, if `$rt > $bal`
+* In an internal context, if `$rt` is greater than `amount` of output with contract ID `MEM[$rs, 32]`
 
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
@@ -740,6 +734,8 @@ Register `$rs` is a memory address from which the following fields are set (word
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
 `$ru` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
+
+For output with contract ID `MEM[$rs, 32]`, increase `amount` by `$rt`. In an external context, decrease `$bal` by `$rt`.
 
 A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
@@ -853,7 +849,7 @@ Panic if:
 | Notes       |                                                                       |
 
 After a revert:
-1. All [OutputContract](./tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as their respective inputs.
+1. All [OutputContract](./tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as on initialization.
 1. All [OutputVariable](./tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
 1. All [OutputContractConditional](./tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
 
