@@ -462,6 +462,8 @@ Otherwise, `$of` and `$err` are cleared.
 
 If `$rt > tx.input[$rs].maturity`, halt, returning `false`. If the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), halt, returning `false`.
 
+Otherwise, advance the program counter `$pc` by `4`.
+
 See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
 
 ### CTMV: Check transaction maturity verify
@@ -475,6 +477,8 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Notes       |                                                  |
 
 If `$rs > tx.maturity`, halt, returning `false`.
+
+Otherwise, advance the program counter `$pc` by `4`.
 
 See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
 
@@ -620,7 +624,7 @@ The memory range `MEM[$rd + imm, 8]` [is checked for ownership](./main.md#owners
 
 ## Contract Opcodes
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract) and [REVERT](#revert-revert).
 
 ### BLOCKHASH: Block hash
 
