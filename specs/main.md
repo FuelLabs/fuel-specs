@@ -42,10 +42,10 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                                                            |
 | `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to free memory).                                  |
 | `0x08` | `$err`   | error               | Error codes for particular operations.                                                                        |
-| `0x09` | `$gas`   | gas                 | Remaining gas.                                                                                                |
-| `0x0A` | `$bal`   | balance             | Received balance for this context.                                                                            |
-| `0x0B` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                                                         |
-| `0x0C` |          |                     |                                                                                                               |
+| `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                                                       |
+| `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                                                 |
+| `0x0B` | `$bal`   | balance             | Received balance for this context.                                                                            |
+| `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                                                         |
 | `0x0D` |          |                     |                                                                                                               |
 | `0x0E` |          |                     |                                                                                                               |
 | `0x0F` |          |                     |                                                                                                               |
@@ -104,11 +104,11 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
 1. `$bal` is set to [the free balance](./tx_validity.md#validity-rules).
-1. `$gas` is set to `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
 Following initialization, execution begins.
 
-For each instruction, its gas cost `gc` is first computed. If `gc > $gas`, deduct `gc` from `$gas`, then [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction. 
+For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `gc` from `$ggas` and `$cgas`, then [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
 ## Call Frames
 

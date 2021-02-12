@@ -531,9 +531,9 @@ If current context is external, cease VM execution and return `$rs`.
 
 Returns from contract call, popping the call frame. Before popping:
 1. Return the unused forwarded gas to the caller:
-    * `$gas = $gas + $fp->$gas` (add remaining gas from previous context to current remaining gas)
+    * `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
 
-Then pop the call frame and restoring registers _except_ the `$gas`. Afterwards, set the following registers:
+Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ## Memory Opcodes
@@ -742,7 +742,7 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
 1. Set `$pc` and `$is` to the starting address of the code.
 1. `$bal = $rt` (forward coins)
-1. `$gas = $ru` (forward gas)
+1. `$cgas = $ru` (forward gas)
 
 ### CODECOPY: Code copy
 
