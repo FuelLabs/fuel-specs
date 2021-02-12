@@ -61,6 +61,7 @@
   - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWX: State write 32 bytes](#swwx-state-write-32-bytes)
+  - [Transfer: Tranfer coins](#transfer-tranfer-coins)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
   - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
   - [KECCAK256: keccak-256](#keccak256-keccak-256)
@@ -910,6 +911,29 @@ Panic if:
 * `$rd + 32 > VM_MAX_RAM`
 * `$rs + 32 > VM_MAX_RAM`
 * `$fp == 0` (in the script context)
+
+### Transfer: Tranfer coins
+
+|             |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| Description | Transfer `$rt` coins to address at `$rd`, with output `$rs`. |
+| Operation   | ```transfer(MEM[$rd, 32], $rs, $rt);```                      |
+| Syntax      | `transfer $rd, $rs, rt`                                      |
+| Encoding    | `0x00 rd rs rt -`                                            |
+| Notes       |                                                              |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs > tx.outputsCount`
+* `$bal < $rt`
+* `$rt == 0`
+* `tx.outputs[$rs].type != OutputType.Variable`
+* `tx.outputs[$rs].amount != 0`
+
+Reduce `$bal` by `$rt` and set:
+* `tx.outputs[$rs].to = MEM[$rd, 32]`
+* `tx.outputs[$rs].amount = $rt`
 
 ## Cryptographic Opcodes
 
