@@ -101,10 +101,10 @@ enum  OutputType : uint8 {
 }
 ```
 
-| name   | type                                                                                                                                      | description     |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| `type` | `OutputType`                                                                                                                              | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), or [OutputVariable](#outputvariable). | Output data.    |
+| name   | type                                                                                                                                                                                               | description     |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `type` | `OutputType`                                                                                                                                                                                       | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractConditional](#outputcontractconditional). | Output data.    |
 
 ### OutputCoin
 
