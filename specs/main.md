@@ -104,8 +104,11 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
 1. `$bal` is set to [the free balance](./tx_validity.md#validity-rules).
+1. `$gas` is set to `tx.gasLimit`.
 
 Following initialization, execution begins.
+
+For each instruction, its gas cost `gc` is first computed. If `gc > $gas`, [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction.
 
 ## Call Frames
 
@@ -121,7 +124,6 @@ A call frame consists of the following, word-aligned:
 | ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
 |       |                      |                   | **Unwritable area begins.**                                                   |
 | 8     | `uint32`             | out offset        | Offset from start of this call frame to out count, in bytes.                  |
-| 8     | `uint64`             | gas               | Gas remaining from previous context after forwarding gas to this call frame.  |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous  context.                                       |
 | 8     | `uint8`              | in count          | Number of input values.                                                       |
