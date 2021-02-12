@@ -739,7 +739,7 @@ Register `$rs` is a memory address from which the following fields are set (word
 
 `$ru` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
-For output with contract ID `MEM[$rs, 32]`, increase `amount` by `$rt`. In an external context, decrease `$bal` by `$rt`. In an internal context, decease `amount` of output with contract ID `MEM[$fp, 32]`.
+For output with contract ID `MEM[$rs, 32]`, increase `amount` by `$rt`. In an external context, decrease `$bal` by `$rt`. In an internal context, decrease `amount` of output with contract ID `MEM[$fp, 32]`.
 
 A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
@@ -942,7 +942,7 @@ Panic if:
 * `tx.outputs[$rs].type != OutputType.Variable`
 * `tx.outputs[$rs].amount != 0`
 
-In an external context, decrease `$bal` by `$rt`. In an internal context, decease `amount` of output with contract ID `MEM[$fp, 32]`. Then set:
+In an external context, decrease `$bal` by `$rt`. In an internal context, decrease `amount` of output with contract ID `MEM[$fp, 32]`. Then set:
 * `tx.outputs[$rs].to = MEM[$rd, 32]`
 * `tx.outputs[$rs].amount = $rt`
 
