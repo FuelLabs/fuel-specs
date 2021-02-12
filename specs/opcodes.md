@@ -577,8 +577,8 @@ Panic if:
 | Notes       |                                                              |
 
 Panic if:
-- `$rs + imm` overflows
-- `$rs + imm > VM_MAX_RAM - 1`
+- `$rs + imm + 1` overflows
+- `$rs + imm + 1 > VM_MAX_RAM`
 
 ### LW: Load word
 
@@ -591,8 +591,8 @@ Panic if:
 | Notes       |                                                              |
 
 Panic if:
-- `$rs + imm + 7` overflows
-- `$rs + imm + 7 > VM_MAX_RAM - 1`
+- `$rs + imm + 8` overflows
+- `$rs + imm + 8 > VM_MAX_RAM`
 
 ### MALLOC: Allocate memory
 
@@ -621,8 +621,8 @@ Panic if:
 Panic if:
 * `$rs + $ru` overflows
 * `$rt + $ru` overflows
-* `$rs + $ru > VM_MAX_RAM - 1`
-* `$rt + $ru > VM_MAX_RAM - 1`
+* `$rs + $ru > VM_MAX_RAM`
+* `$rt + $ru > VM_MAX_RAM`
 * `$ru > MEM_MAX_ACCESS_SIZE`
 
 ### MEMCP: Memory copy
@@ -636,10 +636,10 @@ Panic if:
 | Notes       |                                      |
 
 Panic if:
-* `$rd + $ru` overflows
-* `$rs + $ru` overflows
-* `$rd + $ru > VM_MAX_RAM - 1`
-* `$rs + $ru > VM_MAX_RAM - 1`
+* `$rd + $rt` overflows
+* `$rs + $rt` overflows
+* `$rd + $rt > VM_MAX_RAM`
+* `$rs + $rt > VM_MAX_RAM`
 * `$rt > MEM_MAX_ACCESS_SIZE`
 * The memory range `MEM[$rd, $rt]`  does not pass [ownership check](./main.md#ownership)
 
@@ -654,8 +654,8 @@ Panic if:
 | Notes       |                                                                                     |
 
 Panic if:
-* `$rd + imm` overflows
-* `$rd + imm > VM_MAX_RAM - 1`
+* `$rd + imm + 1` overflows
+* `$rd + imm + 1 > VM_MAX_RAM`
 * The memory range `MEM[$rd + imm, 1]`  does not pass [ownership check](./main.md#ownership)
 
 ### SW: Store word
@@ -669,8 +669,8 @@ Panic if:
 | Notes       |                                                                    |
 
 Panic if:
-* `$rd + imm + 7` overflows
-* `$rd + imm + 7 > VM_MAX_RAM - 1`
+* `$rd + imm + 8` overflows
+* `$rd + imm + 8 > VM_MAX_RAM`
 * The memory range `MEM[$rd + imm, 8]`  does not pass [ownership check](./main.md#ownership)
 
 ## Contract Opcodes
@@ -686,6 +686,11 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `blockhash $rd $rs`                  |
 | Encoding    | `0x00 rd rs - -`                     |
 | Notes       |                                      |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
 
@@ -741,7 +746,11 @@ If the above checks pass, a [call frame](./main.md#call-frames) is pushed at `$s
 | Encoding    | `0x00 rd rs rt ru`                                                                                                                               |
 | Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                |
 
-If `$ru > MEM_MAX_ACCESS_SIZE`, revert instead.
+Panic if:
+* `$rd + $ru` overflows
+* `$rd + $ru > VM_MAX_RAM`
+* The memory range `MEM[$rd, $ru]`  does not pass [ownership check](./main.md#ownership)
+* `$ru > MEM_MAX_ACCESS_SIZE`
 
 ### CODEROOT: Code Merkle root
 
