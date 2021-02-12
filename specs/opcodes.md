@@ -70,6 +70,10 @@
 
 This page provides a description of all opcodes for the FuelVM. Encoding should be read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
+Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is handled depends on [context](./main.md#contexts):
+- In a predicate context, [return](#return-return-from-context) `false`.
+- In other contexts, [revert](#revert-revert).
+
 ## Arithmetic/Logic (ALU) Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
@@ -460,7 +464,7 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                                           |
 | Notes       |                                                             |
 
-If `$rt > tx.input[$rs].maturity`, or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), or if `$rs > tx.inputsCount`, verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
+If `$rt > tx.input[$rs].maturity`, or if the input `$rs` is not of type [`InputType.Coin`](./tx_format.md), or if `$rs > tx.inputsCount`, panic.
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -476,7 +480,7 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Encoding    | `0x00 rd rs - -`                                 |
 | Notes       |                                                  |
 
-If `$rs > tx.maturity`, verification failed and operation depends on the context type. In a predicate context, [return](#return-return-from-context) `false`. In other contexts, [revert](#revert-revert).
+If `$rs > tx.maturity`, panic.
 
 Otherwise, advance the program counter `$pc` by `4`.
 
@@ -492,9 +496,7 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 | Encoding    | `0x00 i i i i`                                 |
 | Notes       |                                                |
 
-If `$is + imm * 4 > VM_MAX_RAM - 1`:
-- In a predicate context, [return](#return-return-from-context) `false`.
-- In other contexts, [revert](#revert-revert).
+If `$is + imm * 4 > VM_MAX_RAM - 1`, panic.
 
 ### JNZI: Jump if not zero immediate
 
@@ -506,9 +508,7 @@ If `$is + imm * 4 > VM_MAX_RAM - 1`:
 | Encoding    | `0x00 rs i i i`                                                                        |
 | Notes       |                                                                                        |
 
-If `$is + imm * 4 > VM_MAX_RAM - 1`:
-- In a predicate context, [return](#return-return-from-context) `false`.
-- In other contexts, [revert](#revert-revert).
+If `$is + imm * 4 > VM_MAX_RAM - 1`, panic.
 
 ### RETURN: Return from context
 
@@ -542,6 +542,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not initialize memory.            |
 
+If `$sp + $rs > VM_MAX_RAM - 1`, panic.
+
 ### CFS: Shrink call frame
 
 |             |                                        |
@@ -552,6 +554,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rs - - -`                        |
 | Notes       | Does not clear memory.                 |
 
+If `$sp < $ssp + $rs`, panic.
+
 ### LB: Load byte
 
 |             |                                                              |
@@ -561,6 +565,8 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `lb $rd, $rs, imm`                                           |
 | Encoding    | `0x00 rd rs i i`                                             |
 | Notes       |                                                              |
+
+If `$rs + imm > VM_MAX_RAM - 1`, panic.
 
 ### LW: Load word
 
