@@ -159,9 +159,9 @@ This output type indicates that the output's amount and owner may vary based on 
 | `amount`     | `uint64`   | Amount of coins owned by contract after transaction execution. |
 | `stateRoot`  | `byte[32]` | State root of contract after transaction execution.            |
 
-Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
+Note: when signing a transaction, `contractID`, `amount`, and `stateRoot` are set to zero.
 
-Note: when executing a transaction, `amount` and `stateRoot` are initialized to zero.
+Note: when executing a transaction, `contractID`, `amount`, and `stateRoot` are initialized to zero.
 
 This output type indicates that a new contract may have been created during transaction execution. A `contractID` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
