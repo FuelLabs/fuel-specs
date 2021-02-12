@@ -762,6 +762,13 @@ Panic if:
 | Encoding    | `0x00 rd rs - -`                                                                                                                      |
 | Notes       |                                                                                                                                       |
 
+Panic if:
+* `$rd + 32` overflows
+* `$rs + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+
 ### CODESIZE: Code size
 
 |             |                                                                                                           |
@@ -771,6 +778,10 @@ Panic if:
 | Syntax      | `codesize $rd, $rs`                                                                                       |
 | Encoding    | `0x00 rd rs - -`                                                                                          |
 | Notes       |                                                                                                           |
+
+Panic if:
+* `$rs + 32` overflows
+* `$rs + 32 > VM_MAX_RAM`
 
 ### COINBASE
 
@@ -782,17 +793,27 @@ Panic if:
 | Encoding    | `0x00 rd - - -`                  |
 | Notes       |                                  |
 
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+
 ### CREATE: Create contract
 
-|             |                                                                       |
-| ----------- | --------------------------------------------------------------------- |
-| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`. |
-| Operation   | ```create(MEM[$rs, $rt])```                                           |
-| Syntax      | `create $rs, $rt`                                                     |
-| Encoding    | `0x00 rs rt - -`                                                      |
-| Notes       |                                                                       |
+|             |                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------- |
+| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`, at output `$rd`. |
+| Operation   | ```create($rd, MEM[$rs, $rt])```                                                       |
+| Syntax      | `create $rd $rs, $rt`                                                                  |
+| Encoding    | `0x00 rs rt - -`                                                                       |
+| Notes       |                                                                                        |
 
-If `$rt > CONTRACT_MAX_SIZE`, revert instead.
+Panic if:
+* `$rs + $rt` overflows
+* `$rs + $rt > VM_MAX_RAM`
+* `$rt > CONTRACT_MAX_SIZE`
+* `tx.outputs[$rd].type != OutputType.ContractConditional`
+* `tx.outputs[$rd].contractID != 0`
 
 ### LOG: Log event
 
@@ -829,6 +850,10 @@ After a revert:
 | Encoding    | `0x00 rd rs - -`                                  |
 | Notes       | Returns zero if the state element does not exist. |
 
+Panic if:
+* `$rs + 32` overflows
+* `$rs + 32 > VM_MAX_RAM`
+
 ### SRWX: State read 32 bytes
 
 |             |                                                     |
@@ -838,6 +863,13 @@ After a revert:
 | Syntax      | `srwx $rd, $rs`                                     |
 | Encoding    | `0x00 rd rs - -`                                    |
 | Notes       | Returns zero if the state element does not exist.   |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rs + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
 
 ### SWW: State write word
 
@@ -849,6 +881,10 @@ After a revert:
 | Encoding    | `0x00 rd rs - -`                                   |
 | Notes       |                                                    |
 
+Panic if:
+* `$rd + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+
 ### SWWX: State write 32 bytes
 
 |             |                                                      |
@@ -858,6 +894,12 @@ After a revert:
 | Syntax      | `swwx $rd, $rs`                                      |
 | Encoding    | `0x00 rd rs - -`                                     |
 | Notes       |                                                      |
+
+Panic if:
+* `$rd + 32` overflows
+* `$rs + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
 
 ## Cryptographic Opcodes
 
