@@ -116,7 +116,7 @@ The VM is [initialized](#vm-initialization), then:
 
 Following initialization, execution begins.
 
-For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `gc` from `$ggas` and `$cgas`, then [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
+For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
 ## Call Frames
 
