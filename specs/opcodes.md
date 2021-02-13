@@ -81,7 +81,9 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
-If the [`F_UNSAFE`](./main.md#flags) flag is unset, an operation that would have set `$err` to `true` is instead a panic.
+If the [`F_UNSAFEMATH`](./main.md#flags) flag is unset, an operation that would have set `$err` to `true` is instead a panic.
+
+If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would have set `$of` to a non-zero value is instead a panic.
 
 ### ADD: Add
 
@@ -137,31 +139,35 @@ If the [`F_UNSAFE`](./main.md#flags) flag is unset, an operation that would have
 
 ### DIV: Divide
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Divides two registers.                           |
-| Operation   | ```$rd = $rs / $rt;```<br>```$of = $rs % $rt;``` |
-| Syntax      | `div $rd, $rs, $rt`                              |
-| Encoding    | `0x00 rd rs rt -`                                |
-| Notes       |                                                  |
+|             |                         |
+| ----------- | ----------------------- |
+| Description | Divides two registers.  |
+| Operation   | ```$rd = $rs // $rt;``` |
+| Syntax      | `div $rd, $rs, $rt`     |
+| Encoding    | `0x00 rd rs rt -`       |
+| Notes       |                         |
 
-If `$rt == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+If `$rt == 0`, `$rd` is cleared and `$err` is set to `true`.
 
-Otherwise, `$of` is assigned the remainder of the operation and `$err` is cleared.
+Otherwise, `$err` is cleared.
+
+`$of` is cleared.
 
 ### DIVI: Divide immediate
 
-|             |                                                  |
-| ----------- | ------------------------------------------------ |
-| Description | Divides a register and an immediate value.       |
-| Operation   | ```$rd = $rs / imm;```<br>```$of = $rs % imm;``` |
-| Syntax      | `divi $rd, $rs, imm`                             |
-| Encoding    | `0x00 rd rs rt -`                                |
-| Notes       |                                                  |
+|             |                                            |
+| ----------- | ------------------------------------------ |
+| Description | Divides a register and an immediate value. |
+| Operation   | ```$rd = $rs // imm;```                    |
+| Syntax      | `divi $rd, $rs, imm`                       |
+| Encoding    | `0x00 rd rs i i`                           |
+| Notes       |                                            |
 
-If `imm == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
+If `imm == 0`, `$rd` is cleared and `$err` is set to `true`.
 
-Otherwise, `$of` is assigned the remainder of the operation and `$err` is cleared.
+Otherwise, `$err` is cleared.
+
+`$of` is cleared.
 
 ### EQ: Equals
 
