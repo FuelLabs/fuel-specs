@@ -62,6 +62,7 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 | value  | name           | description                                           |
 | ------ | -------------- | ----------------------------------------------------- |
 | `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
+| `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
 
 ## Opcodes
 
