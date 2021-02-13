@@ -32,24 +32,24 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 * Immediate value: 12, 18, or 24 bits, depending on operation
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
-| value  | register | name                | description                                                                                                   |
-| ------ | -------- | ------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                                                         |
-| `0x01` | `$one`   | one                 | Contains one (`1`), for convenience.                                                                          |
-| `0x02` | `$of`    | overflow            | Containing high bits of multiplication, remainder in division, or overflow of signed addition or subtraction. |
-| `0x03` | `$pc`    | program counter     | The program counter. Memory address of the current instruction.                                               |
-| `0x04` | `$ssp`   | stack start pointer | Memory address of bottom of current writable stack area.                                                      |
-| `0x05` | `$sp`    | stack pointer       | Memory address on top of current writable stack area (points to free memory).                                 |
-| `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                                                            |
-| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to free memory).                                  |
-| `0x08` | `$err`   | error               | Error codes for particular operations.                                                                        |
-| `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                                                       |
-| `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                                                 |
-| `0x0B` | `$bal`   | balance             | Received balance for this context.                                                                            |
-| `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                                                         |
-| `0x0D` |          |                     |                                                                                                               |
-| `0x0E` |          |                     |                                                                                                               |
-| `0x0F` | `$flag`  | flags               | Flags register.                                                                                               |
+| value  | register | name                | description                                                                   |
+| ------ | -------- | ------------------- | ----------------------------------------------------------------------------- |
+| `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                         |
+| `0x01` | `$one`   | one                 | Contains one (`1`), for convenience.                                          |
+| `0x02` | `$of`    | overflow            | Contains overflow/underflow of addition, subtraction, and multiplication.     |
+| `0x03` | `$pc`    | program counter     | The program counter. Memory address of the current instruction.               |
+| `0x04` | `$ssp`   | stack start pointer | Memory address of bottom of current writable stack area.                      |
+| `0x05` | `$sp`    | stack pointer       | Memory address on top of current writable stack area (points to free memory). |
+| `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                            |
+| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to free memory).  |
+| `0x08` | `$err`   | error               | Error codes for particular operations.                                        |
+| `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                       |
+| `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                 |
+| `0x0B` | `$bal`   | balance             | Received balance for this context.                                            |
+| `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                         |
+| `0x0D` |          |                     |                                                                               |
+| `0x0E` |          |                     |                                                                               |
+| `0x0F` | `$flag`  | flags               | Flags register.                                                               |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
