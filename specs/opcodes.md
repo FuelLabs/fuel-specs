@@ -81,7 +81,7 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
-If the [`F_UNSAFE`](./main.md#flags) flag is unset, an operation that would have set `$err` to `true` is instead a panic.
+If the [`F_UNSAFEMATH`](./main.md#flags) flag is unset, an operation that would have set `$err` to `true` is instead a panic.
 
 ### ADD: Add
 
