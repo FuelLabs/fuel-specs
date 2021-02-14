@@ -199,12 +199,6 @@ This output type indicates that the output's amount and owner may vary based on 
 | ------------ | ---------- | ------------ |
 | `contractID` | `byte[32]` | Contract ID. |
 
-Note: when signing a transaction, `contractID` is set to zero.
-
-Note: when executing a transaction, `contractID`, is initialized to zero.
-
-This output type indicates that a new contract may have been created during transaction execution. A `contractID` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
-
 ## Witness
 
 | name         | type     | description                       |
