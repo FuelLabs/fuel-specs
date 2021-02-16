@@ -54,7 +54,6 @@
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
   - [COINBASE](#coinbase)
-  - [CREATE: Create contract](#create-create-contract)
   - [LOG: Log event](#log-log-event)
   - [REVERT: Revert](#revert-revert)
   - [SRW: State read word](#srw-state-read-word)
@@ -820,23 +819,6 @@ Panic if:
 * `$rd + 32` overflows
 * `$rd + 32 > VM_MAX_RAM`
 * The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
-
-### CREATE: Create contract
-
-|             |                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------- |
-| Description | Create a new contract with `$rt` bytes of bytecode starting at `$rs`, at output `$rd`. |
-| Operation   | ```create($rd, MEM[$rs, $rt])```                                                       |
-| Syntax      | `create $rd $rs, $rt`                                                                  |
-| Encoding    | `0x00 rs rt - -`                                                                       |
-| Notes       |                                                                                        |
-
-Panic if:
-* `$rs + $rt` overflows
-* `$rs + $rt > VM_MAX_RAM`
-* `$rt > CONTRACT_MAX_SIZE`
-* `tx.outputs[$rd].type != OutputType.ContractConditional`
-* `tx.outputs[$rd].contractID != 0`
 
 ### LOG: Log event
 

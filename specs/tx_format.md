@@ -2,6 +2,8 @@
 
 - [Constants](#constants)
 - [Transaction](#transaction)
+    - [TransactionScript](#transactionscript)
+    - [TransactionCreate](#transactioncreate)
 - [Input](#input)
     - [InputCoin](#inputcoin)
     - [InputContract](#inputcontract)
@@ -10,7 +12,7 @@
     - [OutputContract](#outputcontract)
     - [OutputChange](#outputchange)
     - [OutputVariable](#outputvariable)
-    - [OutputContractConditional](#outputcontractconditional)
+    - [OutputContractCreated](#outputcontractcreated)
 - [Witness](#witness)
 
 ## Constants
@@ -28,9 +30,27 @@
 
 ## Transaction
 
+```
+enum  TransactionType : uint8 {
+    Script = 0,
+    Create = 1,
+}
+```
+
+| name   | type                                                                                      | description       |
+| ------ | ----------------------------------------------------------------------------------------- | ----------------- |
+| `type` | `TransactionType`                                                                         | Transaction type. |
+| `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
+
+When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
+1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
+1. `byte[32]`: as-is.
+1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
+
+### TransactionScript
+
 | name               | type                    | description                              |
 | ------------------ | ----------------------- | ---------------------------------------- |
-| `version`          | `uint32`                | Transaction version. Always `0`.         |
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
 | `gasLimit`         | `uint64`                | Gas limit for transaction.               |
 | `maturity`         | `uint64`                | Block until which tx cannot be included. |
@@ -45,12 +65,34 @@
 | `outputs`          | [Output](#output)`[]`   | List of outputs.                         |
 | `witnesses`        | [Witness](#witness)`[]` | List of witnesses.                       |
 
-Transaction is invalid if `blockheight() < maturity`.
+Transaction is invalid if:
+* `blockheight() < maturity`
+* Any output is of type `OutputType.ContractCreated`
 
-When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
-1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
-1. `byte[32]`: as-is.
-1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
+### TransactionCreate
+
+| name             | type                    | description                                |
+| ---------------- | ----------------------- | ------------------------------------------ |
+| `gasPrice`       | `uint64`                | Gas price for transaction.                 |
+| `gasLimit`       | `uint64`                | Gas limit for transaction.                 |
+| `maturity`       | `uint64`                | Block until which tx cannot be included.   |
+| `bytecodeLength` | `uint16`                | Contract bytecode length, in instructions. |
+| `inputsCount`    | `uint8`                 | Number of inputs.                          |
+| `outputsCount`   | `uint8`                 | Number of outputs.                         |
+| `witnessesCount` | `uint8`                 | Number of witnesses.                       |
+| `salt`           | `byte[32]`              | Salt.                                      |
+| `bytecode`       | `byte[]`                | Contract bytecode to create.               |
+| `inputs`         | [Input](#input)`[]`     | List of inputs.                            |
+| `outputs`        | [Output](#output)`[]`   | List of outputs.                           |
+| `witnesses`      | [Witness](#witness)`[]` | List of witnesses.                         |
+
+Transaction is invalid if:
+* `blockheight() < maturity`
+* Any input is of type `InputType.Contract`
+* Any output is of type `OutputType.Contract` or `OutputType.Variable`
+* More than one output is of type `OutputType.ContractCreated`
+
+Creates a contract with contract ID `sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.bytecode))`, where `root` is the Merkle root of [the binary Merkle tree](./cryptographic_primitives.md) with each leaf being an 8-byte word of bytecode. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last opcode is padding with 4-byte zero.
 
 ## Input
 
@@ -97,14 +139,14 @@ enum  OutputType : uint8 {
     Contract = 1,
     Change = 2,
     Variable = 3,
-    ContractConditional = 4,
+    ContractCreated = 4,
 }
 ```
 
-| name   | type                                                                                                                                                                                               | description     |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| `type` | `OutputType`                                                                                                                                                                                       | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractConditional](#outputcontractconditional). | Output data.    |
+| name   | type                                                                                                                                                                                       | description     |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------- |
+| `type` | `OutputType`                                                                                                                                                                               | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 ### OutputCoin
 
@@ -151,19 +193,11 @@ Note: when executing a transaction, `to` and `amount` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
-### OutputContractConditional
+### OutputContractCreated
 
-| name         | type       | description                                                    |
-| ------------ | ---------- | -------------------------------------------------------------- |
-| `contractID` | `byte[32]` | Contract ID.                                                   |
-| `amount`     | `uint64`   | Amount of coins owned by contract after transaction execution. |
-| `stateRoot`  | `byte[32]` | State root of contract after transaction execution.            |
-
-Note: when signing a transaction, `contractID`, `amount`, and `stateRoot` are set to zero.
-
-Note: when executing a transaction, `contractID`, `amount`, and `stateRoot` are initialized to zero.
-
-This output type indicates that a new contract may have been created during transaction execution. A `contractID` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
+| name         | type       | description  |
+| ------------ | ---------- | ------------ |
+| `contractID` | `byte[32]` | Contract ID. |
 
 ## Witness
 
