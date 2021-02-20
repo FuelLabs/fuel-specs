@@ -42,6 +42,7 @@
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
   - [MALLOC: Allocate memory](#malloc-allocate-memory)
+  - [MEMCLEAR: Memory clear](#memclear-memory-clear)
   - [MEMEQ: Memory equality](#memeq-memory-equality)
   - [MEMCP: Memory copy](#memcp-memory-copy)
   - [SB: Store byte](#sb-store-byte)
@@ -703,6 +704,22 @@ Panic if:
 Panic if:
 - `$hp - $rs` underflows
 - `$hp - $rs < $sp`
+
+### MEMCLEAR: Memory clear
+
+|             |                          |
+| ----------- | ------------------------ |
+| Description | Clear bytes in memory.   |
+| Operation   | ```MEM[$rd, $rs] = 0;``` |
+| Syntax      | `memclear $rs`           |
+| Encoding    | `0x00 rd rs - -`         |
+| Notes       |                          |
+
+Panic if:
+* `$rd + $rs` overflows
+* `$rd + $rs > VM_MAX_RAM`
+* `$rs > MEM_MAX_ACCESS_SIZE`
+* The memory range `MEM[$rd, $rs]`  does not pass [ownership check](./main.md#ownership)
 
 ### MEMEQ: Memory equality
 
