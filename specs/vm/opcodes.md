@@ -43,8 +43,8 @@
   - [LW: Load word](#lw-load-word)
   - [MALLOC: Allocate memory](#malloc-allocate-memory)
   - [MEMCLEAR: Memory clear](#memclear-memory-clear)
-  - [MEMEQ: Memory equality](#memeq-memory-equality)
   - [MEMCP: Memory copy](#memcp-memory-copy)
+  - [MEMEQ: Memory equality](#memeq-memory-equality)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
@@ -721,24 +721,6 @@ Panic if:
 * `$rs > MEM_MAX_ACCESS_SIZE`
 * The memory range `MEM[$rd, $rs]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMEQ: Memory equality
-
-|             |                                             |
-| ----------- | ------------------------------------------- |
-| Description | Compare bytes in memory.                    |
-| Operation   | ```$rd = MEM[$rs, $ru] == MEM[$rt, $ru];``` |
-| Syntax      | `memeq $rd, $rs, $rt, $ru`                  |
-| Encoding    | `0x00 rd rs rt ru`                          |
-| Notes       |                                             |
-
-Panic if:
-* `$rd` is a [reserved register](./main.md#semantics)
-* `$rs + $ru` overflows
-* `$rt + $ru` overflows
-* `$rs + $ru > VM_MAX_RAM`
-* `$rt + $ru > VM_MAX_RAM`
-* `$ru > MEM_MAX_ACCESS_SIZE`
-
 ### MEMCP: Memory copy
 
 |             |                                      |
@@ -756,6 +738,24 @@ Panic if:
 * `$rs + $rt > VM_MAX_RAM`
 * `$rt > MEM_MAX_ACCESS_SIZE`
 * The memory range `MEM[$rd, $rt]`  does not pass [ownership check](./main.md#ownership)
+
+### MEMEQ: Memory equality
+
+|             |                                             |
+| ----------- | ------------------------------------------- |
+| Description | Compare bytes in memory.                    |
+| Operation   | ```$rd = MEM[$rs, $ru] == MEM[$rt, $ru];``` |
+| Syntax      | `memeq $rd, $rs, $rt, $ru`                  |
+| Encoding    | `0x00 rd rs rt ru`                          |
+| Notes       |                                             |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+* `$rs + $ru` overflows
+* `$rt + $ru` overflows
+* `$rs + $ru > VM_MAX_RAM`
+* `$rt + $ru > VM_MAX_RAM`
+* `$ru > MEM_MAX_ACCESS_SIZE`
 
 ### SB: Store byte
 
