@@ -1,6 +1,7 @@
 # Transaction Validity
 
-- [Standardness Rules](#standardness-rules)
+- [Transaction Lifecycle](#transaction-lifecycle)
+- [VM Precondition Validity Rules](#vm-precondition-validity-rules)
     - [Version](#version)
     - [Spending UTXOs or Created Contracts](#spending-utxos-or-created-contracts)
     - [Transaction Maturity](#transaction-maturity)
@@ -10,13 +11,23 @@
     - [Predicate Lengths](#predicate-lengths)
     - [Sufficient Balance](#sufficient-balance)
     - [Valid Signatures](#valid-signatures)
-    - [Predicate Validity](#predicate-validity)
-- [Validity Rules](#validity-rules)
+- [Predicate Verification](#predicate-verification)
+- [Script Execution](#script-execution)
+- [VM Postcondition Validity Rules](#vm-postcondition-validity-rules)
     - [No Inflation](#no-inflation)
+    - [State Changes](#state-changes)
 
-## Standardness Rules
+## Transaction Lifecycle
 
-This section defines _standardness rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool. Chains of unconfirmed transactions are omitted.
+Once a transaction is seen, it goes through several stages of validation, in this order:
+1. [VM precondition validity checks](#vm-precondition-validity-rules)
+1. [Predicate verification](#predicate-verification)
+1. [Script execution](#script-execution)
+1. [VM postcondition validity checks](#vm-postcondition-validity-rules)
+
+## VM Precondition Validity Rules
+
+This section defines _vm precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
 For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
 
@@ -133,17 +144,15 @@ for input in tx.inputs:
 return True
 ```
 
-### Predicate Validity
+## Predicate Verification
 
-For each input of type `InputType.Coin` and `predicateLength > 0`, [verify its predicate](./main.md#predicate-verification).
+For each input of type `InputType.Coin` and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).
 
-## Validity Rules
+## Script Execution
 
-This section defines _validity rules_ for transactions: the requirements for a confirmed transaction to be valid.
+Given transaction `tx`, the following checks must pass:
 
-Given transaction `tx`, state `state`, and contract set `contracts`:
-
-If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, and no further checks are required. Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.
+If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, so no further checks are required.
 
 If `tx.scriptLength > 0`, the script must be executed. The free balance available to be moved around by the script and called contracts is `freeBalance`:
 
@@ -151,7 +160,17 @@ If `tx.scriptLength > 0`, the script must be executed. The free balance availabl
 freeBalance = available_balance(tx) - unavailable_balance(tx)
 ```
 
-The following checks must pass.
+Once the free balance is computed, the [script is executed](../vm/main.md#script-execution) and the final value of the transaction in memory is used as the final transaction value which is included in the block, against which [VM postcondition validity checks](#vm-postcondition-validity-rules) are done.
+
+```
+tx = MEM[40, MEM[32, 8]]
+```
+
+## VM Postcondition Validity Rules
+
+This section defines _VM postcondition validity rules_ for transactions: the requirements for a transaction to be valid after it has been executed.
+
+Given transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
 
 ### No Inflation
 
@@ -176,3 +195,7 @@ def sum_all_outputs(tx) -> int:
 
 return sum_all_inputs(tx) >= sum_all_outputs(tx)
 ```
+
+### State Changes
+
+Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.

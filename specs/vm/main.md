@@ -74,6 +74,7 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 
 To initialize the VM, the following is pushed on the stack sequentially:
 1. Transaction hash (`byte[32]`, word-aligned).
+1. Transaction length, in bytes (`uint64`, word-aligned).
 1. The [transaction, serialized](../protocol/tx_format.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
