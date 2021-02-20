@@ -94,6 +94,9 @@ If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would ha
 | Encoding    | `0x00 rd rs rt -`      |
 | Notes       |                        |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` is assigned the overflow of the operation.
 
 `$err` is cleared.
@@ -107,6 +110,9 @@ If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would ha
 | Syntax      | `addi $rd, $rs, immediate`              |
 | Encoding    | `0x00 rs rt i i`                        |
 | Notes       |                                         |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -122,6 +128,9 @@ If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would ha
 | Encoding    | `0x00 rd rs rt -`           |
 | Notes       |                             |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### ANDI: AND immediate
@@ -134,6 +143,9 @@ If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would ha
 | Encoding    | `0x00 rd rs i i`                                |
 | Notes       |                                                 |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### DIV: Divide
@@ -145,6 +157,9 @@ If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would ha
 | Syntax      | `div $rd, $rs, $rt`     |
 | Encoding    | `0x00 rd rs rt -`       |
 | Notes       |                         |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 If `$rt == 0`, `$rd` is cleared and `$err` is set to `true`.
 
@@ -162,6 +177,9 @@ Otherwise, `$err` is cleared.
 | Encoding    | `0x00 rd rs i i`                           |
 | Notes       |                                            |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 If `imm == 0`, `$rd` is cleared and `$err` is set to `true`.
 
 Otherwise, `$err` is cleared.
@@ -178,6 +196,9 @@ Otherwise, `$err` is cleared.
 | Encoding    | `0x00 rd rs rt -`                    |
 | Notes       |                                      |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### EXP: Exponentiate
@@ -189,6 +210,9 @@ Otherwise, `$err` is cleared.
 | Syntax      | `exp $rd, $rs, $rt`                          |
 | Encoding    | `0x00 rd rs rt -`                            |
 | Notes       |                                              |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is cleared.
 
@@ -204,6 +228,9 @@ If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is clea
 | Encoding    | `0x00 rd rt i i`                                        |
 | Notes       |                                                         |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is cleared.
 
 `$err` is cleared.
@@ -218,6 +245,9 @@ If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is clea
 | Encoding    | `0x00 rd rs rt -`                        |
 | Notes       |                                          |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### MATHLOG: Math logarithm
@@ -229,6 +259,9 @@ If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is clea
 | Syntax      | `mathlog $rd, $rs, $rt`                      |
 | Encoding    | `0x00 rd rs rt -`                            |
 | Notes       |                                              |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 If `$rs == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
 
@@ -246,6 +279,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                            |
 | Notes       |                                              |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 If `$rt == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
@@ -259,6 +295,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `mod $rd, $rs, $rt`                |
 | Encoding    | `0x00 rd rs rt -`                  |
 | Notes       |                                    |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 If `$rt == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
 
@@ -274,6 +313,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs i i`                                       |
 | Notes       |                                                        |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 If `imm == 0`, both `$rd` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
@@ -288,6 +330,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`         |
 | Notes       |                           |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` is assigned the overflow of the operation.
 
 `$err` is cleared.
@@ -301,6 +346,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `mul $rd, $rs, imm`                           |
 | Encoding    | `0x00 rd rs i i`                              |
 | Notes       |                                               |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -328,6 +376,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs - -`        |
 | Notes       |                         |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### OR: OR
@@ -339,6 +390,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `or $rd, $rs, $rt`         |
 | Encoding    | `0x00 rd rs rt -`          |
 | Notes       |                            |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -352,6 +406,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs i i`                               |
 | Notes       |                                                |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### SLL: Shift left logical
@@ -363,6 +420,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `sll $rd, $rs, $rt`                   |
 | Encoding    | `0x00 rd rs rt -`                     |
 | Notes       | Zeroes are shifted in.                |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -378,6 +438,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs i i`                              |
 | Notes       | Zeroes are shifted in.                        |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` is assigned the overflow of the operation.
 
 `$err` is cleared.
@@ -391,6 +454,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `srl $rd, $rs, $rt`                    |
 | Encoding    | `0x00 rd rs rt -`                      |
 | Notes       | Zeroes are shifted in.                 |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
@@ -406,6 +472,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs i i`                               |
 | Notes       | Zeroes are shifted in.                         |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
 `$err` is cleared.
@@ -419,6 +488,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `sub $rd, $rs, $rt`                              |
 | Encoding    | `0x00 rd rs rt -`                                |
 | Notes       | `$of` is assigned the overflow of the operation. |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
@@ -434,6 +506,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`                                |
 | Notes       | `$of` is assigned the overflow of the operation. |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
 `$err` is cleared.
@@ -448,6 +523,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Encoding    | `0x00 rd rs rt -`           |
 | Notes       |                             |
 
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
+
 `$of` and `$err` are cleared.
 
 ### XORI: XOR immediate
@@ -459,6 +537,9 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `xori $rt, $rs, imm `                           |
 | Encoding    | `0x00 rs rt i i`                                |
 | Notes       |                                                 |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -475,6 +556,7 @@ Otherwise, `$of` and `$err` are cleared.
 | Notes       |                                                             |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 * `$rt > tx.input[$rs].maturity`
 * the input `$rs` is not of type [`InputType.Coin`](./tx_format.md)
 * `$rs > tx.inputsCount`
@@ -494,6 +576,7 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 | Notes       |                                                  |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 * `$rs > tx.maturity`
 
 Otherwise, advance the program counter `$pc` by `4`.
@@ -588,6 +671,7 @@ Panic if:
 | Notes       |                                                              |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 - `$rs + imm + 1` overflows
 - `$rs + imm + 1 > VM_MAX_RAM`
 
@@ -602,6 +686,7 @@ Panic if:
 | Notes       |                                                              |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 - `$rs + imm + 8` overflows
 - `$rs + imm + 8 > VM_MAX_RAM`
 
@@ -630,6 +715,7 @@ Panic if:
 | Notes       |                                             |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 * `$rs + $ru` overflows
 * `$rt + $ru` overflows
 * `$rs + $ru > VM_MAX_RAM`
@@ -714,6 +800,9 @@ Block header hashes for blocks with height greater than or equal to current bloc
 | Syntax      | `blockheight $rd`          |
 | Encoding    | `0x00 rd - - -`            |
 | Notes       |                            |
+
+Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 
 ### CALL: Call contract
 
@@ -801,6 +890,7 @@ Panic if:
 | Notes       |                                                                                                           |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 * `$rs + 32` overflows
 * `$rs + 32 > VM_MAX_RAM`
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
@@ -856,6 +946,7 @@ After a revert:
 | Notes       | Returns zero if the state element does not exist. |
 
 Panic if:
+* `$rd` is a [reserved register](./main.md#semantics)
 * `$rs + 32` overflows
 * `$rs + 32 > VM_MAX_RAM`
 * `$fp == 0` (in the script context)
