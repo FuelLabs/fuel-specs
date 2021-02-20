@@ -74,7 +74,7 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 
 To initialize the VM, the following is pushed on the stack sequentially:
 1. Transaction hash (`byte[32]`, word-aligned).
-1. The [transaction, serialized](./tx_format.md).
+1. The [transaction, serialized](../protocol/tx_format.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
 1. `$ssp = 32 + size(tx))`: the writable stack area starts immediately after the transaction in memory.
@@ -92,7 +92,7 @@ There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [sc
 
 ## Predicate Verification
 
-Any input of type [`InputType.Coin`](./tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+Any input of type [`InputType.Coin`](../protocol/tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 1. `$pc`  and `$is` are set to the start of the input's `data` field.
@@ -111,7 +111,7 @@ If script bytecode is present, transaction validation requires execution.
 
 The VM is [initialized](#vm-initialization), then:
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$bal` is set to [the free balance](./tx_validity.md#validity-rules).
+1. `$bal` is set to [the free balance](../protocol/tx_validity.md#validity-rules).
 1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
 Following initialization, execution begins.
