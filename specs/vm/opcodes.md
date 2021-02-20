@@ -559,7 +559,7 @@ Panic if:
 Panic if:
 * `$rd` is a [reserved register](./main.md#semantics)
 * `$rt > tx.input[$rs].maturity`
-* the input `$rs` is not of type [`InputType.Coin`](./tx_format.md)
+* the input `$rs` is not of type [`InputType.Coin`](../protocol/tx_format.md)
 * `$rs > tx.inputsCount`
 
 Otherwise, advance the program counter `$pc` by `4`.
@@ -948,9 +948,9 @@ Panic if:
 | Notes       |                                                                       |
 
 After a revert:
-1. All [OutputContract](./tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as on initialization.
-1. All [OutputVariable](./tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
-1. All [OutputContractConditional](./tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
+1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as on initialization.
+1. All [OutputVariable](../protocol/tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
+1. All [OutputContractConditional](../protocol/tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
 
 ### SRW: State read word
 
