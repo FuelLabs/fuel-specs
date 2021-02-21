@@ -55,6 +55,7 @@
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
   - [COINBASE](#coinbase)
+  - [LOADCODE: Load code from an external contract](#loadcode-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
   - [REVERT: Revert](#revert-revert)
   - [SRW: State read word](#srw-state-read-word)
@@ -926,6 +927,30 @@ Panic if:
 * `$rd + 32` overflows
 * `$rd + 32 > VM_MAX_RAM`
 * The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
+
+### LOADCODE: Load code from an external contract
+
+|             |                                                                                                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Description | Copy `$ru` bytes of code starting at `$rt` for contract with ID equal to the 32 bytes in memory starting at `$rs` into memory starting at `$ssp`. |
+| Operation   | ```MEM[$ssp, $ru] = code($rs, $rt, $ru);```                                                                                                       |
+| Syntax      | `loadcode $rs, $rs, $rt, $ru`                                                                                                                     |
+| Encoding    | `0x00 rs rt ru -`                                                                                                                                 |
+| Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                 |
+
+Panic if:
+* `$ssp + $ru` overflows
+* `$rs + 32` overflows
+* `$ssp + $ru > VM_MAX_RAM`
+* `$rs + 32 > VM_MAX_RAM`
+* `$ssp != $sp`
+* `$ru > CONTRACT_MAX_SIZE`
+* `$ru > MEM_MAX_ACCESS_SIZE`
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
+
+Increment `$hp->codesize` by `$ru` padded to word alignment.
+
+This opcode can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
 
 ### LOG: Log event
 
