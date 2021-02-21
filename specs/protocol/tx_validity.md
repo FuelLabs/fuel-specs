@@ -3,7 +3,7 @@
 - [Transaction Lifecycle](#transaction-lifecycle)
 - [VM Precondition Validity Rules](#vm-precondition-validity-rules)
     - [Base Sanity Checks](#base-sanity-checks)
-    - [Spending UTXOs or Created Contracts](#spending-utxos-or-created-contracts)
+    - [Spending UTXOs and Created Contracts](#spending-utxos-and-created-contracts)
     - [Sufficient Balance](#sufficient-balance)
     - [Valid Signatures](#valid-signatures)
 - [Predicate Verification](#predicate-verification)
@@ -18,7 +18,7 @@ Once a transaction is seen, it goes through several stages of validation, in thi
 - [Transaction Lifecycle](#transaction-lifecycle)
 - [VM Precondition Validity Rules](#vm-precondition-validity-rules)
     - [Base Sanity Checks](#base-sanity-checks)
-    - [Spending UTXOs or Created Contracts](#spending-utxos-or-created-contracts)
+    - [Spending UTXOs and Created Contracts](#spending-utxos-and-created-contracts)
     - [Sufficient Balance](#sufficient-balance)
     - [Valid Signatures](#valid-signatures)
 - [Predicate Verification](#predicate-verification)
@@ -39,13 +39,12 @@ For a transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 Base sanity checks are defined in the [transaction format](./tx_format.md).
 
-### Spending UTXOs or Created Contracts
+### Spending UTXOs and Created Contracts
 
 ```py
 for input in tx.inputs:
-    if input.type == InputType.Coin:
-        if not input.utxoID in state:
-            return False
+    if not input.utxoID in state:
+        return False
     if input.type == InputType.Contract:
         if not input.contractID in contracts:
                 return False
