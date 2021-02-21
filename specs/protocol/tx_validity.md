@@ -94,6 +94,8 @@ for input in tx.inputs:
 return True
 ```
 
+The transaction hash is computed as defined [here](./identifiers.md#transaction-id).
+
 ## Predicate Verification
 
 For each input of type `InputType.Coin` and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).

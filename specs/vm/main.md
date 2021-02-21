@@ -73,7 +73,7 @@ A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM - 1` and grows downward.
 
 To initialize the VM, the following is pushed on the stack sequentially:
-1. Transaction hash (`byte[32]`, word-aligned).
+1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/identifiers.md#transaction-id).
 1. Transaction length, in bytes (`uint64`, word-aligned).
 1. The [transaction, serialized](../protocol/tx_format.md).
 
