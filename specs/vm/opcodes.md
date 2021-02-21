@@ -54,7 +54,7 @@
   - [CODECOPY: Code copy](#codecopy-code-copy)
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
   - [CODESIZE: Code size](#codesize-code-size)
-  - [COINBASE](#coinbase)
+  - [COINBASE: Block proposer address](#coinbase-block-proposer-address)
   - [LOADCODE: Load code from an external contract](#loadcode-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
   - [REVERT: Revert](#revert-revert)
@@ -915,7 +915,7 @@ Panic if:
 * `$rs + 32 > VM_MAX_RAM`
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
-### COINBASE
+### COINBASE: Block proposer address
 
 |             |                                  |
 | ----------- | -------------------------------- |
