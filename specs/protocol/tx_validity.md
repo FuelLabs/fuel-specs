@@ -60,7 +60,7 @@ def sum_inputs(tx) -> int:
 def sum_outputs(tx) -> int:
     total: int = 0
     for output in tx.outputs:
-        if output.type == OutputType.Coin:
+        if output.type == OutputType.Coin or output.type == OutputType.Withdrawal:
             total += output.amount
     return total
 
