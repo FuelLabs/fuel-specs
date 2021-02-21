@@ -36,11 +36,18 @@ Base sanity checks are defined in the [transaction format](./tx_format.md).
 
 ```py
 for input in tx.inputs:
-    if not input.utxoID in state:
-        return False
     if input.type == InputType.Contract:
         if not input.contractID in contracts:
                 return False
+return True
+```
+
+If this check passes, the `utxoID` field of each input is set to the UTXO ID of the respective contract. Then check:
+
+```py
+for input in tx.inputs:
+    if not input.utxoID in state:
+        return False
 return True
 ```
 

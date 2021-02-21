@@ -150,6 +150,8 @@ Transaction is invalid if:
 
 Note: when signing a transaction, `utxoID` is set to zero.
 
+Note: when verifying a predicate, `utxoID` is initialized to zero.
+
 ## Output
 
 ```
@@ -188,7 +190,7 @@ Transaction is invalid if:
 
 Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
 
-Note: when executing a transaction, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
+Note: when verifying a predicate or executing a script, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
 ### OutputChange
 
@@ -199,7 +201,7 @@ Note: when executing a transaction, `amount` and `stateRoot` are initialized to 
 
 Note: when signing a transaction, `amount` is set to zero.
 
-Note: when executing a transaction, `amount` is initialized to zero.
+Note: when verifying a predicate or executing a script, `amount` is initialized to zero.
 
 This output type indicates that the output's amount may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
@@ -212,7 +214,7 @@ This output type indicates that the output's amount may vary based on transactio
 
 Note: when signing a transaction, `to` and `amount` are set to zero.
 
-Note: when executing a transaction, `to` and `amount` are initialized to zero.
+Note: when verifying a predicate or executing a script, `to` and `amount` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
