@@ -20,6 +20,7 @@
 | name                        | type     | value | description                                   |
 | --------------------------- | -------- | ----- | --------------------------------------------- |
 | `GAS_PER_BYTE`              | `uint64` |       | Gas charged per byte of the transaction.      |
+| `MAX_GAS_PER_TX`            | `uint64` |       | Maximum gas per transaction.                  |
 | `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
 | `MAX_OUTPUTS`               | `uint64` | `8`   | Maximum number of outputs.                    |
 | `MAX_PREDICATE_LENGTH`      | `uint64` |       | Maximum length of predicate, in instructions. |
@@ -42,10 +43,20 @@ enum  TransactionType : uint8 {
 | `type` | `TransactionType`                                                                         | Transaction type. |
 | `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
 
+Transaction is invalid if:
+* `type > TransactionType.Create`
+* `gasLimit > MAX_GAS_PER_TX`
+* `blockheight() < maturity`
+* `inputsCount > MAX_INPUTS`
+* `outputsCount > MAX_OUTPUTS`
+* `witnessesCount > MAX_WITNESSES`
+
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
 1. `byte[32]`: as-is.
 1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
+
+When deserializing a transaction, the reverse is done. If there are insufficient bytes or too many bytes, the transaction is invalid.
 
 ### TransactionScript
 
@@ -66,8 +77,9 @@ When serializing a transaction, fields are serialized as follows (with inner str
 | `witnesses`        | [Witness](#witness)`[]` | List of witnesses.                       |
 
 Transaction is invalid if:
-* `blockheight() < maturity`
 * Any output is of type `OutputType.ContractCreated`
+* `scriptLength > MAX_SCRIPT_LENGTH`
+* `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 
 ### TransactionCreate
 
@@ -87,13 +99,12 @@ Transaction is invalid if:
 | `witnesses`      | [Witness](#witness)`[]` | List of witnesses.                         |
 
 Transaction is invalid if:
-* `blockheight() < maturity`
 * Any input is of type `InputType.Contract`
 * Any output is of type `OutputType.Contract` or `OutputType.Variable`
 * More than one output is of type `OutputType.ContractCreated`
 * `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 
-Creates a contract with contract ID `sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.bytecode))`, where `root` is the Merkle root of [the binary Merkle tree](./cryptographic_primitives.md) with each leaf being an 8-byte word of bytecode. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last opcode is padding with 4-byte zero.
+Creates a contract with contract ID `sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.bytecode))`, where `root` is the Merkle root of [the binary Merkle tree](./cryptographic_primitives.md) with each leaf being an 8-byte word of bytecode. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last opcode is padded with 4-byte zero.
 
 ## Input
 
@@ -121,6 +132,11 @@ enum  InputType : uint8 {
 | `predicate`           | `byte[]`   | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                                     |
 
+Transaction is invalid if:
+* `witnessIndex >= tx.witnessesCount`
+* `predicateLength > MAX_PREDICATE_LENGTH`
+* `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
+
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
 ### InputContract
@@ -130,7 +146,12 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 | `utxoID`     | `byte[32]` | UTXO ID.     |
 | `contractID` | `byte[32]` | Contract ID. |
 
+Transaction is invalid if:
+* there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
+
 Note: when signing a transaction, `utxoID` is set to zero.
+
+Note: when verifying a predicate, `utxoID` is initialized to zero.
 
 ## Output
 
@@ -164,9 +185,13 @@ enum  OutputType : uint8 {
 | `amount`     | `uint64`   | Amount of coins owned by contract after transaction execution. |
 | `stateRoot`  | `byte[32]` | State root of contract after transaction execution.            |
 
+Transaction is invalid if:
+* `inputIndex >= tx.inputsCount`
+* `tx.inputs[inputIndex].type != InputType.Contract`
+
 Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
 
-Note: when executing a transaction, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
+Note: when verifying a predicate or executing a script, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
 ### OutputChange
 
@@ -177,7 +202,7 @@ Note: when executing a transaction, `amount` and `stateRoot` are initialized to 
 
 Note: when signing a transaction, `amount` is set to zero.
 
-Note: when executing a transaction, `amount` is initialized to zero.
+Note: when verifying a predicate or executing a script, `amount` is initialized to zero.
 
 This output type indicates that the output's amount may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
@@ -190,7 +215,7 @@ This output type indicates that the output's amount may vary based on transactio
 
 Note: when signing a transaction, `to` and `amount` are set to zero.
 
-Note: when executing a transaction, `to` and `amount` are initialized to zero.
+Note: when verifying a predicate or executing a script, `to` and `amount` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
