@@ -9,6 +9,7 @@
 - [Predicate Verification](#predicate-verification)
 - [Script Execution](#script-execution)
 - [VM Postcondition Validity Rules](#vm-postcondition-validity-rules)
+    - [Correct Change](#correct-change)
     - [No Inflation](#no-inflation)
     - [State Changes](#state-changes)
 
@@ -112,19 +113,25 @@ If `tx.scriptLength > 0`, the script must be executed. The free balance availabl
 freeBalance = available_balance(tx) - unavailable_balance(tx)
 ```
 
-Once the free balance is computed, the [script is executed](../vm/main.md#script-execution) and the transaction in memory on VM termination is used as the final transaction which is included in the block, i.e.:
+Once the free balance is computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
 
-```
-tx = MEM[40, MEM[32, 8]]
-```
+1. The transaction in memory on VM termination is used as the final transaction which is included in the block, i.e. `tx = MEM[40, MEM[32, 8]]`.
+1. The unspent free balance `unspentBalance` from the `$bal` register.
+1. The unspent gas `unspentGas` from the `$ggas` register.
 
-If the transaction as included in a block does not match the final transaction, the block is invalid.
+The fees incurred for a transaction are `(tx.gasLimit - unspentGas) * tx.gasPrice`.
+
+If the transaction as included in a block does not match this final transaction, the block is invalid.
 
 ## VM Postcondition Validity Rules
 
 This section defines _VM postcondition validity rules_ for transactions: the requirements for a transaction to be valid after it has been executed.
 
 Given transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
+
+### Correct Change
+
+If a change output is present, it must have an `amount` of `unspentBalance + unspentGas * tx.gasPrice`.
 
 ### No Inflation
 
