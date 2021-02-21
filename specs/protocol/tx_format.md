@@ -45,6 +45,7 @@ enum  TransactionType : uint8 {
 
 Transaction is invalid if:
 * `type > TransactionType.Create`
+* `gasLimit > MAX_GAS_PER_TX`
 * `blockheight() < maturity`
 * `inputsCount > MAX_INPUTS`
 * `outputsCount > MAX_OUTPUTS`
