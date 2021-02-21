@@ -948,7 +948,7 @@ Panic if:
 * `$ru > MEM_MAX_ACCESS_SIZE`
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 
-Increment `$hp->codesize` by `$ru` padded to word alignment.
+Increment `$hp->codesize`, `$ssp`, and `$sp` by `$ru` padded to word alignment.
 
 This opcode can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
 
