@@ -934,7 +934,7 @@ Panic if:
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Description | Copy `$ru` bytes of code starting at `$rt` for contract with ID equal to the 32 bytes in memory starting at `$rs` into memory starting at `$ssp`. |
 | Operation   | ```MEM[$ssp, $ru] = code($rs, $rt, $ru);```                                                                                                       |
-| Syntax      | `loadcode $rs, $rs, $rt, $ru`                                                                                                                     |
+| Syntax      | `loadcode $rs, $rt, $ru`                                                                                                                          |
 | Encoding    | `0x00 rs rt ru -`                                                                                                                                 |
 | Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                 |
 
