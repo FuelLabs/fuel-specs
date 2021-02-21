@@ -2,13 +2,8 @@
 
 - [Transaction Lifecycle](#transaction-lifecycle)
 - [VM Precondition Validity Rules](#vm-precondition-validity-rules)
-    - [Version](#version)
+    - [Base Sanity Checks](#base-sanity-checks)
     - [Spending UTXOs or Created Contracts](#spending-utxos-or-created-contracts)
-    - [Transaction Maturity](#transaction-maturity)
-    - [Input Maturity](#input-maturity)
-    - [Counts](#counts)
-    - [Script Length](#script-length)
-    - [Predicate Lengths](#predicate-lengths)
     - [Sufficient Balance](#sufficient-balance)
     - [Valid Signatures](#valid-signatures)
 - [Predicate Verification](#predicate-verification)
@@ -20,22 +15,29 @@
 ## Transaction Lifecycle
 
 Once a transaction is seen, it goes through several stages of validation, in this order:
-1. [VM precondition validity checks](#vm-precondition-validity-rules)
-1. [Predicate verification](#predicate-verification)
-1. [Script execution](#script-execution)
-1. [VM postcondition validity checks](#vm-postcondition-validity-rules)
+- [Transaction Lifecycle](#transaction-lifecycle)
+- [VM Precondition Validity Rules](#vm-precondition-validity-rules)
+    - [Base Sanity Checks](#base-sanity-checks)
+    - [Spending UTXOs or Created Contracts](#spending-utxos-or-created-contracts)
+    - [Sufficient Balance](#sufficient-balance)
+    - [Valid Signatures](#valid-signatures)
+- [Predicate Verification](#predicate-verification)
+- [Script Execution](#script-execution)
+- [VM Postcondition Validity Rules](#vm-postcondition-validity-rules)
+    - [No Inflation](#no-inflation)
+    - [State Changes](#state-changes)
 
 ## VM Precondition Validity Rules
 
 This section defines _vm precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
+The validity rules assuming sequential transaction validation for side effects (i.e. state changes). However, by construction, transactions with different access lists can be validated in parallel. Transactions with overlapping access lists must be validated and placed in blocks in topological order.
+
 For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
 
-### Version
+### Base Sanity Checks
 
-```py
-return tx.version == 0
-```
+Base sanity checks are defined in the [transaction format](./tx_format.md).
 
 ### Spending UTXOs or Created Contracts
 
@@ -46,54 +48,6 @@ for input in tx.inputs:
             return False
     if input.type == InputType.Contract:
         if not input.contractID in contracts:
-return True
-```
-
-### Transaction Maturity
-
-```py
-return blockheight() >= tx.maturity
-```
-
-### Input Maturity
-
-```py
-for input in tx.inputs:
-    if input.type == InputType.Coin:
-        if blockheight() < state[input.utxoID].created + input.maturity:
-            return False
-return True
-```
-
-### Counts
-
-```py
-return (
-    tx.inputsCount <= MAX_INPUTS and
-    tx.outputsCount <= MAX_OUTPUTS and
-    tx.witnessesCount <= MAX_WITNESSES
-)
-```
-
-### Script Length
-
-```py
-return (
-    scriptLength <= MAX_SCRIPT_LENGTH and
-    scriptDataLength <= MAX_SCRIPT_DATA_LENGTH
-)
-```
-
-### Predicate Lengths
-
-```py
-for input in tx.inputs:
-    if input.type == InputType.Coin:
-        if (
-            input.predicateLength > MAX_PREDICATE_LENGTH or
-            input.predicateDataLength > MAX_PREDICATE_DATA_LENGTH
-        ):
-            return False
 return True
 ```
 
@@ -135,7 +89,7 @@ return available_balance(tx) >= unavailable_balance(tx)
 
 ```py
 def address_from(pubkey: bytes) -> bytes:
-    return sha256(pubkey)[0:31]
+    return sha256(pubkey)[0:32]
 
 for input in tx.inputs:
     if input.type == InputType.Coin:
