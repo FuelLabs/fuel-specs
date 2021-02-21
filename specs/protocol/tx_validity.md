@@ -48,6 +48,7 @@ for input in tx.inputs:
             return False
     if input.type == InputType.Contract:
         if not input.contractID in contracts:
+                return False
 return True
 ```
 
@@ -132,19 +133,14 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 def sum_all_inputs(tx) -> int:
     total: int = 0
     for input in tx.inputs:
-        if input.type == InputType.Coin:
-            total += state[input.utxoID].amount
-        else if input.type == InputType.Contract:
-            total += state[tx.witnesses[input.witnessIndex]].amount
+        total += state[input.utxoID].amount
     return total
 
 def sum_all_outputs(tx) -> int:
     total: int = 0
     for output in tx.outputs:
-        if output.type == OutputType.Coin:
+        if output.type != OutputType.ContractCreated:
             total += output.amount
-        else if output.type == OutputType.Contract:
-            total += tx.witnesses[output.amountWitnessIndex]
     return total
 
 return sum_all_inputs(tx) >= sum_all_outputs(tx)
