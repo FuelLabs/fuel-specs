@@ -15,17 +15,10 @@
 ## Transaction Lifecycle
 
 Once a transaction is seen, it goes through several stages of validation, in this order:
-- [Transaction Lifecycle](#transaction-lifecycle)
-- [VM Precondition Validity Rules](#vm-precondition-validity-rules)
-    - [Base Sanity Checks](#base-sanity-checks)
-    - [Spending UTXOs and Created Contracts](#spending-utxos-and-created-contracts)
-    - [Sufficient Balance](#sufficient-balance)
-    - [Valid Signatures](#valid-signatures)
-- [Predicate Verification](#predicate-verification)
-- [Script Execution](#script-execution)
-- [VM Postcondition Validity Rules](#vm-postcondition-validity-rules)
-    - [No Inflation](#no-inflation)
-    - [State Changes](#state-changes)
+1. [Pre-checks](#vm-precondition-validity-rules)
+1. [Predicate verification](#predicate-verification)
+1. [Script execution](#script-execution)
+1. [Post-checks](#vm-postcondition-validity-rules)
 
 ## VM Precondition Validity Rules
 
