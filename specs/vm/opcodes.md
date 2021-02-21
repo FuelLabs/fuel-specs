@@ -865,7 +865,7 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Description | Copy `$ru` bytes of code starting at `$rt` for contract with ID equal to the 32 bytes in memory starting at `$rs` into memory starting at `$rd`. |
 | Operation   | ```MEM[$rd, $ru] = code($rs, $rt, $ru);```                                                                                                       |
-| Syntax      | `codecopy $rs, $rs, $rt, $ru`                                                                                                                    |
+| Syntax      | `codecopy $rd, $rs, $rt, $ru`                                                                                                                    |
 | Encoding    | `0x00 rd rs rt ru`                                                                                                                               |
 | Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                                                                |
 
