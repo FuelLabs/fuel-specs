@@ -51,6 +51,7 @@ Transaction is invalid if:
 * `inputsCount > MAX_INPUTS`
 * `outputsCount > MAX_OUTPUTS`
 * `witnessesCount > MAX_WITNESSES`
+* More than one output is of type `OutputType.Change`
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
