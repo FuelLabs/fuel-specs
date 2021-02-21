@@ -120,6 +120,9 @@ enum  InputType : uint8 {
 | `type` | `InputType`                                                       | Type of input. |
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
+Transaction is invalid if:
+* `type > InputType.Contract`
+
 ### InputCoin
 
 | name                  | type       | description                                                            |
@@ -169,6 +172,9 @@ enum  OutputType : uint8 {
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------- |
 | `type` | `OutputType`                                                                                                                                                                               | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
+
+Transaction is invalid if:
+* `type > OutputType.ContractCreated`
 
 ### OutputCoin
 
