@@ -78,6 +78,8 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 * In a predicate context, [return](#return-return-from-context) `false`.
 * In other contexts, [revert](#revert-revert).
 
+Attempting to execute an opcode not in this list pauses a panic and consumes no gas.
+
 ## Arithmetic/Logic (ALU) Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
