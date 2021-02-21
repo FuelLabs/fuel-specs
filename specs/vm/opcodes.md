@@ -946,6 +946,7 @@ Panic if:
 * `$ssp + $ru > VM_MAX_RAM`
 * `$rs + 32 > VM_MAX_RAM`
 * `$ssp != $sp`
+* `$ssp + $ru > $hp`
 * `$ru > CONTRACT_MAX_SIZE`
 * `$ru > MEM_MAX_ACCESS_SIZE`
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
