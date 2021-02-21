@@ -10,6 +10,7 @@
 - [Output](#output)
     - [OutputCoin](#outputcoin)
     - [OutputContract](#outputcontract)
+- [OutputWithdrawal](#outputwithdrawal)
     - [OutputChange](#outputchange)
     - [OutputVariable](#outputvariable)
     - [OutputContractCreated](#outputcontractcreated)
@@ -162,16 +163,17 @@ Note: when verifying a predicate, `utxoID` is initialized to zero.
 enum  OutputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Change = 2,
-    Variable = 3,
-    ContractCreated = 4,
+    Withdrawal = 2,
+    Change = 3,
+    Variable = 4,
+    ContractCreated = 5,
 }
 ```
 
-| name   | type                                                                                                                                                                                       | description     |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------- |
-| `type` | `OutputType`                                                                                                                                                                               | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
+| name   | type                                                                                                                                                                                                                             | description     |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `type` | `OutputType`                                                                                                                                                                                                                     | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
 * `type > OutputType.ContractCreated`
@@ -198,6 +200,15 @@ Transaction is invalid if:
 Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
 
 Note: when verifying a predicate or executing a script, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
+
+## OutputWithdrawal
+
+| name     | type       | description                  |
+| -------- | ---------- | ---------------------------- |
+| `to`     | `byte[32]` | Receiving address.           |
+| `amount` | `uint64`   | Amount of coins to withdraw. |
+
+This output type is unspendable and can be pruned form the UTXO set.
 
 ### OutputChange
 
