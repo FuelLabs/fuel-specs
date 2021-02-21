@@ -112,11 +112,13 @@ If `tx.scriptLength > 0`, the script must be executed. The free balance availabl
 freeBalance = available_balance(tx) - unavailable_balance(tx)
 ```
 
-Once the free balance is computed, the [script is executed](../vm/main.md#script-execution) and the final value of the transaction in memory is used as the final transaction value which is included in the block, against which [VM postcondition validity checks](#vm-postcondition-validity-rules) are done.
+Once the free balance is computed, the [script is executed](../vm/main.md#script-execution) and the transaction in memory on VM termination is used as the final transaction which is included in the block, i.e.:
 
 ```
 tx = MEM[40, MEM[32, 8]]
 ```
+
+If the transaction as included in a block does not match the final transaction, the block is invalid.
 
 ## VM Postcondition Validity Rules
 
