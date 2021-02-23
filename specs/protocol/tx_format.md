@@ -10,7 +10,7 @@
 - [Output](#output)
     - [OutputCoin](#outputcoin)
     - [OutputContract](#outputcontract)
-- [OutputWithdrawal](#outputwithdrawal)
+    - [OutputWithdrawal](#outputwithdrawal)
     - [OutputChange](#outputchange)
     - [OutputVariable](#outputvariable)
     - [OutputContractCreated](#outputcontractcreated)
@@ -202,7 +202,7 @@ Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
 
 Note: when verifying a predicate or executing a script, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
-## OutputWithdrawal
+### OutputWithdrawal
 
 | name     | type       | description                  |
 | -------- | ---------- | ---------------------------- |
