@@ -864,6 +864,8 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 1. `$bal = $rt` (forward coins)
 1. `$cgas = $rv` (forward gas)
 
+This modifies the `balanceRoot` field of the appropriate output(s).
+
 ### CODECOPY: Code copy
 
 |             |                                                                                                                                                  |
@@ -1076,6 +1078,8 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`
 * `tx.outputs[$rs].to = MEM[$rd, 32]`
 * `tx.outputs[$rs].amount = $rt`
 * `tx.outputs[$rs].color = MEM[$ru, 32]`
+
+This modifies the `balanceRoot` field of the appropriate output.
 
 ## Cryptographic Opcodes
 
