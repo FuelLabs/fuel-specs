@@ -133,6 +133,7 @@ A call frame consists of the following, word-aligned:
 | ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
 |       |                      |                   | **Unwritable area begins.**                                                   |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
+| 32    | `byte[32]`           | color             | Color of forwarded coins.                                                     |
 | 8*64  | `byte[8][64]`        | regs              | Saved registers from previous context.                                        |
 | 8     | `uint8`              | in count          | Number of input values.                                                       |
 | 8     | `uint8`              | out count         | Number of return values.                                                      |
