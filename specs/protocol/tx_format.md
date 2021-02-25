@@ -132,6 +132,8 @@ Transaction is invalid if:
 | name                  | type       | description                                                            |
 | --------------------- | ---------- | ---------------------------------------------------------------------- |
 | `utxoID`              | `byte[32]` | UTXO ID.                                                               |
+| `owner`               | `byte[32]` | Owning address or script hash.                                         |
+| `amount`              | `uint64`   | Amount of coins.                                                       |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint64`   | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateLength`     | `uint16`   | Length of predicate, in instructions.                                  |
@@ -148,17 +150,21 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 ### InputContract
 
-| name         | type       | description  |
-| ------------ | ---------- | ------------ |
-| `utxoID`     | `byte[32]` | UTXO ID.     |
-| `contractID` | `byte[32]` | Contract ID. |
+| name         | type       | description                                                     |
+| ------------ | ---------- | --------------------------------------------------------------- |
+| `utxoID`     | `byte[32]` | UTXO ID.                                                        |
+| `amount`     | `uint64`   | Amount of coins owned by contract before transaction execution. |
+| `stateRoot`  | `byte[32]` | State root of contract before transaction execution.            |
+| `contractID` | `byte[32]` | Contract ID.                                                    |
 
 Transaction is invalid if:
 * there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
-Note: when signing a transaction, `utxoID` is set to zero.
+Note: when signing a transaction, `utxoID`, `amount`, and `stateRoot` are set to zero.
 
-Note: when verifying a predicate, `utxoID` is initialized to zero.
+Note: when verifying a predicate, `utxoID`, `amount`, and `stateRoot` is initialized to zero.
+
+Note: when executing a script, `utxoID`, `amount`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contract ID`.
 
 ## Output
 
