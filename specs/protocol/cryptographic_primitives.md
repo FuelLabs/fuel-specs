@@ -16,7 +16,7 @@ Three Merkle tree structures are used: a Binary Merkle Tree (to commit to byteco
 
 ### Binary Merkle Tree
 
-A specification for the Sparse Merkle Tree is [here](https://github.com/lazyledger/lazyledger-specs/blob/master/specs/data_structures.md#binary-merkle-tree).
+A specification for the Binary Merkle Tree is [here](https://github.com/lazyledger/lazyledger-specs/blob/master/specs/data_structures.md#binary-merkle-tree).
 
 ### Binary Merkle Sum Tree
 
