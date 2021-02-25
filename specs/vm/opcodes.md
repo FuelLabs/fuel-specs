@@ -826,20 +826,22 @@ Panic if:
 
 ### CALL: Call contract
 
-|             |                    |
-| ----------- | ------------------ |
-| Description | Call contract.     |
-| Operation   |                    |
-| Syntax      | `call $rs $rt $ru` |
-| Encoding    | `0x00 rs rt ru -`  |
-| Notes       |                    |
+|             |                        |
+| ----------- | ---------------------- |
+| Description | Call contract.         |
+| Operation   |                        |
+| Syntax      | `call $rs $rt $ru $rv` |
+| Encoding    | `0x00 rs rt ru rv`     |
+| Notes       |                        |
 
 Panic if:
+* `$rs + 32` overflows
+* `$ru + 32` overflows
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
 * Reading past `MEM[VM_MAX_RAM - 1]`
 * Any output range does not pass [ownership check](./main.md#ownership)
-* In an external context, if `$rt > $bal`
-* In an internal context, if `$rt` is greater than `amount` of output with contract ID `MEM[$rs, 32]`
+* In an external context, if `$rt > MEM[balanceOf(MEM[$ru, 32]), 8]`
+* In an internal context, if `$rt` is greater than the balance of color `MEM[$ru, 32]` of output with contract ID `MEM[$rs, 32]`
 
 Register `$rs` is a memory address from which the following fields are set (word-aligned):
 
@@ -851,16 +853,16 @@ Register `$rs` is a memory address from which the following fields are set (word
 | 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
 | 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
 
-`$ru` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
+`$rv` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
-For output with contract ID `MEM[$rs, 32]`, increase `amount` by `$rt`. In an external context, decrease `$bal` by `$rt`. In an internal context, decrease `amount` of output with contract ID `MEM[$fp, 32]`.
+For output with contract ID `MEM[$rs, 32]`, increase balance of color `MEM[$ru, 32]` by `$rt`. In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`. In an internal context, decrease color `MEM[$ru, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rt`.
 
 A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
 1. Set `$pc` and `$is` to the starting address of the code.
 1. `$bal = $rt` (forward coins)
-1. `$cgas = $ru` (forward gas)
+1. `$cgas = $rv` (forward gas)
 
 ### CODECOPY: Code copy
 
