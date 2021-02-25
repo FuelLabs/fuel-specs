@@ -85,28 +85,30 @@ Transaction is invalid if:
 
 ### TransactionCreate
 
-| name             | type                    | description                                |
-| ---------------- | ----------------------- | ------------------------------------------ |
-| `gasPrice`       | `uint64`                | Gas price for transaction.                 |
-| `gasLimit`       | `uint64`                | Gas limit for transaction.                 |
-| `maturity`       | `uint64`                | Block until which tx cannot be included.   |
-| `bytecodeLength` | `uint16`                | Contract bytecode length, in instructions. |
-| `inputsCount`    | `uint8`                 | Number of inputs.                          |
-| `outputsCount`   | `uint8`                 | Number of outputs.                         |
-| `witnessesCount` | `uint8`                 | Number of witnesses.                       |
-| `salt`           | `byte[32]`              | Salt.                                      |
-| `bytecode`       | `byte[]`                | Contract bytecode to create.               |
-| `inputs`         | [Input](#input)`[]`     | List of inputs.                            |
-| `outputs`        | [Output](#output)`[]`   | List of outputs.                           |
-| `witnesses`      | [Witness](#witness)`[]` | List of witnesses.                         |
+| name                   | type                    | description                                   |
+| ---------------------- | ----------------------- | --------------------------------------------- |
+| `gasPrice`             | `uint64`                | Gas price for transaction.                    |
+| `gasLimit`             | `uint64`                | Gas limit for transaction.                    |
+| `maturity`             | `uint64`                | Block until which tx cannot be included.      |
+| `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
+| `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |
+| `inputsCount`          | `uint8`                 | Number of inputs.                             |
+| `outputsCount`         | `uint8`                 | Number of outputs.                            |
+| `witnessesCount`       | `uint8`                 | Number of witnesses.                          |
+| `salt`                 | `byte[32]`              | Salt.                                         |
+| `inputs`               | [Input](#input)`[]`     | List of inputs.                               |
+| `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
+| `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
 
 Transaction is invalid if:
 * Any input is of type `InputType.Contract`
 * Any output is of type `OutputType.Contract` or `OutputType.Variable`
 * More than one output is of type `OutputType.ContractCreated`
 * `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
+* `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
+* `bytecodeWitnessIndex >= tx.witnessesCount`
 
-Creates a contract with contract ID `sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.bytecode))`, where `root` is the Merkle root of [the binary Merkle tree](./cryptographic_primitives.md#binary-merkle-tree) with each leaf being an 8-byte word of bytecode. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last opcode is padded with 4-byte zero.
+Creates a contract with contract ID `sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.witnesses[bytecodeWitnessIndex].data))`, where `root` is the Merkle root of [the binary Merkle tree](./cryptographic_primitives.md#binary-merkle-tree) with each leaf being an 8-byte word of bytecode. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last opcode is padded with 4-byte zero.
 
 ## Input
 
