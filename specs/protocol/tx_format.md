@@ -162,7 +162,9 @@ Transaction is invalid if:
 
 Note: when signing a transaction, `utxoID`, `amount`, and `stateRoot` are set to zero.
 
-Note: when verifying a predicate, `utxoID` is initialized to zero. `amount` and `stateRoot` are initialized to the amount and state root of the contract with ID `contract ID`.
+Note: when verifying a predicate, `utxoID`, `amount`, and `stateRoot` is initialized to zero.
+
+Note: when executing a script, `utxoID`, `amount`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contract ID`.
 
 ## Output
 
