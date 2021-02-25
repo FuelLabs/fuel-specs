@@ -1,12 +1,22 @@
 # Cryptographic Primitives
 
+- [Hashing](#hashing)
+- [Merkle Trees](#merkle-trees)
+    - [Binary Merkle Tree](#binary-merkle-tree)
+    - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
+    - [Sparse Merkle Tree](#sparse-merkle-tree)
+
 ## Hashing
 
 All hashing is done with SHA-2-256 (also known as SHA-256), defined in [FIPS 180-4](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf).
 
 ## Merkle Trees
 
-Two Merkle tree structures are used: a Binary Merkle Sum Tree (to commit to transactions and collected fees) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).
+Three Merkle tree structures are used: a Binary Merkle Sum Tree (to commit to bytecode), a Binary Merkle Sum Tree (to commit to transactions and collected fees) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).
+
+### Binary Merkle Tree
+
+A specification for the Sparse Merkle Tree is [here](https://github.com/lazyledger/lazyledger-specs/blob/master/specs/data_structures.md#binary-merkle-tree).
 
 ### Binary Merkle Sum Tree
 
