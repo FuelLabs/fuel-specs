@@ -1048,27 +1048,32 @@ Panic if:
 
 ### TRANSFER: Transfer coins
 
-|             |                                                              |
-| ----------- | ------------------------------------------------------------ |
-| Description | Transfer `$rt` coins to address at `$rd`, with output `$rs`. |
-| Operation   | ```transfer(MEM[$rd, 32], $rs, $rt);```                      |
-| Syntax      | `transfer $rd, $rs, rt`                                      |
-| Encoding    | `0x00 rd rs rt -`                                            |
-| Notes       |                                                              |
+|             |                                                                                  |
+| ----------- | -------------------------------------------------------------------------------- |
+| Description | Transfer `$rt` coins with color at `$ru` to address at `$rd`, with output `$rs`. |
+| Operation   | ```transfer(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                            |
+| Syntax      | `transfer $rd, $rs, $rt, $ru`                                                    |
+| Encoding    | `0x00 rd rs rt ru`                                                               |
+| Notes       |                                                                                  |
+
+Given helper `balanceOfStart(color: byte[32]) -> uint32` which returns the memory address of `color` balance, or `0` if `color` has no balance.
 
 Panic if:
 * `$rd + 32` overflows
+* `$ru + 32` overflows
 * `$rd + 32 > VM_MAX_RAM`
+* `$ru + 32 > VM_MAX_RAM`
 * `$rs > tx.outputsCount`
-* In an external context, if `$rt > $bal`
-* In an internal context, if `$rt` is greater than `amount` of output with contract ID `MEM[$fp, 32]`
+* In an external context, if `$rt > MEM[balanceOf(MEM[$ru, 32]), 8]`
+* In an internal context, if `$rt` is greater than the balance of color `MEM[$ru, 32]` of output with contract ID `MEM[$fp, 32]`
 * `$rt == 0`
 * `tx.outputs[$rs].type != OutputType.Variable`
 * `tx.outputs[$rs].amount != 0`
 
-In an external context, decrease `$bal` by `$rt`. In an internal context, decrease `amount` of output with contract ID `MEM[$fp, 32]`. Then set:
+In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`. In an internal context, decrease color `MEM[$ru, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rt`. Then set:
 * `tx.outputs[$rs].to = MEM[$rd, 32]`
 * `tx.outputs[$rs].amount = $rt`
+* `tx.outputs[$rs].color = MEM[$ru, 32]`
 
 ## Cryptographic Opcodes
 
