@@ -12,7 +12,7 @@ All hashing is done with SHA-2-256 (also known as SHA-256), defined in [FIPS 180
 
 ## Merkle Trees
 
-Three Merkle tree structures are used: a Binary Merkle Sum Tree (to commit to bytecode), a Binary Merkle Sum Tree (to commit to transactions and collected fees) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).
+Three Merkle tree structures are used: a Binary Merkle Tree (to commit to bytecode), a Binary Merkle Sum Tree (to commit to transactions and collected fees) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).
 
 ### Binary Merkle Tree
 
