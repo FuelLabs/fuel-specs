@@ -132,6 +132,8 @@ Transaction is invalid if:
 | name                  | type       | description                                                            |
 | --------------------- | ---------- | ---------------------------------------------------------------------- |
 | `utxoID`              | `byte[32]` | UTXO ID.                                                               |
+| `owner`               | `byte[32]` | Owning address or script hash.                                         |
+| `amount`              | `uint64`   | Amount of coins.                                                       |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint64`   | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateLength`     | `uint16`   | Length of predicate, in instructions.                                  |
