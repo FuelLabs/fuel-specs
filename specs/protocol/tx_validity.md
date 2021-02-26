@@ -81,7 +81,7 @@ def unavailable_balance(tx, col) -> int:
     # Only native coin can be used to pay for gas
     if col != 0:
         return sentBalance
-    return ssentBalance + gasBalance + bytesBalance
+    return sentBalance + gasBalance + bytesBalance
 
 return available_balance(tx, col) >= unavailable_balance(tx, col)
 ```
