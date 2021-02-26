@@ -10,7 +10,6 @@
 - [Script Execution](#script-execution)
 - [VM Postcondition Validity Rules](#vm-postcondition-validity-rules)
     - [Correct Change](#correct-change)
-    - [No Inflation](#no-inflation)
     - [State Changes](#state-changes)
 
 ## Transaction Lifecycle
@@ -50,36 +49,41 @@ If this check passes, the `utxoID` field of each input is set to the UTXO ID of 
 
 ### Sufficient Balance
 
+For each color `col` in the input and output set:
+
 ```py
-def sum_inputs(tx) -> int:
+def sum_inputs(tx, col) -> int:
     total: int = 0
     for input in tx.inputs:
-        if input.type == InputType.Coin:
+        if input.type == InputType.Coin and input.color == col:
             total += state[input.utxoID].amount
     return total
 
-def sum_outputs(tx) -> int:
+def sum_outputs(tx, col) -> int:
     total: int = 0
     for output in tx.outputs:
-        if output.type == OutputType.Coin or output.type == OutputType.Withdrawal:
+        if (output.type == OutputType.Coin or output.type == OutputType.Withdrawal) and input.color == col:
             total += output.amount
     return total
 
-def available_balance(tx) -> int:
-    availableBalance = sum_inputs(tx)
+def available_balance(tx, col) -> int:
+    availableBalance = sum_inputs(tx, col)
     return availableBalance
 
-def unavailable_balance(tx) -> int:
+def unavailable_balance(tx, col) -> int:
     """
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of Ethereum calldata more than makes up for this
     """
-    sentBalance = sum_outputs(tx)
+    sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
+    # Only native coin can be used to pay for gas
+    if col != 0:
+        return sentBalance
     return sentBalance + gasBalance + bytesBalance
 
-return available_balance(tx) >= unavailable_balance(tx)
+return available_balance(tx, col) >= unavailable_balance(tx, col)
 ```
 
 ### Valid Signatures
@@ -107,16 +111,16 @@ Given transaction `tx`, the following checks must pass:
 
 If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, so no further checks are required.
 
-If `tx.scriptLength > 0`, the script must be executed. The free balance available to be moved around by the script and called contracts is `freeBalance`:
+If `tx.scriptLength > 0`, the script must be executed. For each color `col` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[col]`:
 
 ```py
-freeBalance = available_balance(tx) - unavailable_balance(tx)
+freeBalance[col] = available_balance(tx, col) - unavailable_balance(tx, col)
 ```
 
-Once the free balance is computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
+Once the free balances are computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
 
-1. The transaction in memory on VM termination is used as the final transaction which is included in the block, i.e. `tx = MEM[40, MEM[32, 8]]`.
-1. The unspent free balance `unspentBalance` from the `$bal` register.
+1. The transaction in-memory on VM termination is used as the final transaction which is included in the block.
+1. The unspent free balance for each color.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
 The fees incurred for a transaction are `(tx.gasLimit - unspentGas) * tx.gasPrice`.
@@ -131,26 +135,7 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 ### Correct Change
 
-If a change output is present, it must have an `amount` of `unspentBalance + unspentGas * tx.gasPrice`.
-
-### No Inflation
-
-```py
-def sum_all_inputs(tx) -> int:
-    total: int = 0
-    for input in tx.inputs:
-        total += state[input.utxoID].amount
-    return total
-
-def sum_all_outputs(tx) -> int:
-    total: int = 0
-    for output in tx.outputs:
-        if output.type != OutputType.ContractCreated:
-            total += output.amount
-    return total
-
-return sum_all_inputs(tx) >= sum_all_outputs(tx)
-```
+If change outputs are present, they must have an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their color is `0`, or an `amount` of the unspent free balance for that color after VM execution is complete.
 
 ### State Changes
 

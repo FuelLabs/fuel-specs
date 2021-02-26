@@ -51,7 +51,8 @@ Transaction is invalid if:
 * `inputsCount > MAX_INPUTS`
 * `outputsCount > MAX_OUTPUTS`
 * `witnessesCount > MAX_WITNESSES`
-* More than one output is of type `OutputType.Change`
+* More than one output is of type `OutputType.Change` for any color in the input set
+* Any output is of type `OutputType.Change` for any color not in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
@@ -103,6 +104,8 @@ Transaction is invalid if:
 Transaction is invalid if:
 * Any input is of type `InputType.Contract`
 * Any output is of type `OutputType.Contract` or `OutputType.Variable`
+* More than one output is of type `OutputType.Change` with `color` of zero
+* Any output is of type `OutputType.Change` with non-zero `color`
 * More than one output is of type `OutputType.ContractCreated`
 * `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 * `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
@@ -134,6 +137,7 @@ Transaction is invalid if:
 | `utxoID`              | `byte[32]` | UTXO ID.                                                               |
 | `owner`               | `byte[32]` | Owning address or script hash.                                         |
 | `amount`              | `uint64`   | Amount of coins.                                                       |
+| `color`               | `byte[32]` | Color of the coins.                                                    |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint64`   | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateLength`     | `uint16`   | Length of predicate, in instructions.                                  |
@@ -150,21 +154,21 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 ### InputContract
 
-| name         | type       | description                                                     |
-| ------------ | ---------- | --------------------------------------------------------------- |
-| `utxoID`     | `byte[32]` | UTXO ID.                                                        |
-| `amount`     | `uint64`   | Amount of coins owned by contract before transaction execution. |
-| `stateRoot`  | `byte[32]` | State root of contract before transaction execution.            |
-| `contractID` | `byte[32]` | Contract ID.                                                    |
+| name          | type       | description                                                             |
+| ------------- | ---------- | ----------------------------------------------------------------------- |
+| `utxoID`      | `byte[32]` | UTXO ID.                                                                |
+| `balanceRoot` | `byte[32]` | Root of amount of coins owned by contract before transaction execution. |
+| `stateRoot`   | `byte[32]` | State root of contract before transaction execution.                    |
+| `contractID`  | `byte[32]` | Contract ID.                                                            |
 
 Transaction is invalid if:
 * there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
-Note: when signing a transaction, `utxoID`, `amount`, and `stateRoot` are set to zero.
+Note: when signing a transaction, `utxoID`, `balanceRoot`, and `stateRoot` are set to zero.
 
-Note: when verifying a predicate, `utxoID`, `amount`, and `stateRoot` is initialized to zero.
+Note: when verifying a predicate, `utxoID`, `balanceRoot`, and `stateRoot` is initialized to zero.
 
-Note: when executing a script, `utxoID`, `amount`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contract ID`.
+Note: when executing a script, `utxoID`, `balanceRoot`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contractID`.
 
 ## Output
 
@@ -193,22 +197,27 @@ Transaction is invalid if:
 | -------- | ---------- | --------------------------------- |
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
+| `color`  | `byte[32]` | Color of coins.                   |
 
 ### OutputContract
 
-| name         | type       | description                                                    |
-| ------------ | ---------- | -------------------------------------------------------------- |
-| `inputIndex` | `uint8`    | Index of input contract.                                       |
-| `amount`     | `uint64`   | Amount of coins owned by contract after transaction execution. |
-| `stateRoot`  | `byte[32]` | State root of contract after transaction execution.            |
+| name          | type       | description                                                            |
+| ------------- | ---------- | ---------------------------------------------------------------------- |
+| `inputIndex`  | `uint8`    | Index of input contract.                                               |
+| `balanceRoot` | `byte[32]` | Root of amount of coins owned by contract after transaction execution. |
+| `stateRoot`   | `byte[32]` | State root of contract after transaction execution.                    |
 
 Transaction is invalid if:
 * `inputIndex >= tx.inputsCount`
 * `tx.inputs[inputIndex].type != InputType.Contract`
 
-Note: when signing a transaction, `amount` and `stateRoot` are set to zero.
+Note: when signing a transaction, `balanceRoot` and `stateRoot` are set to zero.
 
-Note: when verifying a predicate or executing a script, `amount` and `stateRoot` are initialized to the balance and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
+Note: when verifying a predicate or executing a script, `balanceRoot` and `stateRoot` are initialized to the balance root and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
+
+The balance root `balanceRoot` is the root of the [SMT](./cryptographic_primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by color (a `byte[32]`).
+
+The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
 
 ### OutputWithdrawal
 
@@ -216,6 +225,7 @@ Note: when verifying a predicate or executing a script, `amount` and `stateRoot`
 | -------- | ---------- | ---------------------------- |
 | `to`     | `byte[32]` | Receiving address.           |
 | `amount` | `uint64`   | Amount of coins to withdraw. |
+| `color`  | `byte[32]` | Color of coins.              |
 
 This output type is unspendable and can be pruned form the UTXO set.
 
@@ -225,6 +235,7 @@ This output type is unspendable and can be pruned form the UTXO set.
 | -------- | ---------- | --------------------------------- |
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
+| `color`  | `byte[32]` | Color of coins.                   |
 
 Note: when signing a transaction, `amount` is set to zero.
 
@@ -238,10 +249,11 @@ This output type indicates that the output's amount may vary based on transactio
 | -------- | ---------- | --------------------------------- |
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
+| `color`  | `byte[32]` | Color of coins.                   |
 
-Note: when signing a transaction, `to` and `amount` are set to zero.
+Note: when signing a transaction, `to`, `amount`, and `color` are set to zero.
 
-Note: when verifying a predicate or executing a script, `to` and `amount` are initialized to zero.
+Note: when verifying a predicate or executing a script, `to`, `amount`, and `color` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 
