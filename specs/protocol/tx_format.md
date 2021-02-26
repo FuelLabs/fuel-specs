@@ -51,7 +51,8 @@ Transaction is invalid if:
 * `inputsCount > MAX_INPUTS`
 * `outputsCount > MAX_OUTPUTS`
 * `witnessesCount > MAX_WITNESSES`
-* More than one output is of type `OutputType.Change`
+* More than one output is of type `OutputType.Change` for any color in the input set
+* Any output is of type `OutputType.Change` for any color not in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
@@ -103,6 +104,8 @@ Transaction is invalid if:
 Transaction is invalid if:
 * Any input is of type `InputType.Contract`
 * Any output is of type `OutputType.Contract` or `OutputType.Variable`
+* More than one output is of type `OutputType.Change` with `color` of zero
+* Any output is of type `OutputType.Change` with non-zero `color`
 * More than one output is of type `OutputType.ContractCreated`
 * `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 * `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
