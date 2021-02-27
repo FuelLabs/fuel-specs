@@ -62,7 +62,8 @@
   - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWX: State write 32 bytes](#swwx-state-write-32-bytes)
-  - [TRANSFER: Transfer coins](#transfer-transfer-coins)
+  - [TRANSFER: Transfer coins to contract](#transfer-transfer-coins-to-contract)
+  - [TRANSFEROUT: Transfer coins to output](#transferout-transfer-coins-to-output)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
   - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
   - [KECCAK256: keccak-256](#keccak256-keccak-256)
@@ -1050,13 +1051,41 @@ Panic if:
 * `$rs + 32 > VM_MAX_RAM`
 * `$fp == 0` (in the script context)
 
-### TRANSFER: Transfer coins
+### TRANSFER: Transfer coins to contract
+
+|             |                                                                        |
+| ----------- | ---------------------------------------------------------------------- |
+| Description | Transfer `$rs` coins with color at `$rt` to contract with ID at `$rd`. |
+| Operation   | ```transfer(MEM[$rd, 32], $rs, MEM[$rt, 32]);```                       |
+| Syntax      | `transfer $rd, $rs, $rt,`                                              |
+| Encoding    | `0x00 rd rs rt -`                                                      |
+| Notes       |                                                                        |
+
+Given helper `balanceOfStart(color: byte[32]) -> uint32` which returns the memory address of `color` balance, or `0` if `color` has no balance.
+
+Panic if:
+* `$rd + 32` overflows
+* `$rt + 32` overflows
+* `$rd + 32 > VM_MAX_RAM`
+* `$rt + 32 > VM_MAX_RAM`
+* Contract with ID `MEM[$rd, 32]` is not in `tx.inputs`
+* In an external context, if `$rs > MEM[balanceOf(MEM[$ru, 32]), 8]`
+* In an internal context, if `$rs` is greater than the balance of color `MEM[$rt, 32]` of output with contract ID `MEM[$fp, 32]`
+* `$rs == 0`
+* `tx.outputs[$rs].type != OutputType.Variable`
+* `tx.outputs[$rs].amount != 0`
+
+For output with contract ID `MEM[$rd, 32]`, increase balance of color `MEM[$ru, 32]` by `$rt`. In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`. In an internal context, decrease color `MEM[$ru, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rt`.
+
+This modifies the `balanceRoot` field of the appropriate output.
+
+### TRANSFEROUT: Transfer coins to output
 
 |             |                                                                                  |
 | ----------- | -------------------------------------------------------------------------------- |
 | Description | Transfer `$rt` coins with color at `$ru` to address at `$rd`, with output `$rs`. |
-| Operation   | ```transfer(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                            |
-| Syntax      | `transfer $rd, $rs, $rt, $ru`                                                    |
+| Operation   | ```transferout(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                         |
+| Syntax      | `transferout $rd, $rs, $rt, $ru`                                                 |
 | Encoding    | `0x00 rd rs rt ru`                                                               |
 | Notes       |                                                                                  |
 
