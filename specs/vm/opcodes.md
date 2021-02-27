@@ -1075,7 +1075,7 @@ Panic if:
 
 For output with contract ID `MEM[$rd, 32]`, increase balance of color `MEM[$ru, 32]` by `$rt`. In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`. In an internal context, decrease color `MEM[$ru, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rt`.
 
-This modifies the `balanceRoot` field of the appropriate output.
+This modifies the `balanceRoot` field of the appropriate output(s).
 
 ### TRANSFEROUT: Transfer coins to output
 
@@ -1106,7 +1106,7 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`
 * `tx.outputs[$rs].amount = $rt`
 * `tx.outputs[$rs].color = MEM[$ru, 32]`
 
-This modifies the `balanceRoot` field of the appropriate output.
+This modifies the `balanceRoot` field of the appropriate output(s).
 
 ## Cryptographic Opcodes
 
