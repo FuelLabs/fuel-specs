@@ -1072,8 +1072,6 @@ Panic if:
 * In an external context, if `$rs > MEM[balanceOf(MEM[$ru, 32]), 8]`
 * In an internal context, if `$rs` is greater than the balance of color `MEM[$rt, 32]` of output with contract ID `MEM[$fp, 32]`
 * `$rs == 0`
-* `tx.outputs[$rs].type != OutputType.Variable`
-* `tx.outputs[$rs].amount != 0`
 
 For output with contract ID `MEM[$rd, 32]`, increase balance of color `MEM[$ru, 32]` by `$rt`. In an external context, decrease `MEM[balanceOfStart(MEM[$ru, 32]), 8]` by `$rt`. In an internal context, decrease color `MEM[$ru, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rt`.
 
