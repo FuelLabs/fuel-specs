@@ -1057,7 +1057,7 @@ Panic if:
 | ----------- | ---------------------------------------------------------------------- |
 | Description | Transfer `$rs` coins with color at `$rt` to contract with ID at `$rd`. |
 | Operation   | ```transfer(MEM[$rd, 32], $rs, MEM[$rt, 32]);```                       |
-| Syntax      | `transfer $rd, $rs, $rt,`                                              |
+| Syntax      | `transfer $rd, $rs, $rt`                                               |
 | Encoding    | `0x00 rd rs rt -`                                                      |
 | Notes       |                                                                        |
 
