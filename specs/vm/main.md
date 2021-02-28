@@ -81,7 +81,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 1. The [transaction, serialized](../protocol/tx_format.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
-1. `$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))`: the writable stack area starts immediately after the transaction in memory.
+1. `$ssp = 32 + MAX_INPUTS*(32+1) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
 1. `$sp = $sp`: writable stack area is empty to start.
 1. `$fp = VM_MAX_RAM - 1`: the heap area begins at the top.
 1. `$hp = $fp`: heap area is empty to start.
