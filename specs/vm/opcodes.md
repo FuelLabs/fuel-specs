@@ -58,6 +58,7 @@
   - [LOADCODE: Load code from an external contract](#loadcode-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
   - [REVERT: Revert](#revert-revert)
+  - [SLOADCODE: Load code from static list](#sloadcode-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
@@ -984,6 +985,31 @@ After a revert:
 1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as on initialization.
 1. All [OutputVariable](../protocol/tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
 1. All [OutputContractConditional](../protocol/tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
+
+### SLOADCODE: Load code from static list
+
+|             |                                                                                                                 |
+| ----------- | --------------------------------------------------------------------------------------------------------------- |
+| Description | Copy `$ru` bytes of code starting at `$rt` for contract with static index `$rs` into memory starting at `$ssp`. |
+| Operation   | ```MEM[$ssp, $ru] = scode($rs, $rt, $ru);```                                                                    |
+| Syntax      | `sloadcode $rs, $rt, $ru`                                                                                       |
+| Encoding    | `0x00 rs rt ru -`                                                                                               |
+| Notes       | If `$ru` is greater than the code size, zero bytes are filled in.                                               |
+
+Panic if:
+* `$ssp + $ru` overflows
+* `$ssp + $ru > VM_MAX_RAM`
+* `$rs >= MAX_STATIC_CONTRACTS`
+* `$rs` is greater than or equal to `staticContractsCount` for the contract with ID `MEM[$rs, 32]`
+* `$ssp != $sp`
+* `$ssp + $ru > $hp`
+* `$ru > CONTRACT_MAX_SIZE`
+* `$ru > MEM_MAX_ACCESS_SIZE`
+* Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
+
+Increment `$hp->codesize`, `$ssp`, and `$sp` by `$ru` padded to word alignment.
+
+This opcode can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
 
 ### SRW: State read word
 
