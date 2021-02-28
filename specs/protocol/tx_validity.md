@@ -93,7 +93,7 @@ def address_from(pubkey: bytes) -> bytes:
     return sha256(pubkey)[0:32]
 
 for input in tx.inputs:
-    if input.type == InputType.Coin:
+    if input.type == InputType.Coin and input.predicateLength == 0:
         if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex])) != state[input.utxoID].owner:
             return False
 return True
