@@ -999,7 +999,7 @@ After a revert:
 Panic if:
 * `$ssp + $ru` overflows
 * `$ssp + $ru > VM_MAX_RAM`
-* `$rs >= MAX_INPUTS`
+* `$rs >= MAX_STATIC_CONTRACTS`
 * `$rs` is greater than or equal to `staticContractsCount` for the contract with ID `MEM[$rs, 32]`
 * `$ssp != $sp`
 * `$ssp + $ru > $hp`
