@@ -25,7 +25,7 @@
 | `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
 | `MAX_OUTPUTS`               | `uint64` | `8`   | Maximum number of outputs.                    |
 | `MAX_PREDICATE_LENGTH`      | `uint64` |       | Maximum length of predicate, in instructions. |
-| `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate, in bytes.        |
+| `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
 | `MAX_STATIC_CONTRACTS`      | `uint64` | `256` | Maximum number of static contracts.           |
