@@ -28,6 +28,7 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate, in bytes.        |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
+| `MAX_STATIC_CONTRACTS`      | `uint64` | `256` | Maximum number of static contracts.           |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
 ## Transaction
@@ -93,10 +94,12 @@ Transaction is invalid if:
 | `maturity`             | `uint64`                | Block until which tx cannot be included.      |
 | `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
 | `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |
+| `staticContractsCount` | `uint8`                 | Number of static contracts.                   |
 | `inputsCount`          | `uint8`                 | Number of inputs.                             |
 | `outputsCount`         | `uint8`                 | Number of outputs.                            |
 | `witnessesCount`       | `uint8`                 | Number of witnesses.                          |
 | `salt`                 | `byte[32]`              | Salt.                                         |
+| `staticContracts`      | `byte[32][]`            | List of static contracts.                     |
 | `inputs`               | [Input](#input)`[]`     | List of inputs.                               |
 | `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
 | `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
@@ -110,6 +113,9 @@ Transaction is invalid if:
 * `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 * `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
 * `bytecodeWitnessIndex >= tx.witnessesCount`
+* `staticContractsCount > MAX_STATIC_CONTRACTS`
+* `staticContracts` is not ordered in ascending order
+* Any contract with ID in `staticContracts` is not in the state
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
