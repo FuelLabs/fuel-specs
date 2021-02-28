@@ -219,7 +219,7 @@ Panic if:
 Panic if:
 * `$rd` is a [reserved register](./main.md#semantics)
 
-If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is cleared.
+If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise `$of` is cleared.
 
 `$err` is cleared.
 
@@ -236,7 +236,7 @@ If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is clea
 Panic if:
 * `$rd` is a [reserved register](./main.md#semantics)
 
-If the result cannot fit in 8 bits, `$of` is set to `1`, otherwise `$of` is cleared.
+If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise `$of` is cleared.
 
 `$err` is cleared.
 
