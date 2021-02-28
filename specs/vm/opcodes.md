@@ -893,7 +893,7 @@ Panic if:
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | Description | Set the 32 bytes in memory starting at `$rd` to the code root for contract with ID equal to the 32 bytes in memory starting at `$rs`. |
 | Operation   | ```MEM[$rd, 32] = coderoot(MEM[$rs, 32]);```                                                                                          |
-| Syntax      | `codehash $rd, $rs`                                                                                                                   |
+| Syntax      | `coderoot $rd, $rs`                                                                                                                   |
 | Encoding    | `0x00 rd rs - -`                                                                                                                      |
 | Notes       |                                                                                                                                       |
 
@@ -904,6 +904,8 @@ Panic if:
 * `$rs + 32 > VM_MAX_RAM`
 * The memory range `MEM[$rd, 32]`  does not pass [ownership check](./main.md#ownership)
 * Contract with ID `MEM[$rs, 32]` is not in `tx.inputs`
+
+Code root compuration is defined [here](../protocol/identifiers.md#contract-id).
 
 ### CODESIZE: Code size
 
