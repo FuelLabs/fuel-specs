@@ -50,6 +50,7 @@
 - [Contract Opcodes](#contract-opcodes)
   - [BLOCKHASH: Block hash](#blockhash-block-hash)
   - [BLOCKHEIGHT: Block height](#blockheight-block-height)
+  - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
   - [CODECOPY: Code copy](#codecopy-code-copy)
   - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
@@ -57,6 +58,7 @@
   - [COINBASE: Block proposer address](#coinbase-block-proposer-address)
   - [LOADCODE: Load code from an external contract](#loadcode-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
+  - [MINT: Mint new coins](#mint-mint-new-coins)
   - [REVERT: Revert](#revert-revert)
   - [SLOADCODE: Load code from static list](#sloadcode-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
@@ -826,6 +828,24 @@ Block header hashes for blocks with height greater than or equal to current bloc
 Panic if:
 * `$rA` is a [reserved register](./main.md#semantics)
 
+### BURN: Burn existing coins
+
+|             |                                                   |
+| ----------- | ------------------------------------------------- |
+| Description | Burn `$rA` coins of the current contract's color. |
+| Operation   | ```burn($rA);```                                  |
+| Syntax      | `burn $rA`                                        |
+| Encoding    | `0x00 rA - - -`                                   |
+| Notes       |                                                   |
+
+Panic if:
+* Balance of color `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
+* `$fp == 0` (in the script context)
+
+For output with contract ID `MEM[$fp, 32]`, decrease balance of color `MEM[$fp, 32]` by `$rA`.
+
+This modifies the `balanceRoot` field of the appropriate output.
+
 ### CALL: Call contract
 
 |             |                        |
@@ -972,6 +992,24 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 | Syntax      | `log $rA, $rB, $rC, $rD`       |
 | Encoding    | `0x00 rA rB rC rD`             |
 | Notes       |                                |
+
+### MINT: Mint new coins
+
+|             |                                                   |
+| ----------- | ------------------------------------------------- |
+| Description | Mint `$rA` coins of the current contract's color. |
+| Operation   | ```mint($rA);```                                  |
+| Syntax      | `mint $rA`                                        |
+| Encoding    | `0x00 rA - - -`                                   |
+| Notes       |                                                   |
+
+Panic if:
+* Balance of color `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
+* `$fp == 0` (in the script context)
+
+For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp, 32]` by `$rA`.
+
+This modifies the `balanceRoot` field of the appropriate output.
 
 ### REVERT: Revert
 
