@@ -2,18 +2,18 @@
 
 - [Constants](#constants)
 - [Transaction](#transaction)
-    - [TransactionScript](#transactionscript)
-    - [TransactionCreate](#transactioncreate)
+  - [TransactionScript](#transactionscript)
+  - [TransactionCreate](#transactioncreate)
 - [Input](#input)
-    - [InputCoin](#inputcoin)
-    - [InputContract](#inputcontract)
+  - [InputCoin](#inputcoin)
+  - [InputContract](#inputcontract)
 - [Output](#output)
-    - [OutputCoin](#outputcoin)
-    - [OutputContract](#outputcontract)
-    - [OutputWithdrawal](#outputwithdrawal)
-    - [OutputChange](#outputchange)
-    - [OutputVariable](#outputvariable)
-    - [OutputContractCreated](#outputcontractcreated)
+  - [OutputCoin](#outputcoin)
+  - [OutputContract](#outputcontract)
+  - [OutputWithdrawal](#outputwithdrawal)
+  - [OutputChange](#outputchange)
+  - [OutputVariable](#outputvariable)
+  - [OutputContractCreated](#outputcontractcreated)
 - [Witness](#witness)
 
 ## Constants
@@ -46,16 +46,18 @@ enum  TransactionType : uint8 {
 | `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
 
 Transaction is invalid if:
-* `type > TransactionType.Create`
-* `gasLimit > MAX_GAS_PER_TX`
-* `blockheight() < maturity`
-* `inputsCount > MAX_INPUTS`
-* `outputsCount > MAX_OUTPUTS`
-* `witnessesCount > MAX_WITNESSES`
-* More than one output is of type `OutputType.Change` for any color in the input set
-* Any output is of type `OutputType.Change` for any color not in the input set
+
+- `type > TransactionType.Create`
+- `gasLimit > MAX_GAS_PER_TX`
+- `blockheight() < maturity`
+- `inputsCount > MAX_INPUTS`
+- `outputsCount > MAX_OUTPUTS`
+- `witnessesCount > MAX_WITNESSES`
+- More than one output is of type `OutputType.Change` for any color in the input set
+- Any output is of type `OutputType.Change` for any color not in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
+
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
 1. `byte[32]`: as-is.
 1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
@@ -81,9 +83,10 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 | `witnesses`        | [Witness](#witness)`[]` | List of witnesses.                       |
 
 Transaction is invalid if:
-* Any output is of type `OutputType.ContractCreated`
-* `scriptLength > MAX_SCRIPT_LENGTH`
-* `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
+
+- Any output is of type `OutputType.ContractCreated`
+- `scriptLength > MAX_SCRIPT_LENGTH`
+- `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 
 ### TransactionCreate
 
@@ -105,17 +108,18 @@ Transaction is invalid if:
 | `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
 
 Transaction is invalid if:
-* Any input is of type `InputType.Contract`
-* Any output is of type `OutputType.Contract` or `OutputType.Variable`
-* More than one output is of type `OutputType.Change` with `color` of zero
-* Any output is of type `OutputType.Change` with non-zero `color`
-* More than one output is of type `OutputType.ContractCreated`
-* `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
-* `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
-* `bytecodeWitnessIndex >= tx.witnessesCount`
-* `staticContractsCount > MAX_STATIC_CONTRACTS`
-* `staticContracts` is not ordered in ascending order
-* Any contract with ID in `staticContracts` is not in the state
+
+- Any input is of type `InputType.Contract`
+- Any output is of type `OutputType.Contract` or `OutputType.Variable`
+- More than one output is of type `OutputType.Change` with `color` of zero
+- Any output is of type `OutputType.Change` with non-zero `color`
+- More than one output is of type `OutputType.ContractCreated`
+- `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
+- `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
+- `bytecodeWitnessIndex >= tx.witnessesCount`
+- `staticContractsCount > MAX_STATIC_CONTRACTS`
+- `staticContracts` is not ordered in ascending order
+- Any contract with ID in `staticContracts` is not in the state
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
@@ -134,7 +138,8 @@ enum  InputType : uint8 {
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
 Transaction is invalid if:
-* `type > InputType.Contract`
+
+- `type > InputType.Contract`
 
 ### InputCoin
 
@@ -152,9 +157,10 @@ Transaction is invalid if:
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                                     |
 
 Transaction is invalid if:
-* `witnessIndex >= tx.witnessesCount`
-* `predicateLength > MAX_PREDICATE_LENGTH`
-* `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
+
+- `witnessIndex >= tx.witnessesCount`
+- `predicateLength > MAX_PREDICATE_LENGTH`
+- `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
@@ -168,7 +174,8 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 | `contractID`  | `byte[32]` | Contract ID.                                                            |
 
 Transaction is invalid if:
-* there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
+
+- there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
 Note: when signing a transaction, `utxoID`, `balanceRoot`, and `stateRoot` are set to zero.
 
@@ -195,7 +202,8 @@ enum  OutputType : uint8 {
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
-* `type > OutputType.ContractCreated`
+
+- `type > OutputType.ContractCreated`
 
 ### OutputCoin
 
@@ -214,8 +222,9 @@ Transaction is invalid if:
 | `stateRoot`   | `byte[32]` | State root of contract after transaction execution.                    |
 
 Transaction is invalid if:
-* `inputIndex >= tx.inputsCount`
-* `tx.inputs[inputIndex].type != InputType.Contract`
+
+- `inputIndex >= tx.inputsCount`
+- `tx.inputs[inputIndex].type != InputType.Contract`
 
 Note: when signing a transaction, `balanceRoot` and `stateRoot` are set to zero.
 

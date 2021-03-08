@@ -3,9 +3,9 @@
 - [Transaction ID](#transaction-id)
 - [Contract ID](#contract-id)
 - [UTXO ID](#utxo-id)
-    - [Coin ID](#coin-id)
-    - [Deposit ID](#deposit-id)
-    - [Fee ID](#fee-id)
+  - [Coin ID](#coin-id)
+  - [Deposit ID](#deposit-id)
+  - [Fee ID](#fee-id)
 
 This document defines how to compute unique identifiers.
 
