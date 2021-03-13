@@ -96,7 +96,7 @@ If the [`F_WRAPPING`](./main.md#flags) flag is unset, an operation that would ha
 ### ADD: Add
 
 |             |                        |
-| ----------- | ---------------------- |
+|-------------|------------------------|
 | Description | Adds two registers.    |
 | Operation   | ```$rA = $rB + $rC;``` |
 | Syntax      | `add $rA, $rB, $rC`    |
@@ -114,7 +114,7 @@ Panic if:
 ### ADDI: Add immediate
 
 |             |                                         |
-| ----------- | --------------------------------------- |
+|-------------|-----------------------------------------|
 | Description | Adds a register and an immediate value. |
 | Operation   | ```$rA = $rB + imm;```                  |
 | Syntax      | `addi $rA, $rB, immediate`              |
@@ -132,7 +132,7 @@ Panic if:
 ### AND: AND
 
 |             |                             |
-| ----------- | --------------------------- |
+|-------------|-----------------------------|
 | Description | Bitwise ANDs two registers. |
 | Operation   | ```$rA = $rB & $rC;```      |
 | Syntax      | `and $rA, $rB, $rC`         |
@@ -148,7 +148,7 @@ Panic if:
 ### ANDI: AND immediate
 
 |             |                                                 |
-| ----------- | ----------------------------------------------- |
+|-------------|-------------------------------------------------|
 | Description | Bitwise ANDs a register and an immediate value. |
 | Operation   | ```$rA = $rB & imm;```                          |
 | Syntax      | `andi $rA, $rB, imm`                            |
@@ -164,7 +164,7 @@ Panic if:
 ### DIV: Divide
 
 |             |                         |
-| ----------- | ----------------------- |
+|-------------|-------------------------|
 | Description | Divides two registers.  |
 | Operation   | ```$rA = $rB // $rC;``` |
 | Syntax      | `div $rA, $rB, $rC`     |
@@ -184,7 +184,7 @@ Otherwise, `$err` is cleared.
 ### DIVI: Divide immediate
 
 |             |                                            |
-| ----------- | ------------------------------------------ |
+|-------------|--------------------------------------------|
 | Description | Divides a register and an immediate value. |
 | Operation   | ```$rA = $rB // imm;```                    |
 | Syntax      | `divi $rA, $rB, imm`                       |
@@ -204,7 +204,7 @@ Otherwise, `$err` is cleared.
 ### EQ: Equals
 
 |             |                                      |
-| ----------- | ------------------------------------ |
+|-------------|--------------------------------------|
 | Description | Compares two registers for equality. |
 | Operation   | ```$rA = $rB == $rC;```              |
 | Syntax      | `eq $rA, $rB, $rC`                   |
@@ -220,7 +220,7 @@ Panic if:
 ### EXP: Exponentiate
 
 |             |                                              |
-| ----------- | -------------------------------------------- |
+|-------------|----------------------------------------------|
 | Description | Raises one register to the power of another. |
 | Operation   | ```$rA = $rB ** $rC;```                      |
 | Syntax      | `exp $rA, $rB, $rC`                          |
@@ -238,7 +238,7 @@ If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise `$of` is cle
 ### EXPI: Exponentiate immediate
 
 |             |                                                         |
-| ----------- | ------------------------------------------------------- |
+|-------------|---------------------------------------------------------|
 | Description | Raises one register to the power of an immediate value. |
 | Operation   | ```$rA = $rB ** imm;```                                 |
 | Syntax      | `expi $rA, $rB, imm`                                    |
@@ -256,7 +256,7 @@ If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise `$of` is cle
 ### GT: Greater than
 
 |             |                                          |
-| ----------- | ---------------------------------------- |
+|-------------|------------------------------------------|
 | Description | Compares two registers for greater-than. |
 | Operation   | ```$rA = $rB > $rC;```                   |
 | Syntax      | `gt $rA, $rB, $rC`                       |
@@ -272,7 +272,7 @@ Panic if:
 ### MATHLOG: Math logarithm
 
 |             |                                              |
-| ----------- | -------------------------------------------- |
+|-------------|----------------------------------------------|
 | Description | The (integer) logarithm base `$rC` of `$rB`. |
 | Operation   | ```$rA = math.floor(math.log($rB, $rC));```  |
 | Syntax      | `mathlog $rA, $rB, $rC`                      |
@@ -292,7 +292,7 @@ Otherwise, `$of` and `$err` are cleared.
 ### MATHROOT: Math root
 
 |             |                                              |
-| ----------- | -------------------------------------------- |
+|-------------|----------------------------------------------|
 | Description | The (integer) `$rC`th root of `$rB`.         |
 | Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
 | Syntax      | `mathroot $rA, $rB, $rC`                     |
@@ -310,7 +310,7 @@ Otherwise, `$of` and `$err` are cleared.
 ### MOD: Modulus
 
 |             |                                    |
-| ----------- | ---------------------------------- |
+|-------------|------------------------------------|
 | Description | Modulo remainder of two registers. |
 | Operation   | ```$rA = $rB % $rC;```             |
 | Syntax      | `mod $rA, $rB, $rC`                |
@@ -328,7 +328,7 @@ Otherwise, `$of` and `$err` are cleared.
 ### MODI: Modulus immediate
 
 |             |                                                        |
-| ----------- | ------------------------------------------------------ |
+|-------------|--------------------------------------------------------|
 | Description | Modulo remainder of a register and an immediate value. |
 | Operation   | ```$rA = $rB % imm;```                                 |
 | Syntax      | `modi $rA, $rB, imm`                                   |
@@ -346,7 +346,7 @@ Otherwise, `$of` and `$err` are cleared.
 ### MUL: Multiply
 
 |             |                           |
-| ----------- | ------------------------- |
+|-------------|---------------------------|
 | Description | Multiplies two registers. |
 | Operation   | ```$rA = $rB * $rC;```    |
 | Syntax      | `mul $rA, $rB, $rC`       |
@@ -364,7 +364,7 @@ Panic if:
 ### MULI: Multiply immediate
 
 |             |                                               |
-| ----------- | --------------------------------------------- |
+|-------------|-----------------------------------------------|
 | Description | Multiplies a register and an immediate value. |
 | Operation   | ```$rA = $rB * imm;```                        |
 | Syntax      | `mul $rA, $rB, imm`                           |
@@ -382,7 +382,7 @@ Panic if:
 ### NOOP: No operation
 
 |             |                        |
-| ----------- | ---------------------- |
+|-------------|------------------------|
 | Description | Performs no operation. |
 | Operation   |                        |
 | Syntax      | `noop`                 |
@@ -394,7 +394,7 @@ Panic if:
 ### NOT: Invert
 
 |             |                         |
-| ----------- | ----------------------- |
+|-------------|-------------------------|
 | Description | Bitwise NOT a register. |
 | Operation   | ```$rA = ~$rB;```       |
 | Syntax      | `not $rA, $rB`          |
@@ -410,7 +410,7 @@ Panic if:
 ### OR: OR
 
 |             |                            |
-| ----------- | -------------------------- |
+|-------------|----------------------------|
 | Description | Bitwise ORs two registers. |
 | Operation   | ```$rA = $rB | $rC;```     |
 | Syntax      | `or $rA, $rB, $rC`         |
@@ -426,7 +426,7 @@ Panic if:
 ### ORI: OR immediate
 
 |             |                                                |
-| ----------- | ---------------------------------------------- |
+|-------------|------------------------------------------------|
 | Description | Bitwise ORs a register and an immediate value. |
 | Operation   | ```$rA = $rB | imm;```                         |
 | Syntax      | `ori $rA, $rB, imm`                            |
@@ -442,7 +442,7 @@ Panic if:
 ### SLL: Shift left logical
 
 |             |                                       |
-| ----------- | ------------------------------------- |
+|-------------|---------------------------------------|
 | Description | Left shifts a register by a register. |
 | Operation   | ```$rA = $rB << $rC;```               |
 | Syntax      | `sll $rA, $rB, $rC`                   |
@@ -460,7 +460,7 @@ Panic if:
 ### SLLI: Shift left logical immediate
 
 |             |                                               |
-| ----------- | --------------------------------------------- |
+|-------------|-----------------------------------------------|
 | Description | Left shifts a register by an immediate value. |
 | Operation   | ```$rA = $rB << imm;```                       |
 | Syntax      | `slli $rA, $rB, imm`                          |
@@ -478,7 +478,7 @@ Panic if:
 ### SRL: Shift right logical
 
 |             |                                        |
-| ----------- | -------------------------------------- |
+|-------------|----------------------------------------|
 | Description | Right shifts a register by a register. |
 | Operation   | ```$rA = $rB >> $rC;```                |
 | Syntax      | `srl $rA, $rB, $rC`                    |
@@ -496,7 +496,7 @@ Panic if:
 ### SRLI: Shift right logical immediate
 
 |             |                                                |
-| ----------- | ---------------------------------------------- |
+|-------------|------------------------------------------------|
 | Description | Right shifts a register by an immediate value. |
 | Operation   | ```$rA = $rB >> imm;```                        |
 | Syntax      | `srli $rA, $rB, imm`                           |
@@ -514,7 +514,7 @@ Panic if:
 ### SUB: Subtract
 
 |             |                                                  |
-| ----------- | ------------------------------------------------ |
+|-------------|--------------------------------------------------|
 | Description | Subtracts two registers.                         |
 | Operation   | ```$rA = $rB - $rC;```                           |
 | Syntax      | `sub $rA, $rB, $rC`                              |
@@ -532,7 +532,7 @@ Panic if:
 ### SUBI: Subtract immediate
 
 |             |                                                  |
-| ----------- | ------------------------------------------------ |
+|-------------|--------------------------------------------------|
 | Description | Subtracts a register and an immediate value.     |
 | Operation   | ```$rA = $rB - $rC;```                           |
 | Syntax      | `subi $rA, $rB, $rC`                             |
@@ -550,10 +550,10 @@ Panic if:
 ### XOR: XOR
 
 |             |                             |
-| ----------- | --------------------------- |
+|-------------|-----------------------------|
 | Description | Bitwise XORs two registers. |
 | Operation   | ```$rA = $rB ^ $rC;```      |
-| Syntax      | `xor $rA, $rB, $rC`        |
+| Syntax      | `xor $rA, $rB, $rC`         |
 | Encoding    | `0x00 rA rB rC -`           |
 | Notes       |                             |
 
@@ -566,10 +566,10 @@ Panic if:
 ### XORI: XOR immediate
 
 |             |                                                 |
-| ----------- | ----------------------------------------------- |
+|-------------|-------------------------------------------------|
 | Description | Bitwise XORs a register and an immediate value. |
 | Operation   | ```$rA = $rB ^ imm;```                          |
-| Syntax      | `xori $rA, $rB, imm`                           |
+| Syntax      | `xori $rA, $rB, imm`                            |
 | Encoding    | `0x00 rA rB i i`                                |
 | Notes       |                                                 |
 
@@ -584,7 +584,7 @@ Panic if:
 ### CIMV: Check input maturity verify
 
 |             |                                                             |
-| ----------- | ----------------------------------------------------------- |
+|-------------|-------------------------------------------------------------|
 | Description | Set `$rA` to `true` if the `$rC <= tx.input[$rB].maturity`. |
 | Operation   | ```$rA = checkinputmaturityverify($rB, $rC);```             |
 | Syntax      | `cimv $rA $rB $rC`                                          |
@@ -605,7 +605,7 @@ See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawi
 ### CTMV: Check transaction maturity verify
 
 |             |                                                  |
-| ----------- | ------------------------------------------------ |
+|-------------|--------------------------------------------------|
 | Description | Set `$rA` to `true` if `$rB <= tx.maturity`.     |
 | Operation   | ```$rA = checktransactionmaturityverify($rB);``` |
 | Syntax      | `ctmv $rA $rB`                                   |
@@ -624,7 +624,7 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 ### JI: Jump immediate
 
 |             |                                                |
-| ----------- | ---------------------------------------------- |
+|-------------|------------------------------------------------|
 | Description | Jumps to the code instruction offset by `imm`. |
 | Operation   | ```$pc = $is + imm * 4;```                     |
 | Syntax      | `ji imm`                                       |
@@ -637,13 +637,13 @@ Panic if:
 
 ### JNZI: Jump if not zero immediate
 
-|             |                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------- |
-| Description | Jump to the code instruction offset by `imm` if `$rA` is not zero.                     |
+|             |                                                                                    |
+|-------------|------------------------------------------------------------------------------------|
+| Description | Jump to the code instruction offset by `imm` if `$rA` is not zero.                 |
 | Operation   | ```if $rA != 0:```<br>```$pc = $is + imm * 4;```<br>```else:```<br>```$pc += 4;``` |
-| Syntax      | `jnzi $rA`                                                                             |
-| Encoding    | `0x00 rA i i i`                                                                        |
-| Notes       |                                                                                        |
+| Syntax      | `jnzi $rA`                                                                         |
+| Encoding    | `0x00 rA i i i`                                                                    |
+| Notes       |                                                                                    |
 
 Panic if:
 
@@ -652,7 +652,7 @@ Panic if:
 ### RETURN: Return from context
 
 |             |                                                              |
-| ----------- | ------------------------------------------------------------ |
+|-------------|--------------------------------------------------------------|
 | Description | Returns from [context](./main.md#contexts) with value `$rA`. |
 | Operation   | ```return($rA);```                                           |
 | Syntax      | `return $rA`                                                 |
@@ -677,7 +677,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 ### CFE: Extend call frame
 
 |             |                                        |
-| ----------- | -------------------------------------- |
+|-------------|----------------------------------------|
 | Description | Extend the current call frame's stack. |
 | Operation   | ```$sp = $sp + $rA```                  |
 | Syntax      | `cfe $rA`                              |
@@ -692,7 +692,7 @@ Panic if:
 ### CFS: Shrink call frame
 
 |             |                                        |
-| ----------- | -------------------------------------- |
+|-------------|----------------------------------------|
 | Description | Shrink the current call frame's stack. |
 | Operation   | ```$sp = $sp - $rA```                  |
 | Syntax      | `cfs $rA`                              |
@@ -707,7 +707,7 @@ Panic if:
 ### LB: Load byte
 
 |             |                                                              |
-| ----------- | ------------------------------------------------------------ |
+|-------------|--------------------------------------------------------------|
 | Description | A byte is loaded from the specified address offset by `imm`. |
 | Operation   | ```$rA = MEM[$rB + imm, 1];```                               |
 | Syntax      | `lb $rA, $rB, imm`                                           |
@@ -724,7 +724,7 @@ Panic if:
 ### LW: Load word
 
 |             |                                                              |
-| ----------- | ------------------------------------------------------------ |
+|-------------|--------------------------------------------------------------|
 | Description | A word is loaded from the specified address offset by `imm`. |
 | Operation   | ```$rA = MEM[$rB + imm, 8];```                               |
 | Syntax      | `lw $rA, $rB, imm`                                           |
@@ -741,7 +741,7 @@ Panic if:
 ### MALLOC: Allocate memory
 
 |             |                                           |
-| ----------- | ----------------------------------------- |
+|-------------|-------------------------------------------|
 | Description | Allocate a number of bytes from the heap. |
 | Operation   | ```$hp = $hp - $rA;```                    |
 | Syntax      | `malloc $rA`                              |
@@ -756,7 +756,7 @@ Panic if:
 ### MEMCLEAR: Memory clear
 
 |             |                          |
-| ----------- | ------------------------ |
+|-------------|--------------------------|
 | Description | Clear bytes in memory.   |
 | Operation   | ```MEM[$rA, $rB] = 0;``` |
 | Syntax      | `memclear $rA, $rB`      |
@@ -773,7 +773,7 @@ Panic if:
 ### MEMCP: Memory copy
 
 |             |                                      |
-| ----------- | ------------------------------------ |
+|-------------|--------------------------------------|
 | Description | Copy bytes in memory.                |
 | Operation   | ```MEM[$rA, $rC] = MEM[$rB, $rC];``` |
 | Syntax      | `memcp $rA, $rB, $rC`                |
@@ -792,7 +792,7 @@ Panic if:
 ### MEMEQ: Memory equality
 
 |             |                                             |
-| ----------- | ------------------------------------------- |
+|-------------|---------------------------------------------|
 | Description | Compare bytes in memory.                    |
 | Operation   | ```$rA = MEM[$rB, $rD] == MEM[$rC, $rD];``` |
 | Syntax      | `memeq $rA, $rB, $rC, $rD`                  |
@@ -811,7 +811,7 @@ Panic if:
 ### SB: Store byte
 
 |             |                                                                                     |
-| ----------- | ----------------------------------------------------------------------------------- |
+|-------------|-------------------------------------------------------------------------------------|
 | Description | The least significant byte of `$rB` is stored at the address `$rA` offset by `imm`. |
 | Operation   | ```MEM[$rA + imm, 1] = $rB[7, 1];```                                                |
 | Syntax      | `sb $rA, $rB, imm`                                                                  |
@@ -827,7 +827,7 @@ Panic if:
 ### SW: Store word
 
 |             |                                                                    |
-| ----------- | ------------------------------------------------------------------ |
+|-------------|--------------------------------------------------------------------|
 | Description | The value of `$rB` is stored at the address `$rA` offset by `imm`. |
 | Operation   | ```MEM[$rA + imm, 8] = $rB;```                                     |
 | Syntax      | `sw $rA, $rB, imm`                                                 |
@@ -847,7 +847,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 ### BLOCKHASH: Block hash
 
 |             |                                      |
-| ----------- | ------------------------------------ |
+|-------------|--------------------------------------|
 | Description | Get block header hash.               |
 | Operation   | ```MEM[$rA, 32] = blockhash($rB);``` |
 | Syntax      | `blockhash $rA $rB`                  |
@@ -865,7 +865,7 @@ Block header hashes for blocks with height greater than or equal to current bloc
 ### BLOCKHEIGHT: Block height
 
 |             |                            |
-| ----------- | -------------------------- |
+|-------------|----------------------------|
 | Description | Get Fuel block height.     |
 | Operation   | ```$rA = blockheight();``` |
 | Syntax      | `blockheight $rA`          |
@@ -879,7 +879,7 @@ Panic if:
 ### BURN: Burn existing coins
 
 |             |                                                   |
-| ----------- | ------------------------------------------------- |
+|-------------|---------------------------------------------------|
 | Description | Burn `$rA` coins of the current contract's color. |
 | Operation   | ```burn($rA);```                                  |
 | Syntax      | `burn $rA`                                        |
@@ -898,7 +898,7 @@ This modifies the `balanceRoot` field of the appropriate output.
 ### CALL: Call contract
 
 |             |                        |
-| ----------- | ---------------------- |
+|-------------|------------------------|
 | Description | Call contract.         |
 | Operation   |                        |
 | Syntax      | `call $rA $rB $rC $rD` |
@@ -918,7 +918,7 @@ Panic if:
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
 
 | bytes | type                 | value             | description                                                      |
-| ----- | -------------------- | ----------------- | ---------------------------------------------------------------- |
+|-------|----------------------|-------------------|------------------------------------------------------------------|
 | 32    | `byte[32]`           | to                | Contract ID to call.                                             |
 | 8     | `uint8`              | out count         | Number of return values.                                         |
 | 8     | `uint8`              | in count          | Number of input values.                                          |
@@ -942,7 +942,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 ### CODECOPY: Code copy
 
 |             |                                                                                                                                                  |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rD` bytes of code starting at `$rC` for contract with ID equal to the 32 bytes in memory starting at `$rB` into memory starting at `$rA`. |
 | Operation   | ```MEM[$rA, $rD] = code($rB, $rC, $rD);```                                                                                                       |
 | Syntax      | `codecopy $rA, $rB, $rC, $rD`                                                                                                                    |
@@ -962,7 +962,7 @@ Panic if:
 ### CODEROOT: Code Merkle root
 
 |             |                                                                                                                                       |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Set the 32 bytes in memory starting at `$rA` to the code root for contract with ID equal to the 32 bytes in memory starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = coderoot(MEM[$rB, 32]);```                                                                                          |
 | Syntax      | `coderoot $rA, $rB`                                                                                                                   |
@@ -983,7 +983,7 @@ Code root compuration is defined [here](../protocol/identifiers.md#contract-id).
 ### CODESIZE: Code size
 
 |             |                                                                                                           |
-| ----------- | --------------------------------------------------------------------------------------------------------- |
+|-------------|-----------------------------------------------------------------------------------------------------------|
 | Description | Set `$rA` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rB`. |
 | Operation   | ```$rA = codesize(MEM[$rB, 32]);```                                                                       |
 | Syntax      | `codesize $rA, $rB`                                                                                       |
@@ -1000,7 +1000,7 @@ Panic if:
 ### COINBASE: Block proposer address
 
 |             |                                  |
-| ----------- | -------------------------------- |
+|-------------|----------------------------------|
 | Description | Get block proposer address.      |
 | Operation   | ```MEM[$rA, 32] = coinbase();``` |
 | Syntax      | `coinbase $rA`                   |
@@ -1016,7 +1016,7 @@ Panic if:
 ### LOADCODE: Load code from an external contract
 
 |             |                                                                                                                                                   |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rC` bytes of code starting at `$rB` for contract with ID equal to the 32 bytes in memory starting at `$rA` into memory starting at `$ssp`. |
 | Operation   | ```MEM[$ssp, $rC] = code($rA, $rB, $rC);```                                                                                                       |
 | Syntax      | `loadcode $rA, $rB, $rC`                                                                                                                          |
@@ -1042,7 +1042,7 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 ### LOG: Log event
 
 |             |                                |
-| ----------- | ------------------------------ |
+|-------------|--------------------------------|
 | Description | Log an event. This is a no-op. |
 | Operation   | ```log($rA, $rB, $rC, $rD);``` |
 | Syntax      | `log $rA, $rB, $rC, $rD`       |
@@ -1052,7 +1052,7 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 ### MINT: Mint new coins
 
 |             |                                                   |
-| ----------- | ------------------------------------------------- |
+|-------------|---------------------------------------------------|
 | Description | Mint `$rA` coins of the current contract's color. |
 | Operation   | ```mint($rA);```                                  |
 | Syntax      | `mint $rA`                                        |
@@ -1071,7 +1071,7 @@ This modifies the `balanceRoot` field of the appropriate output.
 ### REVERT: Revert
 
 |             |                                                                       |
-| ----------- | --------------------------------------------------------------------- |
+|-------------|-----------------------------------------------------------------------|
 | Description | Halt execution, reverting state changes and returning value in `$rA`. |
 | Operation   | ```revert($rA);```                                                    |
 | Syntax      | `revert $rA`                                                          |
@@ -1087,7 +1087,7 @@ After a revert:
 ### SLOADCODE: Load code from static list
 
 |             |                                                                                                                 |
-| ----------- | --------------------------------------------------------------------------------------------------------------- |
+|-------------|-----------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rC` bytes of code starting at `$rB` for contract with static index `$rA` into memory starting at `$ssp`. |
 | Operation   | ```MEM[$ssp, $rC] = scode($rA, $rB, $rC);```                                                                    |
 | Syntax      | `sloadcode $rA, $rB, $rC`                                                                                       |
@@ -1113,7 +1113,7 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 ### SRW: State read word
 
 |             |                                                   |
-| ----------- | ------------------------------------------------- |
+|-------------|---------------------------------------------------|
 | Description | A word is read from the current contract's state. |
 | Operation   | ```$rA = STATE[MEM[$rB, 32]][0, 8];```            |
 | Syntax      | `srw $rA, $rB`                                    |
@@ -1130,7 +1130,7 @@ Panic if:
 ### SRWX: State read 32 bytes
 
 |             |                                                     |
-| ----------- | --------------------------------------------------- |
+|-------------|-----------------------------------------------------|
 | Description | 32 bytes is read from the current contract's state. |
 | Operation   | ```MEM[$rA, 32] = STATE[MEM[$rB, 32]];```           |
 | Syntax      | `srwx $rA, $rB`                                     |
@@ -1149,7 +1149,7 @@ Panic if:
 ### SWW: State write word
 
 |             |                                                    |
-| ----------- | -------------------------------------------------- |
+|-------------|----------------------------------------------------|
 | Description | A word is written to the current contract's state. |
 | Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rB;```             |
 | Syntax      | `sww $rA $rB`                                      |
@@ -1165,7 +1165,7 @@ Panic if:
 ### SWWX: State write 32 bytes
 
 |             |                                                      |
-| ----------- | ---------------------------------------------------- |
+|-------------|------------------------------------------------------|
 | Description | 32 bytes is written to the current contract's state. |
 | Operation   | ```STATE[MEM[$rA, 32]] = MEM[$rB, 32];```            |
 | Syntax      | `swwx $rA, $rB`                                      |
@@ -1183,7 +1183,7 @@ Panic if:
 ### TRANSFER: Transfer coins to contract
 
 |             |                                                                        |
-| ----------- | ---------------------------------------------------------------------- |
+|-------------|------------------------------------------------------------------------|
 | Description | Transfer `$rB` coins with color at `$rC` to contract with ID at `$rA`. |
 | Operation   | ```transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);```                       |
 | Syntax      | `transfer $rA, $rB, $rC`                                               |
@@ -1210,7 +1210,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 ### TRANSFEROUT: Transfer coins to output
 
 |             |                                                                                  |
-| ----------- | -------------------------------------------------------------------------------- |
+|-------------|----------------------------------------------------------------------------------|
 | Description | Transfer `$rC` coins with color at `$rD` to address at `$rA`, with output `$rB`. |
 | Operation   | ```transferout(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                         |
 | Syntax      | `transferout $rA, $rB, $rC, $rD`                                                 |
@@ -1245,7 +1245,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 ### ECRECOVER: Signature recovery
 
 |             |                                                                                                                             |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
 | Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
 | Syntax      | `ecrecover $rA, $rB, $rC`                                                                                                   |
@@ -1267,7 +1267,7 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 ### KECCAK256: keccak-256
 
 |             |                                                       |
-| ----------- | ----------------------------------------------------- |
+|-------------|-------------------------------------------------------|
 | Description | The keccak-256 hash of `$rC` bytes starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);```        |
 | Syntax      | `keccak256 $rA, $rB, $rC`                             |
@@ -1286,7 +1286,7 @@ Panic if:
 ### SHA256: SHA-2-256
 
 |             |                                                      |
-| ----------- | ---------------------------------------------------- |
+|-------------|------------------------------------------------------|
 | Description | The SHA-2-256 hash of `$rC` bytes starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = sha256(MEM[$rB, $rC]);```          |
 | Syntax      | `sha256 $rA, $rB, $rC`                               |
@@ -1307,7 +1307,7 @@ Panic if:
 ### FLAG: Set flags
 
 |             |                       |
-| ----------- | --------------------- |
+|-------------|-----------------------|
 | Description | Set `$flag` to `$rA`. |
 | Operation   | ```$flag = $rA;```    |
 | Syntax      | `flag $rA`            |

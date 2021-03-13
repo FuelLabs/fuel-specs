@@ -19,7 +19,7 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 ## Parameters
 
 | name                  | type     | value   | note                                  |
-| --------------------- | -------- | ------- | ------------------------------------- |
+|-----------------------|----------|---------|---------------------------------------|
 | `CONTRACT_MAX_SIZE`   | `uint64` |         | Maximum contract size, in bytes.      |
 | `MEM_MAX_ACCESS_SIZE` | `uint64` |         | Maximum memory access size, in bytes. |
 | `VM_MAX_RAM`          | `uint64` | `2**20` | 1 MiB.                                |
@@ -34,7 +34,7 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | value  | register | name                | description                                                                   |
-| ------ | -------- | ------------------- | ----------------------------------------------------------------------------- |
+|--------|----------|---------------------|-------------------------------------------------------------------------------|
 | `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                         |
 | `0x01` | `$one`   | one                 | Contains one (`1`), for convenience.                                          |
 | `0x02` | `$of`    | overflow            | Contains overflow/underflow of addition, subtraction, and multiplication.     |
@@ -61,7 +61,7 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 ## Flags
 
 | value  | name           | description                                           |
-| ------ | -------------- | ----------------------------------------------------- |
+|--------|----------------|-------------------------------------------------------|
 | `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
 | `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
 
@@ -141,7 +141,7 @@ Call frames are needed to ensure that the called contract cannot mutate the runn
 A call frame consists of the following, word-aligned:
 
 | bytes | type                 | value             | description                                                                   |
-| ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
+|-------|----------------------|-------------------|-------------------------------------------------------------------------------|
 |       |                      |                   | **Unwritable area begins.**                                                   |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
 | 32    | `byte[32]`           | color             | Color of forwarded coins.                                                     |
