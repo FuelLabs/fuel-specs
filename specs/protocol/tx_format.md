@@ -2,24 +2,24 @@
 
 - [Constants](#constants)
 - [Transaction](#transaction)
-    - [TransactionScript](#transactionscript)
-    - [TransactionCreate](#transactioncreate)
+  - [TransactionScript](#transactionscript)
+  - [TransactionCreate](#transactioncreate)
 - [Input](#input)
-    - [InputCoin](#inputcoin)
-    - [InputContract](#inputcontract)
+  - [InputCoin](#inputcoin)
+  - [InputContract](#inputcontract)
 - [Output](#output)
-    - [OutputCoin](#outputcoin)
-    - [OutputContract](#outputcontract)
-    - [OutputWithdrawal](#outputwithdrawal)
-    - [OutputChange](#outputchange)
-    - [OutputVariable](#outputvariable)
-    - [OutputContractCreated](#outputcontractcreated)
+  - [OutputCoin](#outputcoin)
+  - [OutputContract](#outputcontract)
+  - [OutputWithdrawal](#outputwithdrawal)
+  - [OutputChange](#outputchange)
+  - [OutputVariable](#outputvariable)
+  - [OutputContractCreated](#outputcontractcreated)
 - [Witness](#witness)
 
 ## Constants
 
 | name                        | type     | value | description                                   |
-| --------------------------- | -------- | ----- | --------------------------------------------- |
+|-----------------------------|----------|-------|-----------------------------------------------|
 | `GAS_PER_BYTE`              | `uint64` |       | Gas charged per byte of the transaction.      |
 | `MAX_GAS_PER_TX`            | `uint64` |       | Maximum gas per transaction.                  |
 | `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
@@ -41,21 +41,23 @@ enum  TransactionType : uint8 {
 ```
 
 | name   | type                                                                                      | description       |
-| ------ | ----------------------------------------------------------------------------------------- | ----------------- |
+|--------|-------------------------------------------------------------------------------------------|-------------------|
 | `type` | `TransactionType`                                                                         | Transaction type. |
 | `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
 
 Transaction is invalid if:
-* `type > TransactionType.Create`
-* `gasLimit > MAX_GAS_PER_TX`
-* `blockheight() < maturity`
-* `inputsCount > MAX_INPUTS`
-* `outputsCount > MAX_OUTPUTS`
-* `witnessesCount > MAX_WITNESSES`
-* More than one output is of type `OutputType.Change` for any color in the input set
-* Any output is of type `OutputType.Change` for any color not in the input set
+
+- `type > TransactionType.Create`
+- `gasLimit > MAX_GAS_PER_TX`
+- `blockheight() < maturity`
+- `inputsCount > MAX_INPUTS`
+- `outputsCount > MAX_OUTPUTS`
+- `witnessesCount > MAX_WITNESSES`
+- More than one output is of type `OutputType.Change` for any color in the input set
+- Any output is of type `OutputType.Change` for any color not in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
+
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
 1. `byte[32]`: as-is.
 1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
@@ -65,7 +67,7 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 ### TransactionScript
 
 | name               | type                    | description                              |
-| ------------------ | ----------------------- | ---------------------------------------- |
+|--------------------|-------------------------|------------------------------------------|
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
 | `gasLimit`         | `uint64`                | Gas limit for transaction.               |
 | `maturity`         | `uint64`                | Block until which tx cannot be included. |
@@ -81,14 +83,15 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 | `witnesses`        | [Witness](#witness)`[]` | List of witnesses.                       |
 
 Transaction is invalid if:
-* Any output is of type `OutputType.ContractCreated`
-* `scriptLength > MAX_SCRIPT_LENGTH`
-* `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
+
+- Any output is of type `OutputType.ContractCreated`
+- `scriptLength > MAX_SCRIPT_LENGTH`
+- `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 
 ### TransactionCreate
 
 | name                   | type                    | description                                   |
-| ---------------------- | ----------------------- | --------------------------------------------- |
+|------------------------|-------------------------|-----------------------------------------------|
 | `gasPrice`             | `uint64`                | Gas price for transaction.                    |
 | `gasLimit`             | `uint64`                | Gas limit for transaction.                    |
 | `maturity`             | `uint64`                | Block until which tx cannot be included.      |
@@ -105,17 +108,18 @@ Transaction is invalid if:
 | `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
 
 Transaction is invalid if:
-* Any input is of type `InputType.Contract`
-* Any output is of type `OutputType.Contract` or `OutputType.Variable`
-* More than one output is of type `OutputType.Change` with `color` of zero
-* Any output is of type `OutputType.Change` with non-zero `color`
-* More than one output is of type `OutputType.ContractCreated`
-* `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
-* `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
-* `bytecodeWitnessIndex >= tx.witnessesCount`
-* `staticContractsCount > MAX_STATIC_CONTRACTS`
-* `staticContracts` is not ordered in ascending order
-* Any contract with ID in `staticContracts` is not in the state
+
+- Any input is of type `InputType.Contract`
+- Any output is of type `OutputType.Contract` or `OutputType.Variable`
+- More than one output is of type `OutputType.Change` with `color` of zero
+- Any output is of type `OutputType.Change` with non-zero `color`
+- More than one output is of type `OutputType.ContractCreated`
+- `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
+- `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
+- `bytecodeWitnessIndex >= tx.witnessesCount`
+- `staticContractsCount > MAX_STATIC_CONTRACTS`
+- `staticContracts` is not ordered in ascending order
+- Any contract with ID in `staticContracts` is not in the state
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
@@ -129,17 +133,18 @@ enum  InputType : uint8 {
 ```
 
 | name   | type                                                              | description    |
-| ------ | ----------------------------------------------------------------- | -------------- |
+|--------|-------------------------------------------------------------------|----------------|
 | `type` | `InputType`                                                       | Type of input. |
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
 Transaction is invalid if:
-* `type > InputType.Contract`
+
+- `type > InputType.Contract`
 
 ### InputCoin
 
 | name                  | type       | description                                                            |
-| --------------------- | ---------- | ---------------------------------------------------------------------- |
+|-----------------------|------------|------------------------------------------------------------------------|
 | `utxoID`              | `byte[32]` | UTXO ID.                                                               |
 | `owner`               | `byte[32]` | Owning address or script hash.                                         |
 | `amount`              | `uint64`   | Amount of coins.                                                       |
@@ -152,23 +157,25 @@ Transaction is invalid if:
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                                     |
 
 Transaction is invalid if:
-* `witnessIndex >= tx.witnessesCount`
-* `predicateLength > MAX_PREDICATE_LENGTH`
-* `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
+
+- `witnessIndex >= tx.witnessesCount`
+- `predicateLength > MAX_PREDICATE_LENGTH`
+- `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
 ### InputContract
 
 | name          | type       | description                                                             |
-| ------------- | ---------- | ----------------------------------------------------------------------- |
+|---------------|------------|-------------------------------------------------------------------------|
 | `utxoID`      | `byte[32]` | UTXO ID.                                                                |
 | `balanceRoot` | `byte[32]` | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]` | State root of contract before transaction execution.                    |
 | `contractID`  | `byte[32]` | Contract ID.                                                            |
 
 Transaction is invalid if:
-* there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
+
+- there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
 Note: when signing a transaction, `utxoID`, `balanceRoot`, and `stateRoot` are set to zero.
 
@@ -190,17 +197,18 @@ enum  OutputType : uint8 {
 ```
 
 | name   | type                                                                                                                                                                                                                             | description     |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
 | `type` | `OutputType`                                                                                                                                                                                                                     | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
-* `type > OutputType.ContractCreated`
+
+- `type > OutputType.ContractCreated`
 
 ### OutputCoin
 
 | name     | type       | description                       |
-| -------- | ---------- | --------------------------------- |
+|----------|------------|-----------------------------------|
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
 | `color`  | `byte[32]` | Color of coins.                   |
@@ -208,14 +216,15 @@ Transaction is invalid if:
 ### OutputContract
 
 | name          | type       | description                                                            |
-| ------------- | ---------- | ---------------------------------------------------------------------- |
+|---------------|------------|------------------------------------------------------------------------|
 | `inputIndex`  | `uint8`    | Index of input contract.                                               |
 | `balanceRoot` | `byte[32]` | Root of amount of coins owned by contract after transaction execution. |
 | `stateRoot`   | `byte[32]` | State root of contract after transaction execution.                    |
 
 Transaction is invalid if:
-* `inputIndex >= tx.inputsCount`
-* `tx.inputs[inputIndex].type != InputType.Contract`
+
+- `inputIndex >= tx.inputsCount`
+- `tx.inputs[inputIndex].type != InputType.Contract`
 
 Note: when signing a transaction, `balanceRoot` and `stateRoot` are set to zero.
 
@@ -228,7 +237,7 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 ### OutputWithdrawal
 
 | name     | type       | description                  |
-| -------- | ---------- | ---------------------------- |
+|----------|------------|------------------------------|
 | `to`     | `byte[32]` | Receiving address.           |
 | `amount` | `uint64`   | Amount of coins to withdraw. |
 | `color`  | `byte[32]` | Color of coins.              |
@@ -238,7 +247,7 @@ This output type is unspendable and can be pruned form the UTXO set.
 ### OutputChange
 
 | name     | type       | description                       |
-| -------- | ---------- | --------------------------------- |
+|----------|------------|-----------------------------------|
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
 | `color`  | `byte[32]` | Color of coins.                   |
@@ -252,7 +261,7 @@ This output type indicates that the output's amount may vary based on transactio
 ### OutputVariable
 
 | name     | type       | description                       |
-| -------- | ---------- | --------------------------------- |
+|----------|------------|-----------------------------------|
 | `to`     | `byte[32]` | Receiving address or script hash. |
 | `amount` | `uint64`   | Amount of coins to send.          |
 | `color`  | `byte[32]` | Color of coins.                   |
@@ -266,12 +275,12 @@ This output type indicates that the output's amount and owner may vary based on 
 ### OutputContractCreated
 
 | name         | type       | description  |
-| ------------ | ---------- | ------------ |
+|--------------|------------|--------------|
 | `contractID` | `byte[32]` | Contract ID. |
 
 ## Witness
 
 | name         | type     | description                       |
-| ------------ | -------- | --------------------------------- |
+|--------------|----------|-----------------------------------|
 | `dataLength` | `uint16` | Length of witness data, in bytes. |
 | `data`       | `byte[]` | Witness data.                     |

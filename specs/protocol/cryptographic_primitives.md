@@ -2,9 +2,9 @@
 
 - [Hashing](#hashing)
 - [Merkle Trees](#merkle-trees)
-    - [Binary Merkle Tree](#binary-merkle-tree)
-    - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
-    - [Sparse Merkle Tree](#sparse-merkle-tree)
+  - [Binary Merkle Tree](#binary-merkle-tree)
+  - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
+  - [Sparse Merkle Tree](#sparse-merkle-tree)
 
 ## Hashing
 
@@ -23,16 +23,19 @@ A specification for the Binary Merkle Tree is [here](https://github.com/lazyledg
 The Binary Merkle Sum Tree is an extension of the tree defined in [RFC-6962](https://tools.ietf.org/html/rfc6962).
 
 The root pair `(fee, digest)` of an empty tree is:
+
 ```
 (0x0000000000000000, hash()) = (0x0000000000000000, 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)
 ```
 
 The root pair of a tree with one leaf:
+
 ```
 (leaf.fee, hash(0x00 ++ serialize(leaf)))
 ```
 
 The root pair of a tree with two or more leaves is defined recursively:
+
 ```
 (left.fee + right.fee, hash(0x01 ++ left.fee ++ left.digest ++ right.fee ++ right.digest))
 ```

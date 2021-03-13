@@ -19,7 +19,7 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 ## Parameters
 
 | name                  | type     | value   | note                                  |
-| --------------------- | -------- | ------- | ------------------------------------- |
+|-----------------------|----------|---------|---------------------------------------|
 | `CONTRACT_MAX_SIZE`   | `uint64` |         | Maximum contract size, in bytes.      |
 | `MEM_MAX_ACCESS_SIZE` | `uint64` |         | Maximum memory access size, in bytes. |
 | `VM_MAX_RAM`          | `uint64` | `2**20` | 1 MiB.                                |
@@ -27,13 +27,14 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 ## Semantics
 
 FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combination of:
-* Opcode: 8 bits
-* Register/special register (see below) identifier: 6 bits
-* Immediate value: 12, 18, or 24 bits, depending on operation
+
+- Opcode: 8 bits
+- Register/special register (see below) identifier: 6 bits
+- Immediate value: 12, 18, or 24 bits, depending on operation
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | value  | register | name                | description                                                                   |
-| ------ | -------- | ------------------- | ----------------------------------------------------------------------------- |
+|--------|----------|---------------------|-------------------------------------------------------------------------------|
 | `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                         |
 | `0x01` | `$one`   | one                 | Contains one (`1`), for convenience.                                          |
 | `0x02` | `$of`    | overflow            | Contains overflow/underflow of addition, subtraction, and multiplication.     |
@@ -60,7 +61,7 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 ## Flags
 
 | value  | name           | description                                           |
-| ------ | -------------- | ----------------------------------------------------- |
+|--------|----------------|-------------------------------------------------------|
 | `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
 | `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
 
@@ -73,6 +74,7 @@ A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
 Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM - 1` and grows downward.
 
 To initialize the VM, the following is pushed on the stack sequentially:
+
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/identifiers.md#transaction-id).
 1. [`MAX_INPUTS`](../protocol/tx_format.md#constants) pairs of `(color: byte[32], balance: uint8)`, of:
     1. For [predicate verification](#predicate-verification), zeroes.
@@ -81,6 +83,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 1. The [transaction, serialized](../protocol/tx_format.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
+
 1. `$ssp = 32 + MAX_INPUTS*(32+1) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
 1. `$sp = $sp`: writable stack area is empty to start.
 1. `$fp = VM_MAX_RAM - 1`: the heap area begins at the top.
@@ -89,6 +92,7 @@ Then the following registers are initialized (without explicit initialization, a
 ## Contexts
 
 There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./opcodes.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal:
+
 - External: predicate and script. `$fp` will be zero.
 - Internal: call. `$fp` will be non-zero.
 
@@ -99,9 +103,11 @@ There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [sc
 Any input of type [`InputType.Coin`](../protocol/tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
+
 1. `$pc`  and `$is` are set to the start of the input's `data` field.
 
 During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
+
 1. Any [contract opcode](./opcodes.md#contract-opcodes).
 1. [JI](./opcodes.md#ji-jump-immediate) or [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
@@ -114,6 +120,7 @@ A predicate that halts without returning Boolean `true` does not pass verificati
 If script bytecode is present, transaction validation requires execution.
 
 The VM is [initialized](#vm-initialization), then:
+
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
 1. `$bal` is set to [the free balance](../protocol/tx_validity.md#validity-rules).
 1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
@@ -125,6 +132,7 @@ For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, dedu
 ## Call Frames
 
 Cross-contract calls push a _call frame_ onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that target the FuelVM). The distinction is as follows:
+
 1. Stack frames: store metadata across trusted internal (i.e. intra-contract) function calls. Not supported natively by the FuelVM, but may be used as an abstraction at a higher layer.
 1. Call frames: store metadata across untrusted external (i.e. inter-contract) calls. Supported natively by the FuelVM.
 
@@ -133,7 +141,7 @@ Call frames are needed to ensure that the called contract cannot mutate the runn
 A call frame consists of the following, word-aligned:
 
 | bytes | type                 | value             | description                                                                   |
-| ----- | -------------------- | ----------------- | ----------------------------------------------------------------------------- |
+|-------|----------------------|-------------------|-------------------------------------------------------------------------------|
 |       |                      |                   | **Unwritable area begins.**                                                   |
 | 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
 | 32    | `byte[32]`           | color             | Color of forwarded coins.                                                     |
@@ -152,10 +160,12 @@ A call frame consists of the following, word-aligned:
 Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [`SW`](./opcodes.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./opcodes.md#call-call-contract)), ownership must be checked.
 
 If the context is external, the owned memory range is:
+
 1. `[$ssp, $sp)`: the writable stack area.
 1. `($hp, VM_MAX_RAM - 1]`: the heap area allocated by this script or predicate.
 
 If the context is internal, the owned memory range for a call frame is:
+
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
 1. `($hp, $fp->$hp]`: the heap area allocated by this call frame.
 1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, addr + size)`.
