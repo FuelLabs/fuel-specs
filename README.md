@@ -19,3 +19,10 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 
 1. [main.md](./specs/vm/main.md): Describes the FuelVM at a high level, from its architecture to how it is initialized.
 1. [opcodes.md](./specs/vm/opcodes.md): Defines all opcodes available in the FuelVM.
+
+## Contributing
+
+Markdown files must conform to [GitHub Flavored Markdown](https://github.github.com/gfm/). Markdown must be formatted with:
+
+- [markdownlint](https://github.com/DavidAnson/markdownlint)
+- [Markdown Table Prettifier](https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt)
