@@ -1,5 +1,22 @@
 # Compressed Transaction Format
 
+- [Transaction](#transaction)
+  - [TransactionScript](#transactionscript)
+  - [TransactionCreate](#transactioncreate)
+- [TXOPointer](#txopointer)
+- [AddressPointer](#addresspointer)
+- [Input](#input)
+  - [InputCoin](#inputcoin)
+  - [InputContract](#inputcontract)
+- [Output](#output)
+  - [OutputCoin](#outputcoin)
+  - [OutputContract](#outputcontract)
+  - [OutputWithdrawal](#outputwithdrawal)
+  - [OutputChange](#outputchange)
+  - [OutputVariable](#outputvariable)
+  - [OutputContractCreated](#outputcontractcreated)
+- [Witness](#witness)
+
 This document specifies the _compressed_ transaction format, which is posted to a blockchain for data availability.
 
 ## Transaction
