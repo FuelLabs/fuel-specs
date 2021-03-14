@@ -81,9 +81,9 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### InputContract
 
-| name              | type     | description        |
-|-------------------|----------|--------------------|
-| `contractIDIndex` | `uint32` | Contract ID index. |
+| name                | type         | description          |
+|---------------------|--------------|----------------------|
+| `contractIDPointer` | `TXOPointer` | Contract ID pointer. |
 
 ## Output
 
