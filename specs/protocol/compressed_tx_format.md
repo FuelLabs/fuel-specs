@@ -69,6 +69,7 @@ This document specifies the _compressed_ transaction format, which is posted to 
 |---------------|----------|--------------------|
 | `blockHeight` | `uint32` | Block height.      |
 | `txIndex`     | `uint16` | Transaction index. |
+| `outputIndex` | `uint8`  | Output index.      |
 
 ## AddressPointer
 
