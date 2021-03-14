@@ -120,6 +120,7 @@ Transaction is invalid if:
 - `staticContractsCount > MAX_STATIC_CONTRACTS`
 - `staticContracts` is not ordered in ascending order
 - Any contract with ID in `staticContracts` is not in the state
+- The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
