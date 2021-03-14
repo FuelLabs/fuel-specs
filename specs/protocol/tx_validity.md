@@ -1,6 +1,7 @@
 # Transaction Validity
 
 - [Transaction Lifecycle](#transaction-lifecycle)
+- [Access Lists](#access-lists)
 - [VM Precondition Validity Rules](#vm-precondition-validity-rules)
   - [Base Sanity Checks](#base-sanity-checks)
   - [Spending UTXOs and Created Contracts](#spending-utxos-and-created-contracts)
@@ -21,11 +22,13 @@ Once a transaction is seen, it goes through several stages of validation, in thi
 1. [Script execution](#script-execution)
 1. [Post-checks](#vm-postcondition-validity-rules)
 
+## Access Lists
+
 ## VM Precondition Validity Rules
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
-The validity rules assuming sequential transaction validation for side effects (i.e. state changes). However, by construction, transactions with different access lists can be validated in parallel. Transactions with overlapping access lists must be validated and placed in blocks in topological order.
+The validity rules assume sequential transaction validation for side effects (i.e. state changes). However, by construction, transactions with different access lists can be validated in parallel. Transactions with overlapping access lists must be validated and placed in blocks in topological order.
 
 For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
 
