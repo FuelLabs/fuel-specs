@@ -46,7 +46,7 @@ This document specifies the _compressed_ transaction format, which is posted to 
 | `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
 | `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
 
-## UTXOPointer
+## TXOPointer
 
 | name          | type     | description        |
 |---------------|----------|--------------------|
@@ -69,15 +69,15 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### InputCoin
 
-| name                  | type          | description                                                            |
-|-----------------------|---------------|------------------------------------------------------------------------|
-| `utxoPointer`         | `UTXOPointer` | UTXO pointer.                                                          |
-| `witnessIndex`        | `uint8`       | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint32`      | UTXO being spent must have been created at least this many blocks ago. |
-| `predicateLength`     | `uint16`      | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`      | Length of predicate input data, in bytes.                              |
-| `predicate`           | `byte[]`      | Predicate bytecode.                                                    |
-| `predicateData`       | `byte[]`      | Predicate input data (parameters).                                     |
+| name                  | type         | description                                                            |
+|-----------------------|--------------|------------------------------------------------------------------------|
+| `utxoPointer`         | `TXOPointer` | UTXO pointer.                                                          |
+| `witnessIndex`        | `uint8`      | Index of witness that authorizes spending the coin.                    |
+| `maturity`            | `uint32`     | UTXO being spent must have been created at least this many blocks ago. |
+| `predicateLength`     | `uint16`     | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint16`     | Length of predicate input data, in bytes.                              |
+| `predicate`           | `byte[]`     | Predicate bytecode.                                                    |
+| `predicateData`       | `byte[]`     | Predicate input data (parameters).                                     |
 
 ### InputContract
 
