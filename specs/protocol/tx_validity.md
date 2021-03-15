@@ -123,7 +123,11 @@ def address_from(pubkey: bytes) -> bytes:
 
 for input in tx.inputs:
     if input.type == InputType.Coin and input.predicateLength == 0:
-        if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex])) != state[input.utxoID].owner:
+        # ECDSA signatures must be 64 bytes
+        if tx.witnesses[input.witnessIndex].dataLength != 64:
+            return False
+        # Signature must be from owner
+        if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex].data)) != state[input.utxoID].owner:
             return False
 return True
 ```
