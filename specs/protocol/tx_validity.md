@@ -24,11 +24,36 @@ Once a transaction is seen, it goes through several stages of validation, in thi
 
 ## Access Lists
 
+The validity rules below assume sequential transaction validation for side effects (i.e. state changes). However, by construction, transactions with disjoint write access lists can be validated in parallel, including with overlapping read-only access lists. Transactions with overlapping write access lists must be validated and placed in blocks in topological order.
+
+UTXOs and contracts in the read-only and write-destroy access lists must exist (i.e. have been created previously) in order for a transaction to be valid. In other words, for a unique state element ID, the write-create must precede the write-destroy.
+
+Read-only access list:
+
+- For each [input `InputType.Contract`](./tx_format.md#inputcontract)
+  - Each contract ID in the `staticContracts` list for contract ID `contract ID`
+- For [transaction `TransactionType.Create`](./tx_format.md#transactioncreate)
+  - Each contract ID in the `staticContracts` list
+
+Write-destroy access list:
+
+- For each [input `InputType.Coin`](./tx_format.md#inputcoin)
+  - The UTXO ID `utxoID`
+- For each [input `InputType.Contract`](./tx_format.md#inputcontract)
+  - The UTXO ID `utxoID`
+
+Write-create access list:
+
+- For each [output `OutputType.OutputContractCreated`](./tx_format.md#outputcontractcreated)
+  - The contract ID `contractID`
+- For each output
+  - The [created UTXO ID](./identifiers.md#utxo-id)
+
+Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format.md#inputcontract) and [`OutputType.Contract`](./tx_format.md#outputcontract) rather than the UTXO ID `utxoID`.
+
 ## VM Precondition Validity Rules
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
-
-The validity rules assume sequential transaction validation for side effects (i.e. state changes). However, by construction, transactions with different access lists can be validated in parallel. Transactions with overlapping access lists must be validated and placed in blocks in topological order.
 
 For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
 
