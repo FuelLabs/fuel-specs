@@ -717,7 +717,6 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
-
 - `$rB + imm + 1` overflows
 - `$rB + imm + 1 > VM_MAX_RAM`
 
@@ -734,7 +733,6 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
-
 - `$rB + imm + 8` overflows
 - `$rB + imm + 8 > VM_MAX_RAM`
 
