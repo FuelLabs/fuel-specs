@@ -99,9 +99,9 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### InputContract
 
-| name                | type         | description          |
-|---------------------|--------------|----------------------|
-| `contractIDPointer` | `TXOPointer` | Contract ID pointer. |
+| name          | type         | description   |
+|---------------|--------------|---------------|
+| `utxoPointer` | `TXOPointer` | UTXO pointer. |
 
 ## Output
 
