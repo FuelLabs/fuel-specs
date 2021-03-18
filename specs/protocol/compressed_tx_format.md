@@ -150,9 +150,9 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### OutputContractCreated
 
-| name         | type       | description  |
-|--------------|------------|--------------|
-| `contractID` | `byte[32]` | Contract ID. |
+| name                | type                    | description          |
+|---------------------|-------------------------|----------------------|
+| `contractIDPointer` | `DigestRegistryPointer` | Contract ID pointer. |
 
 ## Witness
 
