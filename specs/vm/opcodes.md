@@ -412,7 +412,7 @@ Panic if:
 |             |                            |
 |-------------|----------------------------|
 | Description | Bitwise ORs two registers. |
-| Operation   | ```$rA = $rB | $rC;```     |
+| Operation   | ```$rA = $rB \| $rC;```    |
 | Syntax      | `or $rA, $rB, $rC`         |
 | Encoding    | `0x00 rA rB rC -`          |
 | Notes       |                            |
@@ -428,7 +428,7 @@ Panic if:
 |             |                                                |
 |-------------|------------------------------------------------|
 | Description | Bitwise ORs a register and an immediate value. |
-| Operation   | ```$rA = $rB | imm;```                         |
+| Operation   | ```$rA = $rB \| imm;```                        |
 | Syntax      | `ori $rA, $rB, imm`                            |
 | Encoding    | `0x00 rA rB i i`                               |
 | Notes       |                                                |
