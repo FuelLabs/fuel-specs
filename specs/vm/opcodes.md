@@ -635,15 +635,15 @@ Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`
 
-### JNZI: Jump if not zero immediate
+### JNEI: Jump if not equal immediate
 
-|             |                                                                                    |
-|-------------|------------------------------------------------------------------------------------|
-| Description | Jump to the code instruction offset by `imm` if `$rA` is not zero.                 |
-| Operation   | ```if $rA != 0:```<br>```$pc = $is + imm * 4;```<br>```else:```<br>```$pc += 4;``` |
-| Syntax      | `jnzi $rA`                                                                         |
-| Encoding    | `0x00 rA i i i`                                                                    |
-| Notes       |                                                                                    |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Jump to the code instruction offset by `imm` if `$rA` is not equal to `$rB`.         |
+| Operation   | ```if $rA != $rB:```<br>```$pc = $is + imm * 4;```<br>```else:```<br>```$pc += 4;``` |
+| Syntax      | `jnei $rA $rB imm`                                                                   |
+| Encoding    | `0x00 rA rB i i`                                                                     |
+| Notes       |                                                                                      |
 
 Panic if:
 
