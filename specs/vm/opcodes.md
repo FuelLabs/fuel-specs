@@ -37,7 +37,7 @@
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
   - [RETURN: Return from context](#return-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
-  - [CFE: Extend call frame](#cfe-extend-call-frame)
+  - [CFEI: Extend call frame](#cfe-extend-call-frame)
   - [CFS: Shrink call frame](#cfs-shrink-call-frame)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
@@ -674,20 +674,20 @@ Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Af
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
-### CFE: Extend call frame
+### CFEI: Extend call frame by immediate
 
-|             |                                        |
-|-------------|----------------------------------------|
-| Description | Extend the current call frame's stack. |
-| Operation   | ```$sp = $sp + $rA```                  |
-| Syntax      | `cfe $rA`                              |
-| Encoding    | `0x00 rA - - -`                        |
-| Notes       | Does not initialize memory.            |
+|             |                                                              |
+|-------------|--------------------------------------------------------------|
+| Description | Extend the current call frame's stack by an immediate value. |
+| Operation   | ```$sp = $sp + imm```                                        |
+| Syntax      | `cfei imm`                                                   |
+| Encoding    | `0x00 i i i i`                                               |
+| Notes       | Does not initialize memory.                                  |
 
 Panic if:
 
-- `$sp + $rA` overflows
-- `$sp + $rA > $hp`
+- `$sp + imm` overflows
+- `$sp + imm > $hp`
 
 ### CFS: Shrink call frame
 
