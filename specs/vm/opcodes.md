@@ -38,7 +38,7 @@
   - [RETURN: Return from context](#return-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
-  - [CFS: Shrink call frame](#cfs-shrink-call-frame)
+  - [CFSI: Shrink call frame immediate](#cfs-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
   - [MALLOC: Allocate memory](#malloc-allocate-memory)
@@ -689,20 +689,20 @@ Panic if:
 - `$sp + imm` overflows
 - `$sp + imm > $hp`
 
-### CFS: Shrink call frame
+### CFSI: Shrink call frame immediate
 
-|             |                                        |
-|-------------|----------------------------------------|
-| Description | Shrink the current call frame's stack. |
-| Operation   | ```$sp = $sp - $rA```                  |
-| Syntax      | `cfs $rA`                              |
-| Encoding    | `0x00 rA - - -`                        |
-| Notes       | Does not clear memory.                 |
+|             |                                                              |
+|-------------|--------------------------------------------------------------|
+| Description | Shrink the current call frame's stack by an immediate value. |
+| Operation   | ```$sp = $sp - imm```                                        |
+| Syntax      | `cfsi imm`                                                   |
+| Encoding    | `0x00 i i i i`                                               |
+| Notes       | Does not clear memory.                                       |
 
 Panic if:
 
-- `$sp - $rA` underflows
-- `$sp - $rA < $ssp`
+- `$sp - imm` underflows
+- `$sp - imm < $ssp`
 
 ### LB: Load byte
 
