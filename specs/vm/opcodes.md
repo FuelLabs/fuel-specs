@@ -37,7 +37,7 @@
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
   - [RETURN: Return from context](#return-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
-  - [CFEI: Extend call frame](#cfe-extend-call-frame)
+  - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
   - [CFS: Shrink call frame](#cfs-shrink-call-frame)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
@@ -674,7 +674,7 @@ Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Af
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
-### CFEI: Extend call frame by immediate
+### CFEI: Extend call frame immediate
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
