@@ -534,9 +534,9 @@ Panic if:
 |             |                                                  |
 |-------------|--------------------------------------------------|
 | Description | Subtracts a register and an immediate value.     |
-| Operation   | ```$rA = $rB - $rC;```                           |
-| Syntax      | `subi $rA, $rB, $rC`                             |
-| Encoding    | `0x00 rA rB rC -`                                |
+| Operation   | ```$rA = $rB - imm;```                           |
+| Syntax      | `subi $rA, $rB, imm`                             |
+| Encoding    | `0x00 rA rB i i`                                 |
 | Notes       | `$of` is assigned the overflow of the operation. |
 
 Panic if:
