@@ -343,6 +343,22 @@ If `imm == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
+### MOVE: Move
+
+|             |                                    |
+|-------------|------------------------------------|
+| Description | Copy from one register to another. |
+| Operation   | ```$rA = $rB;```                   |
+| Syntax      | `move $rA, $rB`                    |
+| Encoding    | `0x00 rA rB - -`                   |
+| Notes       |                                    |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
+`$of` and `$err` are cleared.
+
 ### MUL: Multiply
 
 |             |                           |
