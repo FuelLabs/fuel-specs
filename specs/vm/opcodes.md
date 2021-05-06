@@ -159,6 +159,8 @@ Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
 
+`imm` is extended to 64 bits, with the high 52 bits set to `0`.
+
 `$of` and `$err` are cleared.
 
 ### DIV: Divide
@@ -452,6 +454,8 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
+
+`imm` is extended to 64 bits, with the high 52 bits set to `0`.
 
 `$of` and `$err` are cleared.
 
