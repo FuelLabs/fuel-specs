@@ -1257,6 +1257,8 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 ## Cryptographic Opcodes
 
+All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
 ### ECRECOVER: Signature recovery
 
 |             |                                                                                                                             |
@@ -1318,6 +1320,8 @@ Panic if:
 - `$rC > MEM_MAX_ACCESS_SIZE`
 
 ## Other Opcodes
+
+All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
 ### FLAG: Set flags
 
