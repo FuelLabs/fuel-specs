@@ -13,10 +13,10 @@
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
   - [MLOG: Math logarithm](#mlog-math-logarithm)
-  - [MROO: Math root](#mroo-math-root)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MOVE: Move](#move-move)
+  - [MROO: Math root](#mroo-math-root)
   - [MUL: Multiply](#mul-multiply)
   - [MULI: Multiply immediate](#muli-multiply-immediate)
   - [NOOP: No operation](#noop-no-operation)
@@ -38,11 +38,11 @@
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
+  - [ALOC: Allocate memory](#aloc-allocate-memory)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
-  - [ALOC: Allocate memory](#aloc-allocate-memory)
   - [MCL: Memory clear](#mcl-memory-clear)
   - [MCLI: Memory clear immediate](#mcli-memory-clear-immediate)
   - [MCP: Memory copy](#mcp-memory-copy)
@@ -50,14 +50,14 @@
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
-  - [BHSH: Block hash](#bhsh-block-hash)
   - [BHEI: Block height](#bhei-block-height)
+  - [BHSH: Block hash](#bhsh-block-hash)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
+  - [CB: Block proposer address](#cb-block-proposer-address)
   - [CCP: Code copy](#ccp-code-copy)
   - [CROO: Code Merkle root](#croo-code-merkle-root)
   - [CSIZ: Code size](#csiz-code-size)
-  - [CB: Block proposer address](#cb-block-proposer-address)
   - [LDC: Load code from an external contract](#ldc-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
   - [MINT: Mint new coins](#mint-mint-new-coins)
@@ -293,24 +293,6 @@ If `$rC <= 1`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
-### MROO: Math root
-
-|             |                                              |
-|-------------|----------------------------------------------|
-| Description | The (integer) `$rC`th root of `$rB`.         |
-| Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
-| Syntax      | `mroo $rA, $rB, $rC`                         |
-| Encoding    | `0x00 rA rB rC -`                            |
-| Notes       |                                              |
-
-Panic if:
-
-- `$rA` is a [reserved register](./main.md#semantics)
-
-If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
-
-Otherwise, `$of` and `$err` are cleared.
-
 ### MOD: Modulus
 
 |             |                                    |
@@ -362,6 +344,24 @@ Panic if:
 - `$rA` is a [reserved register](./main.md#semantics)
 
 `$of` and `$err` are cleared.
+
+### MROO: Math root
+
+|             |                                              |
+|-------------|----------------------------------------------|
+| Description | The (integer) `$rC`th root of `$rB`.         |
+| Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
+| Syntax      | `mroo $rA, $rB, $rC`                         |
+| Encoding    | `0x00 rA rB rC -`                            |
+| Notes       |                                              |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
+If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` and `$err` are cleared.
 
 ### MUL: Multiply
 
@@ -696,6 +696,21 @@ Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Af
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
+### ALOC: Allocate memory
+
+|             |                                           |
+|-------------|-------------------------------------------|
+| Description | Allocate a number of bytes from the heap. |
+| Operation   | ```$hp = $hp - $rA;```                    |
+| Syntax      | `malloc $rA`                              |
+| Encoding    | `0x00 rA - - -`                           |
+| Notes       | Does not initialize memory.               |
+
+Panic if:
+
+- `$hp - $rA` underflows
+- `$hp - $rA < $sp`
+
 ### CFEI: Extend call frame immediate
 
 |             |                                                              |
@@ -757,21 +772,6 @@ Panic if:
 - `$rA` is a [reserved register](./main.md#semantics)
 - `$rB + imm + 8` overflows
 - `$rB + imm + 8 > VM_MAX_RAM`
-
-### ALOC: Allocate memory
-
-|             |                                           |
-|-------------|-------------------------------------------|
-| Description | Allocate a number of bytes from the heap. |
-| Operation   | ```$hp = $hp - $rA;```                    |
-| Syntax      | `malloc $rA`                              |
-| Encoding    | `0x00 rA - - -`                           |
-| Notes       | Does not initialize memory.               |
-
-Panic if:
-
-- `$hp - $rA` underflows
-- `$hp - $rA < $sp`
 
 ### MCL: Memory clear
 
@@ -881,6 +881,20 @@ Panic if:
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract) and [REVERT](#revert-revert).
 
+### BHEI: Block height
+
+|             |                            |
+|-------------|----------------------------|
+| Description | Get Fuel block height.     |
+| Operation   | ```$rA = blockheight();``` |
+| Syntax      | `blockheight $rA`          |
+| Encoding    | `0x00 rA - - -`            |
+| Notes       |                            |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
 ### BHSH: Block hash
 
 |             |                                      |
@@ -898,20 +912,6 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
-
-### BHEI: Block height
-
-|             |                            |
-|-------------|----------------------------|
-| Description | Get Fuel block height.     |
-| Operation   | ```$rA = blockheight();``` |
-| Syntax      | `blockheight $rA`          |
-| Encoding    | `0x00 rA - - -`            |
-| Notes       |                            |
-
-Panic if:
-
-- `$rA` is a [reserved register](./main.md#semantics)
 
 ### BURN: Burn existing coins
 
@@ -976,6 +976,22 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
+### CB: Block proposer address
+
+|             |                                  |
+|-------------|----------------------------------|
+| Description | Get block proposer address.      |
+| Operation   | ```MEM[$rA, 32] = coinbase();``` |
+| Syntax      | `coinbase $rA`                   |
+| Encoding    | `0x00 rA - - -`                  |
+| Notes       |                                  |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+
 ### CCP: Code copy
 
 |             |                                                                                                                                                  |
@@ -1033,22 +1049,6 @@ Panic if:
 - `$rB + 32` overflows
 - `$rB + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
-
-### CB: Block proposer address
-
-|             |                                  |
-|-------------|----------------------------------|
-| Description | Get block proposer address.      |
-| Operation   | ```MEM[$rA, 32] = coinbase();``` |
-| Syntax      | `coinbase $rA`                   |
-| Encoding    | `0x00 rA - - -`                  |
-| Notes       |                                  |
-
-Panic if:
-
-- `$rA + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 
 ### LDC: Load code from an external contract
 
