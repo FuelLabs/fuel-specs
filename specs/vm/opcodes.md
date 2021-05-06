@@ -44,6 +44,7 @@
   - [LW: Load word](#lw-load-word)
   - [MALLOC: Allocate memory](#malloc-allocate-memory)
   - [MEMCLEAR: Memory clear](#memclear-memory-clear)
+  - [MEMCLEARI: Memory clear immediate](#memcleari-memory-clear-immediate)
   - [MEMCP: Memory copy](#memcp-memory-copy)
   - [MEMEQ: Memory equality](#memeq-memory-equality)
   - [SB: Store byte](#sb-store-byte)
@@ -788,6 +789,23 @@ Panic if:
 - `$rA + $rB > VM_MAX_RAM`
 - `$rB > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./main.md#ownership)
+
+### MEMCLEARI: Memory clear immediate
+
+|             |                          |
+|-------------|--------------------------|
+| Description | Clear bytes in memory.   |
+| Operation   | ```MEM[$rA, imm] = 0;``` |
+| Syntax      | `memcleari $rA, imm`     |
+| Encoding    | `0x00 rA i i i`          |
+| Notes       |                          |
+
+Panic if:
+
+- `$rA + imm` overflows
+- `$rA + imm > VM_MAX_RAM`
+- `imm > MEM_MAX_ACCESS_SIZE`
+- The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
 
 ### MEMCP: Memory copy
 
