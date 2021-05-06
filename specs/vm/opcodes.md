@@ -12,8 +12,8 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
-  - [MATHLOG: Math logarithm](#mathlog-math-logarithm)
-  - [MATHROOT: Math root](#mathroot-math-root)
+  - [MLOG: Math logarithm](#mlog-math-logarithm)
+  - [MROO: Math root](#mroo-math-root)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MOVE: Move](#move-move)
@@ -36,43 +36,43 @@
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
-  - [RETURN: Return from context](#return-return-from-context)
+  - [RET: Return from context](#ret-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
-  - [MALLOC: Allocate memory](#malloc-allocate-memory)
-  - [MEMCLEAR: Memory clear](#memclear-memory-clear)
-  - [MEMCLEARI: Memory clear immediate](#memcleari-memory-clear-immediate)
-  - [MEMCP: Memory copy](#memcp-memory-copy)
-  - [MEMEQ: Memory equality](#memeq-memory-equality)
+  - [ALOC: Allocate memory](#aloc-allocate-memory)
+  - [MCL: Memory clear](#mcl-memory-clear)
+  - [MCLI: Memory clear immediate](#mcli-memory-clear-immediate)
+  - [MCP: Memory copy](#mcp-memory-copy)
+  - [MEQ: Memory equality](#meq-memory-equality)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
-  - [BLOCKHASH: Block hash](#blockhash-block-hash)
-  - [BLOCKHEIGHT: Block height](#blockheight-block-height)
+  - [BHSH: Block hash](#bhsh-block-hash)
+  - [BHEI: Block height](#bhei-block-height)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
-  - [CODECOPY: Code copy](#codecopy-code-copy)
-  - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
-  - [CODESIZE: Code size](#codesize-code-size)
-  - [COINBASE: Block proposer address](#coinbase-block-proposer-address)
-  - [LOADCODE: Load code from an external contract](#loadcode-load-code-from-an-external-contract)
+  - [CCP: Code copy](#ccp-code-copy)
+  - [CROO: Code Merkle root](#croo-code-merkle-root)
+  - [CSIZ: Code size](#csiz-code-size)
+  - [CB: Block proposer address](#cb-block-proposer-address)
+  - [LDC: Load code from an external contract](#ldc-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
   - [MINT: Mint new coins](#mint-mint-new-coins)
-  - [REVERT: Revert](#revert-revert)
-  - [SLOADCODE: Load code from static list](#sloadcode-load-code-from-static-list)
+  - [RVRT: Revert](#rvrt-revert)
+  - [SLDC: Load code from static list](#sldc-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
-  - [TRANSFER: Transfer coins to contract](#transfer-transfer-coins-to-contract)
-  - [TRANSFEROUT: Transfer coins to output](#transferout-transfer-coins-to-output)
+  - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
+  - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
-  - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
-  - [KECCAK256: keccak-256](#keccak256-keccak-256)
-  - [SHA256: SHA-2-256](#sha256-sha-2-256)
+  - [ECR: Signature recovery](#ecr-signature-recovery)
+  - [K256: keccak-256](#k256-keccak-256)
+  - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Opcodes](#other-opcodes)
   - [FLAG: Set flags](#flag-set-flags)
 
@@ -273,13 +273,13 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### MATHLOG: Math logarithm
+### MLOG: Math logarithm
 
 |             |                                              |
 |-------------|----------------------------------------------|
 | Description | The (integer) logarithm base `$rC` of `$rB`. |
 | Operation   | ```$rA = math.floor(math.log($rB, $rC));```  |
-| Syntax      | `mathlog $rA, $rB, $rC`                      |
+| Syntax      | `mlog $rA, $rB, $rC`                         |
 | Encoding    | `0x00 rA rB rC -`                            |
 | Notes       |                                              |
 
@@ -293,13 +293,13 @@ If `$rC <= 1`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
-### MATHROOT: Math root
+### MROO: Math root
 
 |             |                                              |
 |-------------|----------------------------------------------|
 | Description | The (integer) `$rC`th root of `$rB`.         |
 | Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
-| Syntax      | `mathroot $rA, $rB, $rC`                     |
+| Syntax      | `mroo $rA, $rB, $rC`                         |
 | Encoding    | `0x00 rA rB rC -`                            |
 | Notes       |                                              |
 
@@ -671,7 +671,7 @@ Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`
 
-### RETURN: Return from context
+### RET: Return from context
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
@@ -758,7 +758,7 @@ Panic if:
 - `$rB + imm + 8` overflows
 - `$rB + imm + 8 > VM_MAX_RAM`
 
-### MALLOC: Allocate memory
+### ALOC: Allocate memory
 
 |             |                                           |
 |-------------|-------------------------------------------|
@@ -773,7 +773,7 @@ Panic if:
 - `$hp - $rA` underflows
 - `$hp - $rA < $sp`
 
-### MEMCLEAR: Memory clear
+### MCL: Memory clear
 
 |             |                          |
 |-------------|--------------------------|
@@ -790,7 +790,7 @@ Panic if:
 - `$rB > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMCLEARI: Memory clear immediate
+### MCLI: Memory clear immediate
 
 |             |                          |
 |-------------|--------------------------|
@@ -807,7 +807,7 @@ Panic if:
 - `imm > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMCP: Memory copy
+### MCP: Memory copy
 
 |             |                                      |
 |-------------|--------------------------------------|
@@ -826,7 +826,7 @@ Panic if:
 - `$rC > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMEQ: Memory equality
+### MEQ: Memory equality
 
 |             |                                             |
 |-------------|---------------------------------------------|
@@ -881,7 +881,7 @@ Panic if:
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract) and [REVERT](#revert-revert).
 
-### BLOCKHASH: Block hash
+### BHSH: Block hash
 
 |             |                                      |
 |-------------|--------------------------------------|
@@ -899,7 +899,7 @@ Panic if:
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
 
-### BLOCKHEIGHT: Block height
+### BHEI: Block height
 
 |             |                            |
 |-------------|----------------------------|
@@ -976,7 +976,7 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### CODECOPY: Code copy
+### CCP: Code copy
 
 |             |                                                                                                                                                  |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -996,7 +996,7 @@ Panic if:
 - `$rD > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### CODEROOT: Code Merkle root
+### CROO: Code Merkle root
 
 |             |                                                                                                                                       |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -1017,7 +1017,7 @@ Panic if:
 
 Code root compuration is defined [here](../protocol/identifiers.md#contract-id).
 
-### CODESIZE: Code size
+### CSIZ: Code size
 
 |             |                                                                                                           |
 |-------------|-----------------------------------------------------------------------------------------------------------|
@@ -1034,7 +1034,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### COINBASE: Block proposer address
+### CB: Block proposer address
 
 |             |                                  |
 |-------------|----------------------------------|
@@ -1050,7 +1050,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 
-### LOADCODE: Load code from an external contract
+### LDC: Load code from an external contract
 
 |             |                                                                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1105,7 +1105,7 @@ For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp, 
 
 This modifies the `balanceRoot` field of the appropriate output.
 
-### REVERT: Revert
+### RVRT: Revert
 
 |             |                                                                       |
 |-------------|-----------------------------------------------------------------------|
@@ -1121,7 +1121,7 @@ After a revert:
 1. All [OutputVariable](../protocol/tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
 1. All [OutputContractConditional](../protocol/tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
 
-### SLOADCODE: Load code from static list
+### SLDC: Load code from static list
 
 |             |                                                                                                                 |
 |-------------|-----------------------------------------------------------------------------------------------------------------|
@@ -1217,7 +1217,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-### TRANSFER: Transfer coins to contract
+### TR: Transfer coins to contract
 
 |             |                                                                        |
 |-------------|------------------------------------------------------------------------|
@@ -1244,7 +1244,7 @@ For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### TRANSFEROUT: Transfer coins to output
+### TRO: Transfer coins to output
 
 |             |                                                                                  |
 |-------------|----------------------------------------------------------------------------------|
@@ -1281,7 +1281,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
-### ECRECOVER: Signature recovery
+### ECR: Signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
@@ -1303,7 +1303,7 @@ Panic if:
 
 To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
-### KECCAK256: keccak-256
+### K256: keccak-256
 
 |             |                                                       |
 |-------------|-------------------------------------------------------|
@@ -1322,7 +1322,7 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 - `$rC > MEM_MAX_ACCESS_SIZE`
 
-### SHA256: SHA-2-256
+### S256: SHA-2-256
 
 |             |                                                      |
 |-------------|------------------------------------------------------|
