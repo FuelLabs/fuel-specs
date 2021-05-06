@@ -677,7 +677,7 @@ Panic if:
 |-------------|--------------------------------------------------------------|
 | Description | Returns from [context](./main.md#contexts) with value `$rA`. |
 | Operation   | ```return($rA);```                                           |
-| Syntax      | `return $rA`                                                 |
+| Syntax      | `ret $rA`                                                    |
 | Encoding    | `0x00 rA - - -`                                              |
 | Notes       |                                                              |
 
@@ -702,7 +702,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |-------------|-------------------------------------------|
 | Description | Allocate a number of bytes from the heap. |
 | Operation   | ```$hp = $hp - $rA;```                    |
-| Syntax      | `malloc $rA`                              |
+| Syntax      | `aloc $rA`                                |
 | Encoding    | `0x00 rA - - -`                           |
 | Notes       | Does not initialize memory.               |
 
@@ -779,7 +779,7 @@ Panic if:
 |-------------|--------------------------|
 | Description | Clear bytes in memory.   |
 | Operation   | ```MEM[$rA, $rB] = 0;``` |
-| Syntax      | `memclear $rA, $rB`      |
+| Syntax      | `mcl $rA, $rB`           |
 | Encoding    | `0x00 rA rB - -`         |
 | Notes       |                          |
 
@@ -796,7 +796,7 @@ Panic if:
 |-------------|--------------------------|
 | Description | Clear bytes in memory.   |
 | Operation   | ```MEM[$rA, imm] = 0;``` |
-| Syntax      | `memcleari $rA, imm`     |
+| Syntax      | `mcli $rA, imm`          |
 | Encoding    | `0x00 rA i i i`          |
 | Notes       |                          |
 
@@ -813,7 +813,7 @@ Panic if:
 |-------------|--------------------------------------|
 | Description | Copy bytes in memory.                |
 | Operation   | ```MEM[$rA, $rC] = MEM[$rB, $rC];``` |
-| Syntax      | `memcp $rA, $rB, $rC`                |
+| Syntax      | `mcp $rA, $rB, $rC`                  |
 | Encoding    | `0x00 rA rB rC -`                    |
 | Notes       |                                      |
 
@@ -832,7 +832,7 @@ Panic if:
 |-------------|---------------------------------------------|
 | Description | Compare bytes in memory.                    |
 | Operation   | ```$rA = MEM[$rB, $rD] == MEM[$rC, $rD];``` |
-| Syntax      | `memeq $rA, $rB, $rC, $rD`                  |
+| Syntax      | `meq $rA, $rB, $rC, $rD`                    |
 | Encoding    | `0x00 rA rB rC rD`                          |
 | Notes       |                                             |
 
@@ -887,7 +887,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |-------------|----------------------------|
 | Description | Get Fuel block height.     |
 | Operation   | ```$rA = blockheight();``` |
-| Syntax      | `blockheight $rA`          |
+| Syntax      | `bhei $rA`                 |
 | Encoding    | `0x00 rA - - -`            |
 | Notes       |                            |
 
@@ -901,7 +901,7 @@ Panic if:
 |-------------|--------------------------------------|
 | Description | Get block header hash.               |
 | Operation   | ```MEM[$rA, 32] = blockhash($rB);``` |
-| Syntax      | `blockhash $rA $rB`                  |
+| Syntax      | `bhsh $rA $rB`                       |
 | Encoding    | `0x00 rA rB - -`                     |
 | Notes       |                                      |
 
@@ -982,7 +982,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 |-------------|----------------------------------|
 | Description | Get block proposer address.      |
 | Operation   | ```MEM[$rA, 32] = coinbase();``` |
-| Syntax      | `coinbase $rA`                   |
+| Syntax      | `cb $rA`                         |
 | Encoding    | `0x00 rA - - -`                  |
 | Notes       |                                  |
 
@@ -998,7 +998,7 @@ Panic if:
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rD` bytes of code starting at `$rC` for contract with ID equal to the 32 bytes in memory starting at `$rB` into memory starting at `$rA`. |
 | Operation   | ```MEM[$rA, $rD] = code($rB, $rC, $rD);```                                                                                                       |
-| Syntax      | `codecopy $rA, $rB, $rC, $rD`                                                                                                                    |
+| Syntax      | `ccp $rA, $rB, $rC, $rD`                                                                                                                         |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                                               |
 | Notes       | If `$rD` is greater than the code size, zero bytes are filled in.                                                                                |
 
@@ -1018,7 +1018,7 @@ Panic if:
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Set the 32 bytes in memory starting at `$rA` to the code root for contract with ID equal to the 32 bytes in memory starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = coderoot(MEM[$rB, 32]);```                                                                                          |
-| Syntax      | `coderoot $rA, $rB`                                                                                                                   |
+| Syntax      | `croo $rA, $rB`                                                                                                                       |
 | Encoding    | `0x00 rA rB - -`                                                                                                                      |
 | Notes       |                                                                                                                                       |
 
@@ -1039,7 +1039,7 @@ Code root compuration is defined [here](../protocol/identifiers.md#contract-id).
 |-------------|-----------------------------------------------------------------------------------------------------------|
 | Description | Set `$rA` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rB`. |
 | Operation   | ```$rA = codesize(MEM[$rB, 32]);```                                                                       |
-| Syntax      | `codesize $rA, $rB`                                                                                       |
+| Syntax      | `csiz $rA, $rB`                                                                                           |
 | Encoding    | `0x00 rA rB - -`                                                                                          |
 | Notes       |                                                                                                           |
 
@@ -1056,7 +1056,7 @@ Panic if:
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rC` bytes of code starting at `$rB` for contract with ID equal to the 32 bytes in memory starting at `$rA` into memory starting at `$ssp`. |
 | Operation   | ```MEM[$ssp, $rC] = code($rA, $rB, $rC);```                                                                                                       |
-| Syntax      | `loadcode $rA, $rB, $rC`                                                                                                                          |
+| Syntax      | `ldc $rA, $rB, $rC`                                                                                                                               |
 | Encoding    | `0x00 rA rB rC -`                                                                                                                                 |
 | Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                                                                 |
 
@@ -1111,7 +1111,7 @@ This modifies the `balanceRoot` field of the appropriate output.
 |-------------|-----------------------------------------------------------------------|
 | Description | Halt execution, reverting state changes and returning value in `$rA`. |
 | Operation   | ```revert($rA);```                                                    |
-| Syntax      | `revert $rA`                                                          |
+| Syntax      | `rvrt $rA`                                                            |
 | Encoding    | `0x00 rA - - -`                                                       |
 | Notes       |                                                                       |
 
@@ -1223,7 +1223,7 @@ Panic if:
 |-------------|------------------------------------------------------------------------|
 | Description | Transfer `$rB` coins with color at `$rC` to contract with ID at `$rA`. |
 | Operation   | ```transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);```                       |
-| Syntax      | `transfer $rA, $rB, $rC`                                               |
+| Syntax      | `tr $rA, $rB, $rC`                                                     |
 | Encoding    | `0x00 rA rB rC -`                                                      |
 | Notes       |                                                                        |
 
@@ -1250,7 +1250,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 |-------------|----------------------------------------------------------------------------------|
 | Description | Transfer `$rC` coins with color at `$rD` to address at `$rA`, with output `$rB`. |
 | Operation   | ```transferout(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                         |
-| Syntax      | `transferout $rA, $rB, $rC, $rD`                                                 |
+| Syntax      | `tro $rA, $rB, $rC, $rD`                                                         |
 | Encoding    | `0x00 rA rB rC rD`                                                               |
 | Notes       |                                                                                  |
 
@@ -1287,7 +1287,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
 | Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
-| Syntax      | `ecrecover $rA, $rB, $rC`                                                                                                   |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
 | Notes       |                                                                                                                             |
 
@@ -1309,7 +1309,7 @@ To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 |-------------|-------------------------------------------------------|
 | Description | The keccak-256 hash of `$rC` bytes starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);```        |
-| Syntax      | `keccak256 $rA, $rB, $rC`                             |
+| Syntax      | `k256 $rA, $rB, $rC`                                  |
 | Encoding    | `0x00 rA rB rC -`                                     |
 | Notes       |                                                       |
 
@@ -1328,7 +1328,7 @@ Panic if:
 |-------------|------------------------------------------------------|
 | Description | The SHA-2-256 hash of `$rC` bytes starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = sha256(MEM[$rB, $rC]);```          |
-| Syntax      | `sha256 $rA, $rB, $rC`                               |
+| Syntax      | `s256 $rA, $rB, $rC`                                 |
 | Encoding    | `0x00 rA rB rC -`                                    |
 | Notes       |                                                      |
 
