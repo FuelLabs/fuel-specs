@@ -63,9 +63,9 @@
   - [REVERT: Revert](#revert-revert)
   - [SLOADCODE: Load code from static list](#sloadcode-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
-  - [SRWX: State read 32 bytes](#srwx-state-read-32-bytes)
+  - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
-  - [SWWX: State write 32 bytes](#swwx-state-write-32-bytes)
+  - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TRANSFER: Transfer coins to contract](#transfer-transfer-coins-to-contract)
   - [TRANSFEROUT: Transfer coins to output](#transferout-transfer-coins-to-output)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
@@ -1146,7 +1146,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-### SRWX: State read 32 bytes
+### SRWQ: State read 32 bytes
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
@@ -1181,7 +1181,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-### SWWX: State write 32 bytes
+### SWWQ: State write 32 bytes
 
 |             |                                                      |
 |-------------|------------------------------------------------------|
