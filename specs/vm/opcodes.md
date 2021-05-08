@@ -12,11 +12,11 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
-  - [MATHLOG: Math logarithm](#mathlog-math-logarithm)
-  - [MATHROOT: Math root](#mathroot-math-root)
+  - [MLOG: Math logarithm](#mlog-math-logarithm)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MOVE: Move](#move-move)
+  - [MROO: Math root](#mroo-math-root)
   - [MUL: Multiply](#mul-multiply)
   - [MULI: Multiply immediate](#muli-multiply-immediate)
   - [NOOP: No operation](#noop-no-operation)
@@ -36,43 +36,43 @@
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
-  - [RETURN: Return from context](#return-return-from-context)
+  - [RET: Return from context](#ret-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
+  - [ALOC: Allocate memory](#aloc-allocate-memory)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
-  - [MALLOC: Allocate memory](#malloc-allocate-memory)
-  - [MEMCLEAR: Memory clear](#memclear-memory-clear)
-  - [MEMCLEARI: Memory clear immediate](#memcleari-memory-clear-immediate)
-  - [MEMCP: Memory copy](#memcp-memory-copy)
-  - [MEMEQ: Memory equality](#memeq-memory-equality)
+  - [MCL: Memory clear](#mcl-memory-clear)
+  - [MCLI: Memory clear immediate](#mcli-memory-clear-immediate)
+  - [MCP: Memory copy](#mcp-memory-copy)
+  - [MEQ: Memory equality](#meq-memory-equality)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
-  - [BLOCKHASH: Block hash](#blockhash-block-hash)
-  - [BLOCKHEIGHT: Block height](#blockheight-block-height)
+  - [BHEI: Block height](#bhei-block-height)
+  - [BHSH: Block hash](#bhsh-block-hash)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
-  - [CODECOPY: Code copy](#codecopy-code-copy)
-  - [CODEROOT: Code Merkle root](#coderoot-code-merkle-root)
-  - [CODESIZE: Code size](#codesize-code-size)
-  - [COINBASE: Block proposer address](#coinbase-block-proposer-address)
-  - [LOADCODE: Load code from an external contract](#loadcode-load-code-from-an-external-contract)
+  - [CB: Block proposer address](#cb-block-proposer-address)
+  - [CCP: Code copy](#ccp-code-copy)
+  - [CROO: Code Merkle root](#croo-code-merkle-root)
+  - [CSIZ: Code size](#csiz-code-size)
+  - [LDC: Load code from an external contract](#ldc-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
   - [MINT: Mint new coins](#mint-mint-new-coins)
-  - [REVERT: Revert](#revert-revert)
-  - [SLOADCODE: Load code from static list](#sloadcode-load-code-from-static-list)
+  - [RVRT: Revert](#rvrt-revert)
+  - [SLDC: Load code from static list](#sldc-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
-  - [TRANSFER: Transfer coins to contract](#transfer-transfer-coins-to-contract)
-  - [TRANSFEROUT: Transfer coins to output](#transferout-transfer-coins-to-output)
+  - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
+  - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
-  - [ECRECOVER: Signature recovery](#ecrecover-signature-recovery)
-  - [KECCAK256: keccak-256](#keccak256-keccak-256)
-  - [SHA256: SHA-2-256](#sha256-sha-2-256)
+  - [ECR: Signature recovery](#ecr-signature-recovery)
+  - [K256: keccak-256](#k256-keccak-256)
+  - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Opcodes](#other-opcodes)
   - [FLAG: Set flags](#flag-set-flags)
 
@@ -273,13 +273,13 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### MATHLOG: Math logarithm
+### MLOG: Math logarithm
 
 |             |                                              |
 |-------------|----------------------------------------------|
 | Description | The (integer) logarithm base `$rC` of `$rB`. |
 | Operation   | ```$rA = math.floor(math.log($rB, $rC));```  |
-| Syntax      | `mathlog $rA, $rB, $rC`                      |
+| Syntax      | `mlog $rA, $rB, $rC`                         |
 | Encoding    | `0x00 rA rB rC -`                            |
 | Notes       |                                              |
 
@@ -290,24 +290,6 @@ Panic if:
 If `$rB == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 If `$rC <= 1`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
-
-Otherwise, `$of` and `$err` are cleared.
-
-### MATHROOT: Math root
-
-|             |                                              |
-|-------------|----------------------------------------------|
-| Description | The (integer) `$rC`th root of `$rB`.         |
-| Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
-| Syntax      | `mathroot $rA, $rB, $rC`                     |
-| Encoding    | `0x00 rA rB rC -`                            |
-| Notes       |                                              |
-
-Panic if:
-
-- `$rA` is a [reserved register](./main.md#semantics)
-
-If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
@@ -362,6 +344,24 @@ Panic if:
 - `$rA` is a [reserved register](./main.md#semantics)
 
 `$of` and `$err` are cleared.
+
+### MROO: Math root
+
+|             |                                              |
+|-------------|----------------------------------------------|
+| Description | The (integer) `$rC`th root of `$rB`.         |
+| Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
+| Syntax      | `mroo $rA, $rB, $rC`                         |
+| Encoding    | `0x00 rA rB rC -`                            |
+| Notes       |                                              |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
+If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
+
+Otherwise, `$of` and `$err` are cleared.
 
 ### MUL: Multiply
 
@@ -671,13 +671,13 @@ Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`
 
-### RETURN: Return from context
+### RET: Return from context
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
 | Description | Returns from [context](./main.md#contexts) with value `$rA`. |
 | Operation   | ```return($rA);```                                           |
-| Syntax      | `return $rA`                                                 |
+| Syntax      | `ret $rA`                                                    |
 | Encoding    | `0x00 rA - - -`                                              |
 | Notes       |                                                              |
 
@@ -695,6 +695,21 @@ Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Af
 ## Memory Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
+### ALOC: Allocate memory
+
+|             |                                           |
+|-------------|-------------------------------------------|
+| Description | Allocate a number of bytes from the heap. |
+| Operation   | ```$hp = $hp - $rA;```                    |
+| Syntax      | `aloc $rA`                                |
+| Encoding    | `0x00 rA - - -`                           |
+| Notes       | Does not initialize memory.               |
+
+Panic if:
+
+- `$hp - $rA` underflows
+- `$hp - $rA < $sp`
 
 ### CFEI: Extend call frame immediate
 
@@ -758,28 +773,13 @@ Panic if:
 - `$rB + imm + 8` overflows
 - `$rB + imm + 8 > VM_MAX_RAM`
 
-### MALLOC: Allocate memory
-
-|             |                                           |
-|-------------|-------------------------------------------|
-| Description | Allocate a number of bytes from the heap. |
-| Operation   | ```$hp = $hp - $rA;```                    |
-| Syntax      | `malloc $rA`                              |
-| Encoding    | `0x00 rA - - -`                           |
-| Notes       | Does not initialize memory.               |
-
-Panic if:
-
-- `$hp - $rA` underflows
-- `$hp - $rA < $sp`
-
-### MEMCLEAR: Memory clear
+### MCL: Memory clear
 
 |             |                          |
 |-------------|--------------------------|
 | Description | Clear bytes in memory.   |
 | Operation   | ```MEM[$rA, $rB] = 0;``` |
-| Syntax      | `memclear $rA, $rB`      |
+| Syntax      | `mcl $rA, $rB`           |
 | Encoding    | `0x00 rA rB - -`         |
 | Notes       |                          |
 
@@ -790,13 +790,13 @@ Panic if:
 - `$rB > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMCLEARI: Memory clear immediate
+### MCLI: Memory clear immediate
 
 |             |                          |
 |-------------|--------------------------|
 | Description | Clear bytes in memory.   |
 | Operation   | ```MEM[$rA, imm] = 0;``` |
-| Syntax      | `memcleari $rA, imm`     |
+| Syntax      | `mcli $rA, imm`          |
 | Encoding    | `0x00 rA i i i`          |
 | Notes       |                          |
 
@@ -807,13 +807,13 @@ Panic if:
 - `imm > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMCP: Memory copy
+### MCP: Memory copy
 
 |             |                                      |
 |-------------|--------------------------------------|
 | Description | Copy bytes in memory.                |
 | Operation   | ```MEM[$rA, $rC] = MEM[$rB, $rC];``` |
-| Syntax      | `memcp $rA, $rB, $rC`                |
+| Syntax      | `mcp $rA, $rB, $rC`                  |
 | Encoding    | `0x00 rA rB rC -`                    |
 | Notes       |                                      |
 
@@ -826,13 +826,13 @@ Panic if:
 - `$rC > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./main.md#ownership)
 
-### MEMEQ: Memory equality
+### MEQ: Memory equality
 
 |             |                                             |
 |-------------|---------------------------------------------|
 | Description | Compare bytes in memory.                    |
 | Operation   | ```$rA = MEM[$rB, $rD] == MEM[$rC, $rD];``` |
-| Syntax      | `memeq $rA, $rB, $rC, $rD`                  |
+| Syntax      | `meq $rA, $rB, $rC, $rD`                    |
 | Encoding    | `0x00 rA rB rC rD`                          |
 | Notes       |                                             |
 
@@ -881,13 +881,27 @@ Panic if:
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract) and [REVERT](#revert-revert).
 
-### BLOCKHASH: Block hash
+### BHEI: Block height
+
+|             |                            |
+|-------------|----------------------------|
+| Description | Get Fuel block height.     |
+| Operation   | ```$rA = blockheight();``` |
+| Syntax      | `bhei $rA`                 |
+| Encoding    | `0x00 rA - - -`            |
+| Notes       |                            |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
+### BHSH: Block hash
 
 |             |                                      |
 |-------------|--------------------------------------|
 | Description | Get block header hash.               |
 | Operation   | ```MEM[$rA, 32] = blockhash($rB);``` |
-| Syntax      | `blockhash $rA $rB`                  |
+| Syntax      | `bhsh $rA $rB`                       |
 | Encoding    | `0x00 rA rB - -`                     |
 | Notes       |                                      |
 
@@ -898,20 +912,6 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
-
-### BLOCKHEIGHT: Block height
-
-|             |                            |
-|-------------|----------------------------|
-| Description | Get Fuel block height.     |
-| Operation   | ```$rA = blockheight();``` |
-| Syntax      | `blockheight $rA`          |
-| Encoding    | `0x00 rA - - -`            |
-| Notes       |                            |
-
-Panic if:
-
-- `$rA` is a [reserved register](./main.md#semantics)
 
 ### BURN: Burn existing coins
 
@@ -976,13 +976,29 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### CODECOPY: Code copy
+### CB: Block proposer address
+
+|             |                                  |
+|-------------|----------------------------------|
+| Description | Get block proposer address.      |
+| Operation   | ```MEM[$rA, 32] = coinbase();``` |
+| Syntax      | `cb $rA`                         |
+| Encoding    | `0x00 rA - - -`                  |
+| Notes       |                                  |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+
+### CCP: Code copy
 
 |             |                                                                                                                                                  |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rD` bytes of code starting at `$rC` for contract with ID equal to the 32 bytes in memory starting at `$rB` into memory starting at `$rA`. |
 | Operation   | ```MEM[$rA, $rD] = code($rB, $rC, $rD);```                                                                                                       |
-| Syntax      | `codecopy $rA, $rB, $rC, $rD`                                                                                                                    |
+| Syntax      | `ccp $rA, $rB, $rC, $rD`                                                                                                                         |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                                               |
 | Notes       | If `$rD` is greater than the code size, zero bytes are filled in.                                                                                |
 
@@ -996,13 +1012,13 @@ Panic if:
 - `$rD > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### CODEROOT: Code Merkle root
+### CROO: Code Merkle root
 
 |             |                                                                                                                                       |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Set the 32 bytes in memory starting at `$rA` to the code root for contract with ID equal to the 32 bytes in memory starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = coderoot(MEM[$rB, 32]);```                                                                                          |
-| Syntax      | `coderoot $rA, $rB`                                                                                                                   |
+| Syntax      | `croo $rA, $rB`                                                                                                                       |
 | Encoding    | `0x00 rA rB - -`                                                                                                                      |
 | Notes       |                                                                                                                                       |
 
@@ -1017,13 +1033,13 @@ Panic if:
 
 Code root compuration is defined [here](../protocol/identifiers.md#contract-id).
 
-### CODESIZE: Code size
+### CSIZ: Code size
 
 |             |                                                                                                           |
 |-------------|-----------------------------------------------------------------------------------------------------------|
 | Description | Set `$rA` to the size of the code for contract with ID equal to the 32 bytes in memory starting at `$rB`. |
 | Operation   | ```$rA = codesize(MEM[$rB, 32]);```                                                                       |
-| Syntax      | `codesize $rA, $rB`                                                                                       |
+| Syntax      | `csiz $rA, $rB`                                                                                           |
 | Encoding    | `0x00 rA rB - -`                                                                                          |
 | Notes       |                                                                                                           |
 
@@ -1034,29 +1050,13 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### COINBASE: Block proposer address
-
-|             |                                  |
-|-------------|----------------------------------|
-| Description | Get block proposer address.      |
-| Operation   | ```MEM[$rA, 32] = coinbase();``` |
-| Syntax      | `coinbase $rA`                   |
-| Encoding    | `0x00 rA - - -`                  |
-| Notes       |                                  |
-
-Panic if:
-
-- `$rA + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
-
-### LOADCODE: Load code from an external contract
+### LDC: Load code from an external contract
 
 |             |                                                                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Copy `$rC` bytes of code starting at `$rB` for contract with ID equal to the 32 bytes in memory starting at `$rA` into memory starting at `$ssp`. |
 | Operation   | ```MEM[$ssp, $rC] = code($rA, $rB, $rC);```                                                                                                       |
-| Syntax      | `loadcode $rA, $rB, $rC`                                                                                                                          |
+| Syntax      | `ldc $rA, $rB, $rC`                                                                                                                               |
 | Encoding    | `0x00 rA rB rC -`                                                                                                                                 |
 | Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                                                                 |
 
@@ -1105,13 +1105,13 @@ For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp, 
 
 This modifies the `balanceRoot` field of the appropriate output.
 
-### REVERT: Revert
+### RVRT: Revert
 
 |             |                                                                       |
 |-------------|-----------------------------------------------------------------------|
 | Description | Halt execution, reverting state changes and returning value in `$rA`. |
 | Operation   | ```revert($rA);```                                                    |
-| Syntax      | `revert $rA`                                                          |
+| Syntax      | `rvrt $rA`                                                            |
 | Encoding    | `0x00 rA - - -`                                                       |
 | Notes       |                                                                       |
 
@@ -1121,7 +1121,7 @@ After a revert:
 1. All [OutputVariable](../protocol/tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
 1. All [OutputContractConditional](../protocol/tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
 
-### SLOADCODE: Load code from static list
+### SLDC: Load code from static list
 
 |             |                                                                                                                 |
 |-------------|-----------------------------------------------------------------------------------------------------------------|
@@ -1217,13 +1217,13 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-### TRANSFER: Transfer coins to contract
+### TR: Transfer coins to contract
 
 |             |                                                                        |
 |-------------|------------------------------------------------------------------------|
 | Description | Transfer `$rB` coins with color at `$rC` to contract with ID at `$rA`. |
 | Operation   | ```transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);```                       |
-| Syntax      | `transfer $rA, $rB, $rC`                                               |
+| Syntax      | `tr $rA, $rB, $rC`                                                     |
 | Encoding    | `0x00 rA rB rC -`                                                      |
 | Notes       |                                                                        |
 
@@ -1244,13 +1244,13 @@ For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### TRANSFEROUT: Transfer coins to output
+### TRO: Transfer coins to output
 
 |             |                                                                                  |
 |-------------|----------------------------------------------------------------------------------|
 | Description | Transfer `$rC` coins with color at `$rD` to address at `$rA`, with output `$rB`. |
 | Operation   | ```transferout(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                         |
-| Syntax      | `transferout $rA, $rB, $rC, $rD`                                                 |
+| Syntax      | `tro $rA, $rB, $rC, $rD`                                                         |
 | Encoding    | `0x00 rA rB rC rD`                                                               |
 | Notes       |                                                                                  |
 
@@ -1281,13 +1281,13 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation.
 
-### ECRECOVER: Signature recovery
+### ECR: Signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
 | Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
-| Syntax      | `ecrecover $rA, $rB, $rC`                                                                                                   |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
 | Notes       |                                                                                                                             |
 
@@ -1303,13 +1303,13 @@ Panic if:
 
 To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
-### KECCAK256: keccak-256
+### K256: keccak-256
 
 |             |                                                       |
 |-------------|-------------------------------------------------------|
 | Description | The keccak-256 hash of `$rC` bytes starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);```        |
-| Syntax      | `keccak256 $rA, $rB, $rC`                             |
+| Syntax      | `k256 $rA, $rB, $rC`                                  |
 | Encoding    | `0x00 rA rB rC -`                                     |
 | Notes       |                                                       |
 
@@ -1322,13 +1322,13 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 - `$rC > MEM_MAX_ACCESS_SIZE`
 
-### SHA256: SHA-2-256
+### S256: SHA-2-256
 
 |             |                                                      |
 |-------------|------------------------------------------------------|
 | Description | The SHA-2-256 hash of `$rC` bytes starting at `$rB`. |
 | Operation   | ```MEM[$rA, 32] = sha256(MEM[$rB, $rC]);```          |
-| Syntax      | `sha256 $rA, $rB, $rC`                               |
+| Syntax      | `s256 $rA, $rB, $rC`                                 |
 | Encoding    | `0x00 rA rB rC -`                                    |
 | Notes       |                                                      |
 
