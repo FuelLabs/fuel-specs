@@ -824,6 +824,7 @@ Panic if:
 - `$rA + $rC > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
 - `$rC > MEM_MAX_ACCESS_SIZE`
+- The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./main.md#ownership)
 
 ### MEQ: Memory equality
