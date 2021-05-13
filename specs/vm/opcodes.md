@@ -616,7 +616,7 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
-- `$rC > tx.input[$rs].maturity`
+- `$rC > tx.input[$rB].maturity`
 - the input `$rB` is not of type [`InputType.Coin`](../protocol/tx_format.md)
 - `$rB > tx.inputsCount`
 
@@ -1250,7 +1250,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 |             |                                                                                  |
 |-------------|----------------------------------------------------------------------------------|
 | Description | Transfer `$rC` coins with color at `$rD` to address at `$rA`, with output `$rB`. |
-| Operation   | ```transferout(MEM[$rd, 32], $rs, $rt, MEM[$ru, 32]);```                         |
+| Operation   | ```transferout(MEM[$rA, 32], $rB, $rC, MEM[$rD, 32]);```                         |
 | Syntax      | `tro $rA, $rB, $rC, $rD`                                                         |
 | Encoding    | `0x00 rA rB rC rD`                                                               |
 | Notes       |                                                                                  |
