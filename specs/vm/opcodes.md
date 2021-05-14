@@ -1300,9 +1300,11 @@ Panic if:
 - `$rA + 64 > VM_MAX_RAM`
 - `$rB + 64 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 64]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 64]` does not pass [ownership check](./main.md#ownership)
 
-To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
+If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
+
+To get the address from the public key, hash the public key with [SHA-2-256](#sha256-sha-2-256).
 
 ### K256: keccak-256
 
