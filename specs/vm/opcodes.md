@@ -69,16 +69,17 @@
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
+- [Cryptographic Opcodes](#cryptographic-opcodes)
+  - [ECR: Signature recovery](#ecr-signature-recovery)
+  - [K256: keccak-256](#k256-keccak-256)
+  - [S256: SHA-2-256](#s256-sha-2-256)
+- [Transaction Access Opcodes](#transaction-access-opcodes)
   - [XIL: Transaction input length](#xil-transaction-input-length)
   - [XIS: Transaction input start](#xis-transaction-input-start)
   - [XOL: Transaction input length](#xol-transaction-input-length)
   - [XOS: Transaction output start](#xos-transaction-output-start)
   - [XWL: Transaction witness length](#xwl-transaction-witness-length)
   - [XWS: Transaction witness start](#xws-transaction-witness-start)
-- [Cryptographic Opcodes](#cryptographic-opcodes)
-  - [ECR: Signature recovery](#ecr-signature-recovery)
-  - [K256: keccak-256](#k256-keccak-256)
-  - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Opcodes](#other-opcodes)
   - [FLAG: Set flags](#flag-set-flags)
 
@@ -1284,6 +1285,74 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
+## Cryptographic Opcodes
+
+All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
+### ECR: Signature recovery
+
+|             |                                                                                                                             |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
+| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+Panic if:
+
+- `$rA + 64` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 64 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 64]`  does not pass [ownership check](./main.md#ownership)
+
+To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
+
+### K256: keccak-256
+
+|             |                                                       |
+|-------------|-------------------------------------------------------|
+| Description | The keccak-256 hash of `$rC` bytes starting at `$rB`. |
+| Operation   | ```MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);```        |
+| Syntax      | `k256 $rA, $rB, $rC`                                  |
+| Encoding    | `0x00 rA rB rC -`                                     |
+| Notes       |                                                       |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rB + $rC` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB + $rC > VM_MAX_RAM`
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- `$rC > MEM_MAX_ACCESS_SIZE`
+
+### S256: SHA-2-256
+
+|             |                                                      |
+|-------------|------------------------------------------------------|
+| Description | The SHA-2-256 hash of `$rC` bytes starting at `$rB`. |
+| Operation   | ```MEM[$rA, 32] = sha256(MEM[$rB, $rC]);```          |
+| Syntax      | `s256 $rA, $rB, $rC`                                 |
+| Encoding    | `0x00 rA rB rC -`                                    |
+| Notes       |                                                      |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rB + $rC` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB + $rC > VM_MAX_RAM`
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- `$rC > MEM_MAX_ACCESS_SIZE`
+
+## Transaction Access Opcodes
+
+All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+
 ### XIL: Transaction input length
 
 |             |                                                                                       |
@@ -1371,70 +1440,6 @@ Panic if:
 - `$rB >= tx.witnessesCount`
 
 Note that the returned memory address includes the [_entire_ witness](../protocol/tx_format.md), not just of the witness's `data` field.
-
-## Cryptographic Opcodes
-
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
-
-### ECR: Signature recovery
-
-|             |                                                                                                                             |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
-| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
-| Encoding    | `0x00 rA rB rC -`                                                                                                           |
-| Notes       |                                                                                                                             |
-
-Panic if:
-
-- `$rA + 64` overflows
-- `$rB + 64` overflows
-- `$rC + 32` overflows
-- `$rA + 64 > VM_MAX_RAM`
-- `$rB + 64 > VM_MAX_RAM`
-- `$rC + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 64]`  does not pass [ownership check](./main.md#ownership)
-
-To get the address, hash the public key with [SHA-2-256](#sha256-sha-2-256).
-
-### K256: keccak-256
-
-|             |                                                       |
-|-------------|-------------------------------------------------------|
-| Description | The keccak-256 hash of `$rC` bytes starting at `$rB`. |
-| Operation   | ```MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);```        |
-| Syntax      | `k256 $rA, $rB, $rC`                                  |
-| Encoding    | `0x00 rA rB rC -`                                     |
-| Notes       |                                                       |
-
-Panic if:
-
-- `$rA + 32` overflows
-- `$rB + $rC` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
-- `$rC > MEM_MAX_ACCESS_SIZE`
-
-### S256: SHA-2-256
-
-|             |                                                      |
-|-------------|------------------------------------------------------|
-| Description | The SHA-2-256 hash of `$rC` bytes starting at `$rB`. |
-| Operation   | ```MEM[$rA, 32] = sha256(MEM[$rB, $rC]);```          |
-| Syntax      | `s256 $rA, $rB, $rC`                                 |
-| Encoding    | `0x00 rA rB rC -`                                    |
-| Notes       |                                                      |
-
-Panic if:
-
-- `$rA + 32` overflows
-- `$rB + $rC` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
-- `$rC > MEM_MAX_ACCESS_SIZE`
 
 ## Other Opcodes
 
