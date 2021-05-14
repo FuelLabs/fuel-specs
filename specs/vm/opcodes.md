@@ -69,6 +69,12 @@
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
+  - [XIL: Transaction input length](#xil-transaction-input-length)
+  - [XIS: Transaction input start](#xis-transaction-input-start)
+  - [XOL: Transaction input length](#xol-transaction-input-length)
+  - [XOS: Transaction output start](#xos-transaction-output-start)
+  - [XWL: Transaction witness length](#xwl-transaction-witness-length)
+  - [XWS: Transaction witness start](#xws-transaction-witness-start)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
   - [ECR: Signature recovery](#ecr-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
@@ -1277,6 +1283,94 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].color = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
+
+### XIL: Transaction input length
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the length in bytes of [the `$rB`th input](./main.md#vm-initialization). |
+| Operation   | ```$rA = xil($rB);```                                                                 |
+| Syntax      | `xil $rA, $rB`                                                                        |
+| Encoding    | `0x00 rA rB - -`                                                                      |
+| Notes       |                                                                                       |
+
+Panic if:
+
+- `$rB >= tx.inputsCount`
+
+### XIS: Transaction input start
+
+|             |                                                                                                  |
+|-------------|--------------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the memory addess of the start of [the `$rB`th input](./main.md#vm-initialization). |
+| Operation   | ```$rA = xis($rB);```                                                                            |
+| Syntax      | `xis $rA, $rB`                                                                                   |
+| Encoding    | `0x00 rA rB - -`                                                                                 |
+| Notes       |                                                                                                  |
+
+Panic if:
+
+- `$rB >= tx.inputsCount`
+
+### XOL: Transaction input length
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the length in bytes of [the `$rB`th output](./main.md#vm-initialization). |
+| Operation   | ```$rA = xol($rB);```                                                                  |
+| Syntax      | `xol $rA, $rB`                                                                         |
+| Encoding    | `0x00 rA rB - -`                                                                       |
+| Notes       |                                                                                        |
+
+Panic if:
+
+- `$rB >= tx.outputsCount`
+
+### XOS: Transaction output start
+
+|             |                                                                                                   |
+|-------------|---------------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the memory addess of the start of [the `$rB`th output](./main.md#vm-initialization). |
+| Operation   | ```$rA = xos($rB);```                                                                             |
+| Syntax      | `xos $rA, $rB`                                                                                    |
+| Encoding    | `0x00 rA rB - -`                                                                                  |
+| Notes       |                                                                                                   |
+
+Panic if:
+
+- `$rB >= tx.outputsCount`
+
+### XWL: Transaction witness length
+
+|             |                                                                                         |
+|-------------|-----------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the length in bytes of [the `$rB`th witness](./main.md#vm-initialization). |
+| Operation   | ```$rA = xwl($rB);```                                                                   |
+| Syntax      | `xwl $rA, $rB`                                                                          |
+| Encoding    | `0x00 rA rB - -`                                                                        |
+| Notes       |                                                                                         |
+
+Panic if:
+
+- `$rB >= tx.witnessesCount`
+
+Note that the returned length includes the [_entire_ witness](../protocol/tx_format.md), not just of the witness's `data` field.
+
+### XWS: Transaction witness start
+
+|             |                                                                                                    |
+|-------------|----------------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the memory addess of the start of [the `$rB`th witness](./main.md#vm-initialization). |
+| Operation   | ```$rA = xws($rB);```                                                                              |
+| Syntax      | `xws $rA, $rB`                                                                                     |
+| Encoding    | `0x00 rA rB - -`                                                                                   |
+| Notes       |                                                                                                    |
+
+Panic if:
+
+- `$rB >= tx.witnessesCount`
+
+Note that the returned memory address includes the [_entire_ witness](../protocol/tx_format.md), not just of the witness's `data` field.
 
 ## Cryptographic Opcodes
 
