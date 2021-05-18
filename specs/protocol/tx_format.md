@@ -28,7 +28,7 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
-| `MAX_STATIC_CONTRACTS`      | `uint64` | `256` | Maximum number of static contracts.           |
+| `MAX_STATIC_CONTRACTS`      | `uint64` | `255` | Maximum number of static contracts.           |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
 ## Transaction
