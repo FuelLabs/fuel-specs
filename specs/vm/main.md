@@ -109,7 +109,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
 
 1. Any [contract opcode](./opcodes.md#contract-opcodes).
-1. [JI](./opcodes.md#ji-jump-immediate) or [JNZI](./opcodes.md#jnzi-jump-if-not-zero-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
+1. [JI](./opcodes.md#ji-jump-immediate) or [JNEI](./opcodes.md#jnei-jump-if-not-equal-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
