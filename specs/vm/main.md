@@ -100,11 +100,11 @@ There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [sc
 
 ## Predicate Verification
 
-Any input of type [`InputType.Coin`](../protocol/tx_format.md), a non-zero `dataLength` (and `data`) field means the UTXO being spent is a a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../protocol/tx_format.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
-1. `$pc`  and `$is` are set to the start of the input's `data` field.
+1. `$pc`  and `$is` are set to the start of the input's `predicate` field.
 
 During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
 
