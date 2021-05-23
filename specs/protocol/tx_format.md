@@ -180,7 +180,7 @@ Transaction is invalid if:
 
 Note: when signing a transaction, `utxoID`, `balanceRoot`, and `stateRoot` are set to zero.
 
-Note: when verifying a predicate, `utxoID`, `balanceRoot`, and `stateRoot` is initialized to zero.
+Note: when verifying a predicate, `utxoID`, `balanceRoot`, and `stateRoot` are initialized to zero.
 
 Note: when executing a script, `utxoID`, `balanceRoot`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contractID`.
 
