@@ -933,7 +933,7 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 Panic if:
 
-- Balance of color `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
+- Balance of color `MEM[$fp + 32, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
 - `$fp == 0` (in the script context)
 
 For output with contract ID `MEM[$fp, 32]`, decrease balance of color `MEM[$fp, 32]` by `$rA`.
