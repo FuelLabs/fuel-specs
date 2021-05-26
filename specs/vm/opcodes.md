@@ -936,7 +936,7 @@ Panic if:
 - Balance of color `MEM[$fp + 32, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
 - `$fp == 0` (in the script context)
 
-For output with contract ID `MEM[$fp, 32]`, decrease balance of color `MEM[$fp, 32]` by `$rA`.
+For output with contract ID `MEM[$fp, 32]`, decrease balance of color `MEM[$fp + 32, 32]` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
 
@@ -1106,10 +1106,10 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 
 Panic if:
 
-- Balance of color `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
+- Balance of color `MEM[$fp + 32, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
 
-For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp, 32]` by `$rA`.
+For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp + 32, 32]` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
 
