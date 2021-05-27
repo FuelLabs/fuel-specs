@@ -1126,7 +1126,7 @@ This modifies the `balanceRoot` field of the appropriate output.
 After a revert:
 
 1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx_format.md outputs#outputvariable) outputs will have `to` and `amount` of zero.
+1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to` and `amount` of zero.
 1. All [OutputContractConditional](../protocol/tx_format.md#outputcontractconditional) outputs will have `contractID`, `amount`, and `stateRoot` of zero.
 
 ### SLDC: Load code from static list
