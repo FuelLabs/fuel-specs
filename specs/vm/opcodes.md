@@ -769,7 +769,7 @@ Panic if:
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
 | Description | A word is loaded from the specified address offset by `imm`. |
-| Operation   | ```$rA = MEM[$rB + imm, 8];```                               |
+| Operation   | ```$rA = MEM[$rB + (imm * 8), 8];```                         |
 | Syntax      | `lw $rA, $rB, imm`                                           |
 | Encoding    | `0x00 rA rB i i`                                             |
 | Notes       |                                                              |
@@ -777,8 +777,8 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
-- `$rB + imm + 8` overflows
-- `$rB + imm + 8 > VM_MAX_RAM`
+- `$rB + (imm * 8) + 8` overflows
+- `$rB + (imm * 8) + 8 > VM_MAX_RAM`
 
 ### MCL: Memory clear
 
@@ -874,16 +874,16 @@ Panic if:
 |             |                                                                    |
 |-------------|--------------------------------------------------------------------|
 | Description | The value of `$rB` is stored at the address `$rA` offset by `imm`. |
-| Operation   | ```MEM[$rA + imm, 8] = $rB;```                                     |
+| Operation   | ```MEM[$rA + (imm * 8), 8] = $rB;```                               |
 | Syntax      | `sw $rA, $rB, imm`                                                 |
 | Encoding    | `0x00 rA rB i i`                                                   |
 | Notes       |                                                                    |
 
 Panic if:
 
-- `$rA + imm + 8` overflows
-- `$rA + imm + 8 > VM_MAX_RAM`
-- The memory range `MEM[$rA + imm, 8]`  does not pass [ownership check](./main.md#ownership)
+- `$rA + (imm * 8) + 8` overflows
+- `$rA + (imm * 8) + 8 > VM_MAX_RAM`
+- The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./main.md#ownership)
 
 ## Contract Opcodes
 
