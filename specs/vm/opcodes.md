@@ -1193,19 +1193,21 @@ Panic if:
 
 ### SWW: State write word
 
-|             |                                                    |
-|-------------|----------------------------------------------------|
-| Description | A word is written to the current contract's state. |
-| Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rB;```             |
-| Syntax      | `sww $rA $rB`                                      |
-| Encoding    | `0x00 rA rB - -`                                   |
-| Notes       |                                                    |
+|             |                                                                                 |
+|-------------|---------------------------------------------------------------------------------|
+| Description | A word is written to the current contract's state.                              |
+| Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rB;```<br>```STATE[MEM[$rA, 32]][8, 24] = 0;``` |
+| Syntax      | `sww $rA $rB`                                                                   |
+| Encoding    | `0x00 rA rB - -`                                                                |
+| Notes       |                                                                                 |
 
 Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
+
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`.
 
 ### SWWQ: State write 32 bytes
 
