@@ -63,6 +63,7 @@
   - [LOG: Log event](#log-log-event)
   - [LOGD: Log data event](#logd-log-data-event)
   - [MINT: Mint new coins](#mint-mint-new-coins)
+  - [RETD: Return from context with data](#retd-return-from-context-with-data)
   - [RVRT: Revert](#rvrt-revert)
   - [SLDC: Load code from static list](#sldc-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
@@ -1142,6 +1143,33 @@ Panic if:
 For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp + 32, 32]` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
+
+### RETD: Return from context with data
+
+|             |                                                                        |
+|-------------|------------------------------------------------------------------------|
+| Description | Returns from [context](./main.md#contexts) with value `MEM[$rA, $rB]`. |
+| Operation   | ```returndata($rA, $rB);```                                            |
+| Syntax      | `retd $rA, $rB`                                                        |
+| Encoding    | `0x00 rA rB - -`                                                       |
+| Notes       |                                                                        |
+
+Panic if:
+
+- `$rA + $rB` overflows
+- `$rA + $rB > VM_MAX_RAM`
+- `$rB > MEM_MAX_ACCESS_SIZE`
+
+If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
+
+Returns from contract call, popping the call frame. Before popping:
+
+1. Return the unused forwarded gas to the caller:
+    - `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+
+Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
+
+1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ### RVRT: Revert
 
