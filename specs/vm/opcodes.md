@@ -12,6 +12,7 @@
   - [EXP: Exponentiate](#exp-exponentiate)
   - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
   - [GT: Greater than](#gt-greater-than)
+  - [LT: Less than](#lt-less-than)
   - [MLOG: Math logarithm](#mlog-math-logarithm)
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
@@ -60,6 +61,7 @@
   - [CSIZ: Code size](#csiz-code-size)
   - [LDC: Load code from an external contract](#ldc-load-code-from-an-external-contract)
   - [LOG: Log event](#log-log-event)
+  - [LOGD: Log data event](#logd-log-data-event)
   - [MINT: Mint new coins](#mint-mint-new-coins)
   - [RVRT: Revert](#rvrt-revert)
   - [SLDC: Load code from static list](#sldc-load-code-from-static-list)
@@ -273,6 +275,22 @@ If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise `$of` is cle
 | Syntax      | `gt $rA, $rB, $rC`                       |
 | Encoding    | `0x00 rA rB rC -`                        |
 | Notes       |                                          |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
+`$of` and `$err` are cleared.
+
+### LT: Less than
+
+|             |                                       |
+|-------------|---------------------------------------|
+| Description | Compares two registers for less-than. |
+| Operation   | ```$rA = $rB < $rC;```                |
+| Syntax      | `lt $rA, $rB, $rC`                    |
+| Encoding    | `0x00 rA rB rC -`                     |
+| Notes       |                                       |
 
 Panic if:
 
@@ -1093,6 +1111,18 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 | Syntax      | `log $rA, $rB, $rC, $rD`       |
 | Encoding    | `0x00 rA rB rC rD`             |
 | Notes       |                                |
+
+### LOGD: Log data event
+
+|             |                                 |
+|-------------|---------------------------------|
+| Description | Log an event. This is a no-op.  |
+| Operation   | ```logd($rA, $rB, $rC, $rD);``` |
+| Syntax      | `logd $rA, $rB, $rC, $rD`       |
+| Encoding    | `0x00 rA rB rC rD`              |
+| Notes       |                                 |
+
+Logs the memory range `MEM[$rC, $rD]`.
 
 ### MINT: Mint new coins
 
