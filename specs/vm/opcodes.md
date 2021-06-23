@@ -977,7 +977,7 @@ Panic if:
 - Reading past `MEM[VM_MAX_RAM - 1]`
 - Any output range does not pass [ownership check](./main.md#ownership)
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
-- In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$rA, 32]`
+- In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
 
