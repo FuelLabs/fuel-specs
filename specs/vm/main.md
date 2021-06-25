@@ -91,7 +91,7 @@ Then the following registers are initialized (without explicit initialization, a
 
 ## Contexts
 
-There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./opcodes.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal:
+There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./opcodes.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
 
 - External: predicate and script. `$fp` will be zero.
 - Internal: call. `$fp` will be non-zero.
