@@ -906,7 +906,7 @@ Panic if:
 
 ## Contract Opcodes
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract) and [REVERT](#revert-revert).
+All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [RETD](#retd-return-from-context-with-data) and [RVRT](#rvrt-revert).
 
 ### BHEI: Block height
 
