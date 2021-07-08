@@ -717,6 +717,8 @@ Returns from contract call, popping the call frame. Before popping:
 Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
+1. `$ret = $rA`
+1. `$retl = 0`
 
 ## Memory Opcodes
 
@@ -1164,9 +1166,11 @@ Returns from contract call, popping the call frame. Before popping:
 1. Return the unused forwarded gas to the caller:
     - `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
 
-Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
+Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
+1. `$ret = $rA`
+1. `$retl = $rB`
 
 ### RVRT: Revert
 

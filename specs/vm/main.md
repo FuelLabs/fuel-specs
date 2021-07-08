@@ -48,8 +48,8 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                 |
 | `0x0B` | `$bal`   | balance             | Received balance for this context.                                            |
 | `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                         |
-| `0x0D` |          |                     |                                                                               |
-| `0x0E` |          |                     |                                                                               |
+| `0x0D` | `$ret`   | return value        | Return value or pointer.                                                      |
+| `0x0E` | `$retl`  | return length       | Return value length in bytes.                                                 |
 | `0x0F` | `$flag`  | flags               | Flags register.                                                               |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
