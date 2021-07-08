@@ -48,8 +48,8 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                 |
 | `0x0B` | `$bal`   | balance             | Received balance for this context.                                            |
 | `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                         |
-| `0x0D` |          |                     |                                                                               |
-| `0x0E` |          |                     |                                                                               |
+| `0x0D` | `$ret`   | return value        | Return value or pointer.                                                      |
+| `0x0E` | `$retl`  | return length       | Return value length in bytes.                                                 |
 | `0x0F` | `$flag`  | flags               | Flags register.                                                               |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
@@ -139,20 +139,18 @@ Call frames are needed to ensure that the called contract cannot mutate the runn
 
 A call frame consists of the following, word-aligned:
 
-| bytes | type                 | value             | description                                                                   |
-|-------|----------------------|-------------------|-------------------------------------------------------------------------------|
-|       |                      |                   | **Unwritable area begins.**                                                   |
-| 32    | `byte[32]`           | to                | Contract ID for this call.                                                    |
-| 32    | `byte[32]`           | color             | Color of forwarded coins.                                                     |
-| 8*64  | `byte[8][64]`        | regs              | Saved registers from previous context.                                        |
-| 8     | `uint8`              | in count          | Number of input values.                                                       |
-| 8     | `uint8`              | out count         | Number of return values.                                                      |
-| 8     | `uint16`             | code size         | Code size in bytes, padded to word alignment.                                 |
-| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.               |
-| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values.              |
-| 1*    | `byte[]`             | code              | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
-|       |                      |                   | **Unwritable area ends.**                                                     |
-| *     |                      |                   | Call frame's stack.                                                           |
+| bytes | type          | value      | description                                                                   |
+|-------|---------------|------------|-------------------------------------------------------------------------------|
+|       |               |            | **Unwritable area begins.**                                                   |
+| 32    | `byte[32]`    | `to`       | Contract ID for this call.                                                    |
+| 32    | `byte[32]`    | `color`    | Color of forwarded coins.                                                     |
+| 8*64  | `byte[8][64]` | `regs`     | Saved registers from previous context.                                        |
+| 8     | `uint16`      | `codesize` | Code size in bytes, padded to word alignment.                                 |
+| 8     | `byte[8]`     | `param1`   | First parameter.                                                              |
+| 8     | `byte[8]`     | `param2`   | Second parameter.                                                             |
+| 1*    | `byte[]`      | `code`     | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
+|       |               |            | **Unwritable area ends.**                                                     |
+| *     |               |            | Call frame's stack.                                                           |
 
 ## Ownership
 
@@ -167,4 +165,3 @@ If the context is internal, the owned memory range for a call frame is:
 
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
 1. `($hp, $fp->$hp]`: the heap area allocated by this call frame.
-1. For each `(addr, size)` pair specified as return values in the call frame, the range `[addr, addr + size)`.

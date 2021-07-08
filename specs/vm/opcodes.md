@@ -709,12 +709,18 @@ Panic if:
 
 If current context is external, cease VM execution and return `$rA`.
 
-Returns from contract call, popping the call frame. Before popping:
+Returns from contract call, popping the call frame. Before popping perform the following operations.
 
-1. Return the unused forwarded gas to the caller:
-    - `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+Return the unused forwarded gas to the caller:
 
-Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
+1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+
+Set the return value:
+
+1. `$ret = $rA`
+1. `$retl = 0`
+
+Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
@@ -906,7 +912,7 @@ Panic if:
 
 ## Contract Opcodes
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract) and [REVERT](#revert-revert).
+All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [RETD](#retd-return-from-context-with-data) and [RVRT](#rvrt-revert).
 
 ### BHEI: Block height
 
@@ -975,19 +981,16 @@ Panic if:
 - `$rC + 32` overflows
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 - Reading past `MEM[VM_MAX_RAM - 1]`
-- Any output range does not pass [ownership check](./main.md#ownership)
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
 - In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
 
-| bytes | type                 | value             | description                                                      |
-|-------|----------------------|-------------------|------------------------------------------------------------------|
-| 32    | `byte[32]`           | to                | Contract ID to call.                                             |
-| 8     | `uint8`              | out count         | Number of return values.                                         |
-| 8     | `uint8`              | in count          | Number of input values.                                          |
-| 16*   | `(uint32, uint32)[]` | out (addr, size)s | Array of memory addresses and lengths in bytes of return values. |
-| 16*   | `(uint32, uint32)[]` | in (addr, size)s  | Array of memory addresses and lengths in bytes of input values.  |
+| bytes | type       | value    | description          |
+|-------|------------|----------|----------------------|
+| 32    | `byte[32]` | `to`     | Contract ID to call. |
+| 8     | `byte[8]`  | `param1` | First parameter.     |
+| 8     | `byte[8]`  | `param2` | Second parameter.    |
 
 `$rD` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
@@ -1162,12 +1165,18 @@ Panic if:
 
 If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
-Returns from contract call, popping the call frame. Before popping:
+Returns from contract call, popping the call frame. Before popping, perform the following operations.
 
-1. Return the unused forwarded gas to the caller:
-    - `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+Return the unused forwarded gas to the caller:
 
-Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
+1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+
+Set the return value:
+
+1. `$ret = $rA`
+1. `$retl = $rB`
+
+Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
