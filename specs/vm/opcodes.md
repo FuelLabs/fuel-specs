@@ -709,16 +709,20 @@ Panic if:
 
 If current context is external, cease VM execution and return `$rA`.
 
-Returns from contract call, popping the call frame. Before popping:
+Returns from contract call, popping the call frame. Before popping perform the following operations.
 
-1. Return the unused forwarded gas to the caller:
-    - `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+Return the unused forwarded gas to the caller:
 
-Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
+1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
 
-1. `$pc = $pc + 4` (advance program counter from where we called)
+Set the return value:
+
 1. `$ret = $rA`
 1. `$retl = 0`
+
+Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
+
+1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ## Memory Opcodes
 
@@ -1161,16 +1165,20 @@ Panic if:
 
 If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
-Returns from contract call, popping the call frame. Before popping:
+Returns from contract call, popping the call frame. Before popping, perform the following operations.
 
-1. Return the unused forwarded gas to the caller:
-    - `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+Return the unused forwarded gas to the caller:
 
-Then pop the call frame and restoring registers _except_ `$ggas` and `$cgas`. Afterwards, set the following registers:
+1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
 
-1. `$pc = $pc + 4` (advance program counter from where we called)
+Set the return value:
+
 1. `$ret = $rA`
 1. `$retl = $rB`
+
+Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
+
+1. `$pc = $pc + 4` (advance program counter from where we called)
 
 ### RVRT: Revert
 
