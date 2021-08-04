@@ -32,7 +32,7 @@ For instance:
 
 This is a function called `entry_one` that takes one `u64` argument and has no returns. 
 
-This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. However, underneath this readable format, it needs to be a well-encoded binary data. The sections below specifies the encoding for the function being selected to be executed and each of the argument types.
+This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ## Function selector 
 To select which function you want to call, first, this function must be a _public_ function in a _contract_ type of a Sway program. For instance:
@@ -47,9 +47,13 @@ pub fn entry_one(arg: u64) -> u64 {
 
 When crafting an ABI call, the first 8 bytes must be the function selector. Important to note that the default word size for the Fuel Virtual Machine is 8 bytes.
 
+When crafting an ABI call, the first 8 bytes of the call data are the function selector. 
+
+_N.B._: the default word size for the Fuel Virtual Machine is 8 bytes.
+
 The function selector is the first 4 bytes of the Keccak-256 hash function of the signature of a public Sway contract function. FuelVM uses **Big-Endian**, so: left to right, higher order to lower. These 4 bytes are then _left-padded_ for more 4 bytes, totaling 8 bytes.
 
-The signature is composed by only the function name with the parenthesized list of parameter types separated by a single comma without spaces. 
+The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. 
 
 For instance, in the case of the function `entry_one` above, we would pass the string `"entry_one(u64)"` to the `keccak256()` hashing algorithm, the full digest would be: 
 ```
@@ -62,10 +66,10 @@ Then we would get only the first 4 bytes of this digest and left pad it to 8 byt
 0x00006719afac
 ```
 
-Then, we would use `0x00006719afa` as the first part of the ABI call. 
+Then, we would use `0x00006719afa` as the first eight bytes of the call data. 
 
 ## Argument encoding
-Once you've selected the function for your ABI call and encode it (first 8 bytes), you must encode the function's arguments into it, starting from the fifth byte and onward. 
+Once you've selected the function for your ABI call and encoded it (first 8 bytes), you must encode the arguments you wish to pass, from the ninth byte on. 
 
 **The encoding for the argument will depend on the type of the argument being encoded.**
 
@@ -81,9 +85,9 @@ These are the available types that can be encoded in the ABI:
 - Bytes32: `bytes32`, 32-byte hash digest.
 - Address : `address`, a 32-byte address. (TODO)
 - Array (TODO)
-- Tuples (TODO)
 - Sum type (TODO)
 - Fixed size string (TODO)
+- Structs (TODO)
 
 
 ### Static Encoding 
@@ -94,7 +98,7 @@ Static types are encoded in-place. Here's how to encode these static types. We d
 
 `enc(X)` is the big-endian, two's complement of `X`, left-padded with zero-bytes. Total length, per argument, must be 8 bytes. 
 
-_Note: since this is unsigned, no need to think about preserving the sign when extending/padding; padding with only zeroes is enough._
+_Note: since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._
 
 Example:
 
@@ -147,9 +151,9 @@ Encoding `bool_check(true)` yields:
 ```
 
 #### Byte
-`byte`, a single byte. While we could use `u8` like Rust, having a distinct type that forbids certain operations (e.g. arithmetic) without explicit casting increases type safety.
+`byte`, a single byte.
 
-`enc(X)` is the big-endian, two's complement of `X`, padded on the **higher-order** (left) with zero-bytes. Total length, per argument, must be 8 bytes. Similar to the `bool` encoding. 
+`enc(X)` is the big-endian, two's complement of `X`, left-padded with zero-bytes. Total length, per argument, must be 8 bytes. Similar to the `bool` encoding. 
 
 Example: 
 
@@ -199,7 +203,7 @@ Example:
 ]
 ```
 
-Encoding `takes_bytes32("c7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745")` yields:
+Encoding `takes_bytes32(0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745)` yields:
 ```
 0x0000ff1e564dc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 ```
