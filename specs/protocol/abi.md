@@ -14,12 +14,19 @@ The JSON of an ABI is the human-readable representation of an interface call to 
 For instance: 
 ```json
 [
-	{
-		"type":"function",
-		"inputs": [{"name":"arg","type":"u64"}],
-		"name":"entry_one",
-		"outputs": []
-	}
+   {
+      "type":"function",
+      "inputs":[
+         {
+            "name":"arg",
+            "type":"u64"
+         }
+      ],
+      "name":"entry_one",
+      "outputs":[
+         
+      ]
+   }
 ]
 ```
 
@@ -93,12 +100,19 @@ Example:
 
 ```json
 [
-	{
-		"type":"contract",
-		"inputs": [{"name":"arg","type":"u64"}],
-		"name":"entry_one",
-		"outputs": []
-	}
+   {
+      "type":"contract",
+      "inputs":[
+         {
+            "name":"arg",
+            "type":"u64"
+         }
+      ],
+      "name":"entry_one",
+      "outputs":[
+         
+      ]
+   }
 ]
 ```
 
@@ -112,12 +126,19 @@ Encoding `entry_one(42)` yields: `0x6719afac00000002a`; `0x6719afac` being the f
 Example:
 ```json
 [
- {
-	 "type":"function",
-	 "inputs": [{"name":"arg","type":"bool"}],
-	 "name":"bool_check",
-	 "outputs": []
- }
+   {
+      "type":"function",
+      "inputs":[
+         {
+            "name":"arg",
+            "type":"bool"
+         }
+      ],
+      "name":"bool_check",
+      "outputs":[
+         
+      ]
+   }
 ]
 ```
 Encoding `bool_check(true)` yields:
@@ -134,12 +155,19 @@ Example:
 
 ```json
 [
-	{
-		"type":"function",
-		"inputs": [{"name":"arg","type":"byte"}],
-		"name":"takes_one_byte",
-		"outputs": []
-	}
+   {
+      "type":"function",
+      "inputs":[
+         {
+            "name":"arg",
+            "type":"byte"
+         }
+      ],
+      "name":"takes_one_byte",
+      "outputs":[
+         
+      ]
+   }
 ]
 ```
 
@@ -155,12 +183,19 @@ Encoding `takes_one_byte(255)` yields:
 Example:
 ```json
 [
-	{
-		"type":"function",
-		"inputs": [{"name":"arg","type":"bytes32"}],
-		"name":"takes_bytes32",
-		"outputs": []
-	}
+   {
+      "type":"function",
+      "inputs":[
+         {
+            "name":"arg",
+            "type":"bytes32"
+         }
+      ],
+      "name":"takes_bytes32",
+      "outputs":[
+         
+      ]
+   }
 ]
 ```
 
