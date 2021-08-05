@@ -95,6 +95,16 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 - In a predicate context, [return](#return-return-from-context) `false`.
 - In other contexts, [revert](#revert-revert).
 
+Instead of the receipt of the above instructions, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Panic`                                                       |
+| `id`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `reason` | `uint64`      | Panic reason.                                                             |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `is`.                                                   |
+
 Attempting to execute an opcode not in this list pauses a panic and consumes no gas.
 
 ## Arithmetic/Logic (ALU) Opcodes
@@ -707,6 +717,16 @@ Panic if:
 | Encoding    | `0x00 rA - - -`                                              |
 | Notes       |                                                              |
 
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name   | type          | description                                                               |
+|--------|---------------|---------------------------------------------------------------------------|
+| `type` | `ReceiptType` | `ReceiptType.Return`                                                      |
+| `id`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `val`  | `uint64`      | Value of register `$rA`.                                                  |
+| `pc`   | `uint64`      | Value of register `$pc`.                                                  |
+| `is`   | `uint64`      | Value of register `is`.                                                   |
+
 If current context is external, cease VM execution and return `$rA`.
 
 Returns from contract call, popping the call frame. Before popping perform the following operations.
@@ -994,6 +1014,22 @@ Register `$rA` is a memory address from which the following fields are set (word
 
 `$rD` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Call`                                                        |
+| `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`     | `byte[32]`    | Contract ID of called contract.                                           |
+| `param1` | `uint64`      | First parameter.                                                          |
+| `param2` | `uint64`      | Second parameter.                                                         |
+| `val0`   | `uint64`      | Value of register `$rA`.                                                  |
+| `val1`   | `uint64`      | Value of register `$rB`.                                                  |
+| `val2`   | `uint64`      | Value of register `$rC`.                                                  |
+| `val3`   | `uint64`      | Value of register `$rD`.                                                  |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `is`.                                                   |
+
 For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease color `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
 A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
@@ -1116,6 +1152,19 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 | Encoding    | `0x00 rA rB rC rD`             |
 | Notes       |                                |
 
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name   | type          | description                                                               |
+|--------|---------------|---------------------------------------------------------------------------|
+| `type` | `ReceiptType` | `ReceiptType.Log`                                                         |
+| `id`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `val0` | `uint64`      | Value of register `$rA`.                                                  |
+| `val1` | `uint64`      | Value of register `$rB`.                                                  |
+| `val2` | `uint64`      | Value of register `$rC`.                                                  |
+| `val3` | `uint64`      | Value of register `$rD`.                                                  |
+| `pc`   | `uint64`      | Value of register `$pc`.                                                  |
+| `is`   | `uint64`      | Value of register `is`.                                                   |
+
 ### LOGD: Log data event
 
 |             |                                 |
@@ -1125,6 +1174,20 @@ This opcode can be used to concatenate the code of multiple contracts together. 
 | Syntax      | `logd $rA, $rB, $rC, $rD`       |
 | Encoding    | `0x00 rA rB rC rD`              |
 | Notes       |                                 |
+
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.LogData`                                                     |
+| `id`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `val0`   | `uint64`      | Value of register `$rA`.                                                  |
+| `val1`   | `uint64`      | Value of register `$rB`.                                                  |
+| `ptr`    | `uint64`      | Value of register `$rC`.                                                  |
+| `len`    | `uint64`      | Value of register `$rD`.                                                  |
+| `digest` | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rC, $rD]`.                               |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `is`.                                                   |
 
 Logs the memory range `MEM[$rC, $rD]`.
 
@@ -1163,6 +1226,18 @@ Panic if:
 - `$rA + $rB > VM_MAX_RAM`
 - `$rB > MEM_MAX_ACCESS_SIZE`
 
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.ReturnData`                                                  |
+| `id`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `ptr`    | `uint64`      | Value of register `$rA`.                                                  |
+| `len`    | `uint64`      | Value of register `$rB`.                                                  |
+| `digest` | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA, $rB]`.                               |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `is`.                                                   |
+
 If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
 Returns from contract call, popping the call frame. Before popping, perform the following operations.
@@ -1190,7 +1265,17 @@ Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret
 | Encoding    | `0x00 rA - - -`                                                       |
 | Notes       |                                                                       |
 
-After a revert:
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name   | type          | description                                                               |
+|--------|---------------|---------------------------------------------------------------------------|
+| `type` | `ReceiptType` | `ReceiptType.Revert`                                                      |
+| `id`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `val`  | `uint64`      | Value of register `$rA`.                                                  |
+| `pc`   | `uint64`      | Value of register `$pc`.                                                  |
+| `is`   | `uint64`      | Value of register `is`.                                                   |
+
+Cease VM execution and revert script effects. After a revert:
 
 1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `amount` and `stateRoot` as on initialization.
 1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to` and `amount` of zero.

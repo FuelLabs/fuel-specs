@@ -66,6 +66,18 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 
 ### TransactionScript
 
+```
+enum  ReceiptType : uint8 {
+    Call = 0,
+    Return = 1,
+    ReturnData = 2,
+    Panic = 3,
+    Revert = 4,
+    Log = 5,
+    LogData = 6,
+}
+```
+
 | name               | type                    | description                              |
 |--------------------|-------------------------|------------------------------------------|
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
