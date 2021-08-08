@@ -66,6 +66,20 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 
 ### TransactionScript
 
+```
+enum  ReceiptType : uint8 {
+    Call = 0,
+    Return = 1,
+    ReturnData = 2,
+    Panic = 3,
+    Revert = 4,
+    Log = 5,
+    LogData = 6,
+    Transfer = 7,
+    TransferOut = 8,
+}
+```
+
 | name               | type                    | description                              |
 |--------------------|-------------------------|------------------------------------------|
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
@@ -76,6 +90,7 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 | `inputsCount`      | `uint8`                 | Number of inputs.                        |
 | `outputsCount`     | `uint8`                 | Number of outputs.                       |
 | `witnessesCount`   | `uint8`                 | Number of witnesses.                     |
+| `receiptsRoot`     | `byte[32]`              | Merkle root of receipts.                 |
 | `script`           | `byte[]`                | Script to execute.                       |
 | `scriptData`       | `byte[]`                | Script input data (parameters).          |
 | `inputs`           | [Input](#input)`[]`     | List of inputs.                          |
@@ -87,6 +102,10 @@ Transaction is invalid if:
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
+
+Note: when signing a transaction, `receiptsRoot` is set to zero.
+
+The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./cryptographic_primitives.md#binary-merkle-tree) of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. `0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
 
 ### TransactionCreate
 
