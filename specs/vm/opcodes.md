@@ -1021,12 +1021,11 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `type`   | `ReceiptType` | `ReceiptType.Call`                                                        |
 | `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
 | `to`     | `byte[32]`    | Contract ID of called contract.                                           |
+| `amount` | `uint64`      | Amount of coins to forward, i.e. `$rB`.                                   |
+| `color`  | `byte[32]`    | Color of coins to forward, i.e. `MEM[$rC, 32]`.                           |
+| `gas`    | `uint64`      | Gas to forward, i.e. `$rD`.                                               |
 | `param1` | `uint64`      | First parameter.                                                          |
 | `param2` | `uint64`      | Second parameter.                                                         |
-| `val0`   | `uint64`      | Value of register `$rA`.                                                  |
-| `val1`   | `uint64`      | Value of register `$rB`.                                                  |
-| `val2`   | `uint64`      | Value of register `$rC`.                                                  |
-| `val3`   | `uint64`      | Value of register `$rD`.                                                  |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
 | `is`     | `uint64`      | Value of register `is`.                                                   |
 
