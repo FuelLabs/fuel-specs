@@ -1402,6 +1402,18 @@ Panic if:
 - In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rB == 0`
 
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Transfer`                                                    |
+| `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`     | `byte[32]`    | Contract ID of contract to transfer coins to.                             |
+| `amount` | `uint64`      | Amount of coins transferred.                                              |
+| `color`  | `byte[32]`    | Color of coins transferred.                                               |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `is`.                                                   |
+
 For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease color `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
 This modifies the `balanceRoot` field of the appropriate output(s).
@@ -1430,6 +1442,18 @@ Panic if:
 - `$rC == 0`
 - `tx.outputs[$rB].type != OutputType.Variable`
 - `tx.outputs[$rB].amount != 0`
+
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.TransferOut`                                                 |
+| `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`     | `byte[32]`    | Address to transfer coins to.                                             |
+| `amount` | `uint64`      | Amount of coins transferred.                                              |
+| `color`  | `byte[32]`    | Color of coins transferred.                                               |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `is`.                                                   |
 
 In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`. In an internal context, decrease color `MEM[$rD, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rC`. Then set:
 

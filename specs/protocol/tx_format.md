@@ -75,6 +75,8 @@ enum  ReceiptType : uint8 {
     Revert = 4,
     Log = 5,
     LogData = 6,
+    Transfer = 7,
+    TransferOut = 8,
 }
 ```
 
