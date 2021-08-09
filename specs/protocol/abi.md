@@ -177,10 +177,7 @@ Then, the second part will be the location section itself, containing the proper
 
 An array of a certain type `T`, `T[]`. The first part of the array encoding will be the offset where its encoded data will be stored at. Once the first part of the ABI encoding is done (in-place values and pointers), the second part starts (data location).
 
-In the second part, the second part of the array encoding starts, it contains, in order:
-
-1. The length, in the bytes, of the array.
-2. The encoding of each element in `T[]`, recursively following the encoding for the type `T`.
+In the second part, the second part of the array encoding starts, it contains, in order, the encoding of each element in `T[]`, recursively following the encoding for the type `T`.
 
 Let's revisit the example from the section above:
 
@@ -191,18 +188,19 @@ The first part of the encoding will be:
 1. `0x0000000000000001`, the `true` bool encoded in-place.
 2. `0x0000000000000010`, the offset that points to where the data for the second parameter (`u8[]`) starts. In this case, `0x10 == 16`, which is exactly 2 words (16 bytes) after the beginning of the encoding.
 
-Then, the second part of the encoding starts, since we have a dynamic type:
+Then, the second part of the encoding starts:
 
-1. `0x0000000000000002`, the length of the array
-2. `0x0000000000000001`, `1` encoded as a u8, right-aligned to 8 bytes.
-3. `0x0000000000000002`, `2` encoded as a u8, right-aligned to 8 bytes.
+1. `0x0000000000000001`, `1` encoded as a u8, right-aligned to 8 bytes.
+2. `0x0000000000000002`, `2` encoded as a u8, right-aligned to 8 bytes.
 
 Note that the first value encoded in the second part starts at `0x10`, in other words: after 16 bytes. Which is exactly where the encoded second argument points to.
+
+Also note that because Sway's array's sizes are fixed, the function signature will contain the information about the length of the array.
 
 The resulting ABI will be:
 
 ```text
-0x0x000000000000000200000000000000010000000000000002
+0x0000000000000001000000000000001000000000000000010000000000000002
 ```
 
 #### Fixed-length strings
@@ -211,22 +209,19 @@ Strings have fixed length and are encoded in the same way as an array. `string[n
 
 Like an array, the first part of the encoding is the offset where the array data will start.
 
-Then, in the data location, the encoding will contain:
+Then, in the data location, the encoding will contain the UTF-8 encoded string.
 
-1. The length of the string, in bytes, right-aligned to 8 bytes.
-2. The UTF-8 encoded string.
-
-It's encoded as its binary representation. Note that all strings are encoded in UTF-8.
+Note that all strings are encoded in UTF-8.
 
 **Example:**
 
 Encoding `"Hello, World"` as a `str[12]` **yields**:
 
 ```text
-0x0000000000000008000000000000000C48656c6c6f2c20576f726c64
+0x000000000000000848656c6c6f2c20576f726c64
 ```
 
-Where `0x0000000000000008` is the offset, `0x000000000000000C` (`12` in decimal) is the length of the string, and `0x48656c6c6f2c20576f726c64` is `"Hello, World"` encoded in UTF-8.
+Where `0x0000000000000008` is the offset and `0x48656c6c6f2c20576f726c64` is `"Hello, World"` encoded in UTF-8.
 
 A more complex example is an array of strings, which is encoded like an array of arrays. Suppose the function `complex(string[])` with the parameters `["hello", "world"]`.
 
@@ -235,18 +230,16 @@ Let's start by encoding the most atomic arguments.
 ```text
 1. a - offset for "hello"
 2. b - offset for "world"
-3. 0x0000000000000005 - length of "hello"
-4. 0x00000068656c6c6f - encoding of "hello"
-5. 0x0000000000000005 - length of "world"
-6. 0x000000776f726c64 - encoding of "world"
+3. 0x00000068656c6c6f - encoding of "hello"
+4. 0x000000776f726c64 - encoding of "world"
 ```
 
 Now let's compute the `a` and `b` offsets.
 
 The offset `a` should point to where the content for "hello" starts, which is line 3, which means we have to offset 2 lines (line 1 and line 2), so `2 * 8`, 16 bytes. `a = 0x0000000000000010`.
 
-Same procedure for the offset `b`. `world` content starts at line 5. We have to offset 4 lines, `4 * 8`, 32 bytes. `a = 0x0000000000000020`.
+Same procedure for the offset `b`. `world` content starts at line 4. We have to offset 3 lines, `3 * 8`, 24 bytes. `a = 0x0000000000000018`.
 
 So our final encoding will be:
 
-`0x0000000000000010000000000000002000000000000000500000068656c6c6f0000000000000005000000776f726c64`.
+`0x0000000000000010000000000000001800000068656c6c6f000000776f726c64`.
