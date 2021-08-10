@@ -1096,7 +1096,7 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-Code root compuration is defined [here](../protocol/identifiers.md#contract-id).
+Code root computation is defined [here](../protocol/identifiers.md#contract-id).
 
 ### CSIZ: Code size
 
