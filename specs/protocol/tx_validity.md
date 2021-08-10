@@ -91,7 +91,7 @@ def sum_inputs(tx, col) -> int:
 def sum_outputs(tx, col) -> int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin or output.type == OutputType.Withdrawal) and input.color == col:
+        if (output.type == OutputType.Coin or output.type == OutputType.Withdrawal) and output.color == col:
             total += output.amount
     return total
 
