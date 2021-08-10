@@ -103,7 +103,7 @@ Instead of the receipt of the above instructions, append a receipt to the list o
 | `id`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
 | `reason` | `uint64`      | Panic reason.                                                             |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `is`.                                                   |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 Attempting to execute an opcode not in this list pauses a panic and consumes no gas.
 
@@ -725,7 +725,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `id`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
 | `val`  | `uint64`      | Value of register `$rA`.                                                  |
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
-| `is`   | `uint64`      | Value of register `is`.                                                   |
+| `is`   | `uint64`      | Value of register `$is`.                                                  |
 
 If current context is external, cease VM execution and return `$rA`.
 
@@ -1027,7 +1027,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `param1` | `uint64`      | First parameter.                                                          |
 | `param2` | `uint64`      | Second parameter.                                                         |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `is`.                                                   |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease color `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
@@ -1162,7 +1162,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `val2` | `uint64`      | Value of register `$rC`.                                                  |
 | `val3` | `uint64`      | Value of register `$rD`.                                                  |
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
-| `is`   | `uint64`      | Value of register `is`.                                                   |
+| `is`   | `uint64`      | Value of register `$is`.                                                  |
 
 ### LOGD: Log data event
 
@@ -1186,7 +1186,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `len`    | `uint64`      | Value of register `$rD`.                                                  |
 | `digest` | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rC, $rD]`.                               |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `is`.                                                   |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 Logs the memory range `MEM[$rC, $rD]`.
 
@@ -1235,7 +1235,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `len`    | `uint64`      | Value of register `$rB`.                                                  |
 | `digest` | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA, $rB]`.                               |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `is`.                                                   |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
@@ -1272,7 +1272,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `id`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
 | `val`  | `uint64`      | Value of register `$rA`.                                                  |
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
-| `is`   | `uint64`      | Value of register `is`.                                                   |
+| `is`   | `uint64`      | Value of register `$is`.                                                  |
 
 Cease VM execution and revert script effects. After a revert:
 
@@ -1411,7 +1411,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `amount` | `uint64`      | Amount of coins transferred.                                              |
 | `color`  | `byte[32]`    | Color of coins transferred.                                               |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `is`.                                                   |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease color `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
@@ -1452,7 +1452,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `amount` | `uint64`      | Amount of coins transferred.                                              |
 | `color`  | `byte[32]`    | Color of coins transferred.                                               |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `is`.                                                   |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`. In an internal context, decrease color `MEM[$rD, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rC`. Then set:
 
