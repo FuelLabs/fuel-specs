@@ -37,6 +37,8 @@ This is a function called `entry_one` that takes one `u64` argument and has no r
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
+TODO: Receipts.
+
 ## Function selector
 
 To select which function you want to call, first, this function must be in an ABI struct of a Sway program. For instance:
@@ -89,8 +91,8 @@ These are the available types that can be encoded in the ABI:
 - Address : `address`, a 32-byte address.
 - Fixed size string
 - Array
-- Sum type (TODO, dynamic)
-- Structs (TODO, dynamic)
+- Sum types
+- Structs
 
 ### Static Encoding
 
@@ -195,7 +197,7 @@ Then, the second part of the encoding starts:
 
 Note that the first value encoded in the second part starts at `0x10`, in other words: after 16 bytes. Which is exactly where the encoded second argument points to.
 
-Also note that because Sway's array's sizes are fixed, the function signature will contain the information about the length of the array.
+Also note that because Sway uses fixed-size arrays, the function signature will contain information about the length of any array parameters.
 
 The resulting ABI will be:
 
@@ -243,3 +245,90 @@ Same procedure for the offset `b`. `world` content starts at line 4. We have to 
 So our final encoding will be:
 
 `0x0000000000000010000000000000001800000068656c6c6f000000776f726c64`.
+
+#### Structs
+
+Encoding ABIs that contain custom types, such as structs, are similar to encoding arrays and strings: you must first encode the offset that points to where the data from the inner fields of the struct are going to be encoded at. At that location, the encoding will proceed _recursively_ just like encoding any other type, in other words: primitive types will be encoded in place and dynamic types will encode offsets. This way you can encode structs with primitive types or structs with more complex types in it, such as other structs, arrays, strings, and enums.
+
+Here's an example: 
+
+```rust
+struct InputStruct {
+    field_1: bool,
+    field_2: u8,
+}
+
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: InputStruct );
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `InputStruct{field_1: true, field_2: 5}` yields:
+
+```plaintext
+0x
+0000000000000008 // Offset to InputStruct (exactly one word)
+0000000000000001 // `true` encoded as a bool
+0000000000000005 // `5` encoded as u8
+```
+
+More complex scenario
+
+```rust
+struct InputStruct {
+    field_1: bool,
+    field_2: u8[], // An array of u8
+}
+
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: InputStruct );
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `InputStruct{field_1: true, field_2: [1,2]}` yields:
+
+```plaintext
+0x
+0000000000000008 // Offset to InputStruct (exactly one word)
+0000000000000001 // `true` encoded as a bool
+0000000000000008 // Another offset to `field_2` which is an array (dynamic encoding)
+0000000000000001 // `1` encoded as u8
+0000000000000002 // `2` encoded as u8
+```
+
+#### Sum types / Enums
+
+ABI calls containing sum types (enums) are encoded identically to structs: encode the offset first, then recursively encode the type of the enum variant being passed to the function being called.
+
+```rust
+enum  MySumType
+{
+    x: u32,
+    y: bool,
+}
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: MySumType );
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `MySumType::x(42)` yields:
+
+```plaintext
+0x
+0000000000000008 // Offset to MySumType (exactly one word)
+000000000000002a // `42` encoded as u64
+```
+
+TODO: I'm assuming the encoder/decoder can infer which variant is being passed by the call arguments (e.g `MySumType::x(42)` being passed to the call, so it knows it's the variant `x`). We could also encode the enum variant's numeric representation (e.g 0, 1, 2, ...) in the ABI. Thoughts?
