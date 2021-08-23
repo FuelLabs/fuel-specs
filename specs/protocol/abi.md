@@ -1,6 +1,6 @@
-# FuelVM ABI Format
+# Contract ABI Format
 
-This document describes and specifies the ABI (Application Binary Interface) of the Fuel Virtual Machine, the Sway programming language, and contracts written in Sway.  
+This document describes and specifies the ABI (Application Binary Interface) of the Fuel Virtual Machine, the Sway programming language, and contracts written in Sway.
 
 ## JSON ABI Format
 
@@ -27,7 +27,7 @@ For instance:
       ],
       "name":"entry_one",
       "outputs":[
-         
+
       ]
    }
 ]
@@ -37,9 +37,272 @@ This is a function called `entry_one` that takes one `u64` argument and has no r
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
-TODO: Receipts.
+### Receipt
 
-## Function selector
+Upon execution of ABI calls, i.e scripts being executed, a JSON representing a list of receipts will be returned to the caller. Below is the JSON specification of the many receipt types. The root will be `receipts_root` which will include an array of `receipts`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"<receipt_type>",
+         ...
+      },
+      ...
+   ]
+}
+```
+
+All receipts will have a `type` property:
+
+- `type`: String, type of the receipt. Can be one of:
+  - Call
+  - Return
+  - ReturnData
+  - Panic
+  - Revert
+  - Log
+  - LogData
+  - Transfer
+  - TransferOut
+
+Then, each receipt type will have its own properties. Some of these properties are related to the Virtual Machine's registers, as specified in more details [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
+
+#### Panic receipt
+
+- `type`: `Panic`.
+- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `reason`: Number, panic reason.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"Panic",
+         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "reason":1,
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### Return receipt
+
+- `type`: `Return`.
+- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `val`: Number, value of register `$rA`.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"Return",
+         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "val": 18446744073709551613,
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### Call receipt
+
+- `type`: `Call`.
+- `from`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `to`: String representation of 32-Bytes,contract ID of called contract.
+- `amount`: Number, amount of coins to forward.
+- `color`: String representation of 32-Bytes, color of coins to forward.
+- `gas`: Number, gas to forward, value in register `$rD`.
+- `param1`: Number, first parameter.
+- `param2`: Number, second parameter.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"Call",
+         "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+         "amount": 10000,
+         "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+         "gas": 500,
+         "param1":184467440737095516,
+         "param2":184467440737095516,
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### Log receipt
+
+- `type`: `Log`.
+- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `val0`: Number, value of register `$rA`.
+- `val1`: Number, value of register `$rB`.
+- `val2`: Number, value of register `$rC`.
+- `val3`: Number, value of register `$rD`.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"Log",
+         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "val0": 1844674407370,
+         "val1": 1844674407371,
+         "val2": 1844674407372,
+         "val3": 1844674407373,
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### LogData receipt
+
+- `type`: `LogData`.
+- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `val0`: Number, value of register `$rA`
+- `val1`: Number, value of register `$rB`
+- `ptr`: Number, value of register `$rC`.
+- `len`: Number, value of register `$rD`.
+- `digest`: String representation of 32-Bytes, hash of `MEM[$rC, $rD]`.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"LogData",
+         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "val0": 1844674407370,
+         "val1": 1844674407371,
+         "ptr": 1844674407372,
+         "len": 1844,
+         "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### ReturnData receipt
+
+- `type`: `ReturnData`.
+- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `ptr`: Number, value of register `$rA`.
+- `len`: Number, value of register `$rB`.
+- `digest`: String representation of 32-Bytes, hash of `MEM[$rA, $rB]`.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"ReturnData",
+         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "ptr": 1844674407372,
+         "len": 1844,
+         "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### Revert receipt
+
+- `type`: `Revert`.
+- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `val`: Number, value of register `$rA`.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"Revert",
+         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "val": 1844674407372,
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### Transfer receipt
+
+- `type`: `Transfer`.
+- `from`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `to`: String representation of 32-Bytes, _contract ID_ of contract to transfer coins to.
+- `amount`: Number, amount of coins to forward.
+- `color`: String representation of 32-Bytes, color of coins to forward.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"Transfer",
+         "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+         "amount": 10000,
+         "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+#### TransferOut receipt
+
+- `type`: `TransferOut`.
+- `from`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
+- `to`: String representation of 32-Bytes, _address_ to transfer coins to.
+- `amount`: Number, amount of coins to forward.
+- `color`: String representation of 32-Bytes, color of coins to forward.
+- `pc`: Number, value of register `$pc`.
+- `is`: Number, value of register `$is`.
+
+```json
+{
+   "receipts_root":[
+      {
+         "type":"TransferOut",
+         "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+         "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+         "amount": 10000,
+         "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+         "pc":18446744073709551615,
+         "is":18446744073709551614
+      }
+   ]
+}
+```
+
+## Function Selector Encoding
 
 To select which function you want to call, first, this function must be in an ABI struct of a Sway program. For instance:
 
@@ -70,9 +333,9 @@ Then we would get only the first 4 bytes of this digest and left pad it to 8 byt
 0x000000000c36cb9c
 ```
 
-## Argument encoding
+## Argument Encoding
 
-When crafting a Sway script data, you must encode the arguments you wish to pass.  
+When crafting a transaction script data, you must encode the arguments you wish to pass to the script.
 
 **The encoding for the argument will depend on the type of the argument being encoded.**
 
@@ -87,7 +350,7 @@ These are the available types that can be encoded in the ABI:
   - `u64`, 64 bits.
 - Boolean: `bool`, either `0` or `1` encoded identically to `u8`.
 - Byte: `byte`, single byte.
-- Bytes32: `bytes32`, 32-byte hash digest.
+- Bytes32: `bytes32`, arbitrary 32-byte value.
 - Address : `address`, a 32-byte address.
 - Fixed size string
 - Array
@@ -98,11 +361,11 @@ These are the available types that can be encoded in the ABI:
 
 Static types are encoded in-place. Here's how to encode these static types. We define `enc(X)` the encoding of the type `X`.
 
-#### Unsigned integers (u8, u16, u32, u64)
+#### Unsigned Integers
 
 `u<M>` where `M` is either 8, 16, 32, or 64 bits.
 
-`enc(X)` is the big-endian representation of `X` left-padded with zero-bytes. Total length, per argument, must be 8 bytes.
+`enc(X)` is the big-endian representation of `X` left-padded with zero-bytes. Total length must be 8 bytes.
 
 _Note: since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._
 
@@ -112,9 +375,7 @@ Encoding `42` yields: `0x000000000000002a`, which is the binary representation o
 
 #### Boolean
 
-`bool`, similar to a `u8`: `enc(X)` is the big-endian, right-aligned to 8 bytes, left-padded with zeroes. Total length, per argument, must be 8 bytes.
-
-`1` equivalent to `true`, `0` equivalent to `false`.
+`enc(X)` is `0` if `X` is false or `1` if `X` is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the `u8` encoding.
 
 **Example:**
 
@@ -135,16 +396,16 @@ Encoding `true` yields:
 Encoding `255` yields:
 
 ```text
-0x00000000ffffffff
+0x00000000000000ff
 ```
 
 #### Bytes32
 
-`bytes32` is a fixed size byte array of length 32. Used for 32-byte hash digests. It's encoded as-is.
+`bytes32` is a fixed size byte array of length 32. Used for 32-byte hash digests and other 32-byte types. It is encoded as-is.
 
 **Example:**
 
-Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` **yields**:
+Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yields:
 
 ```text
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
@@ -152,11 +413,11 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` **
 
 #### Address
 
-A 32-byte address, encoded in the same way as the `Bytes32` argument: encoded as-is.
+A 32-byte address, encoded in the same way as a `Bytes32` argument: encoded as-is.
 
 **Example:**
 
-Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` **yields**:
+Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yields:
 
 ```text
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
@@ -205,7 +466,7 @@ The resulting ABI will be:
 0x0000000000000001000000000000001000000000000000010000000000000002
 ```
 
-#### Fixed-length strings
+#### Fixed-length Strings
 
 Strings have fixed length and are encoded in the same way as an array. `string[n]`, where `n` is the fixed-size of the string.
 
@@ -250,7 +511,7 @@ So our final encoding will be:
 
 Encoding ABIs that contain custom types, such as structs, are similar to encoding arrays and strings: you must first encode the offset that points to where the data from the inner fields of the struct are going to be encoded at. At that location, the encoding will proceed _recursively_ just like encoding any other type, in other words: primitive types will be encoded in place and dynamic types will encode offsets. This way you can encode structs with primitive types or structs with more complex types in it, such as other structs, arrays, strings, and enums.
 
-Here's an example: 
+Here's an example:
 
 ```rust
 struct InputStruct {
@@ -304,7 +565,7 @@ Calling `bar` with `InputStruct{field_1: true, field_2: [1,2]}` yields:
 0000000000000002 // `2` encoded as u8
 ```
 
-#### Sum types / Enums
+#### Sum types (Enums)
 
 ABI calls containing sum types (enums) are encoded identically to structs: encode the offset first, then recursively encode the type of the enum variant being passed to the function being called.
 
