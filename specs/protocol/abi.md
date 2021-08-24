@@ -35,7 +35,7 @@ For instance:
 
 This is a function called `entry_one` that takes one `u64` argument and does not return a value.
 
-This JSON should be both human-readable and parsable by the tooling around the Fuel VM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
+This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ### Receipt
 
@@ -43,7 +43,7 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON object represent
 
 ```json
 {
-   "receipts_root":[
+   "receipts_list":[
       {
          "type":"<receipt_type>",
          ...
@@ -66,239 +66,207 @@ All receipts will have a `type` property:
   - Transfer
   - TransferOut
 
-Then, each receipt type will have its own properties. Some of these properties are related to the Fuel VM's registers, as specified in more detail [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
+Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
+
+_Important note:_ For the JSON representation of the receipts, we represent 64-bit unsigned integers as a JSON's `String` due to limitation around the type `Number` in the JSON specification, which only supports numbers up to `2^{53-1}`, whereas the FuelVM's registers hold values up to `2^64`.
 
 #### Panic receipt
 
 - `type`: `Panic`.
-- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `reason`: Number; panic reason.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `reason`: String representation of a 64-bit unsigned integer; panic reason.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"Panic",
-         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "reason":1,
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"Panic",
+    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "reason":1,
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### Return receipt
 
 - `type`: `Return`.
-- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
-- `val`: Number; value of register `$rA`.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
+- `val`: String representation of a 64-bit unsigned integer; value of register `$rA`.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"Return",
-         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "val": 18446744073709551613,
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"Return",
+    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "val":"18446744073709551613",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### Call receipt
 
 - `type`: `Call`.
-- `from`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
-- `to`: Hexadecimal representation of the 32-byte contract ID of the callee..
-- `amount`: Number; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 32-byte color of coins to forward.
-- `gas`: Number; amount gas to forward; value in [register `$rD`](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md#call-call-contract).
-- `param1`: Number; first parameter.
-- `param2`: Number; second parameter.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
+- `to`: Hexadecimal representation of the 256-bit (32 bytes) contract ID of the callee..
+- `amount`: String representation of a 64-bit unsigned integer; amount of coins to forward.
+- `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
+- `gas`: String representation of a 64-bit unsigned integer; amount gas to forward; value in [register `$rD`](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md#call-call-contract).
+- `param1`: String representation of a 64-bit unsigned integer; first parameter.
+- `param2`: String representation of a 64-bit unsigned integer; second parameter.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"Call",
-         "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-         "amount": 10000,
-         "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-         "gas": 500,
-         "param1":184467440737095516,
-         "param2":184467440737095516,
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"Call",
+    "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+    "amount":"10000",
+    "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "gas":"500",
+    "param1":"184467440737095516",
+    "param2":"184467440737095516",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### Log receipt
 
 - `type`: `Log`.
-- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `val0`: Number; value of register `$rA`.
-- `val1`: Number; value of register `$rB`.
-- `val2`: Number; value of register `$rC`.
-- `val3`: Number; value of register `$rD`.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `val0`: String representation of a 64-bit unsigned integer; value of register `$rA`.
+- `val1`: String representation of a 64-bit unsigned integer; value of register `$rB`.
+- `val2`: String representation of a 64-bit unsigned integer; value of register `$rC`.
+- `val3`: String representation of a 64-bit unsigned integer; value of register `$rD`.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"Log",
-         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "val0": 1844674407370,
-         "val1": 1844674407371,
-         "val2": 1844674407372,
-         "val3": 1844674407373,
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"Log",
+    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "val0": "1844674407370",
+    "val1": "1844674407371",
+    "val2": "1844674407372",
+    "val3": "1844674407373",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### LogData receipt
 
 - `type`: `LogData`.
-- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `val0`: Number; value of register `$rA`
-- `val1`: Number; value of register `$rB`
-- `ptr`: Number; value of register `$rC`.
-- `len`: Number; value of register `$rD`.
-- `digest`: Hexadecimal string representation of the 32-byte hash of `MEM[$rC, $rD]`.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `val0`: String representation of a 64-bit unsigned integer; value of register `$rA`
+- `val1`: String representation of a 64-bit unsigned integer; value of register `$rB`
+- `ptr`: String representation of a 64-bit unsigned integer; value of register `$rC`.
+- `len`: String representation of a 64-bit unsigned integer; value of register `$rD`.
+- `digest`: Hexadecimal string representation of the 256-bit (32 bytes) hash of `MEM[$rC, $rD]`.
+- `mem_range_value`: String representation of the value of the memory range `MEM[$rC, $rD]`.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"LogData",
-         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "val0": 1844674407370,
-         "val1": 1844674407371,
-         "ptr": 1844674407372,
-         "len": 1844,
-         "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"LogData",
+    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "val0":"1844674407370",
+    "val1":"1844674407371",
+    "ptr":"1844674407372",
+    "len":"66544",
+    "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### ReturnData receipt
 
 - `type`: `ReturnData`.
-- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `ptr`: Number; value of register `$rA`.
-- `len`: Number; value of register `$rB`.
-- `digest`: String representation of 32-Bytes, hash of `MEM[$rA, $rB]`.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `ptr`: String representation of a 64-bit unsigned integer; value of register `$rA`.
+- `len`: String representation of a 64-bit unsigned integer; value of register `$rB`.
+- `digest`: String representation of 256-bit (32 bytes), hash of `MEM[$rA, $rB]`.
+- `mem_range_value`: String representation of the value of the memory range `MEM[$rA, $rB]`.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"ReturnData",
-         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "ptr": 1844674407372,
-         "len": 1844,
-         "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"ReturnData",
+    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "ptr":"1844674407372",
+    "len":"1844",
+    "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### Revert receipt
 
 - `type`: `Revert`.
-- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `val`: Number; value of register `$rA`.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `val`: String representation of a 64-bit unsigned integer; value of register `$rA`.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"Revert",
-         "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "val": 1844674407372,
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"Revert",
+    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "val":"1844674407372",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### Transfer receipt
 
 - `type`: `Transfer`.
-- `from`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `to`: Hexadecimal string representation of the 32-byte contract ID of the recipient contract.
-- `amount`: Number; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 32-byte color of coins to forward.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `to`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the recipient contract.
+- `amount`: String representation of a 64-bit unsigned integer; amount of coins to forward.
+- `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"Transfer",
-         "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-         "amount": 10000,
-         "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"Transfer",
+    "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+    "amount": "10000",
+    "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
 #### TransferOut receipt
 
 - `type`: `TransferOut`.
-- `from`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
-- `to`: Hexadecimal string representation of the 32-byte _address_ to transfer coins to.
-- `amount`: Number; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 32-byte color of coins to forward.
-- `pc`: Number; value of register `$pc`.
-- `is`: Number; value of register `$is`.
+- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `to`: Hexadecimal string representation of the 256-bit (32 bytes) _address_ to transfer coins to.
+- `amount`: String representation of a 64-bit unsigned integer; amount of coins to forward.
+- `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
+- `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
-   "receipts_root":[
-      {
-         "type":"TransferOut",
-         "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-         "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-         "amount": 10000,
-         "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-         "pc":18446744073709551615,
-         "is":18446744073709551614
-      }
-   ]
+    "type":"TransferOut",
+    "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+    "amount": "10000",
+    "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "pc":"18446744073709551615",
+    "is":"18446744073709551614"
 }
 ```
 
@@ -350,8 +318,8 @@ These are the available types that can be encoded in the ABI:
   - `u64`, 64 bits.
 - Boolean: `bool`, either `0` or `1` encoded identically to `u8`.
 - Byte: `byte`, single byte.
-- Bytes32: `bytes32`, arbitrary 32-byte value.
-- Address : `address`, a 32-byte address.
+- B256: `b256`, arbitrary 256-bits value.
+- Address : `address`, a 256-bit (32 bytes) address.
 - Fixed size string
 - Array
 - Sum types
@@ -399,9 +367,9 @@ Encoding `255` yields:
 0x00000000000000ff
 ```
 
-#### Bytes32
+#### B256
 
-`bytes32` is a fixed size byte array of length 32. Used for 32-byte hash digests and other 32-byte types. It is encoded as-is.
+`b256` is a fixed size bit array of length 256. Used for 256-bit hash digests and other 256-bit types. It is encoded as-is.
 
 **Example:**
 
@@ -413,7 +381,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 
 #### Address
 
-A 32-byte address, encoded in the same way as a `Bytes32` argument: encoded as-is.
+A 256 bits (32 bytes) address, encoded in the same way as a `B256` argument: encoded as-is.
 
 **Example:**
 
@@ -427,7 +395,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 
 Encoding dynamic types, for instance, arrays, is slightly different. For these types we introduce a new section of the ABI: the dynamic data location, a place in the ABI reserved for the data stored in arguments with more complex types. For static types we don't need to make use of this section; the values are stored in place.
 
-For instance, consider the function signature: `my_func(bool, u8[])` and that we're passing the following values: `(true, [1, 2])`.
+For instance, consider the function signature: `my_func(bool,u8[])` and that we're passing the following values: `(true, [1,2])`.
 
 The first part of the encoding will contain:
 
