@@ -33,13 +33,13 @@ For instance:
 ]
 ```
 
-This is a function called `entry_one` that takes one `u64` argument and has no returns.
+This is a function called `entry_one` that takes one `u64` argument and does not return a value.
 
-This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
+This JSON should be both human-readable and parsable by the tooling around the Fuel VM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ### Receipt
 
-Upon execution of ABI calls, i.e scripts being executed, a JSON representing a list of receipts will be returned to the caller. Below is the JSON specification of the many receipt types. The root will be `receipts_root` which will include an array of `receipts`.
+Upon execution of ABI calls, i.e scripts being executed, a JSON object representing a list of receipts will be returned to the caller. Below is the JSON specification of the possible receipt types. The root will be `receipts_root` which will include an array of `receipts`.
 
 ```json
 {
@@ -55,7 +55,7 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON representing a l
 
 All receipts will have a `type` property:
 
-- `type`: String, type of the receipt. Can be one of:
+- `type`: String; the type of the receipt. Can be one of:
   - Call
   - Return
   - ReturnData
@@ -66,15 +66,15 @@ All receipts will have a `type` property:
   - Transfer
   - TransferOut
 
-Then, each receipt type will have its own properties. Some of these properties are related to the Virtual Machine's registers, as specified in more details [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
+Then, each receipt type will have its own properties. Some of these properties are related to the Fuel VM's registers, as specified in more detail [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
 
 #### Panic receipt
 
 - `type`: `Panic`.
-- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `reason`: Number, panic reason.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `reason`: Number; panic reason.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -93,10 +93,10 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### Return receipt
 
 - `type`: `Return`.
-- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `val`: Number, value of register `$rA`.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
+- `val`: Number; value of register `$rA`.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -115,15 +115,15 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### Call receipt
 
 - `type`: `Call`.
-- `from`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `to`: String representation of 32-Bytes,contract ID of called contract.
-- `amount`: Number, amount of coins to forward.
-- `color`: String representation of 32-Bytes, color of coins to forward.
-- `gas`: Number, gas to forward, value in register `$rD`.
-- `param1`: Number, first parameter.
-- `param2`: Number, second parameter.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `from`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
+- `to`: Hexadecimal representation of the 32-byte contract ID of the callee..
+- `amount`: Number; amount of coins to forward.
+- `color`: Hexadecimal string representation of the 32-byte color of coins to forward.
+- `gas`: Number; amount gas to forward; value in [register `$rD`](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md#call-call-contract).
+- `param1`: Number; first parameter.
+- `param2`: Number; second parameter.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -147,13 +147,13 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### Log receipt
 
 - `type`: `Log`.
-- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `val0`: Number, value of register `$rA`.
-- `val1`: Number, value of register `$rB`.
-- `val2`: Number, value of register `$rC`.
-- `val3`: Number, value of register `$rD`.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `val0`: Number; value of register `$rA`.
+- `val1`: Number; value of register `$rB`.
+- `val2`: Number; value of register `$rC`.
+- `val3`: Number; value of register `$rD`.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -175,14 +175,14 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### LogData receipt
 
 - `type`: `LogData`.
-- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `val0`: Number, value of register `$rA`
-- `val1`: Number, value of register `$rB`
-- `ptr`: Number, value of register `$rC`.
-- `len`: Number, value of register `$rD`.
-- `digest`: String representation of 32-Bytes, hash of `MEM[$rC, $rD]`.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `val0`: Number; value of register `$rA`
+- `val1`: Number; value of register `$rB`
+- `ptr`: Number; value of register `$rC`.
+- `len`: Number; value of register `$rD`.
+- `digest`: Hexadecimal string representation of the 32-byte hash of `MEM[$rC, $rD]`.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -205,12 +205,12 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### ReturnData receipt
 
 - `type`: `ReturnData`.
-- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `ptr`: Number, value of register `$rA`.
-- `len`: Number, value of register `$rB`.
+- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `ptr`: Number; value of register `$rA`.
+- `len`: Number; value of register `$rB`.
 - `digest`: String representation of 32-Bytes, hash of `MEM[$rA, $rB]`.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -231,10 +231,10 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### Revert receipt
 
 - `type`: `Revert`.
-- `id`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `val`: Number, value of register `$rA`.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `id`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `val`: Number; value of register `$rA`.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -253,12 +253,12 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### Transfer receipt
 
 - `type`: `Transfer`.
-- `from`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `to`: String representation of 32-Bytes, _contract ID_ of contract to transfer coins to.
-- `amount`: Number, amount of coins to forward.
-- `color`: String representation of 32-Bytes, color of coins to forward.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `from`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `to`: Hexadecimal string representation of the 32-byte contract ID of the recipient contract.
+- `amount`: Number; amount of coins to forward.
+- `color`: Hexadecimal string representation of the 32-byte color of coins to forward.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
@@ -279,12 +279,12 @@ Then, each receipt type will have its own properties. Some of these properties a
 #### TransferOut receipt
 
 - `type`: `TransferOut`.
-- `from`: String representation of 32-Bytes, contract ID of current context if in an internal context, zero otherwise.
-- `to`: String representation of 32-Bytes, _address_ to transfer coins to.
-- `amount`: Number, amount of coins to forward.
-- `color`: String representation of 32-Bytes, color of coins to forward.
-- `pc`: Number, value of register `$pc`.
-- `is`: Number, value of register `$is`.
+- `from`: Hexadecimal string representation of the 32-byte contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `to`: Hexadecimal string representation of the 32-byte _address_ to transfer coins to.
+- `amount`: Number; amount of coins to forward.
+- `color`: Hexadecimal string representation of the 32-byte color of coins to forward.
+- `pc`: Number; value of register `$pc`.
+- `is`: Number; value of register `$is`.
 
 ```json
 {
