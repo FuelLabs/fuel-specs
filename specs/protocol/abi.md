@@ -1,6 +1,6 @@
 # Contract ABI Format
 
-This document describes and specifies the ABI (Application Binary Interface) of the Fuel Virtual Machine, the Sway programming language, and contracts written in Sway.
+This document describes and specifies the ABI (Application Binary Interface) of the FuelVM, the Sway programming language, and contracts written in Sway.
 
 ## JSON ABI Format
 
@@ -285,7 +285,7 @@ abi MyContract {
 
 The function selector is the first 4 bytes of the SHA-256 hash function of the signature of the Sway function being called. Then, these 4 bytes are right-aligned to 8 bytes, left-padded with zeroes.
 
-_N.B.: the default word size for the Fuel Virtual Machine is 8 bytes._
+_N.B.: the default word size for the FuelVM is 8 bytes._
 
 The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8.
 
