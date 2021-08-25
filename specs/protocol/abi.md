@@ -56,15 +56,15 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON object represent
 All receipts will have a `type` property:
 
 - `type`: String; the type of the receipt. Can be one of:
-  - Call
-  - Return
-  - ReturnData
-  - Panic
-  - Revert
-  - Log
-  - LogData
-  - Transfer
-  - TransferOut
+  - "Call"
+  - "Return"
+  - "ReturnData"
+  - "Panic"
+  - "Revert"
+  - "Log"
+  - "LogData"
+  - "Transfer"
+  - "TransferOut"
 
 Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
 
@@ -73,7 +73,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Panic receipt
 
 - `type`: `Panic`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `reason`: String representation of a 64-bit unsigned integer; panic reason.
 - `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
@@ -91,7 +91,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Return receipt
 
 - `type`: `Return`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; `null` otherwise.
 - `val`: String representation of a 64-bit unsigned integer; value of register `$rA`.
 - `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
@@ -109,12 +109,12 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Call receipt
 
 - `type`: `Call`.
-- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; zero (`"0"`) otherwise.
-- `to`: Hexadecimal representation of the 256-bit (32 bytes) contract ID of the callee..
+- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; `null` otherwise.
+- `to`: Hexadecimal representation of the 256-bit (32 bytes) contract ID of the callee.
 - `amount`: String representation of a 64-bit unsigned integer; amount of coins to forward.
 - `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
-- `gas`: String representation of a 64-bit unsigned integer; amount gas to forward; value in [register `$rD`](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md#call-call-contract).
-- `param1`: String representation of a 64-bit unsigned integer; first parameter.
+- `gas`: String representation of a 64-bit unsigned integer; amount gas to forward; value in register `$rD`.
+- `param1`: String representation of a 64-bit unsigned integer; first parameter, holds the function selector.
 - `param2`: String representation of a 64-bit unsigned integer; second parameter.
 - `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
@@ -137,7 +137,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Log receipt
 
 - `type`: `Log`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `val0`: String representation of a 64-bit unsigned integer; value of register `$rA`.
 - `val1`: String representation of a 64-bit unsigned integer; value of register `$rB`.
 - `val2`: String representation of a 64-bit unsigned integer; value of register `$rC`.
@@ -161,13 +161,13 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### LogData receipt
 
 - `type`: `LogData`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `val0`: String representation of a 64-bit unsigned integer; value of register `$rA`
 - `val1`: String representation of a 64-bit unsigned integer; value of register `$rB`
 - `ptr`: String representation of a 64-bit unsigned integer; value of register `$rC`.
 - `len`: String representation of a 64-bit unsigned integer; value of register `$rD`.
 - `digest`: Hexadecimal string representation of the 256-bit (32 bytes) hash of `MEM[$rC, $rD]`.
-- `mem_range_value`: String representation of the value of the memory range `MEM[$rC, $rD]`.
+- `data`: String representation of the value of the memory range `MEM[$rC, $rD]`.
 - `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -188,7 +188,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### ReturnData receipt
 
 - `type`: `ReturnData`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `ptr`: String representation of a 64-bit unsigned integer; value of register `$rA`.
 - `len`: String representation of a 64-bit unsigned integer; value of register `$rB`.
 - `digest`: String representation of 256-bit (32 bytes), hash of `MEM[$rA, $rB]`.
@@ -211,7 +211,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Revert receipt
 
 - `type`: `Revert`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `val`: String representation of a 64-bit unsigned integer; value of register `$rA`.
 - `pc`: String representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: String representation of a 64-bit unsigned integer; value of register `$is`.
@@ -229,7 +229,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Transfer receipt
 
 - `type`: `Transfer`.
-- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `to`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the recipient contract.
 - `amount`: String representation of a 64-bit unsigned integer; amount of coins to forward.
 - `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
@@ -251,7 +251,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### TransferOut receipt
 
 - `type`: `TransferOut`.
-- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. Zero (`"0"`) otherwise.
+- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
 - `to`: Hexadecimal string representation of the 256-bit (32 bytes) _address_ to transfer coins to.
 - `amount`: String representation of a 64-bit unsigned integer; amount of coins to forward.
 - `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
@@ -325,11 +325,9 @@ These are the available types that can be encoded in the ABI:
 - Sum types
 - Structs
 
-### Static Encoding
+These types are encoded in-place. Here's how to encode them. We define `enc(X)` the encoding of the type `X`.
 
-Static types are encoded in-place. Here's how to encode these static types. We define `enc(X)` the encoding of the type `X`.
-
-#### Unsigned Integers
+### Unsigned Integers
 
 `u<M>` where `M` is either 8, 16, 32, or 64 bits.
 
@@ -341,7 +339,7 @@ _Note: since all integer values are unsigned, there is no need to preserve the s
 
 Encoding `42` yields: `0x000000000000002a`, which is the binary representation of the decimal number `42`, right-aligned to 8 bytes.
 
-#### Boolean
+### Boolean
 
 `enc(X)` is `0` if `X` is false or `1` if `X` is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the `u8` encoding.
 
@@ -353,7 +351,7 @@ Encoding `true` yields:
 0x0000000000000001
 ```
 
-#### Byte
+### Byte
 
 `byte`, a single byte.
 
@@ -367,7 +365,7 @@ Encoding `255` yields:
 0x00000000000000ff
 ```
 
-#### B256
+### B256
 
 `b256` is a fixed size bit array of length 256. Used for 256-bit hash digests and other 256-bit types. It is encoded as-is.
 
@@ -379,7 +377,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 ```
 
-#### Address
+### Address
 
 A 256 bits (32 bytes) address, encoded in the same way as a `B256` argument: encoded as-is.
 
@@ -391,56 +389,31 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 ```
 
-### Dynamic Encoding
+### Array
 
-Encoding dynamic types, for instance, arrays, is slightly different. For these types we introduce a new section of the ABI: the dynamic data location, a place in the ABI reserved for the data stored in arguments with more complex types. For static types we don't need to make use of this section; the values are stored in place.
+An array of a certain type `T`, `T[n]`, where `n` is the length of the array.
 
-For instance, consider the function signature: `my_func(bool,u8[])` and that we're passing the following values: `(true, [1,2])`.
+Arrays in Sway have fixed-length known at compile time, this means the ABI encoding for arrays also happens in-place.  
 
-The first part of the encoding will contain:
+The encoding for the array contains, in order, the encoding of each element in `T[n]`, recursively following the encoding for the type `T`.
 
-1. `true` encoded in-place, as it is plain static encoding
-2. A pointer to where the array `u8[]` will start in the data location section of the ABI
+For instance, consider the function signature `my_func(bool,str[2])` with the values `(true,[1, 2])`.
 
-Then, the second part will be the location section itself, containing the proper values for these complex types. The sections below specifies in details how to proper encode these types.
-
-#### Array
-
-An array of a certain type `T`, `T[]`. The first part of the array encoding will be the offset where its encoded data will be stored at. Once the first part of the ABI encoding is done (in-place values and pointers), the second part starts (data location).
-
-In the second part, the second part of the array encoding starts, it contains, in order, the encoding of each element in `T[]`, recursively following the encoding for the type `T`.
-
-Let's revisit the example from the section above:
-
-`my_func(bool, str[])` with the values `(true, [1, 2])`.
-
-The first part of the encoding will be:
+The encoding will be:
 
 1. `0x0000000000000001`, the `true` bool encoded in-place.
-2. `0x0000000000000010`, the offset that points to where the data for the second parameter (`u8[]`) starts. In this case, `0x10 == 16`, which is exactly 2 words (16 bytes) after the beginning of the encoding.
+2. `0x0000000000000001`, First element of the parameter `str[2]`, `1`, encoded as a u8, right-aligned to 8 bytes.
+3. `0x0000000000000002`, Second element of the parameter `str[2]`, `2`, encoded as a u8, right-aligned to 8 bytes.
 
-Then, the second part of the encoding starts:
-
-1. `0x0000000000000001`, `1` encoded as a u8, right-aligned to 8 bytes.
-2. `0x0000000000000002`, `2` encoded as a u8, right-aligned to 8 bytes.
-
-Note that the first value encoded in the second part starts at `0x10`, in other words: after 16 bytes. Which is exactly where the encoded second argument points to.
-
-Also note that because Sway uses fixed-size arrays, the function signature will contain information about the length of any array parameters.
-
-The resulting ABI will be:
+The resulting encoded ABI will be:
 
 ```text
-0x0000000000000001000000000000001000000000000000010000000000000002
+0x000000000000000100000000000000010000000000000002
 ```
 
-#### Fixed-length Strings
+### Fixed-length Strings
 
-Strings have fixed length and are encoded in the same way as an array. `string[n]`, where `n` is the fixed-size of the string.
-
-Like an array, the first part of the encoding is the offset where the array data will start.
-
-Then, in the data location, the encoding will contain the UTF-8 encoded string.
+Strings have fixed length and are encoded in the same way as an array. `str[n]`, where `n` is the fixed-size of the string.
 
 Note that all strings are encoded in UTF-8.
 
@@ -449,35 +422,14 @@ Note that all strings are encoded in UTF-8.
 Encoding `"Hello, World"` as a `str[12]` **yields**:
 
 ```text
-0x000000000000000848656c6c6f2c20576f726c64
+0x0000000048656c6c6f2c20576f726c64
 ```
 
-Where `0x0000000000000008` is the offset and `0x48656c6c6f2c20576f726c64` is `"Hello, World"` encoded in UTF-8.
+Note that we're padding with zeroes in order to keep it right-aligned to 8 bytes (FuelVM's word size).
 
-A more complex example is an array of strings, which is encoded like an array of arrays. Suppose the function `complex(string[])` with the parameters `["hello", "world"]`.
+### Structs
 
-Let's start by encoding the most atomic arguments.
-
-```text
-1. a - offset for "hello"
-2. b - offset for "world"
-3. 0x00000068656c6c6f - encoding of "hello"
-4. 0x000000776f726c64 - encoding of "world"
-```
-
-Now let's compute the `a` and `b` offsets.
-
-The offset `a` should point to where the content for "hello" starts, which is line 3, which means we have to offset 2 lines (line 1 and line 2), so `2 * 8`, 16 bytes. `a = 0x0000000000000010`.
-
-Same procedure for the offset `b`. `world` content starts at line 4. We have to offset 3 lines, `3 * 8`, 24 bytes. `a = 0x0000000000000018`.
-
-So our final encoding will be:
-
-`0x0000000000000010000000000000001800000068656c6c6f000000776f726c64`.
-
-#### Structs
-
-Encoding ABIs that contain custom types, such as structs, are similar to encoding arrays and strings: you must first encode the offset that points to where the data from the inner fields of the struct are going to be encoded at. At that location, the encoding will proceed _recursively_ just like encoding any other type, in other words: primitive types will be encoded in place and dynamic types will encode offsets. This way you can encode structs with primitive types or structs with more complex types in it, such as other structs, arrays, strings, and enums.
+Encoding ABIs that contain custom types, such as structs, is similar to encoding a set of primitive types. The encoding will proceed in the order that the inner types of a custom type are declared and _recursively_ just like encoding any other type. This way you can encode structs with primitive types or structs with more complex types in it, such as other structs, arrays, strings, and enums.
 
 Here's an example:
 
@@ -500,7 +452,6 @@ Calling `bar` with `InputStruct{field_1: true, field_2: 5}` yields:
 
 ```plaintext
 0x
-0000000000000008 // Offset to InputStruct (exactly one word)
 0000000000000001 // `true` encoded as a bool
 0000000000000005 // `5` encoded as u8
 ```
@@ -510,7 +461,7 @@ More complex scenario
 ```rust
 struct InputStruct {
     field_1: bool,
-    field_2: u8[], // An array of u8
+    field_2: u8[2], // An array of u8, with length 2.
 }
 
 
@@ -526,14 +477,12 @@ Calling `bar` with `InputStruct{field_1: true, field_2: [1,2]}` yields:
 
 ```plaintext
 0x
-0000000000000008 // Offset to InputStruct (exactly one word)
 0000000000000001 // `true` encoded as a bool
-0000000000000008 // Another offset to `field_2` which is an array (dynamic encoding)
 0000000000000001 // `1` encoded as u8
 0000000000000002 // `2` encoded as u8
 ```
 
-#### Sum types (Enums)
+### Sum types (Enums)
 
 ABI calls containing sum types (enums) are encoded identically to structs: encode the offset first, then recursively encode the type of the enum variant being passed to the function being called.
 
@@ -556,8 +505,6 @@ Calling `bar` with `MySumType::x(42)` yields:
 
 ```plaintext
 0x
-0000000000000008 // Offset to MySumType (exactly one word)
+0000000000000000 // The discriminant of the chosen enum, in this case `0`.
 000000000000002a // `42` encoded as u64
 ```
-
-TODO: I'm assuming the encoder/decoder can infer which variant is being passed by the call arguments (e.g `MySumType::x(42)` being passed to the call, so it knows it's the variant `x`). We could also encode the enum variant's numeric representation (e.g 0, 1, 2, ...) in the ABI. Thoughts?
