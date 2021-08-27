@@ -68,12 +68,12 @@ All receipts will have a `type` property:
 
 Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
 
-_Important note:_ For the JSON representation of the receipts, we represent 64-bit unsigned integers as a JSON's `String` due to limitation around the type `Number` in the JSON specification, which only supports numbers up to `2^{53-1}`, whereas the FuelVM's registers hold values up to `2^64`.
+_Important note:_ For the JSON representation of receipts, we represent 64-bit unsigned integers as a JSON `String` due to limitations around the type `Number` in the JSON specification, which only supports numbers up to `2^{53-1}`, while the FuelVM's registers hold values up to `2^64`.
 
 #### Panic receipt
 
 - `type`: `Panic`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `reason`: Decimal string representation of an 8-bit unsigned integer; panic reason.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
@@ -91,7 +91,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Return receipt
 
 - `type`: `Return`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
 - `val`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
@@ -109,13 +109,13 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Call receipt
 
 - `type`: `Call`.
-- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context; `null` otherwise.
-- `to`: Hexadecimal representation of the 256-bit (32 bytes) contract ID of the callee.
+- `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
+- `to`: Hexadecimal representation of the 256-bit (32-byte) contract ID of the callee.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
+- `color`: Hexadecimal string representation of the 256-bit (32-byte) color of coins to forward.
 - `gas`: Decimal string representation of a 64-bit unsigned integer; amount gas to forward; value in register `$rD`.
 - `param1`: Hexadecimal string representation of a 64-bit unsigned integer; first parameter, holds the function selector.
-- `param2`: Hexadecimal string representation of a 64-bit unsigned integer; second parameter.
+- `param2`: Hexadecimal string representation of a 64-bit unsigned integer; second parameter, typically used for the user-specified input to the ABI function being selected.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -137,7 +137,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Log receipt
 
 - `type`: `Log`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `val0`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
 - `val1`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`.
 - `val2`: Decimal string representation of a 64-bit unsigned integer; value of register `$rC`.
@@ -161,12 +161,12 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### LogData receipt
 
 - `type`: `LogData`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `val0`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`
 - `val1`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`
 - `ptr`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rC`.
 - `len`: Decimal string representation of a 64-bit unsigned integer; value of register `$rD`.
-- `digest`: Hexadecimal string representation of the 256-bit (32 bytes) hash of `MEM[$rC, $rD]`.
+- `digest`: Hexadecimal string representation of the 256-bit (32-byte) hash of `MEM[$rC, $rD]`.
 - `data`: Hexadecimal string representation of the value of the memory range `MEM[$rC, $rD]`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
@@ -189,10 +189,10 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### ReturnData receipt
 
 - `type`: `ReturnData`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `ptr`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rA`.
 - `len`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`.
-- `digest`: Hexadecimal string representation of 256-bit (32 bytes), hash of `MEM[$rA, $rB]`.
+- `digest`: Hexadecimal string representation of 256-bit (32-byte), hash of `MEM[$rA, $rB]`.
 - `data`: Hexadecimal string representation of the value of the memory range `MEM[$rA, $rB]`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
@@ -213,7 +213,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Revert receipt
 
 - `type`: `Revert`.
-- `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `val`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
@@ -231,10 +231,10 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### Transfer receipt
 
 - `type`: `Transfer`.
-- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
-- `to`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the recipient contract.
+- `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
+- `to`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the recipient contract.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
+- `color`: Hexadecimal string representation of the 256-bit (32-byte) color of coins to forward.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -253,10 +253,10 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 #### TransferOut receipt
 
 - `type`: `TransferOut`.
-- `from`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
-- `to`: Hexadecimal string representation of the 256-bit (32 bytes) _address_ to transfer coins to.
+- `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
+- `to`: Hexadecimal string representation of the 256-bit (32-byte) _address_ to transfer coins to.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 256-bit (32 bytes) color of coins to forward.
+- `color`: Hexadecimal string representation of the 256-bit (32-byte) color of coins to forward.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -291,13 +291,13 @@ _N.B.: the word size for the FuelVM is 8 bytes._
 
 The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8.
 
-For instance, in the case of the function `entry_one` above, we would pass the string `"entry_one(u64)"` to the `sha256()` hashing algorithm, the full digest would be:
+For instance, in the case of the function `entry_one` above, we would pass the string `"entry_one(u64)"` to the `sha256()` hashing algorithm. The full digest would be:
 
 ```text
 0x0c36cb9cb766ff60422db243c4fff06d342949da3c64a3c6ac564941f84b6f06
 ```
 
-Then we would get only the first 4 bytes of this digest and left pad it to 8 bytes:
+Then we would get only the first 4 bytes of this digest and left-pad it to 8 bytes:
 
 ```text
 0x000000000c36cb9c
@@ -305,7 +305,7 @@ Then we would get only the first 4 bytes of this digest and left pad it to 8 byt
 
 ## Argument Encoding
 
-When crafting a transaction script data, you must encode the arguments you wish to pass to the script.
+When crafting transaction script data, you must encode the arguments you wish to pass to the script.
 
 **The encoding for the argument will depend on the type of the argument being encoded.**
 
@@ -321,7 +321,7 @@ These are the available types that can be encoded in the ABI:
 - Boolean: `bool`, either `0` or `1` encoded identically to `u8`.
 - Byte: `byte`, single byte.
 - B256: `b256`, arbitrary 256-bits value.
-- Address : `address`, a 256-bit (32 bytes) address.
+- Address : `address`, a 256-bit (32-byte) address.
 - Fixed size string
 - Array
 - Sum types
@@ -381,7 +381,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 
 ### Address
 
-A 256 bits (32 bytes) address, encoded in the same way as a `B256` argument: encoded as-is.
+A 256-bit (32-byte) address, encoded in the same way as a `b256` argument: encoded as-is.
 
 **Example:**
 
@@ -395,7 +395,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 
 An array of a certain type `T`, `T[n]`, where `n` is the length of the array.
 
-Arrays in Sway have fixed-length known at compile time, this means the ABI encoding for arrays also happens in-place.  
+Arrays in Sway have a fixed-length which is known at compile time. This means the ABI encoding for arrays also happens in-place, with no need to account for dynamic sizing.
 
 The encoding for the array contains, in order, the encoding of each element in `T[n]`, recursively following the encoding for the type `T`.
 
@@ -431,7 +431,7 @@ Note that we're padding with zeroes in order to keep it right-aligned to 8 bytes
 
 ### Structs
 
-Encoding ABIs that contain custom types, such as structs, is similar to encoding a set of primitive types. The encoding will proceed in the order that the inner types of a custom type are declared and _recursively_ just like encoding any other type. This way you can encode structs with primitive types or structs with more complex types in it, such as other structs, arrays, strings, and enums.
+Encoding ABIs that contain custom types, such as structs, is similar to encoding a set of primitive types. The encoding will proceed in the order that the inner types of a custom type are declared and _recursively_ just like encoding any other type. This way you can encode structs with primitive types or structs with more complex types in them such as other structs, arrays, strings, and enums.
 
 Here's an example:
 
@@ -458,7 +458,7 @@ Calling `bar` with `InputStruct{field_1: true, field_2: 5}` yields:
 0000000000000005 // `5` encoded as u8
 ```
 
-More complex scenario
+A more complex scenario:
 
 ```rust
 struct InputStruct {
@@ -486,7 +486,7 @@ Calling `bar` with `InputStruct{field_1: true, field_2: [1,2]}` yields:
 
 ### Sum types (Enums)
 
-ABI calls containing sum types (enums) are encoded identically to structs: encode the offset first, then recursively encode the type of the enum variant being passed to the function being called.
+ABI calls containing sum types (enums) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.
 
 ```rust
 enum MySumType
