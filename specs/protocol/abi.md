@@ -74,7 +74,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 
 - `type`: `Panic`.
 - `id`: Hexadecimal string representation of the 256-bit (32 bytes) contract ID of the current context if in an internal context. `null` otherwise.
-- `reason`: JSON `Number` type (up to `2^{53-1}`); panic reason.
+- `reason`: Decimal string representation of an 8-bit unsigned integer; panic reason.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -82,7 +82,7 @@ _Important note:_ For the JSON representation of the receipts, we represent 64-b
 {
     "type":"Panic",
     "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "reason":1,
+    "reason":"1",
     "pc":"0xffffffffffffffff",
     "is":"0xfffffffffffffffe"
 }
@@ -424,7 +424,7 @@ Note that all strings are encoded in UTF-8.
 Encoding `"Hello, World"` as a `str[12]` **yields**:
 
 ```text
-0x48656c6c6f2c20576f726c64
+0x48656c6c6f2c20576f726c6400000000
 ```
 
 Note that we're padding with zeroes in order to keep it right-aligned to 8 bytes (FuelVM's word size).
