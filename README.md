@@ -2,9 +2,11 @@
 
 This repository specifies the Fuel protocol, including the Fuel Virtual Machine (FuelVM, FVM), a next-generation verifiable virtual machine for [the Fuel v2 blockchain](https://github.com/FuelLabs).
 
-- [Specification](#specification)
-  - [Protocol](#protocol)
-  - [FuelVM](#fuelvm)
+- [Fuel Specifications](#fuel-specifications)
+  - [Specification](#specification)
+    - [Protocol](#protocol)
+    - [FuelVM](#fuelvm)
+  - [Contributing](#contributing)
 
 ## Specification
 
@@ -15,6 +17,7 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 1. [identifiers.md](./specs/protocol/identifiers.md): How to compute unique IDs for transactions and UTXOs.
 1. [tx_validity.md](./specs/protocol/tx_validity.md): Defines transaction validity rules.
 1. [cryptographic_primitives](./specs/protocol/cryptographic_primitives.md): Cryptographic primitives used in Fuel.
+1. [abi.md](./specs/protocol/abi.md): ABI specifications.
 
 ### FuelVM
 

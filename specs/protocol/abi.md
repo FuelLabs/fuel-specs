@@ -66,7 +66,7 @@ All receipts will have a `type` property:
   - "Transfer"
   - "TransferOut"
 
-Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](https://github.com/FuelLabs/fuel-specs/blob/master/specs/vm/opcodes.md).
+Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../vm/opcodes.md).
 
 _Important note:_ For the JSON representation of receipts, we represent 64-bit unsigned integers as a JSON `String` due to limitations around the type `Number` in the JSON specification, which only supports numbers up to `2^{53-1}`, while the FuelVM's registers hold values up to `2^64`.
 
