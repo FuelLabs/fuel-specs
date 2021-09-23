@@ -11,17 +11,10 @@ The JSON of an ABI is the human-readable representation of an interface call to 
 - `inputs`: An array of objects that represents the inputs to this function, each of which contains:
   - `name`: String, the name of the parameter;
   - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct or enum);
+  - `components`:, Optional object, used if the `type` is a custom type, contains:
+    - `name`: String, the name of the component;
+    - `type`: String, the type of the component;
 - `outputs`: An array of objects similar to `inputs`;
-- `structs`: Optional array object, used if structs are being used, each of which contains:
-  - `name`: String, the name of the struct;
-  - `fields`: Array of objects, the fields of the struct, each contains:
-    - `name`: String, name of the field;
-    - `type`: String, type of the field;
-- `enums`: Optional array object, used if enums are being used, each of which contains:
-  - `name`: String, the name of the enum;
-  - `variants`: Array of objects, the variants of the enum, each contains:
-    - `name`: String, name of the field;
-    - `type`: String, type of the field;
 
 For instance:
 
@@ -51,35 +44,39 @@ Here an example containing custom types:
 [
     {
         "type":"contract",
-        "structs":[
+        "inputs":[
             {
-                "name":"MyStruct",
-                "fields":[
+                "name":"MyNestedStruct",
+                "type":"struct",
+                "components": [
                     {
-                        "name":"foo",
-                        "type":"u8"
+                        "name": "x",
+                        "type": "u16"
                     },
                     {
-                        "name":"bar",
-                        "type":"bool"
+                        "name": "y",
+                        "type": "struct",
+                        "components": [
+                            {
+                                "name":"a",
+                                "type": "bool"
+                            },
+                            {
+                                "name":"b",
+                                "type": "u8[2]"
+                            }
+                        ]
                     }
                 ]
             }
         ],
-        "enums":[],
-        "inputs":[
-            {
-                "name":"my_struct",
-                "type":"MyStruct"
-            }
-        ],
-        "name":"takes_struct",
-        "outputs":[
-            
-        ]
+        "name":"takes_nested_struct",
+        "outputs":[]
     }
 ]
 ```
+
+**Important note**: The ordering of the components of a struct or enum _matters_ for the encoding mechanism. For instance, in the example above, we define the components `a`, then `b`, of the struct `y`. That means when encoding, a `bool` (`a`) will be encoded first, then a `u8[2]`(`b`) will be encoded. That also means that when passing values to the encoder they must also follow the specified order: `"(true,[1,2])"` should be fed into the encoder.
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
