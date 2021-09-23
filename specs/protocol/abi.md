@@ -11,10 +11,17 @@ The JSON of an ABI is the human-readable representation of an interface call to 
 - `inputs`: An array of objects that represents the inputs to this function, each of which contains:
   - `name`: String, the name of the parameter;
   - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct or enum);
-  - `components`:, Optional object, used if the `type` is a custom type, contains:
-    - `name`: String, the name of the component;
-    - `type`: String, the type of the component;
 - `outputs`: An array of objects similar to `inputs`;
+- `structs`: Optional array object, used if structs are being used, each of which contains:
+  - `name`: String, the name of the struct;
+  - `fields`: Array of objects, the fields of the struct, each contains:
+    - `name`: String, name of the field;
+    - `type`: String, type of the field;
+- `enums`: Optional array object, used if enums are being used, each of which contains:
+  - `name`: String, the name of the enum;
+  - `variants`: Array of objects, the variants of the enum, each contains:
+    - `name`: String, name of the field;
+    - `type`: String, type of the field;
 
 For instance:
 
@@ -44,34 +51,32 @@ Here an example containing custom types:
 [
     {
         "type":"contract",
-        "inputs":[
+        "structs":[
             {
-                "name":"MyNestedStruct",
-                "type":"struct",
-                "components": [
+                "name":"MyStruct",
+                "fields":[
                     {
-                        "name": "x",
-                        "type": "u16"
+                        "name":"foo",
+                        "type":"u8"
                     },
                     {
-                        "name": "y",
-                        "type": "struct",
-                        "components": [
-                            {
-                                "name":"a",
-                                "type": "bool"
-                            },
-                            {
-                                "name":"b",
-                                "type": "u8[2]"
-                            }
-                        ]
+                        "name":"bar",
+                        "type":"bool"
                     }
                 ]
             }
         ],
-        "name":"takes_nested_struct",
-        "outputs":[]
+        "enums":[],
+        "inputs":[
+            {
+                "name":"my_struct",
+                "type":"MyStruct"
+            }
+        ],
+        "name":"takes_struct",
+        "outputs":[
+            
+        ]
     }
 ]
 ```
