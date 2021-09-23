@@ -132,7 +132,7 @@ Transaction is invalid if:
 - Any output is of type `OutputType.Contract` or `OutputType.Variable`
 - More than one output is of type `OutputType.Change` with `color` of zero
 - Any output is of type `OutputType.Change` with non-zero `color`
-- More than one output is of type `OutputType.ContractCreated`
+- It does not have exactly one output of type `OutputType.ContractCreated`
 - `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 - `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
 - `bytecodeWitnessIndex >= tx.witnessesCount`
