@@ -85,6 +85,7 @@
   - [XWS: Transaction witness start](#xws-transaction-witness-start)
 - [Other Opcodes](#other-opcodes)
   - [FLAG: Set flags](#flag-set-flags)
+  - [GM: Get metadata](#gm-get-metadata)
 
 ## Reading Guide
 
@@ -1633,3 +1634,13 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `flag $rA`            |
 | Encoding    | `0x00 rA - - -`       |
 | Notes       |                       |
+
+### GM: Get metadata
+
+|             |                           |
+|-------------|---------------------------|
+| Description | Get metadata from memory. |
+| Operation   | Varies (see below).       |
+| Syntax      | `gm $rA, imm`             |
+| Encoding    | `0x00 rA imm imm imm`     |
+| Notes       |                           |
