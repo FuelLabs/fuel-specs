@@ -1647,10 +1647,24 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 Read metadata from memory. A convenience instruction to avoid manually extracting metadata.
 
-| name        | value     | description |
-|-------------|-----------|-------------|
-| `GM_CALLER` | `0x00001` | Get caller. |
+| name                    | value     | description                |
+|-------------------------|-----------|----------------------------|
+| `GM_IS_CALLER_EXTERNAL` | `0x00001` | Get if caller is external. |
+| `GM_GET_CALLER`         | `0x00002` | Get caller's contract ID.  |
 
-If `imm == GM_CALLER`:
+If `imm == GM_IS_CALLER_EXTERNAL`:
 
-Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID), or zero if in an external context.
+Panic if:
+
+- `$fp == 0` (in an external context)
+
+Set `$rA` to `true` if parent is an external context, `false` otherwise.
+
+If `imm == GM_GET_CALLER`:
+
+Panic if:
+
+- `$fp == 0` (in an external context)
+- `$fp->$fp == 0` (if parent context is external)
+
+Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
