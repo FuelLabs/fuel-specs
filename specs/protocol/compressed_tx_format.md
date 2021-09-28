@@ -87,21 +87,21 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### InputCoin
 
-| name                  | type         | description                                                            |
-|-----------------------|--------------|------------------------------------------------------------------------|
-| `utxoPointer`         | `TXOPointer` | UTXO pointer.                                                          |
-| `witnessIndex`        | `uint8`      | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint32`     | UTXO being spent must have been created at least this many blocks ago. |
-| `predicateLength`     | `uint16`     | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`     | Length of predicate input data, in bytes.                              |
-| `predicate`           | `byte[]`     | Predicate bytecode.                                                    |
-| `predicateData`       | `byte[]`     | Predicate input data (parameters).                                     |
+| name                  | type                      | description                                                            |
+|-----------------------|---------------------------|------------------------------------------------------------------------|
+| `utxoPointer`         | [TXOPointer](#txopointer) | UTXO pointer.                                                          |
+| `witnessIndex`        | `uint8`                   | Index of witness that authorizes spending the coin.                    |
+| `maturity`            | `uint32`                  | UTXO being spent must have been created at least this many blocks ago. |
+| `predicateLength`     | `uint16`                  | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint16`                  | Length of predicate input data, in bytes.                              |
+| `predicate`           | `byte[]`                  | Predicate bytecode.                                                    |
+| `predicateData`       | `byte[]`                  | Predicate input data (parameters).                                     |
 
 ### InputContract
 
-| name          | type         | description   |
-|---------------|--------------|---------------|
-| `utxoPointer` | `TXOPointer` | UTXO pointer. |
+| name          | type                      | description   |
+|---------------|---------------------------|---------------|
+| `utxoPointer` | [TXOPointer](#txopointer) | UTXO pointer. |
 
 ## Output
 
@@ -112,11 +112,11 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### OutputCoin
 
-| name           | type                    | description                                       |
-|----------------|-------------------------|---------------------------------------------------|
-| `toPointer`    | `DigestRegistryPointer` | Receiving address pointer or script hash pointer. |
-| `amount`       | `uint64`                | Amount of coins to send.                          |
-| `colorPointer` | `DigestRegistryPointer` | Color pointer of coins.                           |
+| name           | type                                            | description                                       |
+|----------------|-------------------------------------------------|---------------------------------------------------|
+| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
+| `amount`       | `uint64`                                        | Amount of coins to send.                          |
+| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.                           |
 
 ### OutputContract
 
@@ -126,33 +126,33 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### OutputWithdrawal
 
-| name           | type                    | description                  |
-|----------------|-------------------------|------------------------------|
-| `toPointer`    | `DigestRegistryPointer` | Receiving address pointer.   |
-| `amount`       | `uint64`                | Amount of coins to withdraw. |
-| `colorPointer` | `DigestRegistryPointer` | Color pointer of coins.      |
+| name           | type                                            | description                  |
+|----------------|-------------------------------------------------|------------------------------|
+| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer.   |
+| `amount`       | `uint64`                                        | Amount of coins to withdraw. |
+| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.      |
 
 ### OutputChange
 
-| name           | type                    | description                                       |
-|----------------|-------------------------|---------------------------------------------------|
-| `toPointer`    | `DigestRegistryPointer` | Receiving address pointer or script hash pointer. |
-| `amount`       | `uint64`                | Amount of coins to send.                          |
-| `colorPointer` | `DigestRegistryPointer` | Color pointer of coins.                           |
+| name           | type                                            | description                                       |
+|----------------|-------------------------------------------------|---------------------------------------------------|
+| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
+| `amount`       | `uint64`                                        | Amount of coins to send.                          |
+| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.                           |
 
 ### OutputVariable
 
-| name           | type                    | description                                       |
-|----------------|-------------------------|---------------------------------------------------|
-| `toPointer`    | `DigestRegistryPointer` | Receiving address pointer or script hash pointer. |
-| `amount`       | `uint64`                | Amount of coins to send.                          |
-| `colorPointer` | `DigestRegistryPointer` | Color pointer of coins.                           |
+| name           | type                                            | description                                       |
+|----------------|-------------------------------------------------|---------------------------------------------------|
+| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
+| `amount`       | `uint64`                                        | Amount of coins to send.                          |
+| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.                           |
 
 ### OutputContractCreated
 
-| name                | type                    | description          |
-|---------------------|-------------------------|----------------------|
-| `contractIDPointer` | `DigestRegistryPointer` | Contract ID pointer. |
+| name                | type                                            | description          |
+|---------------------|-------------------------------------------------|----------------------|
+| `contractIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Contract ID pointer. |
 
 ## Witness
 
