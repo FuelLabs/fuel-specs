@@ -1644,3 +1644,13 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `gm $rA, imm`             |
 | Encoding    | `0x00 rA imm imm imm`     |
 | Notes       |                           |
+
+Read metadata from memory. A convenience instruction to avoid manually extracting metadata.
+
+| name        | value     | description |
+|-------------|-----------|-------------|
+| `GM_CALLER` | `0x00001` | Get caller. |
+
+If `imm == GM_CALLER`:
+
+Set `$rA` to the memory address of `$fp->$fp` (i.e. the previous call frame's contract ID), or zero if in an external context.
