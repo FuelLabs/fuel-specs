@@ -47,6 +47,7 @@
   - [MCL: Memory clear](#mcl-memory-clear)
   - [MCLI: Memory clear immediate](#mcli-memory-clear-immediate)
   - [MCP: Memory copy](#mcp-memory-copy)
+  - [MCPI: Memory copy immediate](#mcpi-memory-copy-immediate)
   - [MEQ: Memory equality](#meq-memory-equality)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
@@ -878,6 +879,26 @@ Panic if:
 - `$rC > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./main.md#ownership)
+
+### MCPI: Memory copy immediate
+
+|             |                                      |
+|-------------|--------------------------------------|
+| Description | Copy bytes in memory.                |
+| Operation   | ```MEM[$rA, imm] = MEM[$rB, imm];``` |
+| Syntax      | `mcpi $rA, $rB, imm`                 |
+| Encoding    | `0x00 rA rB imm imm`                 |
+| Notes       |                                      |
+
+Panic if:
+
+- `$rA + imm` overflows
+- `$rB + imm` overflows
+- `$rA + imm > VM_MAX_RAM`
+- `$rB + imm > VM_MAX_RAM`
+- `imm > MEM_MAX_ACCESS_SIZE`
+- The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
+- The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
 
 ### MEQ: Memory equality
 
