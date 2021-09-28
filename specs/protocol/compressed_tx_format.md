@@ -46,22 +46,22 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### TransactionCreate
 
-| name                   | type                    | description                                   |
-|------------------------|-------------------------|-----------------------------------------------|
-| `gasPrice`             | `uint64`                | Gas price for transaction.                    |
-| `gasLimit`             | `uint64`                | Gas limit for transaction.                    |
-| `maturity`             | `uint32`                | Block until which tx cannot be included.      |
-| `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
-| `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |
-| `staticContractsCount` | `uint8`                 | Number of static contracts.                   |
-| `inputsCount`          | `uint8`                 | Number of inputs.                             |
-| `outputsCount`         | `uint8`                 | Number of outputs.                            |
-| `witnessesCount`       | `uint8`                 | Number of witnesses.                          |
-| `salt`                 | `byte[32]`              | Salt.                                         |
-| `staticContracts`      | `byte[32][]`            | List of static contracts.                     |
-| `inputs`               | [Input](#input)`[]`     | List of inputs.                               |
-| `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
-| `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
+| name                   | type                          | description                                   |
+|------------------------|-------------------------------|-----------------------------------------------|
+| `gasPrice`             | `uint64`                      | Gas price for transaction.                    |
+| `gasLimit`             | `uint64`                      | Gas limit for transaction.                    |
+| `maturity`             | `uint32`                      | Block until which tx cannot be included.      |
+| `bytecodeLength`       | `uint16`                      | Contract bytecode length, in instructions.    |
+| `bytecodeWitnessIndex` | `uint8`                       | Witness index of contract bytecode to create. |
+| `staticContractsCount` | `uint8`                       | Number of static contracts.                   |
+| `inputsCount`          | `uint8`                       | Number of inputs.                             |
+| `outputsCount`         | `uint8`                       | Number of outputs.                            |
+| `witnessesCount`       | `uint8`                       | Number of witnesses.                          |
+| `salt`                 | `byte[32]`                    | Salt.                                         |
+| `staticContracts`      | [TXOPointer](#txopointer)`[]` | List of pointers to static contracts.         |
+| `inputs`               | [Input](#input)`[]`           | List of inputs.                               |
+| `outputs`              | [Output](#output)`[]`         | List of outputs.                              |
+| `witnesses`            | [Witness](#witness)`[]`       | List of witnesses.                            |
 
 ## TXOPointer
 
