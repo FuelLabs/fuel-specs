@@ -1653,4 +1653,4 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 
 If `imm == GM_CALLER`:
 
-Set `$rA` to the memory address of `$fp->$fp` (i.e. the previous call frame's contract ID), or zero if in an external context.
+Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID), or zero if in an external context.
