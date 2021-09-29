@@ -86,6 +86,7 @@
   - [XWS: Transaction witness start](#xws-transaction-witness-start)
 - [Other Opcodes](#other-opcodes)
   - [FLAG: Set flags](#flag-set-flags)
+  - [GM: Get metadata](#gm-get-metadata)
 
 ## Reading Guide
 
@@ -1654,3 +1655,37 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Syntax      | `flag $rA`            |
 | Encoding    | `0x00 rA - - -`       |
 | Notes       |                       |
+
+### GM: Get metadata
+
+|             |                           |
+|-------------|---------------------------|
+| Description | Get metadata from memory. |
+| Operation   | Varies (see below).       |
+| Syntax      | `gm $rA, imm`             |
+| Encoding    | `0x00 rA imm imm imm`     |
+| Notes       |                           |
+
+Read metadata from memory. A convenience instruction to avoid manually extracting metadata.
+
+| name                    | value     | description                |
+|-------------------------|-----------|----------------------------|
+| `GM_IS_CALLER_EXTERNAL` | `0x00001` | Get if caller is external. |
+| `GM_GET_CALLER`         | `0x00002` | Get caller's contract ID.  |
+
+If `imm == GM_IS_CALLER_EXTERNAL`:
+
+Panic if:
+
+- `$fp == 0` (in an external context)
+
+Set `$rA` to `true` if parent is an external context, `false` otherwise.
+
+If `imm == GM_GET_CALLER`:
+
+Panic if:
+
+- `$fp == 0` (in an external context)
+- `$fp->$fp == 0` (if parent context is external)
+
+Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
