@@ -11,6 +11,7 @@ The indexer will register a handler for events in the following format:
   - `type`: The source of the event, e.g. Contract
   - `address`: address of contract generating the event, or null otherwise
   - `events`: list of event types this handler function is interested in
+  - `start_block`: integer, nullable. block height at which the indexer should start processing events. null to start at beginning.
   - `handler`: string name of the wasm event handler
 
 Example:
@@ -22,6 +23,7 @@ Example:
       "type": "Contract",
       "address": "0xFEEDBABEF00D",
       "events": [ "CallReceipt", "SomeEvent" ],
+      "start_block": null,
       "handler": "an_event_handler",
     },
     ...
