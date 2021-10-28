@@ -1089,6 +1089,9 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                                                                                                               |
 | Notes       | If `$rD` is greater than the code size, zero bytes are filled in.                                                                                |
 
+This is used only for reading and inspecting code of other contracts.
+Use [`LDC`](#ldc-load-code-from-an-external-contract) to load code for executing.
+
 Panic if:
 
 - `$rA + $rD` overflows
