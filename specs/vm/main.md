@@ -1,16 +1,16 @@
 # Fuel VM Specification
 
-- [Introduction](#introduction)
-- [Parameters](#parameters)
-- [Semantics](#semantics)
-- [Flags](#flags)
-- [Opcodes](#opcodes)
-- [VM Initialization](#vm-initialization)
-- [Contexts](#contexts)
-- [Predicate Verification](#predicate-verification)
-- [Script Execution](#script-execution)
-- [Call Frames](#call-frames)
-- [Ownership](#ownership)
+-   [Introduction](#introduction)
+-   [Parameters](#parameters)
+-   [Semantics](#semantics)
+-   [Flags](#flags)
+-   [Opcodes](#opcodes)
+-   [VM Initialization](#vm-initialization)
+-   [Contexts](#contexts)
+-   [Predicate Verification](#predicate-verification)
+-   [Script Execution](#script-execution)
+-   [Call Frames](#call-frames)
+-   [Ownership](#ownership)
 
 ## Introduction
 
@@ -19,7 +19,7 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 ## Parameters
 
 | name                  | type     | value   | note                                  |
-|-----------------------|----------|---------|---------------------------------------|
+| --------------------- | -------- | ------- | ------------------------------------- |
 | `CONTRACT_MAX_SIZE`   | `uint64` |         | Maximum contract size, in bytes.      |
 | `MEM_MAX_ACCESS_SIZE` | `uint64` |         | Maximum memory access size, in bytes. |
 | `VM_MAX_RAM`          | `uint64` | `2**20` | 1 MiB.                                |
@@ -28,29 +28,29 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 
 FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combination of:
 
-- Opcode: 8 bits
-- Register/special register (see below) identifier: 6 bits
-- Immediate value: 12, 18, or 24 bits, depending on operation
+-   Opcode: 8 bits
+-   Register/special register (see below) identifier: 6 bits
+-   Immediate value: 12, 18, or 24 bits, depending on operation
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
-| value  | register | name                | description                                                                   |
+| value | register | name | description |
 |--------|----------|---------------------|-------------------------------------------------------------------------------|
-| `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                         |
-| `0x01` | `$one`   | one                 | Contains one (`1`), for convenience.                                          |
-| `0x02` | `$of`    | overflow            | Contains overflow/underflow of addition, subtraction, and multiplication.     |
-| `0x03` | `$pc`    | program counter     | The program counter. Memory address of the current instruction.               |
-| `0x04` | `$ssp`   | stack start pointer | Memory address of bottom of current writable stack area.                      |
-| `0x05` | `$sp`    | stack pointer       | Memory address on top of current writable stack area (points to free memory). |
-| `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                            |
-| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to free memory).  |
-| `0x08` | `$err`   | error               | Error codes for particular operations.                                        |
-| `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                       |
-| `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                 |
-| `0x0B` | `$bal`   | balance             | Received balance for this context.                                            |
-| `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                         |
-| `0x0D` | `$ret`   | return value        | Return value or pointer.                                                      |
-| `0x0E` | `$retl`  | return length       | Return value length in bytes.                                                 |
-| `0x0F` | `$flag`  | flags               | Flags register.                                                               |
+| `0x00` | `$zero` | zero | Contains zero (`0`), for convenience. |
+| `0x01` | `$one` | one | Contains one (`1`), for convenience. |
+| `0x02` | `$of` | overflow | Contains overflow/underflow of addition, subtraction, and multiplication. |
+| `0x03` | `$pc` | program counter | The program counter. Memory address of the current instruction. |
+| `0x04` | `$ssp` | stack start pointer | Memory address of bottom of current writable stack area. |
+| `0x05` | `$sp` | stack pointer | Memory address on top of current writable stack area (points to free memory). |
+| `0x06` | `$fp` | frame pointer | Memory address of beginning of current call frame. |
+| `0x07` | `$hp` | heap pointer | Memory address below the current bottom of the heap (points to free memory). |
+| `0x08` | `$err` | error | Error codes for particular operations. |
+| `0x09` | `$ggas` | global gas | Remaining gas globally. |
+| `0x0A` | `$cgas` | context gas | Remaining gas in the context. |
+| `0x0B` | `$bal` | balance | Received balance for this context. |
+| `0x0C` | `$is` | instrs start | Pointer to the start of the currently-executing code. |
+| `0x0D` | `$ret` | return value | Return value or pointer. |
+| `0x0E` | `$retl` | return length | Return value length in bytes. |
+| `0x0F` | `$flag` | flags | Flags register. |
 
 Integers are represented in [big-endian](https://en.wikipedia.org/wiki/Endianness) format, and all operations are unsigned. Boolean `false` is `0` and Boolean `true` is `1`.
 
@@ -61,7 +61,7 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 ## Flags
 
 | value  | name           | description                                           |
-|--------|----------------|-------------------------------------------------------|
+| ------ | -------------- | ----------------------------------------------------- |
 | `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
 | `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
 
@@ -92,8 +92,8 @@ Then the following registers are initialized (without explicit initialization, a
 
 There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./opcodes.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
 
-- External: predicate and script. `$fp` will be zero.
-- Internal: call. `$fp` will be non-zero.
+-   External: predicate and script. `$fp` will be zero.
+-   Internal: call. `$fp` will be non-zero.
 
 [Returning](./opcodes.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
 
@@ -103,7 +103,7 @@ For any input of type [`InputType.Coin`](../protocol/tx_format.md), a non-zero `
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
-1. `$pc`  and `$is` are set to the start of the input's `predicate` field.
+1. `$pc` and `$is` are set to the start of the input's `predicate` field.
 
 During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
 
@@ -135,22 +135,22 @@ Cross-contract calls push a _call frame_ onto the stack, similar to a stack fram
 1. Stack frames: store metadata across trusted internal (i.e. intra-contract) function calls. Not supported natively by the FuelVM, but may be used as an abstraction at a higher layer.
 1. Call frames: store metadata across untrusted external (i.e. inter-contract) calls. Supported natively by the FuelVM.
 
-Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: the currently-executing contracts may only write to their own call frame, their own heap, and return value ranges assigned to them.
+Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: the currently-executing contracts may only write to their own call frame and their own heap.
 
 A call frame consists of the following, word-aligned:
 
 | bytes | type          | value      | description                                                                   |
-|-------|---------------|------------|-------------------------------------------------------------------------------|
+| ----- | ------------- | ---------- | ----------------------------------------------------------------------------- |
 |       |               |            | **Unwritable area begins.**                                                   |
 | 32    | `byte[32]`    | `to`       | Contract ID for this call.                                                    |
 | 32    | `byte[32]`    | `color`    | Color of forwarded coins.                                                     |
-| 8*64  | `byte[8][64]` | `regs`     | Saved registers from previous context.                                        |
+| 8\*64 | `byte[8][64]` | `regs`     | Saved registers from previous context.                                        |
 | 8     | `uint16`      | `codesize` | Code size in bytes, padded to word alignment.                                 |
 | 8     | `byte[8]`     | `param1`   | First parameter.                                                              |
 | 8     | `byte[8]`     | `param2`   | Second parameter.                                                             |
-| 1*    | `byte[]`      | `code`     | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
+| 1\*   | `byte[]`      | `code`     | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
 |       |               |            | **Unwritable area ends.**                                                     |
-| *     |               |            | Call frame's stack.                                                           |
+| \*    |               |            | Call frame's stack.                                                           |
 
 ## Ownership
 
