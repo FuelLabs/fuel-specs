@@ -1354,7 +1354,7 @@ Panic if:
 |-------------|-----------------------------------------------------|
 | Description | 32 bytes is read from the current contract's state. |
 | Operation   | ```MEM[$rA, 32] = STATE[MEM[$rB, 32]];```           |
-| Syntax      | `srwx $rA, $rB`                                     |
+| Syntax      | `srwq $rA, $rB`                                     |
 | Encoding    | `0x00 rA rB - -`                                    |
 | Notes       | Returns zero if the state element does not exist.   |
 
@@ -1391,7 +1391,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`.
 |-------------|------------------------------------------------------|
 | Description | 32 bytes is written to the current contract's state. |
 | Operation   | ```STATE[MEM[$rA, 32]] = MEM[$rB, 32];```            |
-| Syntax      | `swwx $rA, $rB`                                      |
+| Syntax      | `swwq $rA, $rB`                                      |
 | Encoding    | `0x00 rA rB - -`                                     |
 | Notes       |                                                      |
 
