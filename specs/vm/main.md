@@ -135,7 +135,7 @@ Cross-contract calls push a _call frame_ onto the stack, similar to a stack fram
 1. Stack frames: store metadata across trusted internal (i.e. intra-contract) function calls. Not supported natively by the FuelVM, but may be used as an abstraction at a higher layer.
 1. Call frames: store metadata across untrusted external (i.e. inter-contract) calls. Supported natively by the FuelVM.
 
-Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: the currently-executing contracts may only write to their own call frame, their own heap, and return value ranges assigned to them.
+Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: the currently-executing contracts may only write to their own call frame and their own heap.
 
 A call frame consists of the following, word-aligned:
 
