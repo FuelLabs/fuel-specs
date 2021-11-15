@@ -1569,6 +1569,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 Panic if:
 
+- `$rA` is a [reserved register](./main.md#semantics)
 - `$rB >= tx.inputsCount`
 
 ### XIS: Transaction input start
@@ -1583,6 +1584,7 @@ Panic if:
 
 Panic if:
 
+- `$rA` is a [reserved register](./main.md#semantics)
 - `$rB >= tx.inputsCount`
 
 ### XOL: Transaction input length
@@ -1597,6 +1599,7 @@ Panic if:
 
 Panic if:
 
+- `$rA` is a [reserved register](./main.md#semantics)
 - `$rB >= tx.outputsCount`
 
 ### XOS: Transaction output start
@@ -1611,6 +1614,7 @@ Panic if:
 
 Panic if:
 
+- `$rA` is a [reserved register](./main.md#semantics)
 - `$rB >= tx.outputsCount`
 
 ### XWL: Transaction witness length
@@ -1625,6 +1629,7 @@ Panic if:
 
 Panic if:
 
+- `$rA` is a [reserved register](./main.md#semantics)
 - `$rB >= tx.witnessesCount`
 
 Note that the returned length includes the [_entire_ witness](../protocol/tx_format.md), not just of the witness's `data` field.
@@ -1641,6 +1646,7 @@ Note that the returned length includes the [_entire_ witness](../protocol/tx_for
 
 Panic if:
 
+- `$rA` is a [reserved register](./main.md#semantics)
 - `$rB >= tx.witnessesCount`
 
 Note that the returned memory address includes the [_entire_ witness](../protocol/tx_format.md), not just of the witness's `data` field.
