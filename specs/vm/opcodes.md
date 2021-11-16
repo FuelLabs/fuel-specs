@@ -107,7 +107,15 @@ Instead of the receipt of the above instructions, append a receipt to the list o
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
 | `is`     | `uint64`      | Value of register `$is`.                                                  |
 
-Attempting to execute an opcode not in this list pauses a panic and consumes no gas.
+In a script context, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
+| `status`   | `uint8`       | `0`                                                                       |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                               |
+
+Attempting to execute an opcode not in this list causes a panic and consumes no gas.
 
 ## Arithmetic/Logic (ALU) Opcodes
 
@@ -729,6 +737,14 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
+If current context is a script, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
+| `status`   | `uint8`       | `1`                                                                       |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                               |
+
 If current context is external, cease VM execution and return `$rA`.
 
 Returns from contract call, popping the call frame. Before popping perform the following operations.
@@ -1262,6 +1278,14 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
 | `is`     | `uint64`      | Value of register `$is`.                                                  |
 
+If current context is a script, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
+| `status`   | `uint8`       | `1`                                                                       |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                               |
+
 If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
 Returns from contract call, popping the call frame. Before popping, perform the following operations.
@@ -1298,6 +1322,14 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `val`  | `uint64`      | Value of register `$rA`.                                                  |
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
+
+If current context is a script, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
+| `status`   | `uint8`       | `0`                                                                       |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                               |
 
 Cease VM execution and revert script effects. After a revert:
 

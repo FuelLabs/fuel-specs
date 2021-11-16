@@ -77,6 +77,7 @@ enum  ReceiptType : uint8 {
     LogData = 6,
     Transfer = 7,
     TransferOut = 8,
+    ScriptResult = 9,
 }
 ```
 
