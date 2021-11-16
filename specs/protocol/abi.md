@@ -108,6 +108,7 @@ All receipts will have a `type` property:
   - "LogData"
   - "Transfer"
   - "TransferOut"
+  - "ScriptResult"
 
 Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../vm/opcodes.md).
 
@@ -310,6 +311,24 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
     "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
     "amount": "10000",
     "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "pc":"0xffffffffffffffff",
+    "is":"0xfffffffffffffffe"
+}
+```
+
+#### ScriptResult receipt
+
+- `type`: `ScriptResult`.
+- `status`: Decimal string representation of an 8-bit unsigned integer; `1` if script exited successfully, `0` otherwise.
+- `gas_used`: Decimal string representation of a 64-bit unsigned integer; amount of gas consumed by the script.
+- `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
+
+```json
+{
+    "type":"ScriptResult",
+    "status":"1",
+    "gas_used":"400",
     "pc":"0xffffffffffffffff",
     "is":"0xfffffffffffffffe"
 }
