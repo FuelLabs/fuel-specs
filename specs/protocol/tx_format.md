@@ -170,7 +170,7 @@ Transaction is invalid if:
 | name                  | type       | description                                                            |
 |-----------------------|------------|------------------------------------------------------------------------|
 | `utxoID`              | `byte[32]` | UTXO ID.                                                               |
-| `owner`               | `byte[32]` | Owning address or script hash.                                         |
+| `owner`               | `byte[32]` | Owning address or predicate hash.                                      |
 | `amount`              | `uint64`   | Amount of coins.                                                       |
 | `color`               | `byte[32]` | Color of the coins.                                                    |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                    |
@@ -231,11 +231,11 @@ Transaction is invalid if:
 
 ### OutputCoin
 
-| name     | type       | description                       |
-|----------|------------|-----------------------------------|
-| `to`     | `byte[32]` | Receiving address or script hash. |
-| `amount` | `uint64`   | Amount of coins to send.          |
-| `color`  | `byte[32]` | Color of coins.                   |
+| name     | type       | description                          |
+|----------|------------|--------------------------------------|
+| `to`     | `byte[32]` | Receiving address or predicate hash. |
+| `amount` | `uint64`   | Amount of coins to send.             |
+| `color`  | `byte[32]` | Color of coins.                      |
 
 ### OutputContract
 
@@ -272,11 +272,11 @@ This output type is unspendable and can be pruned form the UTXO set.
 
 ### OutputChange
 
-| name     | type       | description                       |
-|----------|------------|-----------------------------------|
-| `to`     | `byte[32]` | Receiving address or script hash. |
-| `amount` | `uint64`   | Amount of coins to send.          |
-| `color`  | `byte[32]` | Color of coins.                   |
+| name     | type       | description                          |
+|----------|------------|--------------------------------------|
+| `to`     | `byte[32]` | Receiving address or predicate hash. |
+| `amount` | `uint64`   | Amount of coins to send.             |
+| `color`  | `byte[32]` | Color of coins.                      |
 
 Note: when signing a transaction, `amount` is set to zero.
 
@@ -286,11 +286,11 @@ This output type indicates that the output's amount may vary based on transactio
 
 ### OutputVariable
 
-| name     | type       | description                       |
-|----------|------------|-----------------------------------|
-| `to`     | `byte[32]` | Receiving address or script hash. |
-| `amount` | `uint64`   | Amount of coins to send.          |
-| `color`  | `byte[32]` | Color of coins.                   |
+| name     | type       | description                          |
+|----------|------------|--------------------------------------|
+| `to`     | `byte[32]` | Receiving address or predicate hash. |
+| `amount` | `uint64`   | Amount of coins to send.             |
+| `color`  | `byte[32]` | Color of coins.                      |
 
 Note: when signing a transaction, `to`, `amount`, and `color` are set to zero.
 
