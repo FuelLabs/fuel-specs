@@ -321,16 +321,12 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 - `type`: `ScriptResult`.
 - `status`: Decimal string representation of an 8-bit unsigned integer; `1` if script exited successfully, `0` otherwise.
 - `gas_used`: Decimal string representation of a 64-bit unsigned integer; amount of gas consumed by the script.
-- `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
-- `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
 ```json
 {
     "type":"ScriptResult",
     "status":"1",
     "gas_used":"400",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
 }
 ```
 

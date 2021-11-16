@@ -114,8 +114,6 @@ In a script context, append an additional receipt to the list of receipts, modif
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
 | `status`   | `uint8`       | `0`                                                                       |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                               |
-| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
-| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
 Attempting to execute an opcode not in this list causes a panic and consumes no gas.
 
@@ -746,8 +744,6 @@ If current context is a script, append an additional receipt to the list of rece
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
 | `status`   | `uint8`       | `1`                                                                       |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                               |
-| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
-| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
 If current context is external, cease VM execution and return `$rA`.
 
@@ -1289,8 +1285,6 @@ If current context is a script, append an additional receipt to the list of rece
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
 | `status`   | `uint8`       | `1`                                                                       |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                               |
-| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
-| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
 If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
@@ -1336,8 +1330,6 @@ If current context is a script, append an additional receipt to the list of rece
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                                |
 | `status`   | `uint8`       | `0`                                                                       |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                               |
-| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
-| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
 Cease VM execution and revert script effects. After a revert:
 
