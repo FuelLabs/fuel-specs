@@ -107,7 +107,7 @@ Instead of the receipt of the above instructions, append a receipt to the list o
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
 | `is`     | `uint64`      | Value of register `$is`.                                                  |
 
-Attempting to execute an opcode not in this list pauses a panic and consumes no gas.
+Attempting to execute an opcode not in this list causes a panic and consumes no gas.
 
 ## Arithmetic/Logic (ALU) Opcodes
 
