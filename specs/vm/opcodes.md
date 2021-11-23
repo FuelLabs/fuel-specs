@@ -73,6 +73,7 @@
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
+  - [BAL: Balance of contract ID](#bal-balance)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
   - [ECR: Signature recovery](#ecr-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
@@ -1518,6 +1519,25 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].color = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
+
+### BAL: Balance
+
+|             |                                                                           |
+|-------------|---------------------------------------------------------------------------|
+| Description | Set `$rA` to the balance of color at `$rB` for contract with ID at `$rC`. |
+| Operation   | ```$rA = balanceOf(MEM[$rB, 32], MEM[$rC, 32]);```                        |
+| Syntax      | `bal $rA, $rB, $rC`                                                       |
+| Encoding    | `0x00 rA rB rC -`                                                         |
+| Notes       |                                                                           |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+- `$rB + 32` overflows
+- `$rC + 32` overflows
+- `$rB + 32 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+- Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
 
 ## Cryptographic Opcodes
 
