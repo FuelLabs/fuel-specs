@@ -81,6 +81,41 @@ enum  ReceiptType : uint8 {
 }
 ```
 
+```
+enum PanicReason : uint8 {
+    Revert = 1,
+    OutOfGas = 2,
+    TransactionValidity = 3,
+    MemoryOverflow = 4,
+    ArithmeticOverflow = 5,
+    ContractNotFound = 6,
+    MemoryOwnership = 7,
+    NotEnoughBalance = 8,
+    ExpectedInternalContext = 9,
+    ColorNotFound = 10,
+    InputNotFound = 11,
+    OutputNotFound = 12,
+    WitnessNotFound = 13,
+    TransactionMaturity = 14,
+    InvalidMetadataIdentifier = 15,
+    MalformedCallStructure = 16,
+    ReservedRegisterNotWritable = 17,
+    ErrorFlag = 18,
+    InvalidImmediateValue = 19,
+    ExpectedCoinInput = 20,
+    MaxMemoryAccess = 21,
+    MemoryWriteOverlap = 22,
+    ContractNotInInputs = 23,
+    InternalBalanceOverflow = 24,
+    ContractMaxSize = 25,
+    ExpectedUnallocatedStack = 26,
+    MaxStaticContractsReached = 27,
+    TransferAmountCannotBeZero = 28,
+    ExpectedOutputVariable = 29,
+    ExpectedParentInternalContext = 30,
+}
+```
+
 | name               | type                    | description                              |
 |--------------------|-------------------------|------------------------------------------|
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
