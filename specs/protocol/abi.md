@@ -319,7 +319,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 #### ScriptResult receipt
 
 - `type`: `ScriptResult`.
-- `result`: Decimal string representation of a 64-bit unsigned integer; `0` if script exited successfully, `any` otherwise. The first 8-bits of the result will be the error variant representation, leaving the remaining bits as error metadata - if applicable.
+- `result`: Decimal string representation of a 64-bit unsigned integer; `0` if script exited successfully, `any` otherwise. The first 8 bits of the result will be the error variant representation, leaving the remaining bits as error metadata - if applicable.
 - `gas_used`: Decimal string representation of a 64-bit unsigned integer; amount of gas consumed by the script.
 
 ```json
