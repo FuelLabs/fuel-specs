@@ -112,7 +112,7 @@ enum PanicReason : uint8 {
     MaxStaticContractsReached = 27,
     TransferAmountCannotBeZero = 28,
     ExpectedOutputVariable = 29,
-    ExpectedParentInternalContext = 9,
+    ExpectedParentInternalContext = 30,
 }
 ```
 
