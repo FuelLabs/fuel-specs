@@ -989,10 +989,36 @@ Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
 - `$rB + 32` overflows
-- `$rC + 32` overflows
 - `$rB + 32 > VM_MAX_RAM`
+
+In a script transaction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                             |
+|------------|---------------|-------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8`                                 |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
+
+- `$rC + 32` overflows
 - `$rC + 32 > VM_MAX_RAM`
+
+In a script transaction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                             |
+|------------|---------------|-------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rC >> 8`                                 |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
+
 - Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
+
+In a script transaction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                             |
+|------------|---------------|-------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
+| `result`   | `uint64`      | `PanicReason.ContractNotInInputs \| rC >> 8`                            |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### BHEI: Block height
 
