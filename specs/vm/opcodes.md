@@ -1330,7 +1330,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 
-Block header hashes for blocks with height greater than or equal to current block height are zero (`0x00**32`).
+Block header hashes for blocks with height greater than or equal to current block height are zero (```0x00**32```).
 
 ### BURN: Burn existing coins
 
@@ -1352,7 +1352,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ExpectedInternalContext                                    |
+| `result`   | `uint64`      | `PanicReason.ExpectedInternalContext`                                   |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 For output with contract ID `MEM[$fp, 32]`, decrease balance of color `MEM[$fp, 32]` by `$rA`.
