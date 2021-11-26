@@ -983,7 +983,7 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 | Encoding    | `0x00 rA rB rC -`                                                         |
 | Notes       |                                                                           |
 
-Where helper `balance(color: byte[32], contract_id: byte[32]) -> uint32` returns the current balance of `color` of contract with ID `contract_id`.
+Where helper `balance(color: byte[32], contract_id: byte[32]) -> uint64` returns the current balance of `color` of contract with ID `contract_id`.
 
 Panic if:
 
