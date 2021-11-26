@@ -122,7 +122,7 @@ In a script transaction, if there is an attempt to write to `$rA` that is a [res
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ReservedRegisterNotWritable | rA >> 8`                     |
+| `result`   | `uint64`      | `PanicReason.ReservedRegisterNotWritable \| rA >> 8`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 In a script transaction, if a memory range `MEM[$rX, $rY]` does not pass [ownership check](./main.md#ownership), append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
@@ -130,7 +130,7 @@ In a script transaction, if a memory range `MEM[$rX, $rY]` does not pass [owners
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOwnership | rX >> 8 | rY >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOwnership \| rX >> 8 \| rY >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 In a script transaction, if `$err` is set, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
@@ -701,7 +701,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.TransactionMaturity | rB >> 8 | rC >> 14`                  |
+| `result`   | `uint64`      | `PanicReason.TransactionMaturity \| rB >> 8 \| rC >> 14`                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - the input `$rB` is not of type [`InputType.Coin`](../protocol/tx_format.md)
@@ -711,7 +711,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ExpectedCoinInput | rB >> 8`                               |
+| `result`   | `uint64`      | `PanicReason.ExpectedCoinInput \| rB >> 8`                              |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB > tx.inputsCount`
@@ -721,7 +721,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.InputNotFound | rB >> 8`                                   |
+| `result`   | `uint64`      | `PanicReason.InputNotFound \| rB >> 8`                                  |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 Otherwise, advance the program counter `$pc` by `4`.
@@ -748,7 +748,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.TransactionMaturity | rB >> 8`                             |
+| `result`   | `uint64`      | `PanicReason.TransactionMaturity \| rB >> 8`                            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 Otherwise, advance the program counter `$pc` by `4`.
@@ -774,7 +774,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | imm >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| imm >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### JNEI: Jump if not equal immediate
@@ -796,7 +796,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | imm >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| imm >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### RET: Return from context
@@ -867,7 +867,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$hp - $rA < $sp`
@@ -877,7 +877,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### CFEI: Extend call frame immediate
@@ -899,7 +899,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | imm >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| imm >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$sp + imm > $hp`
@@ -909,7 +909,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | imm >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| imm >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### CFSI: Shrink call frame immediate
@@ -931,7 +931,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | imm >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| imm >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$sp - imm < $ssp`
@@ -941,7 +941,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | imm >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| imm >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### LB: Load byte
@@ -964,7 +964,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB + imm + 1 > VM_MAX_RAM`
@@ -974,7 +974,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### LW: Load word
@@ -997,7 +997,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB + (imm * 8) + 8 > VM_MAX_RAM`
@@ -1007,7 +1007,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### MCL: Memory clear
@@ -1030,7 +1030,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | rB >> 14`                       |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| rB >> 14`                     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB > MEM_MAX_ACCESS_SIZE`
@@ -1040,7 +1040,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess | rB >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess \| rB >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./main.md#ownership)
@@ -1065,7 +1065,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `imm > MEM_MAX_ACCESS_SIZE`
@@ -1075,7 +1075,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess | imm >> 8`                                |
+| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess \| imm >> 8`                               |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
@@ -1101,7 +1101,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | rC >> 14`                       |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| rC >> 14`                     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB + $rC > VM_MAX_RAM`
@@ -1111,7 +1111,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | rC >> 14`                       |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| rC >> 14`                     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rC > MEM_MAX_ACCESS_SIZE`
@@ -1121,7 +1121,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess | rC >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess \| rC >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
@@ -1131,7 +1131,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryWriteOverlap | rA >> 8 | rB >> 14 | rC >> 20`        |
+| `result`   | `uint64`      | `PanicReason.MemoryWriteOverlap \| rA >> 8 \| rB >> 14 \| rC >> 20`     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./main.md#ownership)
@@ -1157,7 +1157,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB + imm > VM_MAX_RAM`
@@ -1167,7 +1167,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `imm > MEM_MAX_ACCESS_SIZE`
@@ -1177,7 +1177,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess | imm >> 8`                                |
+| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess \| imm >> 8`                               |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
@@ -1187,7 +1187,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryWriteOverlap | rA >> 8 | rB >> 14 | imm >> 20`       |
+| `result`   | `uint64`      | `PanicReason.MemoryWriteOverlap \| rA >> 8 \| rB >> 14 \| imm >> 20`    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
@@ -1214,7 +1214,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8 | rD >> 14`                       |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8 \| rD >> 14`                     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rC + $rD > VM_MAX_RAM`
@@ -1224,7 +1224,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rC >> 8 | rD >> 14`                       |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rC >> 8 \| rD >> 14`                     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rD > MEM_MAX_ACCESS_SIZE`
@@ -1234,7 +1234,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess | rD >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess \| rD >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### SB: Store byte
@@ -1257,7 +1257,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./main.md#ownership)
@@ -1282,7 +1282,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | imm >> 14`                      |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| imm >> 14`                    |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./main.md#ownership)
@@ -1325,7 +1325,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
@@ -1380,7 +1380,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ContractNotInInputs | rA >> 8`                             |
+| `result`   | `uint64`      | `PanicReason.ContractNotInInputs \| rA >> 8`                            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - Reading past `MEM[VM_MAX_RAM - 1]`
@@ -1390,7 +1390,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
@@ -1400,7 +1400,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.InternalBalanceOverflow | rB >> 8 | rC >> 14`              |
+| `result`   | `uint64`      | `PanicReason.InternalBalanceOverflow \| rB >> 8 \| rC >> 14`            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
@@ -1410,7 +1410,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.InternalBalanceOverflow | rB >> 8 | rC >> 14`              |
+| `result`   | `uint64`      | `PanicReason.InternalBalanceOverflow \| rB >> 8 \| rC >> 14`            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
@@ -1470,7 +1470,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
@@ -1499,7 +1499,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8 | rD >> 14`                       |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8 \| rD >> 14`                     |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB + 32 > VM_MAX_RAM`
@@ -1509,7 +1509,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./main.md#ownership)
@@ -1520,7 +1520,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess | rD >> 8`                                 |
+| `result`   | `uint64`      | `PanicReason.MaxMemoryAccess \| rD >> 8`                                |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
@@ -1530,7 +1530,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ContractNotInInputs | rB >> 8`                             |
+| `result`   | `uint64`      | `PanicReason.ContractNotInInputs \| rB >> 8`                            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### CROO: Code Merkle root
@@ -1554,7 +1554,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rB + 32 > VM_MAX_RAM`
@@ -1564,7 +1564,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
@@ -1575,7 +1575,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ContractNotInInputs | rB >> 8`                             |
+| `result`   | `uint64`      | `PanicReason.ContractNotInInputs \| rB >> 8`                            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 Code root computation is defined [here](../protocol/identifiers.md#contract-id).
@@ -1601,7 +1601,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rB >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
@@ -1611,7 +1611,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.ContractNotInInputs | rB >> 8`                             |
+| `result`   | `uint64`      | `PanicReason.ContractNotInInputs \| rB >> 8`                            |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### LDC: Load code from an external contract
@@ -1635,7 +1635,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rC >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rC >> 8`                                 |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rA + 32 > VM_MAX_RAM`
@@ -1645,7 +1645,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow | rA >> 8`                                  |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rA >> 8`                               |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$ssp != $sp`
