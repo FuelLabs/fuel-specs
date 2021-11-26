@@ -996,7 +996,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rB >> 8`                                 |
+| `result`   | `uint64`      | ```PanicReason.MemoryOverflow \| rB >> 8```                             |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 - `$rC + 32` overflows
