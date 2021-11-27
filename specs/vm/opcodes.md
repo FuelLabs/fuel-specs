@@ -52,6 +52,7 @@
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Opcodes](#contract-opcodes)
+  - [BAL: Balance of contract ID](#bal-balance-of-contract-id)
   - [BHEI: Block height](#bhei-block-height)
   - [BHSH: Block hash](#bhsh-block-hash)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
@@ -1290,6 +1291,53 @@ In a script transaction, append an additional receipt to the list of receipts, m
 ## Contract Opcodes
 
 All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [RETD](#retd-return-from-context-with-data) and [RVRT](#rvrt-revert).
+
+### BAL: Balance of contract ID
+
+|             |                                                                           |
+|-------------|---------------------------------------------------------------------------|
+| Description | Set `$rA` to the balance of color at `$rB` for contract with ID at `$rC`. |
+| Operation   | ```$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);```                          |
+| Syntax      | `bal $rA, $rB, $rC`                                                       |
+| Encoding    | `0x00 rA rB rC -`                                                         |
+| Notes       |                                                                           |
+
+Where helper `balance(color: byte[32], contract_id: byte[32]) -> uint64` returns the current balance of `color` of contract with ID `contract_id`.
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+- `$rB + 32` overflows
+- `$rB + 32 > VM_MAX_RAM`
+
+In a script transaction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                             |
+|------------|---------------|-------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
+| `result`   | `uint64`      | ```PanicReason.MemoryOverflow \| rB >> 8```                             |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
+
+- `$rC + 32` overflows
+- `$rC + 32 > VM_MAX_RAM`
+
+In a script transaction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                             |
+|------------|---------------|-------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
+| `result`   | `uint64`      | `PanicReason.MemoryOverflow \| rC >> 8`                                 |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
+
+- Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
+
+In a script transaction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name       | type          | description                                                             |
+|------------|---------------|-------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
+| `result`   | `uint64`      | `PanicReason.ContractNotInInputs \| rC >> 8`                            |
+| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ### BHEI: Block height
 
