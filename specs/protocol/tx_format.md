@@ -77,6 +77,42 @@ enum  ReceiptType : uint8 {
     LogData = 6,
     Transfer = 7,
     TransferOut = 8,
+    ScriptResult = 9,
+}
+```
+
+```
+enum PanicReason : uint8 {
+    Revert = 1,
+    OutOfGas = 2,
+    TransactionValidity = 3,
+    MemoryOverflow = 4,
+    ArithmeticOverflow = 5,
+    ContractNotFound = 6,
+    MemoryOwnership = 7,
+    NotEnoughBalance = 8,
+    ExpectedInternalContext = 9,
+    ColorNotFound = 10,
+    InputNotFound = 11,
+    OutputNotFound = 12,
+    WitnessNotFound = 13,
+    TransactionMaturity = 14,
+    InvalidMetadataIdentifier = 15,
+    MalformedCallStructure = 16,
+    ReservedRegisterNotWritable = 17,
+    ErrorFlag = 18,
+    InvalidImmediateValue = 19,
+    ExpectedCoinInput = 20,
+    MaxMemoryAccess = 21,
+    MemoryWriteOverlap = 22,
+    ContractNotInInputs = 23,
+    InternalBalanceOverflow = 24,
+    ContractMaxSize = 25,
+    ExpectedUnallocatedStack = 26,
+    MaxStaticContractsReached = 27,
+    TransferAmountCannotBeZero = 28,
+    ExpectedOutputVariable = 29,
+    ExpectedParentInternalContext = 30,
 }
 ```
 
@@ -170,7 +206,7 @@ Transaction is invalid if:
 | name                  | type       | description                                                            |
 |-----------------------|------------|------------------------------------------------------------------------|
 | `utxoID`              | `byte[32]` | UTXO ID.                                                               |
-| `owner`               | `byte[32]` | Owning address or script hash.                                         |
+| `owner`               | `byte[32]` | Owning address or predicate hash.                                      |
 | `amount`              | `uint64`   | Amount of coins.                                                       |
 | `color`               | `byte[32]` | Color of the coins.                                                    |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                    |
@@ -231,11 +267,11 @@ Transaction is invalid if:
 
 ### OutputCoin
 
-| name     | type       | description                       |
-|----------|------------|-----------------------------------|
-| `to`     | `byte[32]` | Receiving address or script hash. |
-| `amount` | `uint64`   | Amount of coins to send.          |
-| `color`  | `byte[32]` | Color of coins.                   |
+| name     | type       | description                          |
+|----------|------------|--------------------------------------|
+| `to`     | `byte[32]` | Receiving address or predicate hash. |
+| `amount` | `uint64`   | Amount of coins to send.             |
+| `color`  | `byte[32]` | Color of coins.                      |
 
 ### OutputContract
 
@@ -272,11 +308,11 @@ This output type is unspendable and can be pruned form the UTXO set.
 
 ### OutputChange
 
-| name     | type       | description                       |
-|----------|------------|-----------------------------------|
-| `to`     | `byte[32]` | Receiving address or script hash. |
-| `amount` | `uint64`   | Amount of coins to send.          |
-| `color`  | `byte[32]` | Color of coins.                   |
+| name     | type       | description                          |
+|----------|------------|--------------------------------------|
+| `to`     | `byte[32]` | Receiving address or predicate hash. |
+| `amount` | `uint64`   | Amount of coins to send.             |
+| `color`  | `byte[32]` | Color of coins.                      |
 
 Note: when signing a transaction, `amount` is set to zero.
 
@@ -286,11 +322,11 @@ This output type indicates that the output's amount may vary based on transactio
 
 ### OutputVariable
 
-| name     | type       | description                       |
-|----------|------------|-----------------------------------|
-| `to`     | `byte[32]` | Receiving address or script hash. |
-| `amount` | `uint64`   | Amount of coins to send.          |
-| `color`  | `byte[32]` | Color of coins.                   |
+| name     | type       | description                          |
+|----------|------------|--------------------------------------|
+| `to`     | `byte[32]` | Receiving address or predicate hash. |
+| `amount` | `uint64`   | Amount of coins to send.             |
+| `color`  | `byte[32]` | Color of coins.                      |
 
 Note: when signing a transaction, `to`, `amount`, and `color` are set to zero.
 
