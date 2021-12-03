@@ -81,7 +81,7 @@
 - [Transaction Access Opcodes](#transaction-access-opcodes)
   - [XIL: Transaction input length](#xil-transaction-input-length)
   - [XIS: Transaction input start](#xis-transaction-input-start)
-  - [XOL: Transaction input length](#xol-transaction-input-length)
+  - [XOL: Transaction output length](#xol-transaction-output-length)
   - [XOS: Transaction output start](#xos-transaction-output-start)
   - [XWL: Transaction witness length](#xwl-transaction-witness-length)
   - [XWS: Transaction witness start](#xws-transaction-witness-start)
@@ -2597,7 +2597,7 @@ In a script transaction, append an additional receipt to the list of receipts, m
 | `result`   | `uint64`      | ```PanicReason.InputNotFound \| instr >> 8```                           |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
-### XOL: Transaction input length
+### XOL: Transaction output length
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
