@@ -22,6 +22,15 @@ A specification for the Binary Merkle Tree is [here](https://github.com/celestia
 
 The Binary Merkle Sum Tree is an extension of the tree defined in [RFC-6962](https://tools.ietf.org/html/rfc6962).
 
+Nodes contain four fields:
+
+| name        | type   | description                                   |
+|-------------|--------|-----------------------------------------------|
+| `fee`       | uint64 | Node fee                                      |
+| `digest`    | Hash   | Node value                                    |
+| `left_key`  | Hash   | Value of the left child (for internal nodes)  |
+| `right_key` | Hash   | Value of the right child (for internal nodes) |
+
 The root pair `(fee, digest)` of an empty tree is:
 
 ```
@@ -37,6 +46,8 @@ The root pair of a tree with one leaf:
 The root pair of a tree with two or more leaves is defined recursively:
 
 ```
+left = get(node.left_key)
+right = get(node.right_key)
 (left.fee + right.fee, hash(0x01 ++ left.fee ++ left.digest ++ right.fee ++ right.digest))
 ```
 
