@@ -31,6 +31,18 @@ Nodes contain four fields:
 | `left_key`  | Hash   | Value of the left child (for internal nodes)  |
 | `right_key` | Hash   | Value of the right child (for internal nodes) |
 
+For leaf node `node` with fee `fee` and data `data`:
+```
+node.digest = hash(0x00 ++ fee ++ data)
+```
+
+For internal node `node` with left child `left` and right child `right`:
+```
+node.digest = hash(0x01 ++ left.fee ++ left.digest ++ right.fee ++ right.digest)
+```
+
+#### Root Pairs
+
 The root pair `(fee, digest)` of an empty tree is:
 
 ```
