@@ -31,7 +31,7 @@ The root pair `(fee, digest)` of an empty tree is:
 The root pair of a tree with one leaf:
 
 ```
-(leaf.fee, hash(0x00 ++ serialize(leaf)))
+(leaf.fee, hash(0x00 ++ leaf.fee ++ serialize(leaf)))
 ```
 
 The root pair of a tree with two or more leaves is defined recursively:
