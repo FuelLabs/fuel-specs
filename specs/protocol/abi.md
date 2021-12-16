@@ -10,7 +10,7 @@ The JSON of an ABI is the human-readable representation of an interface call to 
 - `name`: String, the name of the contract's function being called;
 - `inputs`: An array of objects that represents the inputs to this function, each of which contains:
   - `name`: String, the name of the parameter;
-  - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct or enum). If it's a custom type, it must follow the format `enum | struct <custom_type_name>`, e.g. `"type": "struct MyCustomStruct"`;
+  - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct or enum). If it's a custom type, it must follow the format `enum | struct $custom_type_name<$field_1, $field_2, ..., $field_n,>`, e.g. `"type": "struct MyCustomStruct<bool, u8>"`. Note that nested structs will follow the same definition recursively, e.g. `struct MyStruct<bool, MyInnerStruct<u8>>`;
   - `components`:, Optional object, used if the `type` is a custom type, contains:
     - `name`: String, the name of the component;
     - `type`: String, the type of the component;
@@ -47,7 +47,7 @@ Here an example containing custom types:
         "inputs":[
             {
                 "name":"my_custom_struct",
-                "type":"struct MyCustomStruct",
+                "type":"struct MyCustomStruct<u16, struct AnotherStruct<bool, u8[2]>>",
                 "components": [
                     {
                         "name": "x",
@@ -76,7 +76,7 @@ Here an example containing custom types:
 ]
 ```
 
-**Important note**: The ordering of the components of a struct or enum _matters_ for the encoding mechanism. For instance, in the example above, we define the components `a`, then `b`, of the struct `y`. That means when encoding, a `bool` (`a`) will be encoded first, then a `u8[2]`(`b`) will be encoded. That also means that when passing values to the encoder they must also follow the specified order: `"(true,[1,2])"` should be fed into the encoder.
+**Important note**: The ordering of the components of a struct or enum _matters_ for the encoding mechanism. For instance, in the example above, we define the components `a`, then `b`, of the struct `AnotherStruct`. That means when encoding, a `bool` (`a`) will be encoded first, then a `u8[2]`(`b`) will be encoded. That also means that when passing values to the encoder they must also follow the specified order: `"(true,[1,2])"` should be fed into the encoder.
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
