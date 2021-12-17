@@ -314,6 +314,10 @@ This output type is unspendable and can be pruned form the UTXO set.
 | `amount` | `uint64`   | Amount of coins to send.             |
 | `color`  | `byte[32]` | Color of coins.                      |
 
+Transaction is invalid if:
+
+- any other output has type `OutputType.OutputChange` and color `color` (i.e. only one change output per color is allowed)
+
 Note: when signing a transaction, `amount` is set to zero.
 
 Note: when verifying a predicate or executing a script, `amount` is initialized to zero.
