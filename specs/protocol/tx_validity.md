@@ -85,7 +85,7 @@ def sum_inputs(tx, col) -> int:
     total: int = 0
     for input in tx.inputs:
         if input.type == InputType.Coin and input.color == col:
-            total += state[input.utxoID].amount
+            total += input.amount
     return total
 
 def sum_outputs(tx, col) -> int:
@@ -127,7 +127,7 @@ for input in tx.inputs:
         if tx.witnesses[input.witnessIndex].dataLength != 64:
             return False
         # Signature must be from owner
-        if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex].data)) != state[input.utxoID].owner:
+        if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
             return False
 return True
 ```
