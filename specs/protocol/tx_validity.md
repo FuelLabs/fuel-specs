@@ -55,7 +55,7 @@ Note that block proposers use the contract ID `contractID` for inputs and output
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
-For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
+For a transaction `tx`, UTXO set `state`, and contract set `contracts`, the following checks must pass.
 
 ### Base Sanity Checks
 
@@ -74,7 +74,7 @@ for input in tx.inputs:
 return True
 ```
 
-If this check passes, the `utxoID` field of each input is set to the UTXO ID of the respective contract.
+If this check passes, the `utxoID` field of each contract input is set to the UTXO ID of the respective contract. The `txoPointer` of each input is also set to the TXO pointer of the UTXO with ID `utxoID`.
 
 ### Sufficient Balance
 
