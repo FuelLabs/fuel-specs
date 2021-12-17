@@ -2,11 +2,12 @@
 
 This repository specifies the Fuel protocol, including the Fuel Virtual Machine (FuelVM, FVM), a next-generation verifiable virtual machine for [the Fuel v2 blockchain](https://github.com/FuelLabs).
 
-- [Fuel Specifications](#fuel-specifications)
-  - [Specification](#specification)
-    - [Protocol](#protocol)
-    - [FuelVM](#fuelvm)
-  - [Contributing](#contributing)
+- [Specification](#specification)
+  - [Protocol](#protocol)
+  - [FuelVM](#fuelvm)
+  - [Chain-Specific Configuration](#chain-specific-configuration)
+    - [Ethereum](#ethereum)
+- [Contributing](#contributing)
 
 ## Specification
 
