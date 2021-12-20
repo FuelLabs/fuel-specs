@@ -205,7 +205,8 @@ Transaction is invalid if:
 
 | name                  | type       | description                                                            |
 |-----------------------|------------|------------------------------------------------------------------------|
-| `utxoID`              | `byte[32]` | UTXO ID.                                                               |
+| `tx_id`               | `byte[32]` | Hash of transaction.                                                   |
+| `output_index`        | `u8`       | Index of transaction output.                                           |
 | `owner`               | `byte[32]` | Owning address or predicate hash.                                      |
 | `amount`              | `uint64`   | Amount of coins.                                                       |
 | `color`               | `byte[32]` | Color of the coins.                                                    |
@@ -228,7 +229,8 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 | name          | type       | description                                                             |
 |---------------|------------|-------------------------------------------------------------------------|
-| `utxoID`      | `byte[32]` | UTXO ID.                                                                |
+| `tx_id`       | `byte[32]` | Hash of transaction.                                                    |
+| `output_index`| `u8`       | Index of transaction output.                                            |
 | `balanceRoot` | `byte[32]` | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]` | State root of contract before transaction execution.                    |
 | `contractID`  | `byte[32]` | Contract ID.                                                            |
@@ -237,11 +239,11 @@ Transaction is invalid if:
 
 - there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
-Note: when signing a transaction, `utxoID`, `balanceRoot`, and `stateRoot` are set to zero.
+Note: when signing a transaction, `tx_id`,`output_index`, `balanceRoot`, and `stateRoot` are set to zero.
 
-Note: when verifying a predicate, `utxoID`, `balanceRoot`, and `stateRoot` are initialized to zero.
+Note: when verifying a predicate, `tx_id`,`output_index`, `balanceRoot`, and `stateRoot` are initialized to zero.
 
-Note: when executing a script, `utxoID`, `balanceRoot`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contractID`.
+Note: when executing a script, `tx_id`,`output_index`, `balanceRoot`, and `stateRoot` are initialized to the transaction id, output index, amount, and state root of the contract with ID `contractID`.
 
 ## Output
 
