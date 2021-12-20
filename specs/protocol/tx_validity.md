@@ -38,7 +38,7 @@ Read-only access list:
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](./tx_format.md#inputcoin)
-  - The UTXO_ID of `tx_id`+`output_index`
+  - The UTXO ID `(txID, outputIndex)`
 - For each [input `InputType.Contract`](./tx_format.md#inputcontract)
   - The UTXO_ID of `tx_id`+`output_index`
 
