@@ -21,7 +21,7 @@ For a transaction of type `TransactionType.Create`, `tx`, the contract ID is `sh
 
 ### Coin ID
 
-Is representet as pair of [transaction ID](#transaction-id) and output index as a `uint8`.
+Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as `byte[32]` and output index as a `uint8`.
 
 ### Deposit ID
 
