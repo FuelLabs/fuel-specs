@@ -205,8 +205,8 @@ Transaction is invalid if:
 
 | name                  | type       | description                                                            |
 |-----------------------|------------|------------------------------------------------------------------------|
-| `tx_id`               | `byte[32]` | Hash of transaction.                                                   |
-| `output_index`        | `u8`       | Index of transaction output.                                           |
+| `txID`               | `byte[32]` | Hash of transaction.                                                   |
+| `outputIndex`        | `uint8`       | Index of transaction output.                                           |
 | `owner`               | `byte[32]` | Owning address or predicate hash.                                      |
 | `amount`              | `uint64`   | Amount of coins.                                                       |
 | `color`               | `byte[32]` | Color of the coins.                                                    |
