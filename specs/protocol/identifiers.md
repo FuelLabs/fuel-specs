@@ -21,7 +21,7 @@ For a transaction of type `TransactionType.Create`, `tx`, the contract ID is `sh
 
 ### Coin ID
 
-The UTXO ID of a transaction's output (i.e. a _coin_) is computed as the [hash](./cryptographic_primitives.md#hashing) of the concatenation of the [transaction ID](#transaction-id) and the output index as a `uint8`.
+Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as `byte[32]` and output index as a `uint8`.
 
 ### Deposit ID
 

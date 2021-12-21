@@ -38,9 +38,9 @@ Read-only access list:
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](./tx_format.md#inputcoin)
-  - The UTXO ID `utxoID`
+  - The UTXO ID `(txID, outputIndex)`
 - For each [input `InputType.Contract`](./tx_format.md#inputcontract)
-  - The UTXO ID `utxoID`
+  - The UTXO_ID of `(txID, outputIndex)`
 
 Write-create access list:
 
@@ -49,7 +49,7 @@ Write-create access list:
 - For each output
   - The [created UTXO ID](./identifiers.md#utxo-id)
 
-Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format.md#inputcontract) and [`OutputType.Contract`](./tx_format.md#outputcontract) rather than the UTXO ID `utxoID`.
+Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format.md#inputcontract) and [`OutputType.Contract`](./tx_format.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
 
 ## VM Precondition Validity Rules
 
@@ -69,12 +69,12 @@ for input in tx.inputs:
         if not input.contractID in contracts:
                 return False
     else:
-        if not input.utxoID in state:
+        if not (input.txID, input.outputIndex) in state:
             return False
 return True
 ```
 
-If this check passes, the `utxoID` field of each contract input is set to the UTXO ID of the respective contract. The `txoPointer` of each input is also set to the TXO pointer of the UTXO with ID `utxoID`.
+If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract input is set to the UTXO ID of the respective contract. The `txoPointer` of each input is also set to the TXO pointer of the UTXO with ID `utxoID`.
 
 ### Sufficient Balance
 

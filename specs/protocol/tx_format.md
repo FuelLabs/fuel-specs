@@ -205,7 +205,8 @@ Transaction is invalid if:
 
 | name                  | type                      | description                                                            |
 |-----------------------|---------------------------|------------------------------------------------------------------------|
-| `utxoID`              | `byte[32]`                | UTXO ID.                                                               |
+| `txID`                | `byte[32]`                | Hash of transaction.                                                   |
+| `outputIndex`         | `uint8`                   | Index of transaction output.                                           |
 | `owner`               | `byte[32]`                | Owning address or predicate hash.                                      |
 | `amount`              | `uint64`                  | Amount of coins.                                                       |
 | `color`               | `byte[32]`                | Color of the coins.                                                    |
@@ -235,7 +236,8 @@ Note: when executing a script, `txoPointer` is initialized to zero.
 
 | name          | type                      | description                                                             |
 |---------------|---------------------------|-------------------------------------------------------------------------|
-| `utxoID`      | `byte[32]`                | UTXO ID.                                                                |
+| `txID`        | `byte[32]`                | Hash of transaction.                                                    |
+| `outputIndex` | `uint8`                   | Index of transaction output.                                            |
 | `balanceRoot` | `byte[32]`                | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]`                | State root of contract before transaction execution.                    |
 | `txoPointer`  | [TXOPointer](#txopointer) | Points to the TXO being spent.                                          |
@@ -245,11 +247,11 @@ Transaction is invalid if:
 
 - there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
-Note: when signing a transaction, `utxoID`, `balanceRoot`, `stateRoot`, and `txoPointer` are set to zero.
+Note: when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txoPointer` are set to zero.
 
-Note: when verifying a predicate, `utxoID`, `balanceRoot`, `stateRoot`, and `txoPointer` are initialized to zero.
+Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txoPointer` are initialized to zero.
 
-Note: when executing a script, `utxoID`, `balanceRoot`, and `stateRoot` are initialized to the UTXO ID, amount, and state root of the contract with ID `contractID`, and `txoPointer` is initialized to zero.
+Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txoPointer` is initialized to zero.
 
 ## Output
 
