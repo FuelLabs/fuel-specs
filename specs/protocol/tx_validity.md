@@ -55,7 +55,7 @@ Note that block proposers use the contract ID `contractID` for inputs and output
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
-For a transaction `tx`, state `state`, and contract set `contracts`, the following checks must pass.
+For a transaction `tx`, UTXO set `state`, and contract set `contracts`, the following checks must pass.
 
 ### Base Sanity Checks
 
@@ -74,7 +74,7 @@ for input in tx.inputs:
 return True
 ```
 
-If this check passes, the UTXO_ID `(txID, outputIndex)` field of each contract input is set to the UTXO ID of the respective contract.
+If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract input is set to the UTXO ID of the respective contract. The `txoPointer` of each input is also set to the TXO pointer of the UTXO with ID `utxoID`.
 
 ### Sufficient Balance
 
@@ -153,7 +153,7 @@ freeBalance[col] = available_balance(tx, col) - unavailable_balance(tx, col)
 Once the free balances are computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
 
 1. The transaction in-memory on VM termination is used as the final transaction which is included in the block.
-1. The unspent free balance for each color.
+1. The unspent free balance `unspentBalance` for each color.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
 The fees incurred for a transaction are `(tx.gasLimit - unspentGas) * tx.gasPrice`.
@@ -168,7 +168,10 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 ### Correct Change
 
-If change outputs are present, they must have an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their color is `0`, or an `amount` of the unspent free balance for that color after VM execution is complete.
+If change outputs are present, they must have:
+
+1. if the transaction does not revert; an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their color is `0`, or an `amount` of the unspent free balance for that color after VM execution is complete, or
+1. if the transaction reverts; an `amount` of the initial free balance minus spent gas times `tx.gasPrice` if their color is `0`, or an `amount` of the initial free balance for that color.
 
 ### State Changes
 
