@@ -1,10 +1,11 @@
 # Cryptographic Primitives
 
-- [Hashing](#hashing)
-- [Merkle Trees](#merkle-trees)
-  - [Binary Merkle Tree](#binary-merkle-tree)
-  - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
-  - [Sparse Merkle Tree](#sparse-merkle-tree)
+- [Cryptographic Primitives](#cryptographic-primitives)
+  - [Hashing](#hashing)
+  - [Merkle Trees](#merkle-trees)
+    - [Binary Merkle Tree](#binary-merkle-tree)
+    - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
+    - [Sparse Merkle Tree](#sparse-merkle-tree)
 
 ## Hashing
 

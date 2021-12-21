@@ -5,6 +5,7 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 - [Specification](#specification)
   - [Protocol](#protocol)
   - [FuelVM](#fuelvm)
+  - [Networking](#networking)
   - [Chain-Specific Configuration](#chain-specific-configuration)
     - [Ethereum](#ethereum)
 - [Contributing](#contributing)
@@ -24,6 +25,10 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 1. [main.md](./specs/vm/main.md): Describes the FuelVM at a high level, from its architecture to how it is initialized.
 1. [opcodes.md](./specs/vm/opcodes.md): Defines all opcodes available in the FuelVM.
 
+
+### Networking
+
+1. [p2p](./specs/networking/p2p.md): Specifies peer to peer communication.
 ### Chain-Specific Configuration
 
 #### Ethereum
