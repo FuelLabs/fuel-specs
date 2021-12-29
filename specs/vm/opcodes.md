@@ -98,48 +98,22 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 - In a predicate context, [return](#return-return-from-context) `false`.
 - In other contexts, [revert](#revert-revert).
 
-Instead of the receipt of the above instructions, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Attempting to execute an opcode not in this list causes a panic and consumes no gas.
+
+In a script context, on panic append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name     | type          | description                                                               |
 |----------|---------------|---------------------------------------------------------------------------|
 | `type`   | `ReceiptType` | `ReceiptType.Panic`                                                       |
 | `id`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
-| `reason` | `uint8`       | Panic reason.                                                             |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
 | `is`     | `uint64`      | Value of register `$is`.                                                  |
 
-In a script context, considering `instr` as the halfword encoded instruction, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+then append an additional receipt to the list of receipts, again modifying `tx.receiptsRoot`:
 
 | name       | type          | description                                                             |
 |------------|---------------|-------------------------------------------------------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | Result variant with embedded `PanicReason` in first 8 bits and `instr`.|
-| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
-
-Attempting to execute an opcode not in this list causes a panic and consumes no gas.
-
-In a script transaction, if there is an attempt to write to `$rA` that is a [reserved register](./main.md#semantics), append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
-
-| name       | type          | description                                                             |
-|------------|---------------|-------------------------------------------------------------------------|
-| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | ```PanicReason.ReservedRegisterNotWritable \| instr >> 8```             |
-| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
-
-In a script transaction, if a memory range `MEM[$rX, $rY]` does not pass [ownership check](./main.md#ownership), append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
-
-| name       | type          | description                                                             |
-|------------|---------------|-------------------------------------------------------------------------|
-| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | ```PanicReason.MemoryOwnership \| instr >> 8```                         |
-| `gas_used` | `uint64`      | Gas consumed by the script.                                             |
-
-In a script transaction, if `$err` is set, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
-
-| name       | type          | description                                                             |
-|------------|---------------|-------------------------------------------------------------------------|
-| `type`     | `ReceiptType` | `ReceiptType.ScriptResult`                                              |
-| `result`   | `uint64`      | ```PanicReason.ErrorFlag \| instr >> 8```                               |
 | `gas_used` | `uint64`      | Gas consumed by the script.                                             |
 
 ## Arithmetic/Logic (ALU) Opcodes
