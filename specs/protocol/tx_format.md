@@ -53,6 +53,7 @@ Transaction is invalid if:
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
+- No inputs are of type `InputType.Coin`
 - More than one output is of type `OutputType.Change` for any color in the input set
 - Any output is of type `OutputType.Change` for any color not in the input set
 
@@ -100,7 +101,6 @@ enum  ReceiptType : uint8 {
 
 Transaction is invalid if:
 
-- No inputs are of type `InputType.Coin`
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
@@ -134,7 +134,6 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 
 Transaction is invalid if:
 
-- No inputs are of type `InputType.Coin`
 - Any input is of type `InputType.Contract`
 - Any output is of type `OutputType.Contract` or `OutputType.Variable`
 - More than one output is of type `OutputType.Change` with `color` of zero
