@@ -974,15 +974,15 @@ All these opcodes advance the program counter `$pc` by `4` after performing thei
 
 ### BAL: Balance of contract ID
 
-|             |                                                                           |
-|-------------|---------------------------------------------------------------------------|
-| Description | Set `$rA` to the balance of color at `$rB` for contract with ID at `$rC`. |
-| Operation   | ```$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);```                          |
-| Syntax      | `bal $rA, $rB, $rC`                                                       |
-| Encoding    | `0x00 rA rB rC -`                                                         |
-| Notes       |                                                                           |
+|             |                                                                              |
+|-------------|------------------------------------------------------------------------------|
+| Description | Set `$rA` to the balance of asset ID at `$rB` for contract with ID at `$rC`. |
+| Operation   | ```$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);```                             |
+| Syntax      | `bal $rA, $rB, $rC`                                                          |
+| Encoding    | `0x00 rA rB rC -`                                                            |
+| Notes       |                                                                              |
 
-Where helper `balance(color: byte[32], contract_id: byte[32]) -> uint64` returns the current balance of `color` of contract with ID `contract_id`.
+Where helper `balance(asset_id: byte[32], contract_id: byte[32]) -> uint64` returns the current balance of `asset_id` of contract with ID `contract_id`.
 
 Panic if:
 
@@ -1027,20 +1027,20 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 ### BURN: Burn existing coins
 
-|             |                                                   |
-|-------------|---------------------------------------------------|
-| Description | Burn `$rA` coins of the current contract's color. |
-| Operation   | ```burn($rA);```                                  |
-| Syntax      | `burn $rA`                                        |
-| Encoding    | `0x00 rA - - -`                                   |
-| Notes       |                                                   |
+|             |                                                      |
+|-------------|------------------------------------------------------|
+| Description | Burn `$rA` coins of the current contract's asset ID. |
+| Operation   | ```burn($rA);```                                     |
+| Syntax      | `burn $rA`                                           |
+| Encoding    | `0x00 rA - - -`                                      |
+| Notes       |                                                      |
 
 Panic if:
 
-- Balance of color `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
+- Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
 - `$fp == 0` (in the script context)
 
-For output with contract ID `MEM[$fp, 32]`, decrease balance of color `MEM[$fp, 32]` by `$rA`.
+For output with contract ID `MEM[$fp, 32]`, decrease balance of asset ID `MEM[$fp, 32]` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
 
@@ -1061,7 +1061,7 @@ Panic if:
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 - Reading past `MEM[VM_MAX_RAM - 1]`
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
-- In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
+- In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
 
@@ -1075,20 +1075,20 @@ Register `$rA` is a memory address from which the following fields are set (word
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name     | type          | description                                                               |
-|----------|---------------|---------------------------------------------------------------------------|
-| `type`   | `ReceiptType` | `ReceiptType.Call`                                                        |
-| `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
-| `to`     | `byte[32]`    | Contract ID of called contract.                                           |
-| `amount` | `uint64`      | Amount of coins to forward, i.e. `$rB`.                                   |
-| `color`  | `byte[32]`    | Color of coins to forward, i.e. `MEM[$rC, 32]`.                           |
-| `gas`    | `uint64`      | Gas to forward, i.e. `$rD`.                                               |
-| `param1` | `uint64`      | First parameter.                                                          |
-| `param2` | `uint64`      | Second parameter.                                                         |
-| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `$is`.                                                  |
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.Call`                                                        |
+| `from`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`       | `byte[32]`    | Contract ID of called contract.                                           |
+| `amount`   | `uint64`      | Amount of coins to forward, i.e. `$rB`.                                   |
+| `asset_id` | `byte[32]`    | Asset ID of coins to forward, i.e. `MEM[$rC, 32]`.                        |
+| `gas`      | `uint64`      | Gas to forward, i.e. `$rD`.                                               |
+| `param1`   | `uint64`      | First parameter.                                                          |
+| `param2`   | `uint64`      | Second parameter.                                                         |
+| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
+| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
-For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease color `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
+For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease asset ID `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
 A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 
@@ -1254,20 +1254,20 @@ Logs the memory range `MEM[$rC, $rD]`.
 
 ### MINT: Mint new coins
 
-|             |                                                   |
-|-------------|---------------------------------------------------|
-| Description | Mint `$rA` coins of the current contract's color. |
-| Operation   | ```mint($rA);```                                  |
-| Syntax      | `mint $rA`                                        |
-| Encoding    | `0x00 rA - - -`                                   |
-| Notes       |                                                   |
+|             |                                                      |
+|-------------|------------------------------------------------------|
+| Description | Mint `$rA` coins of the current contract's asset ID. |
+| Operation   | ```mint($rA);```                                     |
+| Syntax      | `mint $rA`                                           |
+| Encoding    | `0x00 rA - - -`                                      |
+| Notes       |                                                      |
 
 Panic if:
 
-- Balance of color `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
+- Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
 
-For output with contract ID `MEM[$fp, 32]`, increase balance of color `MEM[$fp, 32]` by `$rA`.
+For output with contract ID `MEM[$fp, 32]`, increase balance of asset ID `MEM[$fp, 32]` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
 
@@ -1355,7 +1355,7 @@ If current context is external, append an additional receipt to the list of rece
 Cease VM execution and revert script effects. After a revert:
 
 1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to`, `amount`, and `color` of zero.
+1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SLDC: Load code from static list
 
@@ -1457,15 +1457,15 @@ Panic if:
 
 ### TR: Transfer coins to contract
 
-|             |                                                                        |
-|-------------|------------------------------------------------------------------------|
-| Description | Transfer `$rB` coins with color at `$rC` to contract with ID at `$rA`. |
-| Operation   | ```transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);```                       |
-| Syntax      | `tr $rA, $rB, $rC`                                                     |
-| Encoding    | `0x00 rA rB rC -`                                                      |
-| Notes       |                                                                        |
+|             |                                                                           |
+|-------------|---------------------------------------------------------------------------|
+| Description | Transfer `$rB` coins with asset ID at `$rC` to contract with ID at `$rA`. |
+| Operation   | ```transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);```                          |
+| Syntax      | `tr $rA, $rB, $rC`                                                        |
+| Encoding    | `0x00 rA rB rC -`                                                         |
+| Notes       |                                                                           |
 
-Given helper `balanceOfStart(color: byte[32]) -> uint32` which returns the memory address of `color` balance, or `0` if `color` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
 
 Panic if:
 
@@ -1475,36 +1475,36 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 - In an external context, if `$rB > MEM[balanceOf(MEM[$rC, 32]), 8]`
-- In an internal context, if `$rB` is greater than the balance of color `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
+- In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rB == 0`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name     | type          | description                                                               |
-|----------|---------------|---------------------------------------------------------------------------|
-| `type`   | `ReceiptType` | `ReceiptType.Transfer`                                                    |
-| `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
-| `to`     | `byte[32]`    | Contract ID of contract to transfer coins to.                             |
-| `amount` | `uint64`      | Amount of coins transferred.                                              |
-| `color`  | `byte[32]`    | Color of coins transferred.                                               |
-| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `$is`.                                                  |
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.Transfer`                                                    |
+| `from`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`       | `byte[32]`    | Contract ID of contract to transfer coins to.                             |
+| `amount`   | `uint64`      | Amount of coins transferred.                                              |
+| `asset_id` | `byte[32]`    | asset ID of coins transferred.                                            |
+| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
+| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
-For output with contract ID `MEM[$rA, 32]`, increase balance of color `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease color `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
+For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease asset ID `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
 ### TRO: Transfer coins to output
 
-|             |                                                                                  |
-|-------------|----------------------------------------------------------------------------------|
-| Description | Transfer `$rC` coins with color at `$rD` to address at `$rA`, with output `$rB`. |
-| Operation   | ```transferout(MEM[$rA, 32], $rB, $rC, MEM[$rD, 32]);```                         |
-| Syntax      | `tro $rA, $rB, $rC, $rD`                                                         |
-| Encoding    | `0x00 rA rB rC rD`                                                               |
-| Notes       |                                                                                  |
+|             |                                                                                     |
+|-------------|-------------------------------------------------------------------------------------|
+| Description | Transfer `$rC` coins with asset ID at `$rD` to address at `$rA`, with output `$rB`. |
+| Operation   | ```transferout(MEM[$rA, 32], $rB, $rC, MEM[$rD, 32]);```                            |
+| Syntax      | `tro $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                  |
+| Notes       |                                                                                     |
 
-Given helper `balanceOfStart(color: byte[32]) -> uint32` which returns the memory address of `color` balance, or `0` if `color` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
 
 Panic if:
 
@@ -1514,28 +1514,28 @@ Panic if:
 - `$rD + 32 > VM_MAX_RAM`
 - `$rB > tx.outputsCount`
 - In an external context, if `$rC > MEM[balanceOf(MEM[$rD, 32]), 8]`
-- In an internal context, if `$rC` is greater than the balance of color `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`
+- In an internal context, if `$rC` is greater than the balance of asset ID `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rC == 0`
 - `tx.outputs[$rB].type != OutputType.Variable`
 - `tx.outputs[$rB].amount != 0`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name     | type          | description                                                               |
-|----------|---------------|---------------------------------------------------------------------------|
-| `type`   | `ReceiptType` | `ReceiptType.TransferOut`                                                 |
-| `from`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
-| `to`     | `byte[32]`    | Address to transfer coins to.                                             |
-| `amount` | `uint64`      | Amount of coins transferred.                                              |
-| `color`  | `byte[32]`    | Color of coins transferred.                                               |
-| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `$is`.                                                  |
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.TransferOut`                                                 |
+| `from`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`       | `byte[32]`    | Address to transfer coins to.                                             |
+| `amount`   | `uint64`      | Amount of coins transferred.                                              |
+| `asset_id` | `byte[32]`    | asset ID of coins transferred.                                            |
+| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
+| `is`       | `uint64`      | Value of register `$is`.                                                  |
 
-In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`. In an internal context, decrease color `MEM[$rD, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rC`. Then set:
+In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`. In an internal context, decrease asset ID `MEM[$rD, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rC`. Then set:
 
 - `tx.outputs[$rB].to = MEM[$rA, 32]`
 - `tx.outputs[$rB].amount = $rC`
-- `tx.outputs[$rB].color = MEM[$rD, 32]`
+- `tx.outputs[$rB].asset_id = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 

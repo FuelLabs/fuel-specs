@@ -78,20 +78,20 @@ If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract 
 
 ### Sufficient Balance
 
-For each color `col` in the input and output set:
+For each asset ID `asset_id` in the input and output set:
 
 ```py
 def sum_inputs(tx, col) -> int:
     total: int = 0
     for input in tx.inputs:
-        if input.type == InputType.Coin and input.color == col:
+        if input.type == InputType.Coin and input.asset_id == col:
             total += input.amount
     return total
 
 def sum_outputs(tx, col) -> int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin or output.type == OutputType.Withdrawal) and output.color == col:
+        if (output.type == OutputType.Coin or output.type == OutputType.Withdrawal) and output.asset_id == col:
             total += output.amount
     return total
 
@@ -144,7 +144,7 @@ Given transaction `tx`, the following checks must pass:
 
 If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, so no further checks are required.
 
-If `tx.scriptLength > 0`, the script must be executed. For each color `col` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[col]`:
+If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_id` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[asset_id]`:
 
 ```py
 freeBalance[col] = available_balance(tx, col) - unavailable_balance(tx, col)
@@ -153,7 +153,7 @@ freeBalance[col] = available_balance(tx, col) - unavailable_balance(tx, col)
 Once the free balances are computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
 
 1. The transaction in-memory on VM termination is used as the final transaction which is included in the block.
-1. The unspent free balance `unspentBalance` for each color.
+1. The unspent free balance `unspentBalance` for each asset ID.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
 The fees incurred for a transaction are `(tx.gasLimit - unspentGas) * tx.gasPrice`.
@@ -170,8 +170,8 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 If change outputs are present, they must have:
 
-1. if the transaction does not revert; an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their color is `0`, or an `amount` of the unspent free balance for that color after VM execution is complete, or
-1. if the transaction reverts; an `amount` of the initial free balance minus spent gas times `tx.gasPrice` if their color is `0`, or an `amount` of the initial free balance for that color.
+1. if the transaction does not revert; an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their asset ID is `0`, or an `amount` of the unspent free balance for that asset ID after VM execution is complete, or
+1. if the transaction reverts; an `amount` of the initial free balance minus spent gas times `tx.gasPrice` if their asset ID is `0`, or an `amount` of the initial free balance for that asset ID.
 
 ### State Changes
 
