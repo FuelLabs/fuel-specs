@@ -1,4 +1,4 @@
-# Fuel Specifications
+# Fuel: A Secure Decentralized Generalized Scalable Transaction Ledger
 
 This repository specifies the Fuel protocol, including the Fuel Virtual Machine (FuelVM, FVM), a next-generation verifiable virtual machine for [the Fuel v2 blockchain](https://github.com/FuelLabs).
 
