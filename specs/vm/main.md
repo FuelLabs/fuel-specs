@@ -76,9 +76,9 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 To initialize the VM, the following is pushed on the stack sequentially:
 
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/identifiers.md#transaction-id).
-1. [`MAX_INPUTS`](../protocol/tx_format.md#constants) pairs of `(color: byte[32], balance: uint64)`, of:
+1. [`MAX_INPUTS`](../protocol/tx_format.md#constants) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate verification](#predicate-verification), zeroes.
-    1. For [script execution](#script-execution), the free balance for each color seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` colors, the pair has a value of zero.
+    1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
 1. The [transaction, serialized](../protocol/tx_format.md).
 
@@ -143,7 +143,7 @@ A call frame consists of the following, word-aligned:
 |-------|---------------|------------|-------------------------------------------------------------------------------|
 |       |               |            | **Unwritable area begins.**                                                   |
 | 32    | `byte[32]`    | `to`       | Contract ID for this call.                                                    |
-| 32    | `byte[32]`    | `color`    | Color of forwarded coins.                                                     |
+| 32    | `byte[32]`    | `asset_id` | asset ID of forwarded coins.                                                  |
 | 8*64  | `byte[8][64]` | `regs`     | Saved registers from previous context.                                        |
 | 8     | `uint16`      | `codesize` | Code size in bytes, padded to word alignment.                                 |
 | 8     | `byte[8]`     | `param1`   | First parameter.                                                              |

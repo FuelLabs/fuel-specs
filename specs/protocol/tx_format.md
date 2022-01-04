@@ -54,8 +54,8 @@ Transaction is invalid if:
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
 - No inputs are of type `InputType.Coin`
-- More than one output is of type `OutputType.Change` for any color in the input set
-- Any output is of type `OutputType.Change` for any color not in the input set
+- More than one output is of type `OutputType.Change` for any asset ID in the input set
+- Any output is of type `OutputType.Change` for any asset ID not in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
@@ -136,8 +136,8 @@ Transaction is invalid if:
 
 - Any input is of type `InputType.Contract`
 - Any output is of type `OutputType.Contract` or `OutputType.Variable`
-- More than one output is of type `OutputType.Change` with `color` of zero
-- Any output is of type `OutputType.Change` with non-zero `color`
+- More than one output is of type `OutputType.Change` with `asset_id` of zero
+- Any output is of type `OutputType.Change` with non-zero `asset_id`
 - It does not have exactly one output of type `OutputType.ContractCreated`
 - `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 - `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
@@ -175,7 +175,7 @@ Transaction is invalid if:
 | `outputIndex`         | `uint8`                   | Index of transaction output.                                           |
 | `owner`               | `byte[32]`                | Owning address or predicate hash.                                      |
 | `amount`              | `uint64`                  | Amount of coins.                                                       |
-| `color`               | `byte[32]`                | Color of the coins.                                                    |
+| `asset_id`            | `byte[32]`                | Asset ID of the coins.                                                 |
 | `txoPointer`          | [TXOPointer](#txopointer) | Points to the TXO being spent.                                         |
 | `witnessIndex`        | `uint8`                   | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint64`                  | UTXO being spent must have been created at least this many blocks ago. |
@@ -243,11 +243,11 @@ Transaction is invalid if:
 
 ### OutputCoin
 
-| name     | type       | description                          |
-|----------|------------|--------------------------------------|
-| `to`     | `byte[32]` | Receiving address or predicate hash. |
-| `amount` | `uint64`   | Amount of coins to send.             |
-| `color`  | `byte[32]` | Color of coins.                      |
+| name       | type       | description                          |
+|------------|------------|--------------------------------------|
+| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `amount`   | `uint64`   | Amount of coins to send.             |
+| `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
 ### OutputContract
 
@@ -268,31 +268,31 @@ Note: when verifying a predicate, `balanceRoot` and `stateRoot` are initialized 
 
 Note: when executing a script, `balanceRoot` and `stateRoot` are initialized to the balance root and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
-The balance root `balanceRoot` is the root of the [SMT](./cryptographic_primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by color (a `byte[32]`).
+The balance root `balanceRoot` is the root of the [SMT](./cryptographic_primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by asset ID (a `byte[32]`).
 
 The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
 
 ### OutputWithdrawal
 
-| name     | type       | description                  |
-|----------|------------|------------------------------|
-| `to`     | `byte[32]` | Receiving address.           |
-| `amount` | `uint64`   | Amount of coins to withdraw. |
-| `color`  | `byte[32]` | Color of coins.              |
+| name       | type       | description                  |
+|------------|------------|------------------------------|
+| `to`       | `byte[32]` | Receiving address.           |
+| `amount`   | `uint64`   | Amount of coins to withdraw. |
+| `asset_id` | `byte[32]` | Asset ID of coins.           |
 
 This output type is unspendable and can be pruned form the UTXO set.
 
 ### OutputChange
 
-| name     | type       | description                          |
-|----------|------------|--------------------------------------|
-| `to`     | `byte[32]` | Receiving address or predicate hash. |
-| `amount` | `uint64`   | Amount of coins to send.             |
-| `color`  | `byte[32]` | Color of coins.                      |
+| name       | type       | description                          |
+|------------|------------|--------------------------------------|
+| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `amount`   | `uint64`   | Amount of coins to send.             |
+| `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
 Transaction is invalid if:
 
-- any other output has type `OutputType.OutputChange` and color `color` (i.e. only one change output per color is allowed)
+- any other output has type `OutputType.OutputChange` and asset ID `asset_id` (i.e. only one change output per asset ID is allowed)
 
 Note: when signing a transaction, `amount` is set to zero.
 
@@ -302,15 +302,15 @@ This output type indicates that the output's amount may vary based on transactio
 
 ### OutputVariable
 
-| name     | type       | description                          |
-|----------|------------|--------------------------------------|
-| `to`     | `byte[32]` | Receiving address or predicate hash. |
-| `amount` | `uint64`   | Amount of coins to send.             |
-| `color`  | `byte[32]` | Color of coins.                      |
+| name       | type       | description                          |
+|------------|------------|--------------------------------------|
+| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `amount`   | `uint64`   | Amount of coins to send.             |
+| `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
-Note: when signing a transaction, `to`, `amount`, and `color` are set to zero.
+Note: when signing a transaction, `to`, `amount`, and `asset_id` are set to zero.
 
-Note: when verifying a predicate or executing a script, `to`, `amount`, and `color` are initialized to zero.
+Note: when verifying a predicate or executing a script, `to`, `amount`, and `asset_id` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
 

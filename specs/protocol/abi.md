@@ -156,7 +156,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
 - `to`: Hexadecimal representation of the 256-bit (32-byte) contract ID of the callee.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 256-bit (32-byte) color of coins to forward.
+- `asset_id`: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.
 - `gas`: Decimal string representation of a 64-bit unsigned integer; amount gas to forward; value in register `$rD`.
 - `param1`: Hexadecimal string representation of a 64-bit unsigned integer; first parameter, holds the function selector.
 - `param2`: Hexadecimal string representation of a 64-bit unsigned integer; second parameter, typically used for the user-specified input to the ABI function being selected.
@@ -169,7 +169,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
     "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
     "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
     "amount":"10000",
-    "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
     "gas":"500",
     "param1":"0x28f5c28f5c28f5c",
     "param2":"0x68db8bac710cb",
@@ -278,7 +278,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `to`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the recipient contract.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 256-bit (32-byte) color of coins to forward.
+- `asset_id`: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -288,7 +288,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
     "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
     "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
     "amount": "10000",
-    "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
     "pc":"0xffffffffffffffff",
     "is":"0xfffffffffffffffe"
 }
@@ -300,7 +300,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `to`: Hexadecimal string representation of the 256-bit (32-byte) _address_ to transfer coins to.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
-- `color`: Hexadecimal string representation of the 256-bit (32-byte) color of coins to forward.
+- `asset_id`: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -310,7 +310,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
     "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
     "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
     "amount": "10000",
-    "color":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+    "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
     "pc":"0xffffffffffffffff",
     "is":"0xfffffffffffffffe"
 }

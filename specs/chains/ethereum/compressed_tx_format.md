@@ -112,11 +112,11 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### OutputCoin
 
-| name           | type                                            | description                                       |
-|----------------|-------------------------------------------------|---------------------------------------------------|
-| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
-| `amount`       | `uint64`                                        | Amount of coins to send.                          |
-| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.                           |
+| name             | type                                            | description                                       |
+|------------------|-------------------------------------------------|---------------------------------------------------|
+| `toPointer`      | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
+| `amount`         | `uint64`                                        | Amount of coins to send.                          |
+| `assetIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Asset ID pointer of coins.                        |
 
 ### OutputContract
 
@@ -126,27 +126,27 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### OutputWithdrawal
 
-| name           | type                                            | description                  |
-|----------------|-------------------------------------------------|------------------------------|
-| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer.   |
-| `amount`       | `uint64`                                        | Amount of coins to withdraw. |
-| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.      |
+| name             | type                                            | description                  |
+|------------------|-------------------------------------------------|------------------------------|
+| `toPointer`      | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer.   |
+| `amount`         | `uint64`                                        | Amount of coins to withdraw. |
+| `assetIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Asset ID pointer of coins.   |
 
 ### OutputChange
 
-| name           | type                                            | description                                       |
-|----------------|-------------------------------------------------|---------------------------------------------------|
-| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
-| `amount`       | `uint64`                                        | Amount of coins to send.                          |
-| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.                           |
+| name             | type                                            | description                                       |
+|------------------|-------------------------------------------------|---------------------------------------------------|
+| `toPointer`      | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
+| `amount`         | `uint64`                                        | Amount of coins to send.                          |
+| `assetIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Asset ID pointer of coins.                        |
 
 ### OutputVariable
 
-| name           | type                                            | description                                       |
-|----------------|-------------------------------------------------|---------------------------------------------------|
-| `toPointer`    | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
-| `amount`       | `uint64`                                        | Amount of coins to send.                          |
-| `colorPointer` | [DigestRegistryPointer](#digestregistrypointer) | Color pointer of coins.                           |
+| name             | type                                            | description                                       |
+|------------------|-------------------------------------------------|---------------------------------------------------|
+| `toPointer`      | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
+| `amount`         | `uint64`                                        | Amount of coins to send.                          |
+| `assetIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Asset ID pointer of coins.                        |
 
 ### OutputContractCreated
 
