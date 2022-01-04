@@ -53,6 +53,7 @@ Transaction is invalid if:
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
+- No inputs are of type `InputType.Coin`
 - More than one output is of type `OutputType.Change` for any color in the input set
 - Any output is of type `OutputType.Change` for any color not in the input set
 
