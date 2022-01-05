@@ -1,12 +1,15 @@
 # Transaction Format
 
 - [Constants](#constants)
+- [TransactionType](#transactiontype)
 - [Transaction](#transaction)
   - [TransactionScript](#transactionscript)
   - [TransactionCreate](#transactioncreate)
+- [InputType](#inputtype)
 - [Input](#input)
   - [InputCoin](#inputcoin)
   - [InputContract](#inputcontract)
+- [OutputType](#outputtype)
 - [Output](#output)
   - [OutputCoin](#outputcoin)
   - [OutputContract](#outputcontract)
@@ -15,6 +18,7 @@
   - [OutputVariable](#outputvariable)
   - [OutputContractCreated](#outputcontractcreated)
 - [Witness](#witness)
+- [TXOPointer](#txopointer)
 
 ## Constants
 
@@ -31,7 +35,7 @@
 | `MAX_STATIC_CONTRACTS`      | `uint64` | `255` | Maximum number of static contracts.           |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
-## Transaction
+## TransactionType
 
 ```
 enum  TransactionType : uint8 {
@@ -40,9 +44,11 @@ enum  TransactionType : uint8 {
 }
 ```
 
+## Transaction
+
 | name   | type                                                                                      | description       |
 |--------|-------------------------------------------------------------------------------------------|-------------------|
-| `type` | `TransactionType`                                                                         | Transaction type. |
+| `type` | [TransactionType](#transactiontype)                                                       | Transaction type. |
 | `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
 
 Transaction is invalid if:
@@ -149,7 +155,7 @@ Transaction is invalid if:
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
-## Input
+## InputType
 
 ```
 enum  InputType : uint8 {
@@ -158,9 +164,11 @@ enum  InputType : uint8 {
 }
 ```
 
+## Input
+
 | name   | type                                                              | description    |
 |--------|-------------------------------------------------------------------|----------------|
-| `type` | `InputType`                                                       | Type of input. |
+| `type` | [InputType](#inputtype)                                           | Type of input. |
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
 Transaction is invalid if:
@@ -219,7 +227,7 @@ Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRo
 
 Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txoPointer` is initialized to zero.
 
-## Output
+## OutputType
 
 ```
 enum  OutputType : uint8 {
@@ -232,9 +240,11 @@ enum  OutputType : uint8 {
 }
 ```
 
+## Output
+
 | name   | type                                                                                                                                                                                                                             | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | `OutputType`                                                                                                                                                                                                                     | Type of output. |
+| `type` | OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
