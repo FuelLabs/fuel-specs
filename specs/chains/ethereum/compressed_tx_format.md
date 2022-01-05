@@ -23,7 +23,7 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 | name   | type                                                                                      | description       |
 |--------|-------------------------------------------------------------------------------------------|-------------------|
-| `type` | [`TransactionType`](../../protocol/tx_format.md#transactiontype)                          | Transaction type. |
+| `type` | [TransactionType](../../protocol/tx_format.md#transactiontype)                            | Transaction type. |
 | `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
 
 ### TransactionScript
@@ -82,7 +82,7 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 | name   | type                                                              | description    |
 |--------|-------------------------------------------------------------------|----------------|
-| `type` | [`InputType`](../../protocol/tx_format.md#inputtype)              | Type of input. |
+| `type` | [InputType](../../protocol/tx_format.md#inputtype)                | Type of input. |
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
 ### InputCoin
@@ -107,7 +107,7 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 | name   | type                                                                                                                                                                                                                             | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [`OutputType`](../../protocol/tx_format.md#outputtype)                                                                                                                                                                           | Type of output. |
+| `type` | [OutputType](../../protocol/tx_format.md#outputtype)                                                                                                                                                                             | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 ### OutputCoin

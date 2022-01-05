@@ -48,7 +48,7 @@ enum  TransactionType : uint8 {
 
 | name   | type                                                                                      | description       |
 |--------|-------------------------------------------------------------------------------------------|-------------------|
-| `type` | [`TransactionType`](#transactiontype)                                                     | Transaction type. |
+| `type` | [TransactionType](#transactiontype)                                                       | Transaction type. |
 | `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
 
 Transaction is invalid if:
@@ -167,7 +167,7 @@ enum  InputType : uint8 {
 
 | name   | type                                                              | description    |
 |--------|-------------------------------------------------------------------|----------------|
-| `type` | [`InputType`](#inputtype)                                         | Type of input. |
+| `type` | [InputType](#inputtype)                                           | Type of input. |
 | `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
 
 Transaction is invalid if:
@@ -243,7 +243,7 @@ enum  OutputType : uint8 {
 
 | name   | type                                                                                                                                                                                                                             | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [`OutputType`](#outputtype)                                                                                                                                                                                                      | Type of output. |
+| `type` | OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
