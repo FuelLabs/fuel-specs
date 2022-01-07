@@ -106,7 +106,8 @@ def unavailable_balance(tx, col) -> int:
     """
     sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit
-    bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
+    # Size excludes witness data as it is malleable (even by third parties!)
+    bytesBalance = size(tx) * bytePrice
     # Only native coin can be used to pay for gas
     if col != 0:
         return sentBalance
@@ -171,7 +172,7 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 If change outputs are present, they must have:
 
 1. if the transaction does not revert; an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their asset ID is `0`, or an `amount` of the unspent free balance for that asset ID after VM execution is complete, or
-1. if the transaction reverts; an `amount` of the initial free balance minus spent gas times `tx.gasPrice` if their asset ID is `0`, or an `amount` of the initial free balance for that asset ID.
+1. if the transaction reverts; an `amount` of the initial free balance plus `unspentGas * tx.gasPrice` if their asset ID is `0`, or an `amount` of the initial free balance for that asset ID.
 
 ### State Changes
 
