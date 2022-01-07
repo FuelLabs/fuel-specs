@@ -24,7 +24,6 @@
 
 | name                        | type     | value | description                                   |
 |-----------------------------|----------|-------|-----------------------------------------------|
-| `GAS_PER_BYTE`              | `uint64` |       | Gas charged per byte of the transaction.      |
 | `MAX_GAS_PER_TX`            | `uint64` |       | Maximum gas per transaction.                  |
 | `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
 | `MAX_OUTPUTS`               | `uint64` | `8`   | Maximum number of outputs.                    |
@@ -90,6 +89,7 @@ enum  ReceiptType : uint8 {
 
 | name               | type                    | description                              |
 |--------------------|-------------------------|------------------------------------------|
+| `bytePrice`        | `uint64`                | Price per transaction byte.              |
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
 | `gasLimit`         | `uint64`                | Gas limit for transaction.               |
 | `maturity`         | `uint32`                | Block until which tx cannot be included. |
@@ -123,8 +123,7 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 
 | name                   | type                    | description                                   |
 |------------------------|-------------------------|-----------------------------------------------|
-| `gasPrice`             | `uint64`                | Gas price for transaction.                    |
-| `gasLimit`             | `uint64`                | Gas limit for transaction.                    |
+| `bytePrice`            | `uint64`                | Price per transaction byte.                   |
 | `maturity`             | `uint32`                | Block until which tx cannot be included.      |
 | `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
 | `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |

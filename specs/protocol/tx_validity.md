@@ -106,7 +106,7 @@ def unavailable_balance(tx, col) -> int:
     """
     sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit
-    bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice
+    bytesBalance = size(tx) * bytePrice
     # Only native coin can be used to pay for gas
     if col != 0:
         return sentBalance
