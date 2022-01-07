@@ -89,9 +89,9 @@ enum  ReceiptType : uint8 {
 
 | name               | type                    | description                              |
 |--------------------|-------------------------|------------------------------------------|
-| `bytePrice`        | `uint64`                | Price per transaction byte.              |
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
 | `gasLimit`         | `uint64`                | Gas limit for transaction.               |
+| `bytePrice`        | `uint64`                | Price per transaction byte.              |
 | `maturity`         | `uint32`                | Block until which tx cannot be included. |
 | `scriptLength`     | `uint16`                | Script length, in instructions.          |
 | `scriptDataLength` | `uint16`                | Length of script input data, in bytes.   |
