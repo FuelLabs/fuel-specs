@@ -196,6 +196,7 @@ Transaction is invalid if:
 - `witnessIndex >= tx.witnessesCount`
 - `predicateLength > MAX_PREDICATE_LENGTH`
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
+- If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
@@ -204,6 +205,8 @@ Note: when signing a transaction, `txoPointer` is set to zero.
 Note: when verifying a predicate, `txoPointer` is initialized to zero.
 
 Note: when executing a script, `txoPointer` is initialized to zero.
+
+The predicate root is computed identically to the contract ID, [here](./identifiers.md#contract-id).
 
 ### InputContract
 
