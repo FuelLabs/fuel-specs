@@ -1563,6 +1563,8 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./main.md#ownership)
 
+Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
 To get the address from the public key, hash the public key with [SHA-2-256](#sha256-sha-2-256).

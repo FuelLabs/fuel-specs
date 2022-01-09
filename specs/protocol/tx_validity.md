@@ -133,6 +133,8 @@ for input in tx.inputs:
 return True
 ```
 
+Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+
 The transaction hash is computed as defined [here](./identifiers.md#transaction-id).
 
 ## Predicate Verification
