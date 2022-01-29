@@ -153,6 +153,7 @@ Transaction is invalid if:
 - `staticContracts` is not ordered in ascending order
 - Any contract with ID in `staticContracts` is not in the state
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
+- The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
@@ -330,9 +331,10 @@ This output type indicates that the output's amount and owner may vary based on 
 
 ### OutputContractCreated
 
-| name         | type       | description  |
-|--------------|------------|--------------|
-| `contractID` | `byte[32]` | Contract ID. |
+| name         | type       | description                     |
+|--------------|------------|---------------------------------|
+| `contractID` | `byte[32]` | Contract ID.                    |
+| `stateRoot`  | `byte[32]` | Initial state root of contract. |
 
 ## Witness
 
