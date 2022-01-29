@@ -121,21 +121,23 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 
 ### TransactionCreate
 
-| name                   | type                    | description                                   |
-|------------------------|-------------------------|-----------------------------------------------|
-| `bytePrice`            | `uint64`                | Price per transaction byte.                   |
-| `maturity`             | `uint32`                | Block until which tx cannot be included.      |
-| `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
-| `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |
-| `staticContractsCount` | `uint8`                 | Number of static contracts.                   |
-| `inputsCount`          | `uint8`                 | Number of inputs.                             |
-| `outputsCount`         | `uint8`                 | Number of outputs.                            |
-| `witnessesCount`       | `uint8`                 | Number of witnesses.                          |
-| `salt`                 | `byte[32]`              | Salt.                                         |
-| `staticContracts`      | `byte[32][]`            | List of static contracts.                     |
-| `inputs`               | [Input](#input)`[]`     | List of inputs.                               |
-| `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
-| `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
+| name                   | type                      | description                                   |
+|------------------------|---------------------------|-----------------------------------------------|
+| `bytePrice`            | `uint64`                  | Price per transaction byte.                   |
+| `maturity`             | `uint32`                  | Block until which tx cannot be included.      |
+| `bytecodeLength`       | `uint16`                  | Contract bytecode length, in instructions.    |
+| `bytecodeWitnessIndex` | `uint8`                   | Witness index of contract bytecode to create. |
+| `staticContractsCount` | `uint8`                   | Number of static contracts.                   |
+| `storageSlotsCount`    | `uint16`                  | Number of storage slots to initialize.        |
+| `inputsCount`          | `uint8`                   | Number of inputs.                             |
+| `outputsCount`         | `uint8`                   | Number of outputs.                            |
+| `witnessesCount`       | `uint8`                   | Number of witnesses.                          |
+| `salt`                 | `byte[32]`                | Salt.                                         |
+| `staticContracts`      | `byte[32][]`              | List of static contracts.                     |
+| `storageSlots`         | `(byte[32], byte[32]])[]` | List of storage slots to initialize.          |
+| `inputs`               | [Input](#input)`[]`       | List of inputs.                               |
+| `outputs`              | [Output](#output)`[]`     | List of outputs.                              |
+| `witnesses`            | [Witness](#witness)`[]`   | List of witnesses.                            |
 
 Transaction is invalid if:
 
