@@ -49,6 +49,8 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 | name                   | type                          | description                                   |
 |------------------------|-------------------------------|-----------------------------------------------|
+| `gasPrice`             | `uint64`                      | Gas price for transaction.                    |
+| `gasLimit`             | `uint64`                      | Gas limit for transaction.                    |
 | `bytePrice`            | `uint64`                      | Price per transaction byte.                   |
 | `maturity`             | `uint32`                      | Block until which tx cannot be included.      |
 | `bytecodeLength`       | `uint16`                      | Contract bytecode length, in instructions.    |
