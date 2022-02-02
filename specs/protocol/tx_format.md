@@ -18,7 +18,7 @@
   - [OutputVariable](#outputvariable)
   - [OutputContractCreated](#outputcontractcreated)
 - [Witness](#witness)
-- [TXOPointer](#txopointer)
+- [TXPointer](#txpointer)
 
 ## Constants
 
@@ -121,23 +121,25 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 
 ### TransactionCreate
 
-| name                   | type                    | description                                   |
-|------------------------|-------------------------|-----------------------------------------------|
-| `gasPrice`             | `uint64`                | Gas price for transaction.                    |
-| `gasLimit`             | `uint64`                | Gas limit for transaction.                    |
-| `bytePrice`            | `uint64`                | Price per transaction byte.                   |
-| `maturity`             | `uint32`                | Block until which tx cannot be included.      |
-| `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
-| `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |
-| `staticContractsCount` | `uint8`                 | Number of static contracts.                   |
-| `inputsCount`          | `uint8`                 | Number of inputs.                             |
-| `outputsCount`         | `uint8`                 | Number of outputs.                            |
-| `witnessesCount`       | `uint8`                 | Number of witnesses.                          |
-| `salt`                 | `byte[32]`              | Salt.                                         |
-| `staticContracts`      | `byte[32][]`            | List of static contracts.                     |
-| `inputs`               | [Input](#input)`[]`     | List of inputs.                               |
-| `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
-| `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
+| name                   | type                      | description                                       |
+|------------------------|---------------------------|---------------------------------------------------|
+| `gasPrice`             | `uint64`                  | Gas price for transaction.                        |
+| `gasLimit`             | `uint64`                  | Gas limit for transaction.                        |
+| `bytePrice`            | `uint64`                  | Price per transaction byte.                       |
+| `maturity`             | `uint32`                  | Block until which tx cannot be included.          |
+| `bytecodeLength`       | `uint16`                  | Contract bytecode length, in instructions.        |
+| `bytecodeWitnessIndex` | `uint8`                   | Witness index of contract bytecode to create.     |
+| `staticContractsCount` | `uint8`                   | Number of static contracts.                       |
+| `storageSlotsCount`    | `uint16`                  | Number of storage slots to initialize.            |
+| `inputsCount`          | `uint8`                   | Number of inputs.                                 |
+| `outputsCount`         | `uint8`                   | Number of outputs.                                |
+| `witnessesCount`       | `uint8`                   | Number of witnesses.                              |
+| `salt`                 | `byte[32]`                | Salt.                                             |
+| `staticContracts`      | `byte[32][]`              | List of static contracts.                         |
+| `storageSlots`         | `(byte[32], byte[32]])[]` | List of storage slots to initialize (key, value). |
+| `inputs`               | [Input](#input)`[]`       | List of inputs.                                   |
+| `outputs`              | [Output](#output)`[]`     | List of outputs.                                  |
+| `witnesses`            | [Witness](#witness)`[]`   | List of witnesses.                                |
 
 Transaction is invalid if:
 
@@ -153,6 +155,7 @@ Transaction is invalid if:
 - `staticContracts` is not ordered in ascending order
 - Any contract with ID in `staticContracts` is not in the state
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
+- The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
@@ -178,20 +181,20 @@ Transaction is invalid if:
 
 ### InputCoin
 
-| name                  | type                      | description                                                            |
-|-----------------------|---------------------------|------------------------------------------------------------------------|
-| `txID`                | `byte[32]`                | Hash of transaction.                                                   |
-| `outputIndex`         | `uint8`                   | Index of transaction output.                                           |
-| `owner`               | `byte[32]`                | Owning address or predicate hash.                                      |
-| `amount`              | `uint64`                  | Amount of coins.                                                       |
-| `asset_id`            | `byte[32]`                | Asset ID of the coins.                                                 |
-| `txoPointer`          | [TXOPointer](#txopointer) | Points to the TXO being spent.                                         |
-| `witnessIndex`        | `uint8`                   | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint64`                  | UTXO being spent must have been created at least this many blocks ago. |
-| `predicateLength`     | `uint16`                  | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`                  | Length of predicate input data, in bytes.                              |
-| `predicate`           | `byte[]`                  | Predicate bytecode.                                                    |
-| `predicateData`       | `byte[]`                  | Predicate input data (parameters).                                     |
+| name                  | type                    | description                                                            |
+|-----------------------|-------------------------|------------------------------------------------------------------------|
+| `txID`                | `byte[32]`              | Hash of transaction.                                                   |
+| `outputIndex`         | `uint8`                 | Index of transaction output.                                           |
+| `owner`               | `byte[32]`              | Owning address or predicate hash.                                      |
+| `amount`              | `uint64`                | Amount of coins.                                                       |
+| `asset_id`            | `byte[32]`              | Asset ID of the coins.                                                 |
+| `txPointer`           | [TXPointer](#txpointer) | Points to the TX whose output is being spent.                          |
+| `witnessIndex`        | `uint8`                 | Index of witness that authorizes spending the coin.                    |
+| `maturity`            | `uint64`                | UTXO being spent must have been created at least this many blocks ago. |
+| `predicateLength`     | `uint16`                | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint16`                | Length of predicate input data, in bytes.                              |
+| `predicate`           | `byte[]`                | Predicate bytecode.                                                    |
+| `predicateData`       | `byte[]`                | Predicate input data (parameters).                                     |
 
 Transaction is invalid if:
 
@@ -202,34 +205,34 @@ Transaction is invalid if:
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
-Note: when signing a transaction, `txoPointer` is set to zero.
+Note: when signing a transaction, `txPointer` is set to zero.
 
-Note: when verifying a predicate, `txoPointer` is initialized to zero.
+Note: when verifying a predicate, `txPointer` is initialized to zero.
 
-Note: when executing a script, `txoPointer` is initialized to zero.
+Note: when executing a script, `txPointer` is initialized to zero.
 
 The predicate root is computed identically to the contract ID, [here](./identifiers.md#contract-id).
 
 ### InputContract
 
-| name          | type                      | description                                                             |
-|---------------|---------------------------|-------------------------------------------------------------------------|
-| `txID`        | `byte[32]`                | Hash of transaction.                                                    |
-| `outputIndex` | `uint8`                   | Index of transaction output.                                            |
-| `balanceRoot` | `byte[32]`                | Root of amount of coins owned by contract before transaction execution. |
-| `stateRoot`   | `byte[32]`                | State root of contract before transaction execution.                    |
-| `txoPointer`  | [TXOPointer](#txopointer) | Points to the TXO being spent.                                          |
-| `contractID`  | `byte[32]`                | Contract ID.                                                            |
+| name          | type                    | description                                                             |
+|---------------|-------------------------|-------------------------------------------------------------------------|
+| `txID`        | `byte[32]`              | Hash of transaction.                                                    |
+| `outputIndex` | `uint8`                 | Index of transaction output.                                            |
+| `balanceRoot` | `byte[32]`              | Root of amount of coins owned by contract before transaction execution. |
+| `stateRoot`   | `byte[32]`              | State root of contract before transaction execution.                    |
+| `txPointer`   | [TXPointer](#txpointer) | Points to the TX whose output is being spent.                           |
+| `contractID`  | `byte[32]`              | Contract ID.                                                            |
 
 Transaction is invalid if:
 
 - there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
-Note: when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txoPointer` are set to zero.
+Note: when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are set to zero.
 
-Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txoPointer` are initialized to zero.
+Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
 
-Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txoPointer` is initialized to zero.
+Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to zero.
 
 ## OutputType
 
@@ -330,9 +333,10 @@ This output type indicates that the output's amount and owner may vary based on 
 
 ### OutputContractCreated
 
-| name         | type       | description  |
-|--------------|------------|--------------|
-| `contractID` | `byte[32]` | Contract ID. |
+| name         | type       | description                     |
+|--------------|------------|---------------------------------|
+| `contractID` | `byte[32]` | Contract ID.                    |
+| `stateRoot`  | `byte[32]` | Initial state root of contract. |
 
 ## Witness
 
@@ -341,10 +345,9 @@ This output type indicates that the output's amount and owner may vary based on 
 | `dataLength` | `uint16` | Length of witness data, in bytes. |
 | `data`       | `byte[]` | Witness data.                     |
 
-## TXOPointer
+## TXPointer
 
 | name          | type     | description        |
 |---------------|----------|--------------------|
 | `blockHeight` | `uint32` | Block height.      |
 | `txIndex`     | `uint16` | Transaction index. |
-| `outputIndex` | `uint8`  | Output index.      |
