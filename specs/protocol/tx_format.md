@@ -121,21 +121,23 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 
 ### TransactionCreate
 
-| name                   | type                    | description                                   |
-|------------------------|-------------------------|-----------------------------------------------|
-| `bytePrice`            | `uint64`                | Price per transaction byte.                   |
-| `maturity`             | `uint32`                | Block until which tx cannot be included.      |
-| `bytecodeLength`       | `uint16`                | Contract bytecode length, in instructions.    |
-| `bytecodeWitnessIndex` | `uint8`                 | Witness index of contract bytecode to create. |
-| `staticContractsCount` | `uint8`                 | Number of static contracts.                   |
-| `inputsCount`          | `uint8`                 | Number of inputs.                             |
-| `outputsCount`         | `uint8`                 | Number of outputs.                            |
-| `witnessesCount`       | `uint8`                 | Number of witnesses.                          |
-| `salt`                 | `byte[32]`              | Salt.                                         |
-| `staticContracts`      | `byte[32][]`            | List of static contracts.                     |
-| `inputs`               | [Input](#input)`[]`     | List of inputs.                               |
-| `outputs`              | [Output](#output)`[]`   | List of outputs.                              |
-| `witnesses`            | [Witness](#witness)`[]` | List of witnesses.                            |
+| name                   | type                      | description                                       |
+|------------------------|---------------------------|---------------------------------------------------|
+| `bytePrice`            | `uint64`                  | Price per transaction byte.                       |
+| `maturity`             | `uint32`                  | Block until which tx cannot be included.          |
+| `bytecodeLength`       | `uint16`                  | Contract bytecode length, in instructions.        |
+| `bytecodeWitnessIndex` | `uint8`                   | Witness index of contract bytecode to create.     |
+| `staticContractsCount` | `uint8`                   | Number of static contracts.                       |
+| `storageSlotsCount`    | `uint16`                  | Number of storage slots to initialize.            |
+| `inputsCount`          | `uint8`                   | Number of inputs.                                 |
+| `outputsCount`         | `uint8`                   | Number of outputs.                                |
+| `witnessesCount`       | `uint8`                   | Number of witnesses.                              |
+| `salt`                 | `byte[32]`                | Salt.                                             |
+| `staticContracts`      | `byte[32][]`              | List of static contracts.                         |
+| `storageSlots`         | `(byte[32], byte[32]])[]` | List of storage slots to initialize (key, value). |
+| `inputs`               | [Input](#input)`[]`       | List of inputs.                                   |
+| `outputs`              | [Output](#output)`[]`     | List of outputs.                                  |
+| `witnesses`            | [Witness](#witness)`[]`   | List of witnesses.                                |
 
 Transaction is invalid if:
 
@@ -151,6 +153,7 @@ Transaction is invalid if:
 - `staticContracts` is not ordered in ascending order
 - Any contract with ID in `staticContracts` is not in the state
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
+- The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
@@ -328,9 +331,10 @@ This output type indicates that the output's amount and owner may vary based on 
 
 ### OutputContractCreated
 
-| name         | type       | description  |
-|--------------|------------|--------------|
-| `contractID` | `byte[32]` | Contract ID. |
+| name         | type       | description                     |
+|--------------|------------|---------------------------------|
+| `contractID` | `byte[32]` | Contract ID.                    |
+| `stateRoot`  | `byte[32]` | Initial state root of contract. |
 
 ## Witness
 
