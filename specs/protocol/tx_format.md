@@ -24,6 +24,7 @@
 
 | name                        | type     | value | description                                   |
 |-----------------------------|----------|-------|-----------------------------------------------|
+| `GAS_PER_BYTE`              | `uint64` |       | Gas charged per byte of the transaction.      |
 | `MAX_GAS_PER_TX`            | `uint64` |       | Maximum gas per transaction.                  |
 | `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
 | `MAX_OUTPUTS`               | `uint64` | `8`   | Maximum number of outputs.                    |
@@ -110,6 +111,7 @@ Transaction is invalid if:
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
+- `bytePrice != gasPrice * GAS_PER_BYTE`
 
 Note: when signing a transaction, `receiptsRoot` is set to zero.
 
@@ -156,6 +158,7 @@ Transaction is invalid if:
 - Any contract with ID in `staticContracts` is not in the state
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
+- `bytePrice != gasPrice * GAS_PER_BYTE`
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
