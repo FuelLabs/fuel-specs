@@ -63,7 +63,7 @@ Here an example containing custom types:
                             },
                             {
                                 "name":"b",
-                                "type": "u8[2]"
+                                "type": "[u8; 2]"
                             }
                         ]
                     }
@@ -245,7 +245,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 {
     "type":"ReturnData",
     "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "ptr":"0x1ad7f29abcc", 
+    "ptr":"0x1ad7f29abcc",
     "len":"1844",
     "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
     "pc":"0xffffffffffffffff",
@@ -451,19 +451,19 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 
 ### Array
 
-An array of a certain type `T`, `T[n]`, where `n` is the length of the array.
+An array of a certain type `T`, `[T; n]`, where `n` is the length of the array.
 
 Arrays in Sway have a fixed-length which is known at compile time. This means the ABI encoding for arrays also happens in-place, with no need to account for dynamic sizing.
 
-The encoding for the array contains, in order, the encoding of each element in `T[n]`, recursively following the encoding for the type `T`.
+The encoding for the array contains, in order, the encoding of each element in `[T; n]`, recursively following the encoding for the type `T`.
 
-For instance, consider the function signature `my_func(bool,u64[2])` with the values `(true,[1, 2])`.
+For instance, consider the function signature `my_func(bool,[u64; 2])` with the values `(true,[1, 2])`.
 
 The encoding will be:
 
 1. `0x0000000000000001`, the `true` bool encoded in-place.
-2. `0x0000000000000001`, First element of the parameter `u64[2]`, `1`, encoded as a `u64`.
-3. `0x0000000000000002`, Second element of the parameter `u64[2]`, `2`, encoded as a `u64`.
+2. `0x0000000000000001`, First element of the parameter `[u64; 2]`, `1`, encoded as a `u64`.
+3. `0x0000000000000002`, Second element of the parameter `[u64; 2]`, `2`, encoded as a `u64`.
 
 The resulting encoded ABI will be:
 
@@ -521,7 +521,7 @@ A more complex scenario:
 ```rust
 struct InputStruct {
     field_1: bool,
-    field_2: u8[2], // An array of u8, with length 2.
+    field_2: [u8; 2], // An array of u8, with length 2.
 }
 
 
