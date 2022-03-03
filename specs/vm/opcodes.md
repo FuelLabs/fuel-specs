@@ -1344,7 +1344,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-If current context is external, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Then append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
