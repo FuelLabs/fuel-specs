@@ -100,7 +100,7 @@ Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is hand
 
 Attempting to execute an opcode not in this list causes a panic and consumes no gas.
 
-If current context is a script, on panic append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+On any panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
@@ -1344,7 +1344,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-If current context is external, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Then append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
