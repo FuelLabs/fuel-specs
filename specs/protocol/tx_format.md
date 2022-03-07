@@ -33,6 +33,7 @@
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
 | `MAX_STATIC_CONTRACTS`      | `uint64` | `255` | Maximum number of static contracts.           |
+| `MAX_STORAGE_SLOTS`         | `uint16` | `255` | Maximum number of initial storage slots.      |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
 ## TransactionType
@@ -157,6 +158,7 @@ Transaction is invalid if:
 - `staticContracts` is not ordered in ascending order
 - Any contract with ID in `staticContracts` is not in the state
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
+- `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 - `bytePrice != gasPrice * GAS_PER_BYTE`
 
