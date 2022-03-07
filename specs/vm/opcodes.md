@@ -1071,7 +1071,7 @@ Register `$rA` is a memory address from which the following fields are set (word
 | 8     | `byte[8]`  | `param1` | First parameter.     |
 | 8     | `byte[8]`  | `param2` | Second parameter.    |
 
-`$rD` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
+`$rB` is the amount of coins to forward. `$rC` points to the 32-byte asset ID of the coins to forward. `$rD` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
