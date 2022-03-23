@@ -1095,7 +1095,7 @@ A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
 1. Set `$pc` and `$is` to the starting address of the code.
-1. `$bal = $rD` (forward coins)
+1. `$bal = $rB` (forward coins)
 1. `$cgas = $rD` or all available gas (forward gas)
 
 This modifies the `balanceRoot` field of the appropriate output(s).
