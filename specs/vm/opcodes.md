@@ -1349,7 +1349,7 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`  |
-| `result`   | `uint64`      | `0`                         |
+| `result`   | `uint64`      | `1`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
 
 Cease VM execution and revert script effects. After a revert:
