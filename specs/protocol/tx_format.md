@@ -256,7 +256,7 @@ enum  OutputType : uint8 {
 
 | name   | type                                                                                                                                                                                                                             | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
+| `type` | [OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
