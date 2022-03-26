@@ -17,6 +17,7 @@
   - [MOD: Modulus](#mod-modulus)
   - [MODI: Modulus immediate](#modi-modulus-immediate)
   - [MOVE: Move](#move-move)
+  - [MOVI: Move immediate](#movi-move-immediate)
   - [MROO: Math root](#mroo-math-root)
   - [MUL: Multiply](#mul-multiply)
   - [MULI: Multiply immediate](#muli-multiply-immediate)
@@ -384,6 +385,22 @@ Otherwise, `$of` and `$err` are cleared.
 | Syntax      | `move $rA, $rB`                    |
 | Encoding    | `0x00 rA rB - -`                   |
 | Notes       |                                    |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+
+`$of` and `$err` are cleared.
+
+### MOVI: Move immediate
+
+|             |                                          |
+|-------------|------------------------------------------|
+| Description | Copy an immediate value into a register. |
+| Operation   | ```$rA = imm;```                         |
+| Syntax      | `movi $rA, imm`                          |
+| Encoding    | `0x00 rA i i i`                          |
+| Notes       |                                          |
 
 Panic if:
 
