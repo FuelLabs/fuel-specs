@@ -1647,7 +1647,7 @@ Panic if:
 
 |             |                                                                                                  |
 |-------------|--------------------------------------------------------------------------------------------------|
-| Description | Set `$rA` to the memory addess of the start of [the `$rB`th input](./main.md#vm-initialization). |
+| Description | Set `$rA` to the memory address of the start of [the `$rB`th input](./main.md#vm-initialization). |
 | Operation   | ```$rA = xis($rB);```                                                                            |
 | Syntax      | `xis $rA, $rB`                                                                                   |
 | Encoding    | `0x00 rA rB - -`                                                                                 |
@@ -1677,7 +1677,7 @@ Panic if:
 
 |             |                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------|
-| Description | Set `$rA` to the memory addess of the start of [the `$rB`th output](./main.md#vm-initialization). |
+| Description | Set `$rA` to the memory address of the start of [the `$rB`th output](./main.md#vm-initialization). |
 | Operation   | ```$rA = xos($rB);```                                                                             |
 | Syntax      | `xos $rA, $rB`                                                                                    |
 | Encoding    | `0x00 rA rB - -`                                                                                  |
@@ -1709,7 +1709,7 @@ Note that the returned length includes the [_entire_ witness](../protocol/tx_for
 
 |             |                                                                                                    |
 |-------------|----------------------------------------------------------------------------------------------------|
-| Description | Set `$rA` to the memory addess of the start of [the `$rB`th witness](./main.md#vm-initialization). |
+| Description | Set `$rA` to the memory address of the start of [the `$rB`th witness](./main.md#vm-initialization). |
 | Operation   | ```$rA = xws($rB);```                                                                              |
 | Syntax      | `xws $rA, $rB`                                                                                     |
 | Encoding    | `0x00 rA rB - -`                                                                                   |
