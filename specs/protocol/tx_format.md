@@ -195,7 +195,7 @@ Transaction is invalid if:
 | `asset_id`            | `byte[32]`              | Asset ID of the coins.                                                 |
 | `txPointer`           | [TXPointer](#txpointer) | Points to the TX whose output is being spent.                          |
 | `witnessIndex`        | `uint8`                 | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint64`                | UTXO being spent must have been created at least this many blocks ago. |
+| `maturity`            | `uint32`                | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateLength`     | `uint16`                | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint16`                | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`                | Predicate bytecode.                                                    |
