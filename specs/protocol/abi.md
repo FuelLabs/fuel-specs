@@ -89,7 +89,7 @@ Here an example containing custom types:
 ]
 ```
 
-**Important note**: The ordering of the components of a struct, enum or tuple  _matters_ for the encoding mechanism. For instance, in the example above, we define the components `a`, then `b`, of the struct `y`. That means when encoding, a `bool` (`a`) will be encoded first, then a `u8[2]`(`b`) will be encoded. That also means that when passing values to the encoder they must also follow the specified order: `"(true,[1,2])"` should be fed into the encoder.
+**Important note**: The ordering of the components of a struct, enum, or tuple  _matters_ for the encoding mechanism. For instance, in the example above, we define the components `a`, then `b`, of the struct `y`. That means when encoding, a `bool` (`a`) will be encoded first, then a `u8[2]`(`b`) will be encoded. That also means that when passing values to the encoder they must also follow the specified order: `"(true,[1,2])"` should be fed into the encoder.
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
 
