@@ -10,7 +10,7 @@ The JSON of an ABI is the human-readable representation of an interface call to 
 - `name`: String, the name of the contract's function being called;
 - `inputs`: An array of objects that represents the inputs to this function, each of which contains:
   - `name`: String, the name of the parameter;
-  - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct, enum or tuple). If it's a custom type, it must follow the format `enum | struct <custom_type_name> | tuple <types>`, e.g. `"type": "struct MyCustomStruct"`, `"type": "tuple (u64, u64)"`;
+  - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct, enum, or tuple). If it's a custom type, it must follow the format `enum | struct <custom_type_name> | tuple <types>`, e.g. `"type": "struct MyCustomStruct"`, `"type": "tuple (u64, u64)"`;
   - `components`:, Optional object, used if the `type` is a custom type, contains:
     - `name`: String, the name of the component;
     - `type`: String, the type of the component;
