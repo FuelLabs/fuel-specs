@@ -95,6 +95,8 @@
 
 This page provides a description of all opcodes for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
+- The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
+
 Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is handled depends on [context](./main.md#contexts):
 
 - In a predicate context, [return](#return-return-from-context) `false`.
