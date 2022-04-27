@@ -38,6 +38,7 @@
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
+  - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Opcodes](#memory-opcodes)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
@@ -729,6 +730,20 @@ Panic if:
 | Syntax      | `jnei $rA $rB imm`                                                                   |
 | Encoding    | `0x00 rA rB i i`                                                                     |
 | Notes       |                                                                                      |
+
+Panic if:
+
+- `$is + imm * 4 > VM_MAX_RAM - 1`
+
+### JNZI: Jump if not zero immediate
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Jump to the code instruction offset by `imm` if `$rA` is not equal to `$zero`.         |
+| Operation   | ```if $rA != $zero:```<br>```$pc = $is + imm * 4;```<br>```else:```<br>```$pc += 4;``` |
+| Syntax      | `jnzi $rA imm`                                                                         |
+| Encoding    | `0x00 rA i i i`                                                                        |
+| Notes       |                                                                                        |
 
 Panic if:
 
