@@ -741,7 +741,7 @@ Panic if:
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump to the code instruction offset by `imm` if `$rA` is not equal to `$zero`.         |
 | Operation   | ```if $rA != $zero:```<br>```$pc = $is + imm * 4;```<br>```else:```<br>```$pc += 4;``` |
-| Syntax      | `jnei $rA imm`                                                                         |
+| Syntax      | `jnzi $rA imm`                                                                         |
 | Encoding    | `0x00 rA i i i`                                                                        |
 | Notes       |                                                                                        |
 
