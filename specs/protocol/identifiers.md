@@ -25,7 +25,7 @@ Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as 
 
 ### Deposit ID
 
-The UTXO ID of a deposit is computed as the [hash](./cryptographic_primitives.md#hashing) of the depoitor `address`, token `address`, token precision `u8` and deposit nonce `u256`.
+The UTXO ID of a deposit is computed as the [hash](./cryptographic_primitives.md#hashing) of the depoitor address `byte[20]`, token address `byte[20]`, token precision `uint8` and deposit nonce `byte[32]`: `hash(byte[20] ++ byte[20] ++ uint8 ++ byte[32])`. Address values are serialized as a byte array of length 20 and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
 
 ### Fee ID
 
