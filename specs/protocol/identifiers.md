@@ -25,7 +25,7 @@ Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as 
 
 ### Deposit ID
 
-The UTXO ID of a deposit is computed as the [hash](./cryptographic_primitives.md#hashing) of TODO.
+The UTXO ID of a deposit is computed as the [hash](./cryptographic_primitives.md#hashing) of the depoitor `address`, token `address`, token precision `u8` and deposit nonce `u256`.
 
 ### Fee ID
 
