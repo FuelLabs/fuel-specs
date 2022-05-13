@@ -378,8 +378,7 @@ Then we would get only the first 4 bytes of this digest and left-pad it to 8 byt
 
 #### Function with `Struct` input
 
-- If the function has a `Struct` input type, a prefix `s` is put in front of the parenthesized
-  list of its components
+- If the function has a `Struct` input type, a prefix `s` is put in front of the parenthesized list of its components
 
 ```rust
 struct MyStruct {
