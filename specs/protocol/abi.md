@@ -402,7 +402,7 @@ foo(s(u64,bool))
 ```rust
 enum MyEnum {
     foo: u64,
-bar: bool,
+    bar: bool,
 }
 fn foo(a: MyEnum);
 ```
