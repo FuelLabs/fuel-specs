@@ -360,7 +360,9 @@ The function selector is the first 4 bytes of the SHA-256 hash function of the s
 
 _N.B.: the word size for the FuelVM is 8 bytes._
 
-The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8.
+### Function signature
+
+The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8. For custom types such as `Enum` and `Struct`, there is a prefix added to the parenthesized list (see below).
 
 For instance, in the case of the function `entry_one` above, we would pass the string `"entry_one(u64)"` to the `sha256()` hashing algorithm. The full digest would be:
 
@@ -372,6 +374,76 @@ Then we would get only the first 4 bytes of this digest and left-pad it to 8 byt
 
 ```text
 0x000000000c36cb9c
+```
+
+#### Function with `Struct` input
+
+- If the function has a `Struct` input type, a prefix `s` is put in front of the parenthesized list of its components
+
+```rust
+struct MyStruct {
+    foo: u64,
+    bar: bool,
+}
+
+fn foo(a: MyStruct);
+```
+
+has the signature
+
+```text
+foo(s(u64,bool))
+```
+
+#### Function with `Enum` input
+
+- If the function has an `Enum` input type, a prefix `e` is put in front of the parenthesized list of its components
+
+```rust
+enum MyEnum {
+    foo: u64,
+    bar: bool,
+}
+fn foo(a: MyEnum);
+```
+
+has the signature
+
+```text
+foo(e(u64,bool))
+```
+
+#### Complex example for Function signature encoding
+
+```rust
+enum MyEnum {
+    foo: u64,
+    bar: bool,
+}
+struct MyStruct {
+    bim: u8,
+    bam: MyEnum,
+}
+
+fn complex_function(arg: MyStruct);
+```
+
+is encoded as:
+
+```text
+complex_function(s(u8,e(u64,bool)))
+```
+
+which is then hashed into:
+
+```text
+0x91d41b3e8c2ed1fe49678517450a32d89c9054b53f4127544e9f73ee0af704d3
+```
+
+and then the encoded function selector is:
+
+```text
+0x0000000091d41b3e
 ```
 
 ## Argument Encoding
