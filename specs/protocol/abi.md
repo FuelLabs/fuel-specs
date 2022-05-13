@@ -427,15 +427,21 @@ struct MyStruct {
 
 fn complex_function(arg: MyStruct);
 ```
+
 is encoded as:
+
 ```text
 complex_function(s(u8,e(u64,bool)))
 ```
+
 which is then hashed into:
+
 ```text
 0x91d41b3e8c2ed1fe49678517450a32d89c9054b53f4127544e9f73ee0af704d3
 ```
+
 and then the encoded function selector is:
+
 ```text
 0x0000000091d41b3e
 ```
