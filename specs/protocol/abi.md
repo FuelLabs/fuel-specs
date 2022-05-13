@@ -397,8 +397,7 @@ foo(s(u64,bool))
 
 #### Function with `Enum` input
 
-- If the function has an `Enum` input type, a prefix `e` is put in front of the parenthesized list
-  of its components
+- If the function has an `Enum` input type, a prefix `e` is put in front of the parenthesized list of its components
 
 ```rust
 enum MyEnum {
