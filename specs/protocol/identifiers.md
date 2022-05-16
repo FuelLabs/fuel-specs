@@ -4,8 +4,8 @@
 - [Contract ID](#contract-id)
 - [UTXO ID](#utxo-id)
   - [Coin ID](#coin-id)
-  - [Asset ID](#asset-id)
   - [Deposit ID](#deposit-id)
+    - [Deposit Asset ID](#deposit-asset-id)
   - [Fee ID](#fee-id)
 
 This document defines how to compute unique identifiers.
@@ -24,13 +24,14 @@ For a transaction of type `TransactionType.Create`, `tx`, the contract ID is `sh
 
 Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as `byte[32]` and output index as a `uint8`.
 
-### Asset ID
-
-The ID of an asset is computed as the [hash](./cryptographic_primitives.md#hashing) of the token address `byte[32]` and token precision `uint8`: `hash(byte[32] ++ uint8)`. The address value is serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
 
 ### Deposit ID
 
-The ID of a deposit is computed as the [hash](./cryptographic_primitives.md#hashing) of the [Asset ID](#asset-id) `byte[32]`, recipient address `byte[32]` and deposit nonce `uint64`: `hash(byte[32] ++ byte[32] ++ uint64)`. All value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
+The ID of a deposit is computed as the [hash](./cryptographic_primitives.md#hashing) of the [Deposit Asset ID](#deposit-asset-id) `byte[32]`, recipient address `byte[32]`, amount `uint64` and deposit nonce `uint64`: `hash(byte[32] ++ byte[32] ++ uint64 ++ uint64)`. All value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
+
+#### Deposit Asset ID
+
+The ID of a deposit asset is computed as the [hash](./cryptographic_primitives.md#hashing) of the token address `byte[32]` and token precision `uint8`: `hash(byte[32] ++ uint8)`. The address value is serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
 
 ### Fee ID
 
