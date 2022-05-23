@@ -25,7 +25,7 @@ Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as 
 
 ### Message ID
 
-The ID of a message is computed as the [hash](./cryptographic_primitives.md#hashing) of the EVM contract/account address `byte[32]` (either the sender or target), FuelVM contract/account address `byte[32]` (either the sender or target), the abi encoded message (either [EVM abi](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) or [FuelVM abi](./abi.md)) `byte[]` and message nonce `uint64`: `hash(byte[32] ++ byte[32] ++ byte[] ++ uint64)`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
+The ID of a message is computed as the [hash](./cryptographic_primitives.md#hashing) of the sender address `byte[32]`, recipient address `byte[32]`, the abi encoded message (either [EVM abi](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) or [FuelVM abi](./abi.md)) `byte[]` and message nonce `uint64`: `hash(byte[32] ++ byte[32] ++ byte[] ++ uint64)`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction).
 
 ### Fee ID
 
