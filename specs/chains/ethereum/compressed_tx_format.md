@@ -11,7 +11,7 @@
 - [Output](#output)
   - [OutputCoin](#outputcoin)
   - [OutputContract](#outputcontract)
-  - [OutputWithdrawal](#outputwithdrawal)
+  - [OutputMessage](#outputmessage)
   - [OutputChange](#outputchange)
   - [OutputVariable](#outputvariable)
   - [OutputContractCreated](#outputcontractcreated)
@@ -105,6 +105,17 @@ This document specifies the _compressed_ transaction format, which is posted to 
 |---------------|---------------------------|---------------|
 | `utxoPointer` | [TXOPointer](#txopointer) | UTXO pointer. |
 
+### InputMessage
+
+| name                  | type                      | description                                                            |
+|-----------------------|---------------------------|------------------------------------------------------------------------|
+| `messageID`           | [TXOPointer](#txopointer) | UTXO pointer.                                                          |
+| `witnessIndex`        | `uint8`                   | Index of witness that authorizes spending the coin.                    |
+| `predicateLength`     | `uint16`                  | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint16`                  | Length of predicate input data, in bytes.                              |
+| `predicate`           | `byte[]`                  | Predicate bytecode.                                                    |
+| `predicateData`       | `byte[]`                  | Predicate input data (parameters).                                     |
+
 ## Output
 
 | name   | type                                                                                                                                                                                                                             | description     |
@@ -126,20 +137,18 @@ This document specifies the _compressed_ transaction format, which is posted to 
 |--------------|---------|--------------------------|
 | `inputIndex` | `uint8` | Index of input contract. |
 
-### OutputWithdrawal
+### OutputMessage
 
-| name             | type                                            | description                  |
-|------------------|-------------------------------------------------|------------------------------|
-| `toPointer`      | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer.   |
-| `amount`         | `uint64`                                        | Amount of coins to withdraw. |
-| `assetIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Asset ID pointer of coins.   |
+| name             | type         | description                                                       |
+|------------------|--------------|-------------------------------------------------------------------|
+| `messageID`      | `byte[32]`   | The messageID as described [here](./identifiers.md#message-id).   |
 
 ### OutputChange
 
 | name             | type                                            | description                                       |
 |------------------|-------------------------------------------------|---------------------------------------------------|
 | `toPointer`      | [DigestRegistryPointer](#digestregistrypointer) | Receiving address pointer or script hash pointer. |
-| `amount`         | `uint64`                                        | Amount of coins to send.                          |
+| `amount`         | `uint64`                                        | Amount of base asset coins sent with message.     |
 | `assetIDPointer` | [DigestRegistryPointer](#digestregistrypointer) | Asset ID pointer of coins.                        |
 
 ### OutputVariable
