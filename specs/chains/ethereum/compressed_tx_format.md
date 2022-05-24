@@ -109,7 +109,7 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 | name                  | type                      | description                                                            |
 |-----------------------|---------------------------|------------------------------------------------------------------------|
-| `messageID`           | [TXOPointer](#txopointer) | UTXO pointer.                                                          |
+| `messageID`           | `byte[32]`                | The messageID as described [here](../../protocol/identifiers.md#message-id).    |
 | `witnessIndex`        | `uint8`                   | Index of witness that authorizes spending the coin.                    |
 | `predicateLength`     | `uint16`                  | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint16`                  | Length of predicate input data, in bytes.                              |
@@ -139,9 +139,9 @@ This document specifies the _compressed_ transaction format, which is posted to 
 
 ### OutputMessage
 
-| name             | type         | description                                                       |
-|------------------|--------------|-------------------------------------------------------------------|
-| `messageID`      | `byte[32]`   | The messageID as described [here](./identifiers.md#message-id).   |
+| name             | type         | description                                                           |
+|------------------|--------------|-----------------------------------------------------------------------|
+| `messageID`      | `byte[32]`   | The messageID as described [here](../../protocol/identifiers.md#message-id).   |
 
 ### OutputChange
 
