@@ -329,7 +329,7 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 | `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#message-id).         |
 | `sender`              | `byte[32]`  | The address of the message sender.                                      |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                   |
-| `callABI`             | `byte[]`    | The [abi encoded]([./abi.md](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html)) call to execute.        |
+| `callABI`             | `byte[]`    | The [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute.        |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
 | `nonce`               | `uint64`    | The message nonce.                                                      |
 
