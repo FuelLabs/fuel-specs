@@ -8,7 +8,7 @@
 - [InputType](#inputtype)
 - [Input](#input)
   - [InputCoin](#inputcoin)
-  - [fInputContract](#inputcontract)
+  - [InputContract](#inputcontract)
   - [InputMessage](#inputmessage)
 - [OutputType](#outputtype)
 - [Output](#output)
