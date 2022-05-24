@@ -216,7 +216,7 @@ Note: when verifying a predicate, `txPointer` is initialized to zero.
 
 Note: when executing a script, `txPointer` is initialized to zero.
 
-The predicate root is computed identically to the contract ID, [here](./identifiers.md#contract-id).
+The predicate root is computed identically to the contract root, used to compute the contract ID, [here](./identifiers.md#contract-id).
 
 ### InputContract
 
