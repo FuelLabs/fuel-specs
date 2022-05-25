@@ -333,7 +333,11 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
 | `nonce`               | `uint64`    | The message nonce.                                                      |
 
-This output type is unspendable and can be pruned from the UTXO set.
+Note: when signing a transaction, `messageID`, `sender`, `recipient`, `callABI`, `amount`, and `nonce` are set to zero.
+
+Note: when verifying a predicate or executing a script, `messageID`, `sender`, `recipient`, `callABI`, `amount`, and `nonce` are initialized to zero.
+
+Note: this output type is unspendable and can be pruned from the UTXO set.
 
 ### OutputChange
 
