@@ -76,6 +76,7 @@
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
+  - [SMO: Send Message to output](#smo-send-message-to-output)
 - [Cryptographic Opcodes](#cryptographic-opcodes)
   - [ECR: Signature recovery](#ecr-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
@@ -1572,6 +1573,42 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].asset_id = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
+
+### SMO: Send message output
+
+|             |                                                                                     |
+|-------------|-------------------------------------------------------------------------------------|
+| Description | Send a message to recipient address `MEM[$rA, 32]` with call abi `MEM[$rA + 32, $rB]` and `$rD` coins, with output `$rC`. |
+| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```      |
+| Syntax      | `smo $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                  |
+| Notes       |                                                                                     |
+
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rA + $rB + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rA + $rB + 32 > VM_MAX_RAM`
+- `$rC > tx.outputsCount`
+- In an external context, if `$rD > MEM[balanceOf(0), 8]`
+- In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
+- `tx.outputs[$rC].type != OutputType.Message`
+- `tx.outputs[$rC].recipient != 0 || tx.outputs[$rC].sender != 0`
+
+In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
+
+- `tx.outputs[$rC].recipient = MEM[$rA, 32]`
+- `tx.outputs[$rC].sender = MEM[$fp, 32]`
+- `tx.outputs[$rC].callABI = MEM[$rA + 32, $rB]`
+- `tx.outputs[$rC].amount = $rD`
+- `tx.outputs[$rC].nonce = ++messageOutputNonce`
+- `tx.outputs[$rC].messageID = messageID` as defined [here](../protocol/identifiers.md#message-id)
+
+This modifies the `balanceRoot` field of the appropriate output(s).
+MessageID is added to the `OutputMessage` merkle tree as part of block header.
 
 ## Cryptographic Opcodes
 
