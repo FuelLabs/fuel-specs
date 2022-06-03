@@ -248,7 +248,7 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#message-id).        |
 | `sender`              | `byte[32]`  | The address of the message sender.                                     |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
-| `callABI`             | `byte[]`    | The [abi encoded](./abi.md) call to execute.                           |
+| `data`                | `byte[]`    | The message data or [abi encoded](./abi.md) call to execute.           |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
 | `nonce`               | `uint64`    | The message nonce.                                                     |
 | `owner`               | `byte[32]`  | Owning address or predicate hash.                                      |
@@ -329,13 +329,13 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 | `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#message-id).         |
 | `sender`              | `byte[32]`  | The address of the message sender.                                      |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                   |
-| `callABI`             | `byte[]`    | The [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute.        |
+| `data`                | `byte[]`    | The message data or [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute.        |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
 | `nonce`               | `uint64`    | The message nonce.                                                      |
 
-Note: when signing a transaction, `messageID`, `sender`, `recipient`, `callABI`, `amount`, and `nonce` are set to zero.
+Note: when signing a transaction, `messageID`, `sender`, `recipient`, `data`, `amount`, and `nonce` are set to zero.
 
-Note: when verifying a predicate or executing a script, `messageID`, `sender`, `recipient`, `callABI`, `amount`, and `nonce` are initialized to zero.
+Note: when verifying a predicate or executing a script, `messageID`, `sender`, `recipient`, `data`, `amount`, and `nonce` are initialized to zero.
 
 Note: this output type is unspendable and can be pruned from the UTXO set.
 
