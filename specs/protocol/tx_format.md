@@ -157,6 +157,7 @@ Transaction is invalid if:
 - `staticContractsCount > MAX_STATIC_CONTRACTS`
 - `staticContracts` is not ordered in ascending order
 - Any contract with ID in `staticContracts` is not in the state
+- The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
