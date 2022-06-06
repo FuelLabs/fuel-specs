@@ -541,9 +541,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
 
-`$of` is assigned the overflow of the operation.
-
-`$err` is cleared.
+`$of` and `$err` are cleared.
 
 ### SLLI: Shift left logical immediate
 
@@ -559,9 +557,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
 
-`$of` is assigned the overflow of the operation.
-
-`$err` is cleared.
+`$of` and `$err` are cleared.
 
 ### SRL: Shift right logical
 
