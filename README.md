@@ -24,13 +24,7 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 ### FuelVM
 
 1. [main.md](./specs/vm/main.md): Describes the FuelVM at a high level, from its architecture to how it is initialized.
-1. [opcodes.md](./specs/vm/opcodes.md): Defines all opcodes available in the FuelVM.
-
-### Chain-Specific Configuration
-
-#### Ethereum
-
-1. [compressed_tx_format.md](./specs/chains/ethereum/compressed_tx_format.md): Ethereum-compressed transaction format.
+1. [instruction_set.md](./specs/vm/instruction_set.md): Defines the FuelVM instruction set.
 
 ## Contributing
 

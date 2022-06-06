@@ -30,11 +30,6 @@ UTXOs and contracts in the read-only and write-destroy access lists must exist (
 
 Read-only access list:
 
-- For each [input `InputType.Contract`](./tx_format.md#inputcontract)
-  - Each contract ID in the `staticContracts` list for contract ID `contract ID`
-- For [transaction `TransactionType.Create`](./tx_format.md#transactioncreate)
-  - Each contract ID in the `staticContracts` list
-
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](./tx_format.md#inputcoin)
@@ -107,7 +102,7 @@ def unavailable_balance(tx, col) -> int:
     sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit
     # Size excludes witness data as it is malleable (even by third parties!)
-    bytesBalance = size(tx) * bytePrice
+    bytesBalance = size(tx) * gasPrice * GAS_PER_BYTE
     # Only native coin can be used to pay for gas
     if col != 0:
         return sentBalance
