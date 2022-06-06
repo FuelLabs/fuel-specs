@@ -69,7 +69,6 @@
   - [MINT: Mint new coins](#mint-mint-new-coins)
   - [RETD: Return from context with data](#retd-return-from-context-with-data)
   - [RVRT: Revert](#rvrt-revert)
-  - [SLDC: Load code from static list](#sldc-load-code-from-static-list)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
@@ -1390,32 +1389,6 @@ Cease VM execution and revert script effects. After a revert:
 
 1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
 1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
-
-### SLDC: Load code from static list
-
-|             |                                                                                                                 |
-|-------------|-----------------------------------------------------------------------------------------------------------------|
-| Description | Copy `$rC` bytes of code starting at `$rB` for contract with static index `$rA` into memory starting at `$ssp`. |
-| Operation   | ```MEM[$ssp, $rC] = scode($rA, $rB, $rC);```                                                                    |
-| Syntax      | `sloadcode $rA, $rB, $rC`                                                                                       |
-| Encoding    | `0x00 rA rB rC -`                                                                                               |
-| Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                               |
-
-Panic if:
-
-- `$ssp + $rC` overflows
-- `$ssp + $rC > VM_MAX_RAM`
-- `$rA >= MAX_STATIC_CONTRACTS`
-- `$rA` is greater than or equal to `staticContractsCount` for the contract with ID `MEM[$fp, 32]`
-- `$ssp != $sp`
-- `$ssp + $rC > $hp`
-- `$rC > CONTRACT_MAX_SIZE`
-- `$rC > MEM_MAX_ACCESS_SIZE`
-- `$fp == 0` (in the script context)
-
-Increment `$hp->codesize`, `$ssp`, and `$sp` by `$rC` padded to word alignment.
-
-This opcode can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
 
 ### SRW: State read word
 
