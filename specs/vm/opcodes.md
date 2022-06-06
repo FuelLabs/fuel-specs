@@ -97,14 +97,12 @@ This page provides a description of all opcodes for the FuelVM. Encoding is read
 
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
 
-Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is handled depends on [context](./main.md#contexts):
+Some opcodes may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an opcode not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./main.md#contexts):
 
-- In a predicate context, [return](#return-return-from-context) `false`.
-- In other contexts, [revert](#revert-revert).
+- In a predicate context, cease VM execution and return `false`.
+- In other contexts, revert (described below).
 
-Attempting to execute an opcode not in this list causes a panic and consumes no gas.
-
-On any panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+On a non-predicate panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
@@ -541,9 +539,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
 
-`$of` is assigned the overflow of the operation.
-
-`$err` is cleared.
+`$of` and `$err` are cleared.
 
 ### SLLI: Shift left logical immediate
 
@@ -559,9 +555,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
 
-`$of` is assigned the overflow of the operation.
-
-`$err` is cleared.
+`$of` and `$err` are cleared.
 
 ### SRL: Shift right logical
 
@@ -1088,6 +1082,8 @@ This modifies the `balanceRoot` field of the appropriate output.
 | Encoding    | `0x00 rA rB rC rD`     |
 | Notes       |                        |
 
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+
 Panic if:
 
 - `$rA + 32` overflows
@@ -1499,7 +1495,7 @@ Panic if:
 | Encoding    | `0x00 rA rB rC -`                                                         |
 | Notes       |                                                                           |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
 Panic if:
 
@@ -1508,7 +1504,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
-- In an external context, if `$rB > MEM[balanceOf(MEM[$rC, 32]), 8]`
+- In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
 - In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rB == 0`
 
@@ -1538,7 +1534,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 | Encoding    | `0x00 rA rB rC rD`                                                                  |
 | Notes       |                                                                                     |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
 Panic if:
 
@@ -1547,7 +1543,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rD + 32 > VM_MAX_RAM`
 - `$rB > tx.outputsCount`
-- In an external context, if `$rC > MEM[balanceOf(MEM[$rD, 32]), 8]`
+- In an external context, if `$rC > MEM[balanceOfStart(MEM[$rD, 32]), 8]`
 - In an internal context, if `$rC` is greater than the balance of asset ID `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rC == 0`
 - `tx.outputs[$rB].type != OutputType.Variable`

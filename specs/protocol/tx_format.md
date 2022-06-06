@@ -151,6 +151,7 @@ Transaction is invalid if:
 - `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 - `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
 - `bytecodeWitnessIndex >= tx.witnessesCount`
+- The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
@@ -250,7 +251,7 @@ enum  OutputType : uint8 {
 
 | name   | type                                                                                                                                                                                                                             | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
+| `type` | [OutputType](#outputtype)                                                                                                                                                                                                        | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
