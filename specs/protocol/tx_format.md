@@ -93,7 +93,6 @@ enum  ReceiptType : uint8 {
 |--------------------|-------------------------|------------------------------------------|
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
 | `gasLimit`         | `uint64`                | Gas limit for transaction.               |
-| `bytePrice`        | `uint64`                | Price per transaction byte.              |
 | `maturity`         | `uint32`                | Block until which tx cannot be included. |
 | `scriptLength`     | `uint16`                | Script length, in instructions.          |
 | `scriptDataLength` | `uint16`                | Length of script input data, in bytes.   |
@@ -112,7 +111,6 @@ Transaction is invalid if:
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
-- `bytePrice != gasPrice * GAS_PER_BYTE`
 
 Note: when signing a transaction, `receiptsRoot` is set to zero.
 
@@ -128,7 +126,6 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 |------------------------|---------------------------|---------------------------------------------------|
 | `gasPrice`             | `uint64`                  | Gas price for transaction.                        |
 | `gasLimit`             | `uint64`                  | Gas limit for transaction.                        |
-| `bytePrice`            | `uint64`                  | Price per transaction byte.                       |
 | `maturity`             | `uint32`                  | Block until which tx cannot be included.          |
 | `bytecodeLength`       | `uint16`                  | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint8`                   | Witness index of contract bytecode to create.     |
@@ -160,7 +157,6 @@ Transaction is invalid if:
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
-- `bytePrice != gasPrice * GAS_PER_BYTE`
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 

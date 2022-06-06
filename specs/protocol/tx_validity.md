@@ -107,7 +107,7 @@ def unavailable_balance(tx, col) -> int:
     sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit
     # Size excludes witness data as it is malleable (even by third parties!)
-    bytesBalance = size(tx) * bytePrice
+    bytesBalance = size(tx) * gasPrice * GAS_PER_BYTE
     # Only native coin can be used to pay for gas
     if col != 0:
         return sentBalance
