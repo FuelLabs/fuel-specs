@@ -30,11 +30,6 @@ UTXOs and contracts in the read-only and write-destroy access lists must exist (
 
 Read-only access list:
 
-- For each [input `InputType.Contract`](./tx_format.md#inputcontract)
-  - Each contract ID in the `staticContracts` list for contract ID `contract ID`
-- For [transaction `TransactionType.Create`](./tx_format.md#transactioncreate)
-  - Each contract ID in the `staticContracts` list
-
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](./tx_format.md#inputcoin)

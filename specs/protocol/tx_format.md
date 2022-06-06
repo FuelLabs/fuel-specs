@@ -32,7 +32,6 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
-| `MAX_STATIC_CONTRACTS`      | `uint64` | `255` | Maximum number of static contracts.           |
 | `MAX_STORAGE_SLOTS`         | `uint16` | `255` | Maximum number of initial storage slots.      |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
@@ -132,13 +131,11 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 | `maturity`             | `uint32`                  | Block until which tx cannot be included.          |
 | `bytecodeLength`       | `uint16`                  | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint8`                   | Witness index of contract bytecode to create.     |
-| `staticContractsCount` | `uint8`                   | Number of static contracts.                       |
 | `storageSlotsCount`    | `uint16`                  | Number of storage slots to initialize.            |
 | `inputsCount`          | `uint8`                   | Number of inputs.                                 |
 | `outputsCount`         | `uint8`                   | Number of outputs.                                |
 | `witnessesCount`       | `uint8`                   | Number of witnesses.                              |
 | `salt`                 | `byte[32]`                | Salt.                                             |
-| `staticContracts`      | `byte[32][]`              | List of static contracts.                         |
 | `storageSlots`         | `(byte[32], byte[32]])[]` | List of storage slots to initialize (key, value). |
 | `inputs`               | [Input](#input)`[]`       | List of inputs.                                   |
 | `outputs`              | [Output](#output)`[]`     | List of outputs.                                  |
@@ -154,9 +151,6 @@ Transaction is invalid if:
 - `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 - `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
 - `bytecodeWitnessIndex >= tx.witnessesCount`
-- `staticContractsCount > MAX_STATIC_CONTRACTS`
-- `staticContracts` is not ordered in ascending order
-- Any contract with ID in `staticContracts` is not in the state
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
