@@ -4,7 +4,7 @@
 - [Parameters](#parameters)
 - [Semantics](#semantics)
 - [Flags](#flags)
-- [Opcodes](#opcodes)
+- [Instruction Set](#instruction-set)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
 - [Predicate Verification](#predicate-verification)
@@ -14,7 +14,7 @@
 
 ## Introduction
 
-This document provides the specification for the Fuel Virtual Machine (FuelVM). The specification covers the types, opcodes, and execution semantics.
+This document provides the specification for the Fuel Virtual Machine (FuelVM). The specification covers the types, instruction set, and execution semantics.
 
 ## Parameters
 
@@ -65,9 +65,9 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 | `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
 | `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
 
-## Opcodes
+## Instruction Set
 
-A complete list of opcodes in the Fuel VM is documented [here](./opcodes.md).
+A complete instruction set of the Fuel VM is documented [here](./instruction_set.md).
 
 ## VM Initialization
 
@@ -90,12 +90,12 @@ Then the following registers are initialized (without explicit initialization, a
 
 ## Contexts
 
-There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./opcodes.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
+There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./instruction_set.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
 
 - External: predicate and script. `$fp` will be zero.
 - Internal: call. `$fp` will be non-zero.
 
-[Returning](./opcodes.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
+[Returning](./instruction_set.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
 
 ## Predicate Verification
 
@@ -105,10 +105,10 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 
 1. `$pc`  and `$is` are set to the start of the input's `predicate` field.
 
-During predicate mode, hitting any of the following opcodes causes predicate verification to halt, returning Boolean `false`:
+During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
 
-1. Any [contract opcode](./opcodes.md#contract-opcodes).
-1. [JI](./opcodes.md#ji-jump-immediate) or [JNEI](./opcodes.md#jnei-jump-if-not-equal-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
+1. Any [contract instruction](./instruction_set.md#contract-opcodes).
+1. [JI](./instruction_set.md#ji-jump-immediate) or [JNEI](./instruction_set.md#jnei-jump-if-not-equal-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
@@ -125,7 +125,7 @@ The VM is [initialized](#vm-initialization), then:
 
 Following initialization, execution begins.
 
-For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./opcodes.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
+For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction_set.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
 ## Call Frames
 
@@ -153,7 +153,7 @@ A call frame consists of the following, word-aligned:
 
 ## Ownership
 
-Whenever memory is written to (i.e. with [`SB`](./opcodes.md#sb-store-byte) or [`SW`](./opcodes.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./opcodes.md#call-call-contract)), ownership must be checked.
+Whenever memory is written to (i.e. with [`SB`](./instruction_set.md#sb-store-byte) or [`SW`](./instruction_set.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./instruction_set.md#call-call-contract)), ownership must be checked.
 
 If the context is external, the owned memory range is:
 
