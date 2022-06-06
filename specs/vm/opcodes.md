@@ -1088,6 +1088,8 @@ This modifies the `balanceRoot` field of the appropriate output.
 | Encoding    | `0x00 rA rB rC rD`     |
 | Notes       |                        |
 
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+
 Panic if:
 
 - `$rA + 32` overflows
@@ -1508,7 +1510,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
-- In an external context, if `$rB > MEM[balanceOf(MEM[$rC, 32]), 8]`
+- In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
 - In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rB == 0`
 
@@ -1538,7 +1540,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 | Encoding    | `0x00 rA rB rC rD`                                                                  |
 | Notes       |                                                                                     |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
 Panic if:
 
@@ -1547,7 +1549,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rD + 32 > VM_MAX_RAM`
 - `$rB > tx.outputsCount`
-- In an external context, if `$rC > MEM[balanceOf(MEM[$rD, 32]), 8]`
+- In an external context, if `$rC > MEM[balanceOfStart(MEM[$rD, 32]), 8]`
 - In an internal context, if `$rC` is greater than the balance of asset ID `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rC == 0`
 - `tx.outputs[$rB].type != OutputType.Variable`
