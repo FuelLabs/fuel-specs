@@ -1501,7 +1501,7 @@ Panic if:
 | Encoding    | `0x00 rA rB rC -`                                                         |
 | Notes       |                                                                           |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
 Panic if:
 
