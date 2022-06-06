@@ -1,7 +1,7 @@
-# FuelVM Opcodes
+# FuelVM Instruction Set
 
 - [Reading Guide](#reading-guide)
-- [Arithmetic/Logic (ALU) Opcodes](#arithmeticlogic-alu-opcodes)
+- [Arithmetic/Logic (ALU) Instructions](#arithmeticlogic-alu-instructions)
   - [ADD: Add](#add-add)
   - [ADDI: Add immediate](#addi-add-immediate)
   - [AND: AND](#and-and)
@@ -33,14 +33,14 @@
   - [SUBI: Subtract immediate](#subi-subtract-immediate)
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
-- [Control Flow Opcodes](#control-flow-opcodes)
+- [Control Flow Instructions](#control-flow-instructions)
   - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
   - [RET: Return from context](#ret-return-from-context)
-- [Memory Opcodes](#memory-opcodes)
+- [Memory Instructions](#memory-instructions)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
@@ -53,7 +53,7 @@
   - [MEQ: Memory equality](#meq-memory-equality)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
-- [Contract Opcodes](#contract-opcodes)
+- [Contract Instructions](#contract-instructions)
   - [BAL: Balance of contract ID](#bal-balance-of-contract-id)
   - [BHEI: Block height](#bhei-block-height)
   - [BHSH: Block hash](#bhsh-block-hash)
@@ -75,28 +75,28 @@
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
-- [Cryptographic Opcodes](#cryptographic-opcodes)
+- [Cryptographic Instructions](#cryptographic-instructions)
   - [ECR: Signature recovery](#ecr-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
-- [Transaction Access Opcodes](#transaction-access-opcodes)
+- [Transaction Access Instructions](#transaction-access-instructions)
   - [XIL: Transaction input length](#xil-transaction-input-length)
   - [XIS: Transaction input start](#xis-transaction-input-start)
   - [XOL: Transaction output length](#xol-transaction-output-length)
   - [XOS: Transaction output start](#xos-transaction-output-start)
   - [XWL: Transaction witness length](#xwl-transaction-witness-length)
   - [XWS: Transaction witness start](#xws-transaction-witness-start)
-- [Other Opcodes](#other-opcodes)
+- [Other Instructions](#other-instructions)
   - [FLAG: Set flags](#flag-set-flags)
   - [GM: Get metadata](#gm-get-metadata)
 
 ## Reading Guide
 
-This page provides a description of all opcodes for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
+This page provides a description of all instructions for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
 
-Some opcodes may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an opcode not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./main.md#contexts):
+Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./main.md#contexts):
 
 - In a predicate context, cease VM execution and return `false`.
 - In other contexts, revert (described below).
@@ -118,9 +118,9 @@ then append an additional receipt to the list of receipts, again modifying `tx.r
 | `result`   | `uint64`      | `1`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
 
-## Arithmetic/Logic (ALU) Opcodes
+## Arithmetic/Logic (ALU) Instructions
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
 If the [`F_UNSAFEMATH`](./main.md#flags) flag is unset, an operation that would have set `$err` to `true` is instead a panic.
 
@@ -660,7 +660,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-## Control Flow Opcodes
+## Control Flow Instructions
 
 ### CIMV: Check input maturity verify
 
@@ -789,9 +789,9 @@ Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
-## Memory Opcodes
+## Memory Instructions
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
 ### ALOC: Allocate memory
 
@@ -995,9 +995,9 @@ Panic if:
 - `$rA + (imm * 8) + 8 > VM_MAX_RAM`
 - The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./main.md#ownership)
 
-## Contract Opcodes
+## Contract Instructions
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [RETD](#retd-return-from-context-with-data) and [RVRT](#rvrt-revert).
+All these instructions advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [RETD](#retd-return-from-context-with-data) and [RVRT](#rvrt-revert).
 
 ### BAL: Balance of contract ID
 
@@ -1230,7 +1230,7 @@ Panic if:
 
 Increment `$fp->codesize`, `$ssp`, and `$sp` by `$rC` padded to word alignment.
 
-This opcode can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
+This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
 
 ### LOG: Log event
 
@@ -1542,9 +1542,9 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-## Cryptographic Opcodes
+## Cryptographic Instructions
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
 ### ECR: Signature recovery
 
@@ -1610,9 +1610,9 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
 - `$rC > MEM_MAX_ACCESS_SIZE`
 
-## Transaction Access Opcodes
+## Transaction Access Instructions
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
 ### XIL: Transaction input length
 
@@ -1708,9 +1708,9 @@ Panic if:
 
 Note that the returned memory address includes the [_entire_ witness](../protocol/tx_format.md), not just of the witness's `data` field.
 
-## Other Opcodes
+## Other Instructions
 
-All these opcodes advance the program counter `$pc` by `4` after performing their operation.
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
 ### FLAG: Set flags
 
