@@ -97,14 +97,12 @@ This page provides a description of all opcodes for the FuelVM. Encoding is read
 
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
 
-Some opcodes may _panic_, i.e. enter an unrecoverable state. How a panic is handled depends on [context](./main.md#contexts):
+Some opcodes may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an opcode not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./main.md#contexts):
 
-- In a predicate context, [return](#return-return-from-context) `false`.
-- In other contexts, [revert](#revert-revert).
+- In a predicate context, cease VM execution and return `false`.
+- In other contexts, revert (described below).
 
-Attempting to execute an opcode not in this list causes a panic and consumes no gas.
-
-On any panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+On a non-predicate panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
