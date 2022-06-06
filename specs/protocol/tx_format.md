@@ -32,7 +32,6 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
-| `MAX_STATIC_CONTRACTS`      | `uint64` | `255` | Maximum number of static contracts.           |
 | `MAX_STORAGE_SLOTS`         | `uint16` | `255` | Maximum number of initial storage slots.      |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
@@ -93,7 +92,6 @@ enum  ReceiptType : uint8 {
 |--------------------|-------------------------|------------------------------------------|
 | `gasPrice`         | `uint64`                | Gas price for transaction.               |
 | `gasLimit`         | `uint64`                | Gas limit for transaction.               |
-| `bytePrice`        | `uint64`                | Price per transaction byte.              |
 | `maturity`         | `uint32`                | Block until which tx cannot be included. |
 | `scriptLength`     | `uint16`                | Script length, in instructions.          |
 | `scriptDataLength` | `uint16`                | Length of script input data, in bytes.   |
@@ -112,7 +110,6 @@ Transaction is invalid if:
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
-- `bytePrice != gasPrice * GAS_PER_BYTE`
 
 Note: when signing a transaction, `receiptsRoot` is set to zero.
 
@@ -128,17 +125,14 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](./crypt
 |------------------------|---------------------------|---------------------------------------------------|
 | `gasPrice`             | `uint64`                  | Gas price for transaction.                        |
 | `gasLimit`             | `uint64`                  | Gas limit for transaction.                        |
-| `bytePrice`            | `uint64`                  | Price per transaction byte.                       |
 | `maturity`             | `uint32`                  | Block until which tx cannot be included.          |
 | `bytecodeLength`       | `uint16`                  | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint8`                   | Witness index of contract bytecode to create.     |
-| `staticContractsCount` | `uint8`                   | Number of static contracts.                       |
 | `storageSlotsCount`    | `uint16`                  | Number of storage slots to initialize.            |
 | `inputsCount`          | `uint8`                   | Number of inputs.                                 |
 | `outputsCount`         | `uint8`                   | Number of outputs.                                |
 | `witnessesCount`       | `uint8`                   | Number of witnesses.                              |
 | `salt`                 | `byte[32]`                | Salt.                                             |
-| `staticContracts`      | `byte[32][]`              | List of static contracts.                         |
 | `storageSlots`         | `(byte[32], byte[32]])[]` | List of storage slots to initialize (key, value). |
 | `inputs`               | [Input](#input)`[]`       | List of inputs.                                   |
 | `outputs`              | [Output](#output)`[]`     | List of outputs.                                  |
@@ -154,14 +148,10 @@ Transaction is invalid if:
 - `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
 - `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
 - `bytecodeWitnessIndex >= tx.witnessesCount`
-- `staticContractsCount > MAX_STATIC_CONTRACTS`
-- `staticContracts` is not ordered in ascending order
-- Any contract with ID in `staticContracts` is not in the state
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
-- `bytePrice != gasPrice * GAS_PER_BYTE`
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
