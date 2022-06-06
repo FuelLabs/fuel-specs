@@ -767,7 +767,7 @@ Panic if:
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump to the code instruction offset by a register if `$rA` is not equal to `$zero`.    |
 | Operation   | ```if $rA != $zero:```<br>```$pc = $is + $rB * 4;```<br>```else:```<br>```$pc += 4;``` |
-| Syntax      | `jnzi $rA $rB`                                                                         |
+| Syntax      | `jnz $rA $rB`                                                                          |
 | Encoding    | `0x00 rA rB - -`                                                                       |
 | Notes       |                                                                                        |
 
