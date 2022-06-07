@@ -25,7 +25,16 @@ Is represented as an _outpoint_: a pair of [transaction ID](#transaction-id) as 
 
 ### Message ID
 
-The ID of a message is computed as the [hash](./cryptographic_primitives.md#hashing) of the sender address `byte[32]`, recipient address `byte[32]`, the message data (either [EVM abi](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) or [FuelVM abi](./abi.md)/data) `byte[]`, the amount being sent with the message `uint64`, the message nonce `uint64` and the message owner (either address or predicate hash) `byte[32]`: `hash(byte[32] ++ byte[32] ++ byte[] ++ uint64 ++ uint64 ++ byte[32])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction). If the owner component is not applicable then a 32 byte long array of zeros should be used.
+The ID of a message is computed as the [hash](./cryptographic_primitives.md#hashing) of:
+
+1. the sender address `byte[32]`,
+1. recipient address `byte[32]`,
+1. the message data `byte[]`,
+1. the amount being sent with the message `uint64`,
+1. the message nonce `uint64`,
+1. the message owner (either address or predicate hash)
+
+`byte[32]`: `hash(byte[32] ++ byte[32] ++ byte[] ++ uint64 ++ uint64 ++ byte[32])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction). If the owner component is not applicable then a 32 byte long array of zeros should be used.
 
 ### Fee ID
 

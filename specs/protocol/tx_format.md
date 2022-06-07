@@ -162,7 +162,7 @@ Creates a contract with contract ID as computed [here](./identifiers.md#contract
 enum  InputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Message = 2
+    Message = 2,
 }
 ```
 
@@ -171,7 +171,7 @@ enum  InputType : uint8 {
 | name   | type                                                              | description    |
 |--------|-------------------------------------------------------------------|----------------|
 | `type` | [InputType](#inputtype)                                           | Type of input. |
-| `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract) or [InputMessage](#inputmessage) | Input data.    |
+| `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract), or [InputMessage](#inputmessage) | Input data.    |
 
 Transaction is invalid if:
 
@@ -240,7 +240,7 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `sender`              | `byte[32]`  | The address of the message sender.                                     |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
 | `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
-| `data`                | `byte[]`    | The message data or [abi encoded](./abi.md) call to execute.           |
+| `data`                | `byte[]`    | The message data .           |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
 | `nonce`               | `uint64`    | The message nonce.                                                     |
 | `owner`               | `byte[32]`  | Owning address or predicate hash.                                      |
@@ -257,7 +257,7 @@ Transaction is invalid if:
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
 - If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
 
-Note: the predicate root is computed identically to the contract ID, [here](./identifiers.md#contract-id).
+The predicate root is computed identically to the contract root, used to compute the contract ID, [here](./identifiers.md#contract-id).
 
 ## OutputType
 
