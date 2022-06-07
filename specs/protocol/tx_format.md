@@ -246,9 +246,9 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `witnessIndex`        | `uint8`     | Index of witness that authorizes spending the coin.                    |
 | `predicateLength`     | `uint16`    | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint16`    | Length of predicate input data, in bytes.                              |
+| `data`                | `byte[]`    | The message data.                                                      |
 | `predicate`           | `byte[]`    | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`    | Predicate input data (parameters).                                     |
-| `data`                | `byte[]`    | The message data.                                                      |
 
 Transaction is invalid if:
 
