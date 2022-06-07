@@ -1755,3 +1755,50 @@ Panic if:
 - `$fp->$fp == 0` (if parent context is external)
 
 Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
+
+### GT: Get transaction fields
+
+|             |                         |
+|-------------|-------------------------|
+| Description | Get transaction fields. |
+| Operation   | Varies (see below).     |
+| Syntax      | `gt $rA, $rB, imm`      |
+| Encoding    | `0x00 rA rB i i`        |
+| Notes       |                         |
+
+Get [fields from the transaction](../protocol/tx_format.md#transaction).
+
+| name                    | value   |
+|-------------------------|---------|
+| `GT_TYPE`               | `0x001` |
+| `GT_GAS_PRICE`          | `0x002` |
+| `GT_GAS_LIMIT`          | `0x003` |
+| `GT_MATURITY`           | `0x004` |
+| `GT_SCRIPT_LENGTH`      | `0x005` |
+| `GT_SCRIPT_DATA_LENGTH` | `0x006` |
+| `GT_INPUTS_COUNT`       | `0x007` |
+| `GT_OUTPUTS_COUNT`      | `0x008` |
+| `GT_WITNESSES_COUNT`    | `0x009` |
+| `GT_RECEIPTS_ROOT`      | `0x00A` |
+| `GT_SCRIPT`             | `0x00B` |
+| `GT_SCRIPT_DATA`        | `0x00C` |
+| `GT_INPUT_AT_INDEX`     | `0x00D` |
+| `GT_OUTPUT_AT_INDEX`    | `0x00E` |
+| `GT_WITNESS_AT_INDEX`   | `0x00F` |
+
+If `imm == GT_TYPE`:
+
+Panic if:
+
+- `$fp == 0` (in an external context)
+
+Set `$rA` to `true` if parent is an external context, `false` otherwise.
+
+If `imm == GT_GAS_PRICE`:
+
+Panic if:
+
+- `$fp == 0` (in an external context)
+- `$fp->$fp == 0` (if parent context is external)
+
+Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
