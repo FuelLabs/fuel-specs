@@ -40,7 +40,6 @@
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNE: Jump if not equal](#jne-jump-if-not-equal)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
-  - [JNZ: Jump if not zero](#jnz-jump-if-not-zero)
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
@@ -760,20 +759,6 @@ Panic if:
 Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`
-
-### JNZ: Jump if not zero
-
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump to the code instruction offset by a register if `$rA` is not equal to `$zero`.    |
-| Operation   | ```if $rA != $zero:```<br>```$pc = $is + $rB * 4;```<br>```else:```<br>```$pc += 4;``` |
-| Syntax      | `jnz $rA $rB`                                                                          |
-| Encoding    | `0x00 rA rB - -`                                                                       |
-| Notes       |                                                                                        |
-
-Panic if:
-
-- `$is + $rB * 4 > VM_MAX_RAM - 1`
 
 ### JNZI: Jump if not zero immediate
 
