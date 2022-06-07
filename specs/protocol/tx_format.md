@@ -240,7 +240,6 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `sender`              | `byte[32]`  | The address of the message sender.                                     |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
 | `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
-| `data`                | `byte[]`    | The message data .           |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
 | `nonce`               | `uint64`    | The message nonce.                                                     |
 | `owner`               | `byte[32]`  | Owning address or predicate hash.                                      |
@@ -249,6 +248,7 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `predicateDataLength` | `uint16`    | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`    | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`    | Predicate input data (parameters).                                     |
+| `data`                | `byte[]`    | The message data.                                                      |
 
 Transaction is invalid if:
 
@@ -322,9 +322,9 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 | `sender`              | `byte[32]`  | The address of the message sender.                                      |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                   |
 | `dataLength`          | `uint16`    | Length of message data, in bytes.                                       |
-| `data`                | `byte[]`    | The message data or [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute.        |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
 | `nonce`               | `uint64`    | The message nonce.                                                      |
+| `data`                | `byte[]`    | The message data or [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute.        |
 
 Note: when signing a transaction, `messageID`, `sender`, `recipient`, `data`, `amount`, and `nonce` are set to zero.
 

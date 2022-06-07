@@ -1553,7 +1553,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 | Encoding    | `0x00 rA rB rC rD`                                                                  |
 | Notes       |                                                                                     |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of `asset_id` balance, or `0` if `asset_id` has no balance.
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
 Panic if:
 
@@ -1562,7 +1562,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rA + $rB + 32 > VM_MAX_RAM`
 - `$rC > tx.outputsCount`
-- In an external context, if `$rD > MEM[balanceOf(0), 8]`
+- In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
 - `tx.outputs[$rC].type != OutputType.Message`
 - `tx.outputs[$rC].recipient != 0 || tx.outputs[$rC].sender != 0`
