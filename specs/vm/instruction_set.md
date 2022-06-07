@@ -36,7 +36,7 @@
 - [Control Flow Instructions](#control-flow-instructions)
   - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
-  - [J: Jump](#j-jump)
+  - [JMP: Jump](#jmp-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNE: Jump if not equal](#jne-jump-if-not-equal)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
@@ -705,13 +705,13 @@ Otherwise, advance the program counter `$pc` by `4`.
 
 See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
 
-### J: Jump
+### JMP: Jump
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
 | Description | Jumps to the code instruction offset by a register. |
 | Operation   | ```$pc = $is + $rA * 4;```                          |
-| Syntax      | `j $rA`                                             |
+| Syntax      | `jmp $rA`                                           |
 | Encoding    | `0x00 rA - - -`                                     |
 | Notes       |                                                     |
 
