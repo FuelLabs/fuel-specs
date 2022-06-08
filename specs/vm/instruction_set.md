@@ -69,13 +69,13 @@
   - [MINT: Mint new coins](#mint-mint-new-coins)
   - [RETD: Return from context with data](#retd-return-from-context-with-data)
   - [RVRT: Revert](#rvrt-revert)
+  - [SMO: Send Message to output](#smo-send-message-to-output)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
-  - [SMO: Send Message to output](#smo-send-message-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
   - [ECR: Signature recovery](#ecr-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
@@ -1387,6 +1387,42 @@ Cease VM execution and revert script effects. After a revert:
 1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
 1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
+### SMO: Send message to output
+
+|             |                                                                                     |
+|-------------|-------------------------------------------------------------------------------------|
+| Description | Send a message to recipient address `MEM[$rA, 32]` with call abi `MEM[$rA + 32, $rB]` and `$rD` coins, with output `$rC`. |
+| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```      |
+| Syntax      | `smo $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                  |
+| Notes       |                                                                                     |
+
+Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rA + $rB + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rA + $rB + 32 > VM_MAX_RAM`
+- `$rC > tx.outputsCount`
+- In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
+- In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
+- `tx.outputs[$rC].type != OutputType.Message`
+- `tx.outputs[$rC].recipient != 0 || tx.outputs[$rC].sender != 0`
+
+In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
+
+- `tx.outputs[$rC].recipient = MEM[$rA, 32]`
+- `tx.outputs[$rC].sender = MEM[$fp, 32]`
+- `tx.outputs[$rC].callABI = MEM[$rA + 32, $rB]`
+- `tx.outputs[$rC].amount = $rD`
+- `tx.outputs[$rC].nonce = ++messageOutputNonce`
+- `tx.outputs[$rC].messageID = messageID` as defined [here](../protocol/identifiers.md#message-id)
+
+This modifies the `balanceRoot` field of the appropriate output(s).
+MessageID is added to the `OutputMessage` merkle tree as part of block header.
+
 ### SRW: State read word
 
 |             |                                                   |
@@ -1542,42 +1578,6 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].asset_id = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
-
-### SMO: Send message to output
-
-|             |                                                                                     |
-|-------------|-------------------------------------------------------------------------------------|
-| Description | Send a message to recipient address `MEM[$rA, 32]` with call abi `MEM[$rA + 32, $rB]` and `$rD` coins, with output `$rC`. |
-| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```      |
-| Syntax      | `smo $rA, $rB, $rC, $rD`                                                            |
-| Encoding    | `0x00 rA rB rC rD`                                                                  |
-| Notes       |                                                                                     |
-
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
-
-Panic if:
-
-- `$rA + 32` overflows
-- `$rA + $rB + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rA + $rB + 32 > VM_MAX_RAM`
-- `$rC > tx.outputsCount`
-- In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
-- In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
-- `tx.outputs[$rC].type != OutputType.Message`
-- `tx.outputs[$rC].recipient != 0 || tx.outputs[$rC].sender != 0`
-
-In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
-
-- `tx.outputs[$rC].recipient = MEM[$rA, 32]`
-- `tx.outputs[$rC].sender = MEM[$fp, 32]`
-- `tx.outputs[$rC].callABI = MEM[$rA + 32, $rB]`
-- `tx.outputs[$rC].amount = $rD`
-- `tx.outputs[$rC].nonce = ++messageOutputNonce`
-- `tx.outputs[$rC].messageID = messageID` as defined [here](../protocol/identifiers.md#message-id)
-
-This modifies the `balanceRoot` field of the appropriate output(s).
-MessageID is added to the `OutputMessage` merkle tree as part of block header.
 
 ## Cryptographic Instructions
 
