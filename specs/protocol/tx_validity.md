@@ -97,7 +97,7 @@ def available_balance(tx, col) -> int:
 def unavailable_balance(tx, col) -> int:
     """
     Note: we don't charge for predicate verification because predicates are
-    monotonic and the cost of Ethereum calldata more than makes up for this
+    monotonic and the cost of bytes should approximately makes up for this.
     """
     sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit
