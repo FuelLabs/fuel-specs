@@ -103,7 +103,7 @@ def unavailable_balance(tx, col) -> int:
     gasBalance = ceiling((gasPrice * gasLimit) / GAS_PRICE_FACTOR)
     # Size excludes witness data as it is malleable (even by third parties!)
     bytesBalance = ceiling((size(tx) * gasPrice * GAS_PER_BYTE) / GAS_PRICE_FACTOR)
-    # Only native coin can be used to pay for gas
+    # Only base asset can be used to pay for gas
     if col != 0:
         return sentBalance
     return sentBalance + gasBalance + bytesBalance
