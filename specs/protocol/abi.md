@@ -122,6 +122,7 @@ All receipts will have a `type` property:
   - "Transfer"
   - "TransferOut"
   - "ScriptResult"
+  - "MessageOut"
 
 Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../vm/instruction_set.md).
 
@@ -340,6 +341,32 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
     "type":"ScriptResult",
     "result":"0x00",
     "gas_used":"400",
+}
+```
+
+#### MessageOut receipt
+
+- `type`: `MessageOut`.
+- `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](../protocol/identifiers.md#message-id).
+- `sender`: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: `MEM[$fp, 32]`.
+- `recipient`: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: `MEM[$rA, 32]`.
+- `amount`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rD`.
+- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce.
+- `len`: Decimal string representation of a 16-bit unsigned integer; value of register `$rB`.
+- `digest`: Hexadecimal string representation of 256-bit (32-byte), hash of `MEM[$rA + 32, $rB]`.
+- `data`: Hexadecimal string representation of the value of the memory range `MEM[$rA + 32, $rB]`.
+
+```json
+{
+    "type":"MessageOut",
+    "messageID":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "sender":"0x38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff05139150017c9e",
+    "recipient":"0x4710162c2e3a95a6faff05139150017c9e38e5e280432d546fae345d6ce6d8fe",
+    "amount":"0xe6d8fe4710162c2e",
+    "nonce":"0x47101017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+    "len":"65535",
+    "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+    "data":"0xa7c5ac471b47"
 }
 ```
 

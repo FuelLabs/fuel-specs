@@ -1405,6 +1405,8 @@ Panic if:
 - `$rA + $rB + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rA + $rB + 32 > VM_MAX_RAM`
+- `$rB > MEM_MAX_ACCESS_SIZE`
+- `$rB > 65535`
 - `$rC > tx.outputsCount`
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
@@ -1419,10 +1421,10 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `messageID`  | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#message-id). |
 | `sender`     | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                        |
 | `recipient`  | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                     |
-| `dataLength` | `uint16`      | Length of message data, in bytes: `$rB - ($rA + 32)`.                     |
 | `amount`     | `uint64`      | Amount of base asset coins sent with message: `$rD`.                      |
 | `nonce`      | `byte[32]`    | The message nonce.                                                        |
-| `data`       | `byte[]`      | The message data or [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute: `MEM[$rA + 32, $rB]`.        |
+| `len`        | `uint16`      | Length of message data, in bytes: `$rB`.                                  |
+| `digest`     | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                          |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
 
