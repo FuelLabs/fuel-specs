@@ -1416,7 +1416,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | name         | type          | description                                                               |
 |--------------|---------------|---------------------------------------------------------------------------|
 | `type`       | `ReceiptType` | `ReceiptType.MessageOut`                                                  |
-| `messageID`  | `byte[32]`    | The messageID as described [here](./identifiers.md#message-id).           |
+| `messageID`  | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#message-id). |
 | `sender`     | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                        |
 | `recipient`  | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                     |
 | `dataLength` | `uint16`      | Length of message data, in bytes: `$rB - ($rA + 32)`.                     |
