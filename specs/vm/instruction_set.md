@@ -1411,17 +1411,28 @@ Panic if:
 - `tx.outputs[$rC].type != OutputType.Message`
 - `tx.outputs[$rC].recipient != 0 || tx.outputs[$rC].sender != 0`
 
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+
+| name         | type          | description                                                               |
+|--------------|---------------|---------------------------------------------------------------------------|
+| `type`       | `ReceiptType` | `ReceiptType.MessageOut`                                                  |
+| `messageID`  | `byte[32]`    | The messageID as described [here](./identifiers.md#message-id).           |
+| `sender`     | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                        |
+| `recipient`  | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                     |
+| `dataLength` | `uint16`      | Length of message data, in bytes: `$rB - ($rA + 32)`.                     |
+| `amount`     | `uint64`      | Amount of base asset coins sent with message: `$rD`.                      |
+| `nonce`      | `byte[32]`    | The message nonce.                                                        |
+| `data`       | `byte[]`      | The message data or [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute: `MEM[$rA + 32, $rB]`.        |
+
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
 
 - `tx.outputs[$rC].recipient = MEM[$rA, 32]`
-- `tx.outputs[$rC].sender = MEM[$fp, 32]`
-- `tx.outputs[$rC].callABI = MEM[$rA + 32, $rB]`
 - `tx.outputs[$rC].amount = $rD`
-- `tx.outputs[$rC].nonce = ++messageOutputNonce`
-- `tx.outputs[$rC].messageID = messageID` as defined [here](../protocol/identifiers.md#message-id)
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 MessageID is added to the `OutputMessage` merkle tree as part of block header.
+
+Append messageID to the global list of `OutputMessage`, modifying `OutputMessagesRoot`:
 
 ### SRW: State read word
 

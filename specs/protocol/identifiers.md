@@ -30,11 +30,11 @@ The ID of a message is computed as the [hash](./cryptographic_primitives.md#hash
 1. the sender address `byte[32]`,
 1. recipient address `byte[32]`,
 1. the amount being sent with the message `uint64`,
-1. the message nonce `uint64`,
+1. the message nonce `byte[32]`,
 1. the message owner (either address or predicate hash) `byte[32]`,
 1. the message data `byte[]`
 
-`hash(byte[32] ++ byte[32] ++ uint64 ++ uint64 ++ byte[32] ++ byte[])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction). If the owner component is not applicable then a 32 byte long array of zeros should be used. Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.
+`hash(byte[32] ++ byte[32] ++ uint64 ++ byte[32] ++ byte[32] ++ byte[])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction). If the owner component is not applicable then a 32 byte long array of zeros should be used. Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.
 
 ### Fee ID
 

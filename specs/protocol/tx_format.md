@@ -86,6 +86,7 @@ enum  ReceiptType : uint8 {
     Transfer = 7,
     TransferOut = 8,
     ScriptResult = 9,
+    MessageOut = 10,
 }
 ```
 
@@ -241,7 +242,7 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
 | `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
-| `nonce`               | `uint64`    | The message nonce.                                                     |
+| `nonce`               | `byte[32]`  | The message nonce.                                                     |
 | `owner`               | `byte[32]`  | Owning address or predicate hash.                                      |
 | `witnessIndex`        | `uint8`     | Index of witness that authorizes spending the coin.                    |
 | `predicateLength`     | `uint16`    | Length of predicate, in instructions.                                  |
@@ -318,17 +319,12 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 
 | name                  | type        | description                                                             |
 |-----------------------|-------------|-------------------------------------------------------------------------|
-| `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#message-id).         |
-| `sender`              | `byte[32]`  | The address of the message sender.                                      |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                   |
-| `dataLength`          | `uint16`    | Length of message data, in bytes.                                       |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
-| `nonce`               | `uint64`    | The message nonce.                                                      |
-| `data`                | `byte[]`    | The message data or [abi encoded](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html) call to execute.        |
 
-Note: when signing a transaction, `messageID`, `sender`, `recipient`, `data`, `amount`, and `nonce` are set to zero.
+Note: when signing a transaction `recipient` and `amount` are set to zero.
 
-Note: when verifying a predicate or executing a script, `messageID`, `sender`, `recipient`, `data`, `amount`, and `nonce` are initialized to zero.
+Note: when verifying a predicate or executing a script, `recipient` and `amount` are initialized to zero.
 
 Note: this output type is unspendable and can be pruned from the UTXO set.
 
