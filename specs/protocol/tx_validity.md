@@ -97,13 +97,13 @@ def available_balance(tx, col) -> int:
 def unavailable_balance(tx, col) -> int:
     """
     Note: we don't charge for predicate verification because predicates are
-    monotonic and the cost of Ethereum calldata more than makes up for this
+    monotonic and the cost of bytes should approximately makes up for this.
     """
     sentBalance = sum_outputs(tx, col)
-    gasBalance = gasPrice * gasLimit
+    gasBalance = ceiling((gasPrice * gasLimit) / GAS_PRICE_FACTOR)
     # Size excludes witness data as it is malleable (even by third parties!)
-    bytesBalance = size(tx) * gasPrice * GAS_PER_BYTE
-    # Only native coin can be used to pay for gas
+    bytesBalance = ceiling((size(tx) * gasPrice * GAS_PER_BYTE) / GAS_PRICE_FACTOR)
+    # Only base asset can be used to pay for gas
     if col != 0:
         return sentBalance
     return sentBalance + gasBalance + bytesBalance
@@ -154,7 +154,7 @@ Once the free balances are computed, the [script is executed](../vm/main.md#scri
 1. The unspent free balance `unspentBalance` for each asset ID.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
-The fees incurred for a transaction are `(tx.gasLimit - unspentGas) * tx.gasPrice`.
+The fees incurred for a transaction are `ceiling(((tx.gasLimit - unspentGas) * tx.gasPrice) / GAS_PRICE_FACTOR)`.
 
 If the transaction as included in a block does not match this final transaction, the block is invalid.
 
@@ -168,7 +168,7 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 If change outputs are present, they must have:
 
-1. if the transaction does not revert; an `amount` of `unspentBalance + unspentGas * tx.gasPrice` if their asset ID is `0`, or an `amount` of the unspent free balance for that asset ID after VM execution is complete, or
+1. if the transaction does not revert; an `amount` of `unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)` if their asset ID is `0`, or an `amount` of the unspent free balance for that asset ID after VM execution is complete, or
 1. if the transaction reverts; an `amount` of the initial free balance plus `unspentGas * tx.gasPrice` if their asset ID is `0`, or an `amount` of the initial free balance for that asset ID.
 
 ### State Changes

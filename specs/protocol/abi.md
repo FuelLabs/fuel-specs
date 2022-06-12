@@ -428,8 +428,8 @@ foo(s(u64,bool))
 
 ```rust
 enum MyEnum {
-    foo: u64,
-    bar: bool,
+    Foo: u64,
+    Bar: bool,
 }
 fn foo(a: MyEnum);
 ```
@@ -444,8 +444,8 @@ foo(e(u64,bool))
 
 ```rust
 enum MyEnum {
-    foo: u64,
-    bar: bool,
+    Foo: u64,
+    Bar: bool,
 }
 struct MyStruct {
     bim: u8,
@@ -661,8 +661,8 @@ ABI calls containing sum types (enums) are encoded similarly to structs: encode 
 ```rust
 enum MySumType
 {
-    x: u32,
-    y: bool,
+    X: u32,
+    Y: bool,
 }
 
 abi MyContract {
@@ -673,10 +673,65 @@ abi MyContract {
 }
 ```
 
-Calling `bar` with `MySumType::x(42)` yields:
+Calling `bar` with `MySumType::X(42)` yields:
 
 ```plaintext
 0x
 0000000000000000 // The discriminant of the chosen enum, in this case `0`.
 000000000000002a // `42` encoded as u64
+```
+
+If the sum type has variants of different sizes, then left padding is required.
+
+```rust
+enum MySumType
+{
+    X: b256,
+    Y: u32,
+}
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: MySumType);
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `MySumType::Y(42)` yields:
+
+```plaintext
+0x
+0000000000000001 // The discriminant of the chosen enum, in this case `1`.
+0000000000000000 // Left padding
+0000000000000000 // Left padding
+0000000000000000 // Left padding
+000000000000002a // `42` encoded as u64
+```
+
+Note that three words of padding are required because the largest variant of `MySumType` is 4 words wide.
+
+If all the variants of a sum type are of type `()`, or unit, then only the discriminant needs to be encoded.
+
+```rust
+enum MySumType
+{
+    X: (),
+    Y: (),
+    Z: (),
+}
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: MySumType);
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `MySumType::Z` yields:
+
+```plaintext
+0x
+0000000000000002 // The discriminant of the chosen enum, in this case `2`.
 ```
