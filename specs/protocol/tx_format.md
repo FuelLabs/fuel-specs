@@ -33,6 +33,7 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
+| `MAX_MESSAGE_DATA_LENGTH`   | `uint16` |       | Maximum length of message data, in bytes.     |
 | `MAX_STORAGE_SLOTS`         | `uint16` | `255` | Maximum number of initial storage slots.      |
 | `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
 
@@ -240,11 +241,11 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#message-id).        |
 | `sender`              | `byte[32]`  | The address of the message sender.                                     |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
-| `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
 | `nonce`               | `byte[32]`  | The message nonce.                                                     |
 | `owner`               | `byte[32]`  | Owning address or predicate hash.                                      |
 | `witnessIndex`        | `uint8`     | Index of witness that authorizes spending the coin.                    |
+| `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
 | `predicateLength`     | `uint16`    | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint16`    | Length of predicate input data, in bytes.                              |
 | `data`                | `byte[]`    | The message data.                                                      |
@@ -254,6 +255,7 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 Transaction is invalid if:
 
 - `witnessIndex >= tx.witnessesCount`
+- `dataLength > MAX_MESSAGE_DATA_LENGTH`
 - `predicateLength > MAX_PREDICATE_LENGTH`
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
 - If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`

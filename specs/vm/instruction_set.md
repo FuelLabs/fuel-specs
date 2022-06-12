@@ -1401,17 +1401,15 @@ Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the me
 
 Panic if:
 
-- `$rA + 32` overflows
 - `$rA + $rB + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
 - `$rA + $rB + 32 > VM_MAX_RAM`
 - `$rB > MEM_MAX_ACCESS_SIZE`
-- `$rB > 65535`
+- `$rB > MESSAGE_MAX_DATA_SIZE`
 - `$rC > tx.outputsCount`
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
 - `tx.outputs[$rC].type != OutputType.Message`
-- `tx.outputs[$rC].recipient != 0 || tx.outputs[$rC].sender != 0`
+- `tx.outputs[$rC].recipient != 0`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
