@@ -1460,10 +1460,10 @@ In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an int
 - `tx.outputs[$rC].recipient = MEM[$rA, 32]`
 - `tx.outputs[$rC].amount = $rD`
 
-This modifies the `balanceRoot` field of the appropriate output(s).
-MessageID is added to the `OutputMessage` merkle tree as part of block header.
+This modifies the `balanceRoot` field of the appropriate output.
+`messageID` is added to the `OutputMessage` Merkle tree as part of block header.
 
-Append messageID to the global list of `OutputMessage`, modifying `OutputMessagesRoot`:
+Append `messageID` to the global list of `OutputMessage`, modifying `OutputMessagesRoot`.
 
 ### SRW: State read word
 
