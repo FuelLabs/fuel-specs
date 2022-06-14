@@ -5,6 +5,7 @@
 - [UTXO ID](#utxo-id)
   - [Coin ID](#coin-id)
   - [Message ID](#message-id)
+  - [Message Nonce](#message-nonce)
   - [Fee ID](#fee-id)
 
 This document defines how to compute unique identifiers.
@@ -35,6 +36,10 @@ The ID of a message is computed as the [hash](./cryptographic_primitives.md#hash
 1. the message data `byte[]`
 
 `hash(byte[32] ++ byte[32] ++ uint64 ++ byte[32] ++ byte[32] ++ byte[])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction). If the owner component is not applicable then a 32 byte long array of zeros should be used. Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.
+
+### Message Nonce
+
+The nonce value for `OutputMessage` is computed as the [hash](./cryptographic_primitives.md#hashing) of the [Transaction ID](#transaction-id) that the message is an output for and the index of the output as a `uint8`. `hash(byte[32] ++ uint8)`
 
 ### Fee ID
 
