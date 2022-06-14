@@ -182,7 +182,7 @@ Transaction is invalid if:
 |-----------------------|-------------------------|------------------------------------------------------------------------|
 | `txID`                | `byte[32]`              | Hash of transaction.                                                   |
 | `outputIndex`         | `uint8`                 | Index of transaction output.                                           |
-| `owner`               | `byte[32]`              | Owning address or predicate hash.                                      |
+| `owner`               | `byte[32]`              | Owning address or predicate root.                                      |
 | `amount`              | `uint64`                | Amount of coins.                                                       |
 | `asset_id`            | `byte[32]`              | Asset ID of the coins.                                                 |
 | `txPointer`           | [TXPointer](#txpointer) | Points to the TX whose output is being spent.                          |
@@ -259,7 +259,7 @@ Transaction is invalid if:
 
 | name       | type       | description                          |
 |------------|------------|--------------------------------------|
-| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `to`       | `byte[32]` | Receiving address or predicate root. |
 | `amount`   | `uint64`   | Amount of coins to send.             |
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
@@ -300,7 +300,7 @@ This output type is unspendable and can be pruned form the UTXO set.
 
 | name       | type       | description                          |
 |------------|------------|--------------------------------------|
-| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `to`       | `byte[32]` | Receiving address or predicate root. |
 | `amount`   | `uint64`   | Amount of coins to send.             |
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
@@ -318,7 +318,7 @@ This output type indicates that the output's amount may vary based on transactio
 
 | name       | type       | description                          |
 |------------|------------|--------------------------------------|
-| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `to`       | `byte[32]` | Receiving address or predicate root. |
 | `amount`   | `uint64`   | Amount of coins to send.             |
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
