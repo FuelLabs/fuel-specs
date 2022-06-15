@@ -192,7 +192,7 @@ Below is a list of the JSON ABI formats for each available type:
        "components": null
     } 
     ```
-    
+
     `<n>` is the size of the string.
 
 - `array`:
