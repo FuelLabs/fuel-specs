@@ -239,12 +239,12 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 
 | name                  | type        | description                                                            |
 |-----------------------|-------------|------------------------------------------------------------------------|
-| `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#message-id).        |
+| `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#input-message-id).  |
 | `sender`              | `byte[32]`  | The address of the message sender.                                     |
 | `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
 | `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
 | `nonce`               | `byte[32]`  | The message nonce.                                                     |
-| `owner`               | `byte[32]`  | Owning address or predicate hash.                                      |
+| `owner`               | `byte[32]`  | Owning address or predicate root.                                      |
 | `witnessIndex`        | `uint8`     | Index of witness that authorizes spending the coin.                    |
 | `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
 | `predicateLength`     | `uint16`    | Length of predicate, in instructions.                                  |

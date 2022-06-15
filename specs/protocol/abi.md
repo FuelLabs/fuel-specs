@@ -347,11 +347,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 #### MessageOut receipt
 
 - `type`: `MessageOut`.
-- `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](../protocol/identifiers.md#message-id).
+- `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](../protocol/identifiers.md#output-message-id).
 - `sender`: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: `MEM[$fp, 32]`.
 - `recipient`: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: `MEM[$rA, 32]`.
 - `amount`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rD`.
-- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described [here](../protocol/identifiers.md#message-nonce).
+- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described [here](../protocol/identifiers.md#output-message-nonce).
 - `len`: Decimal string representation of a 16-bit unsigned integer; value of register `$rB`.
 - `digest`: Hexadecimal string representation of 256-bit (32-byte), hash of `MEM[$rA + 32, $rB]`.
 - `data`: Hexadecimal string representation of the value of the memory range `MEM[$rA + 32, $rB]`.

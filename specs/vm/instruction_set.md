@@ -1444,16 +1444,16 @@ Panic if:
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name         | type          | description                                                                       |
-|--------------|---------------|-----------------------------------------------------------------------------------|
-| `type`       | `ReceiptType` | `ReceiptType.MessageOut`                                                          |
-| `messageID`  | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#message-id).         |
-| `sender`     | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                |
-| `recipient`  | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                             |
-| `amount`     | `uint64`      | Amount of base asset coins sent with message: `$rD`.                              |
-| `nonce`      | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#message-nonce).  |
-| `len`        | `uint16`      | Length of message data, in bytes: `$rB`.                                          |
-| `digest`     | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                  |
+| name         | type          | description                                                                              |
+|--------------|---------------|------------------------------------------------------------------------------------------|
+| `type`       | `ReceiptType` | `ReceiptType.MessageOut`                                                                 |
+| `messageID`  | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#output-message-id).         |
+| `sender`     | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                       |
+| `recipient`  | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                                    |
+| `amount`     | `uint64`      | Amount of base asset coins sent with message: `$rD`.                                     |
+| `nonce`      | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#output-message-nonce).  |
+| `len`        | `uint16`      | Length of message data, in bytes: `$rB`.                                                 |
+| `digest`     | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                         |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
 
