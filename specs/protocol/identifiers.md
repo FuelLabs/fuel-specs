@@ -32,8 +32,8 @@ The ID of an input message is computed as the [hash](./cryptographic_primitives.
 1. the sender address as `byte[32]`,
 1. recipient address as `byte[32]`,
 1. the message owner (either address or predicate root) as `byte[32]`,
-1. the amount being sent with the message as `uint64`,
 1. the message nonce as `uint64`,
+1. the amount being sent with the message as `uint64`,
 1. the message data as `byte[]`
 
 `hash(byte[32] ++ byte[32] ++ byte[32] ++ uint64 ++ uint64 ++ byte[])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](./tx_format.md#transaction). Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.
