@@ -32,42 +32,42 @@ the JSON representation of this ABI looks like:
 
 ```json
 [
-   {
-      "type": "function",
-      "inputs": [
-         {
-           "name": "arg",
-           "type": "u64",
-           "components": null
-         }
-      ],
-      "name": "first_function",
-      "outputs": [
-         {
-           "name": "",
-           "type": "bool",
-           "components": null
-         }
-      ]
-   },
-   {
-      "type": "function",
-      "inputs": [
-         {
-           "name": "arg",
-           "type": "b256",
-           "components": null
-         }
-      ],
-      "name": "second_function",
-      "outputs": [
-         {
-           "name": "",
-           "type": "()",
-           "components": []
-         }
-      ]
-   }
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "arg",
+        "type": "u64",
+        "components": null
+      }
+    ],
+    "name": "first_function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "components": null
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "arg",
+        "type": "b256",
+        "components": null
+      }
+    ],
+    "name": "second_function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "()",
+        "components": []
+      }
+    ]
+  }
 ]
 ```
 
@@ -79,9 +79,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "bool",
-       "components": null
+      "name": "<var_name>",
+      "type": "bool",
+      "components": null
     } 
     ```
 
@@ -89,9 +89,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "u8",
-       "components": null
+      "name": "<var_name>",
+      "type": "u8",
+      "components": null
     } 
     ```
 
@@ -99,9 +99,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "u16",
-       "components": null
+      "name": "<var_name>",
+      "type": "u16",
+      "components": null
     } 
     ```
 
@@ -109,9 +109,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "u32",
-       "components": null
+      "name": "<var_name>",
+      "type": "u32",
+      "components": null
     } 
     ```
 
@@ -119,9 +119,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "u64",
-       "components": null
+      "name": "<var_name>",
+      "type": "u64",
+      "components": null
     } 
     ```
 
@@ -129,9 +129,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "b256",
-       "components": null
+      "name": "<var_name>",
+      "type": "b256",
+      "components": null
     } 
     ```
 
@@ -139,21 +139,21 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "struct <decl_name>",
-       "components": [
-           {
-              "name": "<field1_name>",
-              "type": "<field1_type>",
-              "components": ...
-           },
-           {
-              "name": "<field2_name>",
-              "type": "<field2_type>",
-              "components": ...
-           },
-           ...
-       ]
+      "name": "<var_name>",
+      "type": "struct <decl_name>",
+      "components": [
+        {
+          "name": "<field1_name>",
+          "type": "<field1_type>",
+          "components": ...
+        },
+        {
+          "name": "<field2_name>",
+          "type": "<field2_type>",
+          "components": ...
+        },
+        ...
+      ]
     }
     ```
 
@@ -163,21 +163,21 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "enum <decl_name>",
-       "components": [
-           {
-              "name": "<variant1_name>",
-              "type": "<variant1_type>",
-              "components": ...
-           },
-           {
-              "name": "<variant2_name>",
-              "type": "<variant2_type>",
-              "components": ...
-           },
-           ...
-       ]
+      "name": "<var_name>",
+      "type": "enum <decl_name>",
+      "components": [
+        {
+          "name": "<variant1_name>",
+          "type": "<variant1_type>",
+          "components": ...
+        },
+        {
+          "name": "<variant2_name>",
+          "type": "<variant2_type>",
+          "components": ...
+        },
+        ...
+      ]
     }
     ```
 
@@ -187,9 +187,9 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "str[<n>]",
-       "components": null
+      "name": "<var_name>",
+      "type": "str[<n>]",
+      "components": null
     } 
     ```
 
@@ -199,15 +199,15 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "[<element_type>; <n>]",
-       "components": [
-          {
-             "name": "__array_element",
-             "type": "<element_type>",
-             "components": ...
-          }
-       ]
+      "name": "<var_name>",
+      "type": "[<element_type>; <n>]",
+      "components": [
+        {
+          "name": "__array_element",
+          "type": "<element_type>",
+          "components": ...
+        }
+      ]
     },
     ```
 
@@ -217,21 +217,21 @@ Below is a list of the JSON ABI formats for each available type:
 
     ```json
     {
-       "name": "<var_name>",
-       "type": "(<field1_type>, <field2_type>, ...)",
-       "components": [
-           {
-              "name": "__tuple_element",
-              "type": "<field1_type>",
-              "components": ...
-           },
-           {
-              "name": "__tuple_element",
-              "type": "<field2_type>",
-              "components": ...
-           },
-           ...
-       ]
+      "name": "<var_name>",
+      "type": "(<field1_type>, <field2_type>, ...)",
+      "components": [
+        {
+          "name": "__tuple_element",
+          "type": "<field1_type>",
+          "components": ...
+        },
+        {
+          "name": "__tuple_element",
+          "type": "<field2_type>",
+          "components": ...
+        },
+        ...
+      ]
     }
     ```
 
@@ -254,7 +254,7 @@ struct MyStruct {
 }
 
 abi MyContract {
-    fn complex_function(arg1: MyStruct, arg2: [b256; 4], arg3: (str[5], bool)) -> str[6];
+    fn complex_function(arg1: MyStruct, arg2: [MyStruct; 4], arg3: (str[5], bool)) -> str[6];
 }
 ```
 
@@ -262,73 +262,95 @@ its JSON representation would look like:
 
 ```json
 [
-   {
-      "type": "function",
-      "inputs": [
-         {
-            "name": "arg1",
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "arg1",
+        "type": "struct MyStruct",
+        "components": [
+          {
+            "name": "bim",
+            "type": "u8",
+            "components": null
+          },
+          {
+            "name": "bam",
+            "type": "enum MyEnum",
+            "components": [
+              {
+                "name": "Foo",
+                "type": "u64",
+                "components": null
+              },
+              {
+                "name": "Bar",
+                "type": "bool",
+                "components": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "arg2",
+        "type": "[struct MyStruct; 4]",
+        "components": [
+          {
+            "name": "__array_element",
             "type": "struct MyStruct",
             "components": [
-               {
-                  "name": "bim",
-                  "type": "u8",
-                  "components": null
-               },
-               {
-                  "name": "bam",
-                  "type": "enum MyEnum",
-                  "components": [
-                     {
-                        "name": "Foo",
-                        "type": "u64",
-                        "components": null
-                     },
-                     {
-                        "name": "Bar",
-                        "type": "bool",
-                        "components": null
-                     }
-                  ]
-               }
+              {
+                "name": "bim",
+                "type": "u8",
+                "components": null
+              },
+              {
+                "name": "bam",
+                "type": "enum MyEnum",
+                "components": [
+                  {
+                    "name": "Foo",
+                    "type": "u64",
+                    "components": null
+                  },
+                  {
+                    "name": "Bar",
+                    "type": "bool",
+                    "components": null
+                  }
+                ]
+              }
             ]
-         },
-         {
-            "name": "arg2",
-            "type": "[b256; 4]",
-            "components": [
-               {
-                  "name": "__array_element",
-                  "type": "b256",
-                  "components": null
-               }
-            ]
-         },
-         {
-            "name": "arg3",
-            "type": "(str[5], bool)",
-            "components": [
-               {
-                  "name": "__tuple_element",
-                  "type": "str[5]",
-                  "components": null
-               },
-               {
-                  "name": "__tuple_element",
-                  "type": "bool",
-                  "components": null
-               }
-            ]
-         }
-      ],
-      "name": "complex_function",
-      "outputs": [
-         {
-            "name": "",
-            "type": "str[6]",
+          }
+        ]
+      },
+      {
+        "name": "arg3",
+        "type": "(str[5], bool)",
+        "components": [
+          {
+            "name": "__tuple_element",
+            "type": "str[5]",
             "components": null
-         }
-      ]
-   }
+          },
+          {
+            "name": "__tuple_element",
+            "type": "bool",
+            "components": null
+          }
+        ]
+      }
+    ],
+    "name": "complex_function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "str[6]",
+        "components": null
+      }
+    ]
+  }
 ]
 ```
 
@@ -340,13 +362,13 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON object represent
 
 ```json
 {
-   "receipts_list":[
-      {
-         "type":"<receipt_type>",
-         ...
-      },
+  "receipts_list":[
+    {
+      "type":"<receipt_type>",
       ...
-   ]
+    },
+    ...
+  ]
 }
 ```
 
@@ -378,11 +400,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"Panic",
-   "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "reason":"1",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"Panic",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "reason":"1",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -396,11 +418,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"Return",
-   "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "val":"18446744073709551613",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"Return",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val":"18446744073709551613",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -419,16 +441,16 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"Call",
-   "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-   "amount":"10000",
-   "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-   "gas":"500",
-   "param1":"0x28f5c28f5c28f5c",
-   "param2":"0x68db8bac710cb",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"Call",
+  "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+  "amount":"10000",
+  "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+  "gas":"500",
+  "param1":"0x28f5c28f5c28f5c",
+  "param2":"0x68db8bac710cb",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -445,14 +467,14 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"Log",
-   "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "val0":"1844674407370",
-   "val1":"1844674407371",
-   "val2":"1844674407372",
-   "val3":"1844674407373",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"Log",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val0":"1844674407370",
+  "val1":"1844674407371",
+  "val2":"1844674407372",
+  "val3":"1844674407373",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -471,16 +493,16 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"LogData",
-   "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "val0":"1844674407370",
-   "val1":"1844674407371",
-   "ptr":"0x1ad7f29abcc",
-   "len":"66544",
-   "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
-   "pc":"0xffffffffffffffff",
-   "data":"0xa7c5ac471b47",
-   "is":"0xfffffffffffffffe"
+  "type":"LogData",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val0":"1844674407370",
+  "val1":"1844674407371",
+  "ptr":"0x1ad7f29abcc",
+  "len":"66544",
+  "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+  "pc":"0xffffffffffffffff",
+  "data":"0xa7c5ac471b47",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -497,14 +519,14 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"ReturnData",
-   "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "ptr":"0x1ad7f29abcc",
-   "len":"1844",
-   "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
-   "pc":"0xffffffffffffffff",
-   "data":"0xa7c5ac471b47",
-   "is":"0xfffffffffffffffe"
+  "type":"ReturnData",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "ptr":"0x1ad7f29abcc",
+  "len":"1844",
+  "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+  "pc":"0xffffffffffffffff",
+  "data":"0xa7c5ac471b47",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -518,11 +540,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"Revert",
-   "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "val":"1844674407372",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"Revert",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val":"1844674407372",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -538,13 +560,13 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"Transfer",
-   "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-   "amount": "10000",
-   "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"Transfer",
+  "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+  "amount": "10000",
+  "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -560,13 +582,13 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"TransferOut",
-   "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-   "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-   "amount": "10000",
-   "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-   "pc":"0xffffffffffffffff",
-   "is":"0xfffffffffffffffe"
+  "type":"TransferOut",
+  "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+  "amount": "10000",
+  "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -578,9 +600,9 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-   "type":"ScriptResult",
-   "result":"0x00",
-   "gas_used":"400",
+  "type":"ScriptResult",
+  "result":"0x00",
+  "gas_used":"400",
 }
 ```
 
