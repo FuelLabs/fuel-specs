@@ -6,92 +6,355 @@ This document describes and specifies the ABI (Application Binary Interface) of 
 
 The JSON of an ABI is the human-readable representation of an interface call to a Sway contract. It is an array of functions containing the following properties:
 
-- `type`: String, type of the function; right now only one is supported: `"function"`
-- `name`: String, the name of the contract's function being called;
-- `inputs`: An array of objects that represents the inputs to this function, each of which contains:
-  - `name`: String, the name of the parameter;
-  - `type`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct, enum, or tuple). If it's a custom type, it must follow the format `enum | struct <custom_type_name> | tuple <types>`, e.g. `"type": "struct MyCustomStruct"`, `"type": "tuple (u64, u64)"`;
-  - `components`:, Optional object, used if the `type` is a custom type, contains:
-    - `name`: String, the name of the component;
-    - `type`: String, the type of the component;
-- `outputs`: An array of objects similar to `inputs`;
+- `"type"`: String, type of the function; right now only one is supported: `"function"`
+- `"name"`: String, the name of the contract's function being called;
+- `"inputs"`: An array of objects that represents the inputs to this function, each of which contains:
+  - `"name"`: String, the name of the parameter;
+  - `"type"`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct, enum, or tuple). The format of `"type"` for each possible type is shown in the [JSON ABI format for each type](#json-abi-format-for-each-type) section;
+  - `"components"`: An array of the components of a given type if any and `null` otherwise. Each element of this array contains:
+    - `"name"`: String, the name of the component;
+    - `"type"`: String, the type of the component;
+    - `"components"`: Recursively following the format explained here.
+- `"outputs"`: An array of objects similar to `"inputs"`;
 
-For instance:
+> **Note**: The order of entries in `"inputs"`, `"outputs"`, and `"components"`, is important and should be taken into account when encoding/decoding an ABI.
+
+For instance, given the following ABI declaration:
+
+```rust
+abi MyContract {
+    fn first_function(arg: u64) -> bool;
+    fn second_function(arg: b256);
+}
+```
+
+the JSON representation of this ABI looks like:
 
 ```json
 [
-   {
-      "type":"function",
-      "inputs":[
-         {
-            "name":"arg",
-            "type":"u64"
-         }
-      ],
-      "name":"entry_one",
-      "outputs":[
-
-      ]
-   }
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "arg",
+        "type": "u64",
+        "components": null
+      }
+    ],
+    "name": "first_function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "components": null
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "arg",
+        "type": "b256",
+        "components": null
+      }
+    ],
+    "name": "second_function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "()",
+        "components": []
+      }
+    ]
+  }
 ]
 ```
 
-This is a function called `entry_one` that takes one `u64` argument and does not return a value.
+### JSON ABI format for each type
 
-Here an example containing custom types:
+Below is a list of the JSON ABI formats for each available type:
 
-```json
-[
+- `bool`:
+
+    ```json
     {
-        "type":"contract",
-        "inputs":[
-            {
-                "name":"my_custom_struct",
-                "type":"struct MyCustomStruct",
-                "components": [
-                    {
-                        "name": "x",
-                        "type": "u16"
-                    },
-                    {
-                        "name": "y",
-                        "type": "struct AnotherStruct",
-                        "components": [
-                            {
-                                "name":"a",
-                                "type": "bool"
-                            },
-                            {
-                                "name":"b",
-                                "type": "[u8; 2]"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "z",
-                        "type": "tuple (u16, u8)",
-                        "components": [
-                            {
-                                "type": "u16"
-                            },
-                            {
-                                "type": "u8"
-                            }
-                        ]
+      "name": "<var_name>",
+      "type": "bool",
+      "components": null
+    } 
+    ```
 
-                    },
-                ]
-            }
-        ],
-        "name":"takes_nested_struct",
-        "outputs":[]
+- `u8`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "u8",
+      "components": null
+    } 
+    ```
+
+- `u16`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "u16",
+      "components": null
+    } 
+    ```
+
+- `u32`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "u32",
+      "components": null
+    } 
+    ```
+
+- `u64`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "u64",
+      "components": null
+    } 
+    ```
+
+- `b256`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "b256",
+      "components": null
+    } 
+    ```
+
+- `struct`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "struct <decl_name>",
+      "components": [
+        {
+          "name": "<field1_name>",
+          "type": "<field1_type>",
+          "components": ...
+        },
+        {
+          "name": "<field2_name>",
+          "type": "<field2_type>",
+          "components": ...
+        },
+        ...
+      ]
     }
+    ```
+
+    `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
+
+- `enum`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "enum <decl_name>",
+      "components": [
+        {
+          "name": "<variant1_name>",
+          "type": "<variant1_type>",
+          "components": ...
+        },
+        {
+          "name": "<variant2_name>",
+          "type": "<variant2_type>",
+          "components": ...
+        },
+        ...
+      ]
+    }
+    ```
+
+    `<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section. The `components` entry for each variant is recursively formatted according to the rules of this section.
+
+- `str[<n>]`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "str[<n>]",
+      "components": null
+    } 
+    ```
+
+    `<n>` is the size of the string.
+
+- `array`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "[<element_type>; <n>]",
+      "components": [
+        {
+          "name": "__array_element",
+          "type": "<element_type>",
+          "components": ...
+        }
+      ]
+    },
+    ```
+
+    `<element_type>` is formatted according to the rules of this section. `<n>` is the size of the array. The `components` entry for `__array_element` is recursively formatted according to the rules of this section.
+
+- `tuple`:
+
+    ```json
+    {
+      "name": "<var_name>",
+      "type": "(<field1_type>, <field2_type>, ...)",
+      "components": [
+        {
+          "name": "__tuple_element",
+          "type": "<field1_type>",
+          "components": ...
+        },
+        {
+          "name": "__tuple_element",
+          "type": "<field2_type>",
+          "components": ...
+        },
+        ...
+      ]
+    }
+    ```
+
+    `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
+
+> **Note**: Because outputs don't have names, the field `"name"` should be set to `""` for each entry of the array `outputs`.
+
+#### Complex example for JSON ABI format
+
+Given the following ABI declaration:
+
+```rust
+enum MyEnum {
+    Foo: u64,
+    Bar: bool,
+}
+struct MyStruct {
+    bim: u8,
+    bam: MyEnum,
+}
+
+abi MyContract {
+    fn complex_function(arg1: MyStruct, arg2: [MyStruct; 4], arg3: (str[5], bool)) -> str[6];
+}
+```
+
+its JSON representation would look like:
+
+```json
+[
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "arg1",
+        "type": "struct MyStruct",
+        "components": [
+          {
+            "name": "bim",
+            "type": "u8",
+            "components": null
+          },
+          {
+            "name": "bam",
+            "type": "enum MyEnum",
+            "components": [
+              {
+                "name": "Foo",
+                "type": "u64",
+                "components": null
+              },
+              {
+                "name": "Bar",
+                "type": "bool",
+                "components": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "arg2",
+        "type": "[struct MyStruct; 4]",
+        "components": [
+          {
+            "name": "__array_element",
+            "type": "struct MyStruct",
+            "components": [
+              {
+                "name": "bim",
+                "type": "u8",
+                "components": null
+              },
+              {
+                "name": "bam",
+                "type": "enum MyEnum",
+                "components": [
+                  {
+                    "name": "Foo",
+                    "type": "u64",
+                    "components": null
+                  },
+                  {
+                    "name": "Bar",
+                    "type": "bool",
+                    "components": null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "arg3",
+        "type": "(str[5], bool)",
+        "components": [
+          {
+            "name": "__tuple_element",
+            "type": "str[5]",
+            "components": null
+          },
+          {
+            "name": "__tuple_element",
+            "type": "bool",
+            "components": null
+          }
+        ]
+      }
+    ],
+    "name": "complex_function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "str[6]",
+        "components": null
+      }
+    ]
+  }
 ]
 ```
 
-**Important note**: The ordering of the components of a struct, enum, or tuple  _matters_ for the encoding mechanism. For instance, in the example above, we define the components `a`, then `b`, of the struct `y`. That means when encoding, a `bool` (`a`) will be encoded first, then a `u8[2]`(`b`) will be encoded. That also means that when passing values to the encoder they must also follow the specified order: `"(true,[1,2])"` should be fed into the encoder.
-
-This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The section below specifies the encoding for the function being selected to be executed and each of the argument types.
+This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ### Receipt
 
@@ -99,13 +362,13 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON object represent
 
 ```json
 {
-   "receipts_list":[
-      {
-         "type":"<receipt_type>",
-         ...
-      },
+  "receipts_list":[
+    {
+      "type":"<receipt_type>",
       ...
-   ]
+    },
+    ...
+  ]
 }
 ```
 
@@ -137,11 +400,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"Panic",
-    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "reason":"1",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"Panic",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "reason":"1",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -155,11 +418,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"Return",
-    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "val":"18446744073709551613",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"Return",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val":"18446744073709551613",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -178,16 +441,16 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"Call",
-    "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-    "amount":"10000",
-    "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-    "gas":"500",
-    "param1":"0x28f5c28f5c28f5c",
-    "param2":"0x68db8bac710cb",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"Call",
+  "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+  "amount":"10000",
+  "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+  "gas":"500",
+  "param1":"0x28f5c28f5c28f5c",
+  "param2":"0x68db8bac710cb",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -204,14 +467,14 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"Log",
-    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "val0":"1844674407370",
-    "val1":"1844674407371",
-    "val2":"1844674407372",
-    "val3":"1844674407373",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"Log",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val0":"1844674407370",
+  "val1":"1844674407371",
+  "val2":"1844674407372",
+  "val3":"1844674407373",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -230,16 +493,16 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"LogData",
-    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "val0":"1844674407370",
-    "val1":"1844674407371",
-    "ptr":"0x1ad7f29abcc",
-    "len":"66544",
-    "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
-    "pc":"0xffffffffffffffff",
-    "data":"0xa7c5ac471b47",
-    "is":"0xfffffffffffffffe"
+  "type":"LogData",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val0":"1844674407370",
+  "val1":"1844674407371",
+  "ptr":"0x1ad7f29abcc",
+  "len":"66544",
+  "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+  "pc":"0xffffffffffffffff",
+  "data":"0xa7c5ac471b47",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -256,14 +519,14 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"ReturnData",
-    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "ptr":"0x1ad7f29abcc",
-    "len":"1844",
-    "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
-    "pc":"0xffffffffffffffff",
-    "data":"0xa7c5ac471b47",
-    "is":"0xfffffffffffffffe"
+  "type":"ReturnData",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "ptr":"0x1ad7f29abcc",
+  "len":"1844",
+  "digest":"0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
+  "pc":"0xffffffffffffffff",
+  "data":"0xa7c5ac471b47",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -277,11 +540,11 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"Revert",
-    "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "val":"1844674407372",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"Revert",
+  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val":"1844674407372",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -297,13 +560,13 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"Transfer",
-    "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-    "amount": "10000",
-    "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"Transfer",
+  "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+  "amount": "10000",
+  "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -319,13 +582,13 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"TransferOut",
-    "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-    "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
-    "amount": "10000",
-    "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
-    "pc":"0xffffffffffffffff",
-    "is":"0xfffffffffffffffe"
+  "type":"TransferOut",
+  "from":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "to":"0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
+  "amount": "10000",
+  "asset_id":"0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
+  "pc":"0xffffffffffffffff",
+  "is":"0xfffffffffffffffe"
 }
 ```
 
@@ -337,9 +600,9 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 ```json
 {
-    "type":"ScriptResult",
-    "result":"0x00",
-    "gas_used":"400",
+  "type":"ScriptResult",
+  "result":"0x00",
+  "gas_used":"400",
 }
 ```
 
@@ -349,10 +612,10 @@ To select which function you want to call, first, this function must be in an AB
 
 ```rust
 abi MyContract {
-  fn foo(a: u64);
-  fn bar(a: InputStruct );
+    fn foo(a: u64);
+    fn bar(a: InputStruct );
 } {
-  fn baz(a: ()) { }
+    fn baz(a: ()) { }
 }
 ```
 
@@ -364,7 +627,13 @@ _N.B.: the word size for the FuelVM is 8 bytes._
 
 The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8. For custom types such as `enum` and `struct`, there is a prefix added to the parenthesized list (see below).
 
-For instance, in the case of the function `entry_one` above, we would pass the string `"entry_one(u64)"` to the `sha256()` hashing algorithm. The full digest would be:
+For instance, to compute the selector for the following function:
+
+```rust
+    fn entry_one(arg: u64);
+```
+
+we should pass `"entry_one(u64)"` to the `sha256()` hashing algorithm. The full digest would be:
 
 ```text
 0x0c36cb9cb766ff60422db243c4fff06d342949da3c64a3c6ac564941f84b6f06
@@ -378,19 +647,19 @@ Then we would get only the first 4 bytes of this digest and left-pad it to 8 byt
 
 The table below summarizes how each function argument type is encoded
 
-| Type     | Encoding                                                                                    |
-|----------|---------------------------------------------------------------------------------------------|
-| `bool`   | `bool`                                                                                      |
-| `u8`     | `u8`                                                                                        |
-| `u16`    | `u16`                                                                                       |
-| `u32`    | `u32`                                                                                       |
-| `u64`    | `u64`                                                                                       |
-| `b256`   | `b256`                                                                                      |
-| `struct` | `s(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the struct fields |
-| `enum`   | `e(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the enum variants |
-| `str[n]` | `str[n]`                                                                                    |
-| `array`  | `a[<ty>;n]` where `ty` is the encoded element type of the array and `n` is its length       |
-| `tuple`  | `(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the tuple fields   |
+| Type       | Encoding                                                                                    |
+|------------|---------------------------------------------------------------------------------------------|
+| `bool`     | `bool`                                                                                      |
+| `u8`       | `u8`                                                                                        |
+| `u16`      | `u16`                                                                                       |
+| `u32`      | `u32`                                                                                       |
+| `u64`      | `u64`                                                                                       |
+| `b256`     | `b256`                                                                                      |
+| `struct`   | `s(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the struct fields |
+| `enum`     | `e(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the enum variants |
+| `str[<n>]` | `str[<n>]`                                                                                  |
+| `array`    | `a[<ty>;<n>]` where `<ty>` is the encoded element type of the array and `<n>` is its length |
+| `tuple`    | `(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the tuple fields   |
 
 #### Complex example for Function signature encoding
 
@@ -410,7 +679,9 @@ fn complex_function(arg1: MyStruct, arg2: [b256; 4], arg3: (str[5], bool));
 is encoded as:
 
 ```text
-complex_function(s(u8,e(u64,bool)),a[b256;4],(str[5],bool))
+abi MyContract {
+    complex_function(s(u8,e(u64,bool)),a[b256;4],(str[5],bool))
+}
 ```
 
 which is then hashed into:
@@ -441,7 +712,6 @@ These are the available types that can be encoded in the ABI:
   - `u32`, 32 bits.
   - `u64`, 64 bits.
 - Boolean: `bool`, either `0` or `1` encoded identically to `u8`.
-- Byte: `byte`, single byte.
 - B256: `b256`, arbitrary 256-bits value.
 - Address : `address`, a 256-bit (32-byte) address.
 - Fixed size string
@@ -457,7 +727,7 @@ These types are encoded in-place. Here's how to encode them. We define `enc(X)` 
 
 `enc(X)` is the big-endian representation of `X` left-padded with zero-bytes. Total length must be 8 bytes.
 
-_Note: since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._
+> **Note:** since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._
 
 **Example:**
 
@@ -473,20 +743,6 @@ Encoding `true` yields:
 
 ```text
 0x0000000000000001
-```
-
-### Byte
-
-`byte`, a single byte.
-
-`enc(X)` is `X`, left-padded with zero-bytes. Total length, per argument, must be 8 bytes. Similar to the `u8` encoding.
-
-**Example:**
-
-Encoding `255` yields:
-
-```text
-0x00000000000000ff
 ```
 
 ### B256
@@ -565,10 +821,10 @@ struct InputStruct {
 
 
 abi MyContract {
-  fn foo(a: u64);
-  fn bar(a: InputStruct);
+    fn foo(a: u64);
+    fn bar(a: InputStruct);
 } {
-  fn baz(a: ()) { }
+    fn baz(a: ()) { }
 }
 ```
 
@@ -590,10 +846,10 @@ struct InputStruct {
 
 
 abi MyContract {
-  fn foo(a: u64);
-  fn bar(a: InputStruct);
+    fn foo(a: u64);
+    fn bar(a: InputStruct);
 } {
-  fn baz(a: ()) { }
+    fn baz(a: ()) { }
 }
 ```
 
@@ -618,10 +874,10 @@ enum MySumType
 }
 
 abi MyContract {
-  fn foo(a: u64);
-  fn bar(a: MySumType);
+    fn foo(a: u64);
+    fn bar(a: MySumType);
 } {
-  fn baz(a: ()) { }
+    fn baz(a: ()) { }
 }
 ```
 
@@ -643,10 +899,10 @@ enum MySumType
 }
 
 abi MyContract {
-  fn foo(a: u64);
-  fn bar(a: MySumType);
+    fn foo(a: u64);
+    fn bar(a: MySumType);
 } {
-  fn baz(a: ()) { }
+    fn baz(a: ()) { }
 }
 ```
 
@@ -674,10 +930,10 @@ enum MySumType
 }
 
 abi MyContract {
-  fn foo(a: u64);
-  fn bar(a: MySumType);
+    fn foo(a: u64);
+    fn bar(a: MySumType);
 } {
-  fn baz(a: ()) { }
+    fn baz(a: ()) { }
 }
 ```
 
