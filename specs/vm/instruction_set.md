@@ -36,7 +36,9 @@
 - [Control Flow Instructions](#control-flow-instructions)
   - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
   - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
+  - [JMP: Jump](#jmp-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
+  - [JNE: Jump if not equal](#jne-jump-if-not-equal)
   - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
   - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
   - [RET: Return from context](#ret-return-from-context)
@@ -702,6 +704,20 @@ Otherwise, advance the program counter `$pc` by `4`.
 
 See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
 
+### JMP: Jump
+
+|             |                                                     |
+|-------------|-----------------------------------------------------|
+| Description | Jumps to the code instruction offset by a register. |
+| Operation   | ```$pc = $is + $rA * 4;```                          |
+| Syntax      | `jmp $rA`                                           |
+| Encoding    | `0x00 rA - - -`                                     |
+| Notes       |                                                     |
+
+Panic if:
+
+- `$is + $rA * 4 > VM_MAX_RAM - 1`
+
 ### JI: Jump immediate
 
 |             |                                                |
@@ -715,6 +731,20 @@ See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawik
 Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`
+
+### JNE: Jump if not equal
+
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Jump to the code instruction offset by a register if `$rA` is not equal to `$rB`.    |
+| Operation   | ```if $rA != $rB:```<br>```$pc = $is + $rC * 4;```<br>```else:```<br>```$pc += 4;``` |
+| Syntax      | `jne $rA $rB $rC`                                                                    |
+| Encoding    | `0x00 rA rB rC -`                                                                    |
+| Notes       |                                                                                      |
+
+Panic if:
+
+- `$is + $rC * 4 > VM_MAX_RAM - 1`
 
 ### JNEI: Jump if not equal immediate
 

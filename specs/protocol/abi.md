@@ -362,7 +362,7 @@ _N.B.: the word size for the FuelVM is 8 bytes._
 
 ### Function signature
 
-The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8. For custom types such as `Enum` and `Struct`, there is a prefix added to the parenthesized list (see below).
+The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8. For custom types such as `enum` and `struct`, there is a prefix added to the parenthesized list (see below).
 
 For instance, in the case of the function `entry_one` above, we would pass the string `"entry_one(u64)"` to the `sha256()` hashing algorithm. The full digest would be:
 
@@ -376,74 +376,53 @@ Then we would get only the first 4 bytes of this digest and left-pad it to 8 byt
 0x000000000c36cb9c
 ```
 
-#### Function with `Struct` input
+The table below summarizes how each function argument type is encoded
 
-- If the function has a `Struct` input type, a prefix `s` is put in front of the parenthesized list of its components
-
-```rust
-struct MyStruct {
-    foo: u64,
-    bar: bool,
-}
-
-fn foo(a: MyStruct);
-```
-
-has the signature
-
-```text
-foo(s(u64,bool))
-```
-
-#### Function with `Enum` input
-
-- If the function has an `Enum` input type, a prefix `e` is put in front of the parenthesized list of its components
-
-```rust
-enum MyEnum {
-    foo: u64,
-    bar: bool,
-}
-fn foo(a: MyEnum);
-```
-
-has the signature
-
-```text
-foo(e(u64,bool))
-```
+| Type     | Encoding                                                                                    |
+|----------|---------------------------------------------------------------------------------------------|
+| `bool`   | `bool`                                                                                      |
+| `u8`     | `u8`                                                                                        |
+| `u16`    | `u16`                                                                                       |
+| `u32`    | `u32`                                                                                       |
+| `u64`    | `u64`                                                                                       |
+| `b256`   | `b256`                                                                                      |
+| `struct` | `s(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the struct fields |
+| `enum`   | `e(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the enum variants |
+| `str[n]` | `str[n]`                                                                                    |
+| `array`  | `a[<ty>;n]` where `ty` is the encoded element type of the array and `n` is its length       |
+| `tuple`  | `(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the tuple fields   |
 
 #### Complex example for Function signature encoding
 
 ```rust
 enum MyEnum {
-    foo: u64,
-    bar: bool,
+    Foo: u64,
+    Bar: bool,
 }
 struct MyStruct {
     bim: u8,
     bam: MyEnum,
 }
 
-fn complex_function(arg: MyStruct);
+fn complex_function(arg1: MyStruct, arg2: [b256; 4], arg3: (str[5], bool));
 ```
 
 is encoded as:
 
 ```text
-complex_function(s(u8,e(u64,bool)))
+complex_function(s(u8,e(u64,bool)),a[b256;4],(str[5],bool))
 ```
 
 which is then hashed into:
 
 ```text
-0x91d41b3e8c2ed1fe49678517450a32d89c9054b53f4127544e9f73ee0af704d3
+0x99a4b52e832e718e30c8105f4d7f09e9c98c908b0ac93121e13171ddbbc82363
 ```
 
 and then the encoded function selector is:
 
 ```text
-0x0000000091d41b3e
+0x0000000099a4b52e
 ```
 
 ## Argument Encoding
@@ -634,8 +613,8 @@ ABI calls containing sum types (enums) are encoded similarly to structs: encode 
 ```rust
 enum MySumType
 {
-    x: u32,
-    y: bool,
+    X: u32,
+    Y: bool,
 }
 
 abi MyContract {
@@ -646,10 +625,65 @@ abi MyContract {
 }
 ```
 
-Calling `bar` with `MySumType::x(42)` yields:
+Calling `bar` with `MySumType::X(42)` yields:
 
 ```plaintext
 0x
 0000000000000000 // The discriminant of the chosen enum, in this case `0`.
 000000000000002a // `42` encoded as u64
+```
+
+If the sum type has variants of different sizes, then left padding is required.
+
+```rust
+enum MySumType
+{
+    X: b256,
+    Y: u32,
+}
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: MySumType);
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `MySumType::Y(42)` yields:
+
+```plaintext
+0x
+0000000000000001 // The discriminant of the chosen enum, in this case `1`.
+0000000000000000 // Left padding
+0000000000000000 // Left padding
+0000000000000000 // Left padding
+000000000000002a // `42` encoded as u64
+```
+
+Note that three words of padding are required because the largest variant of `MySumType` is 4 words wide.
+
+If all the variants of a sum type are of type `()`, or unit, then only the discriminant needs to be encoded.
+
+```rust
+enum MySumType
+{
+    X: (),
+    Y: (),
+    Z: (),
+}
+
+abi MyContract {
+  fn foo(a: u64);
+  fn bar(a: MySumType);
+} {
+  fn baz(a: ()) { }
+}
+```
+
+Calling `bar` with `MySumType::Z` yields:
+
+```plaintext
+0x
+0000000000000002 // The discriminant of the chosen enum, in this case `2`.
 ```

@@ -22,18 +22,19 @@
 
 ## Constants
 
-| name                        | type     | value | description                                   |
-|-----------------------------|----------|-------|-----------------------------------------------|
-| `GAS_PER_BYTE`              | `uint64` |       | Gas charged per byte of the transaction.      |
-| `MAX_GAS_PER_TX`            | `uint64` |       | Maximum gas per transaction.                  |
-| `MAX_INPUTS`                | `uint64` | `8`   | Maximum number of inputs.                     |
-| `MAX_OUTPUTS`               | `uint64` | `8`   | Maximum number of outputs.                    |
-| `MAX_PREDICATE_LENGTH`      | `uint64` |       | Maximum length of predicate, in instructions. |
-| `MAX_PREDICATE_DATA_LENGTH` | `uint64` |       | Maximum length of predicate data, in bytes.   |
-| `MAX_SCRIPT_LENGTH`         | `uint64` |       | Maximum length of script, in instructions.    |
-| `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |       | Maximum length of script data, in bytes.      |
-| `MAX_STORAGE_SLOTS`         | `uint16` | `255` | Maximum number of initial storage slots.      |
-| `MAX_WITNESSES`             | `uint64` | `16`  | Maximum number of witnesses.                  |
+| name                        | type     | value           | description                                   |
+|-----------------------------|----------|-----------------|-----------------------------------------------|
+| `GAS_PER_BYTE`              | `uint64` |                 | Gas charged per byte of the transaction.      |
+| `GAS_PRICE_FACTOR`          | `uint64` | `1,000,000,000` | Unit factor for gas price.                    |
+| `MAX_GAS_PER_TX`            | `uint64` |                 | Maximum gas per transaction.                  |
+| `MAX_INPUTS`                | `uint64` | `8`             | Maximum number of inputs.                     |
+| `MAX_OUTPUTS`               | `uint64` | `8`             | Maximum number of outputs.                    |
+| `MAX_PREDICATE_LENGTH`      | `uint64` |                 | Maximum length of predicate, in instructions. |
+| `MAX_PREDICATE_DATA_LENGTH` | `uint64` |                 | Maximum length of predicate data, in bytes.   |
+| `MAX_SCRIPT_LENGTH`         | `uint64` |                 | Maximum length of script, in instructions.    |
+| `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |                 | Maximum length of script data, in bytes.      |
+| `MAX_STORAGE_SLOTS`         | `uint16` | `255`           | Maximum number of initial storage slots.      |
+| `MAX_WITNESSES`             | `uint64` | `16`            | Maximum number of witnesses.                  |
 
 ## TransactionType
 
@@ -181,7 +182,7 @@ Transaction is invalid if:
 |-----------------------|-------------------------|------------------------------------------------------------------------|
 | `txID`                | `byte[32]`              | Hash of transaction.                                                   |
 | `outputIndex`         | `uint8`                 | Index of transaction output.                                           |
-| `owner`               | `byte[32]`              | Owning address or predicate hash.                                      |
+| `owner`               | `byte[32]`              | Owning address or predicate root.                                      |
 | `amount`              | `uint64`                | Amount of coins.                                                       |
 | `asset_id`            | `byte[32]`              | Asset ID of the coins.                                                 |
 | `txPointer`           | [TXPointer](#txpointer) | Points to the TX whose output is being spent.                          |
@@ -258,7 +259,7 @@ Transaction is invalid if:
 
 | name       | type       | description                          |
 |------------|------------|--------------------------------------|
-| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `to`       | `byte[32]` | Receiving address or predicate root. |
 | `amount`   | `uint64`   | Amount of coins to send.             |
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
@@ -299,7 +300,7 @@ This output type is unspendable and can be pruned form the UTXO set.
 
 | name       | type       | description                          |
 |------------|------------|--------------------------------------|
-| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `to`       | `byte[32]` | Receiving address or predicate root. |
 | `amount`   | `uint64`   | Amount of coins to send.             |
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
@@ -317,7 +318,7 @@ This output type indicates that the output's amount may vary based on transactio
 
 | name       | type       | description                          |
 |------------|------------|--------------------------------------|
-| `to`       | `byte[32]` | Receiving address or predicate hash. |
+| `to`       | `byte[32]` | Receiving address or predicate root. |
 | `amount`   | `uint64`   | Amount of coins to send.             |
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
