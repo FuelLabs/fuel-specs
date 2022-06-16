@@ -1440,7 +1440,7 @@ Panic if:
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
 - `tx.outputs[$rC].type != OutputType.Message`
 - `tx.outputs[$rC].recipient != 0`
-- `MEM[$rA, 32] != 0`
+- `MEM[$rA, 32] == 0`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
