@@ -52,7 +52,7 @@ The ID of an input message is computed as the [hash](./cryptographic_primitives.
 
 #### Output Message Nonce
 
-The nonce value for `OutputMessage` is computed as the [hash](./cryptographic_primitives.md#hashing) of the [Transaction ID](#transaction-id) that the message is an output for and the index of the output as a `uint8`. `hash(byte[32] ++ uint8)`
+The nonce value for `OutputMessage` is computed as the [hash](./cryptographic_primitives.md#hashing) of the [Transaction ID](#transaction-id) that the message is an output for and the index of the output as a `uint8`: `hash(byte[32] ++ uint8)`.
 
 ### Fee ID
 
