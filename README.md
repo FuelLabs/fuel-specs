@@ -2,7 +2,7 @@
 
 **Fuel: A Secure Decentralized Generalized Massively Scalable Transaction Ledger**
 
-This repository specifies the Fuel protocol, including the Fuel Virtual Machine (FuelVM, FVM), a next-generation verifiable virtual machine for [the Fuel v2 blockchain](https://github.com/FuelLabs).
+This repository specifies the Fuel protocol, including the Fuel Virtual Machine (short: FuelVM), a blazingly fast verifiable blockchain virtual machine.
 
 - [Specification](#specification)
   - [Protocol](#protocol)
@@ -20,6 +20,7 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 1. [tx_validity.md](./specs/protocol/tx_validity.md): Defines transaction validity rules.
 1. [cryptographic_primitives](./specs/protocol/cryptographic_primitives.md): Cryptographic primitives used in Fuel.
 1. [abi.md](./specs/protocol/abi.md): ABI specifications.
+1. [storage_initialization.md](./specs/protocol/storage_initialization.md): JSON format for contract storage slot initialization.
 
 ### FuelVM
 
