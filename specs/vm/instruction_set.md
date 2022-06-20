@@ -1798,7 +1798,7 @@ Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's cont
 
 Get [fields from the transaction](../protocol/tx_format.md#transaction).
 
-| name                                     | value   | set `$rA` to                                     |
+| name                                     | `imm`   | set `$rA` to                                     |
 |------------------------------------------|---------|--------------------------------------------------|
 | `GT_TYPE`                                | `0x001` | `tx.type`                                        |
 | `GT_SCRIPT_GAS_PRICE`                    | `0x002` | `tx.gasPrice`                                    |
@@ -1878,5 +1878,8 @@ Get [fields from the transaction](../protocol/tx_format.md#transaction).
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
+- `imm` is not one of the values listed above
 - The value of `$rB` results in an out of bounds access for variable-length fields
 - The input or output type does not match (`OutputChange` and `OutputVariable` count as `OutputCoin`)
+
+For fixed-length fields, the value of `$rB` is ignored.
