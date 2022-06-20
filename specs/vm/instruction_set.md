@@ -1798,37 +1798,85 @@ Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's cont
 
 Get [fields from the transaction](../protocol/tx_format.md#transaction).
 
-| name                    | value   |
-|-------------------------|---------|
-| `GT_TYPE`               | `0x001` |
-| `GT_GAS_PRICE`          | `0x002` |
-| `GT_GAS_LIMIT`          | `0x003` |
-| `GT_MATURITY`           | `0x004` |
-| `GT_SCRIPT_LENGTH`      | `0x005` |
-| `GT_SCRIPT_DATA_LENGTH` | `0x006` |
-| `GT_INPUTS_COUNT`       | `0x007` |
-| `GT_OUTPUTS_COUNT`      | `0x008` |
-| `GT_WITNESSES_COUNT`    | `0x009` |
-| `GT_RECEIPTS_ROOT`      | `0x00A` |
-| `GT_SCRIPT`             | `0x00B` |
-| `GT_SCRIPT_DATA`        | `0x00C` |
-| `GT_INPUT_AT_INDEX`     | `0x00D` |
-| `GT_OUTPUT_AT_INDEX`    | `0x00E` |
-| `GT_WITNESS_AT_INDEX`   | `0x00F` |
-
-If `imm == GT_TYPE`:
+| name                                     | value   | set `$rA` to                                     |
+|------------------------------------------|---------|--------------------------------------------------|
+| `GT_TYPE`                                | `0x001` | `tx.type`                                        |
+| `GT_SCRIPT_GAS_PRICE`                    | `0x002` | `tx.gasPrice`                                    |
+| `GT_SCRIPT_GAS_LIMIT`                    | `0x003` | `tx.gasLimit`                                    |
+| `GT_SCRIPT_MATURITY`                     | `0x004` | `tx.maturity`                                    |
+| `GT_SCRIPT_SCRIPT_LENGTH`                | `0x005` | `tx.scriptLength`                                |
+| `GT_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x006` | `tx.scriptDataLength`                            |
+| `GT_SCRIPT_INPUTS_COUNT`                 | `0x007` | `tx.inputsCount`                                 |
+| `GT_SCRIPT_OUTPUTS_COUNT`                | `0x008` | `tx.outputsCount`                                |
+| `GT_SCRIPT_WITNESSES_COUNT`              | `0x009` | `tx.witnessesCount`                              |
+| `GT_SCRIPT_RECEIPTS_ROOT`                | `0x00A` | Memory address of `tx.receiptsRoot`              |
+| `GT_SCRIPT_SCRIPT`                       | `0x00B` | Memory address of `tx.script`                    |
+| `GT_SCRIPT_SCRIPT_DATA`                  | `0x00C` | Memory address of `tx.scriptData`                |
+| `GT_SCRIPT_INPUT_AT_INDEX`               | `0x00D` | Memory address of `tx.inputs[$rB]`               |
+| `GT_SCRIPT_OUTPUT_AT_INDEX`              | `0x00E` | Memory address of `t.outputs[$rB]`               |
+| `GT_SCRIPT_WITNESS_AT_INDEX`             | `0x00F` | Memory address of `tx.witnesses[$rB]`            |
+| `GT_CREATE_GAS_PRICE`                    | `0x010` | `tx.gasPrice`                                    |
+| `GT_CREATE_GAS_LIMIT`                    | `0x011` | `tx.gasLimit`                                    |
+| `GT_CREATE_MATURITY`                     | `0x012` | `tx.maturity`                                    |
+| `GT_CREATE_BYTECODE_LENGTH`              | `0x013` | `tx.bytecodeLength`                              |
+| `GT_CREATE_BYTECODE_WITNESS_INDEX`       | `0x014` | `tx.bytecodeWitnessIndex`                        |
+| `GT_CREATE_STORAGE_SLOTS_COUNT`          | `0x015` | `tx.storageSlotsCount`                           |
+| `GT_CREATE_INPUTS_COUNT`                 | `0x016` | `tx.inputsCount`                                 |
+| `GT_CREATE_OUTPUTS_COUNT`                | `0x017` | `tx.outputsCount`                                |
+| `GT_CREATE_WITNESSES_COUNT`              | `0x018` | `tx.witnessesCount`                              |
+| `GT_CREATE_SALT`                         | `0x019` | Memory address of `tx.salt`                      |
+| `GT_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x01A` | Memory address of `tx.storageSlots[$rB]`         |
+| `GT_CREATE_INPUT_AT_INDEX`               | `0x01B` | Memory address of `tx.inputs[$rB]`               |
+| `GT_CREATE_OUTPUT_AT_INDEX`              | `0x01C` | Memory address of `t.outputs[$rB]`               |
+| `GT_CREATE_WITNESS_AT_INDEX`             | `0x01D` | Memory address of `tx.witnesses[$rB]`            |
+| `GT_INPUT_TYPE`                          | `0x101` | `tx.inputs[$rB].type`                            |
+| `GT_INPUT_COIN_TX_ID`                    | `0x102` | Memory address of `tx.inputs[$rB].txID`          |
+| `GT_INPUT_COIN_OUTPUT_INDEX`             | `0x103` | `tx.inputs[$rB].outputIndex`                     |
+| `GT_INPUT_COIN_OWNER`                    | `0x104` | Memory address of `tx.inputs[$rB].owner`         |
+| `GT_INPUT_COIN_AMOUNT`                   | `0x105` | `tx.inputs[$rB].amount`                          |
+| `GT_INPUT_COIN_ASSET_ID`                 | `0x106` | Memory address of `tx.inputs[$rB].asset_id`      |
+| `GT_INPUT_COIN_TX_POINTER`               | `0x107` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GT_INPUT_COIN_WITNESS_INDEX`            | `0x108` | `tx.inputs[$rB].witnessIndex`                    |
+| `GT_INPUT_COIN_MATURITY`                 | `0x109` | `tx.inputs[$rB].maturity`                        |
+| `GT_INPUT_COIN_PREDICATE_LENGTH`         | `0x10A` | `tx.inputs[$rB].predicateLength`                 |
+| `GT_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x10B` | `tx.inputs[$rB].predicateDataLength`             |
+| `GT_INPUT_COIN_PREDICATE`                | `0x10C` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GT_INPUT_COIN_PREDICATE_DATA`           | `0x10D` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GT_INPUT_CONTRACT_TX_ID`                | `0x10E` | Memory address of `tx.inputs[$rB].txID`          |
+| `GT_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x10F` | `tx.inputs[$rB].outputIndex`                     |
+| `GT_INPUT_CONTRACT_BALANCE_ROOT`         | `0x110` | Memory address of `tx.inputs[$rB].balanceRoot`   |
+| `GT_INPUT_CONTRACT_STATE_ROOT`           | `0x111` | Memory address of `tx.inputs[$rB].stateRoot`     |
+| `GT_INPUT_CONTRACT_TX_POINTER`           | `0x112` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GT_INPUT_CONTRACT_CONTRACT_ID`          | `0x113` | Memory address of `tx.inputs[$rB].contractID`    |
+| `GT_INPUT_MESSAGE_MESSAGE_ID`            | `0x114` | Memory address of `tx.inputs[$rB].messageID`     |
+| `GT_INPUT_MESSAGE_SENDER`                | `0x115` | Memory address of `tx.inputs[$rB].sender`        |
+| `GT_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
+| `GT_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
+| `GT_INPUT_MESSAGE_NONCE`                 | `0x118` | Memory address of `tx.inputs[$rB].nonce`         |
+| `GT_INPUT_MESSAGE_OWNER`                 | `0x119` | Memory address of `tx.inputs[$rB].owner`         |
+| `GT_INPUT_MESSAGE_WITNESS_INDEX`         | `0x11A` | `tx.inputs[$rB].witnessIndex`                    |
+| `GT_INPUT_MESSAGE_DATA_LENGTH`           | `0x11B` | `tx.inputs[$rB].dataLength`                      |
+| `GT_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11C` | `tx.inputs[$rB].predicateLength`                 |
+| `GT_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11D` | `tx.inputs[$rB].predicateDataLength`             |
+| `GT_INPUT_MESSAGE_DATA`                  | `0x11E` | Memory address of `tx.inputs[$rB].data`          |
+| `GT_INPUT_MESSAGE_PREDICATE`             | `0x11F` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GT_INPUT_MESSAGE_PREDICATE_DATA`        | `0x120` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GT_OUTPUT_TYPE`                         | `0x201` | `tx.outputs[$rB].type`                           |
+| `GT_OUTPUT_COIN_TO`                      | `0x202` | Memory address of `tx.outputs[$rB].to`           |
+| `GT_OUTPUT_COIN_AMOUNT`                  | `0x203` | `tx.outputs[$rB].amount`                         |
+| `GT_OUTPUT_COIN_ASSET_ID`                | `0x204` | Memory address of `tx.outputs[$rB].asset_id`     |
+| `GT_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x205` | `tx.outputs[$rB].inputIndex`                     |
+| `GT_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x206` | Memory address of `tx.outputs[$rB].balanceRoot`  |
+| `GT_OUTPUT_CONTRACT_STATE_ROOT`          | `0x207` | Memory address of `tx.outputs[$rB].stateRoot`    |
+| `GT_OUTPUT_MESSAGE_RECIPIENT`            | `0x208` | Memory address of `tx.outputs[$rB].recipient`    |
+| `GT_OUTPUT_MESSAGE_AMOUNT`               | `0x209` | `tx.outputs[$rB].amount`                         |
+| `GT_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x20A` | Memory address of `tx.outputs[$rB].contractID`   |
+| `GT_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x20B` | Memory address of `tx.outputs[$rB].stateRoot`    |
+| `GT_WITNESS_DATA_LENGTH`                 | `0x301` | `tx.witnesses[$rB].dataLength`                   |
+| `GT_WITNESS_DATA`                        | `0x302` | Memory address of `tx.witnesses[$rB].data`       |
 
 Panic if:
 
-- `$fp == 0` (in an external context)
-
-Set `$rA` to `true` if parent is an external context, `false` otherwise.
-
-If `imm == GT_GAS_PRICE`:
-
-Panic if:
-
-- `$fp == 0` (in an external context)
-- `$fp->$fp == 0` (if parent context is external)
-
-Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
+- `$rA` is a [reserved register](./main.md#semantics)
+- The value of `$rB` results in an out of bounds access for variable-length fields
+- The input or output type does not match (`OutputChange` and `OutputVariable` count as `OutputCoin`)
