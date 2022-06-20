@@ -91,6 +91,7 @@
 - [Other Instructions](#other-instructions)
   - [FLAG: Set flags](#flag-set-flags)
   - [GM: Get metadata](#gm-get-metadata)
+  - [GT: Get transaction fields](#gt-get-transaction-fields)
 
 ## Reading Guide
 
