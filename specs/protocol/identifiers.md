@@ -1,13 +1,14 @@
 # Identifiers
 
-- [Transaction ID](#transaction-id)
-- [Contract ID](#contract-id)
-- [UTXO ID](#utxo-id)
-  - [Coin ID](#coin-id)
-  - [Input Message ID](#input-message-id)
-  - [Output Message ID](#output-message-id)
-    - [Output Message Nonce](#output-message-nonce)
-  - [Fee ID](#fee-id)
+- [Identifiers](#identifiers)
+  - [Transaction ID](#transaction-id)
+  - [Contract ID](#contract-id)
+  - [UTXO ID](#utxo-id)
+    - [Coin ID](#coin-id)
+    - [Input Message ID](#input-message-id)
+    - [Output Message ID](#output-message-id)
+      - [Output Message Nonce](#output-message-nonce)
+    - [Fee ID](#fee-id)
 
 This document defines how to compute unique identifiers.
 
@@ -40,7 +41,7 @@ The ID of an input message is computed as the [hash](./cryptographic_primitives.
 
 ### Output Message ID
 
-The ID of an input message is computed as the [hash](./cryptographic_primitives.md#hashing) of:
+The ID of an output message is computed as the [hash](./cryptographic_primitives.md#hashing) of:
 
 1. the sender address as `byte[32]`,
 1. recipient address as `byte[32]`,
