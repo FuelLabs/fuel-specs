@@ -9,11 +9,12 @@
 - [Input](#input)
   - [InputCoin](#inputcoin)
   - [InputContract](#inputcontract)
+  - [InputMessage](#inputmessage)
 - [OutputType](#outputtype)
 - [Output](#output)
   - [OutputCoin](#outputcoin)
   - [OutputContract](#outputcontract)
-  - [OutputWithdrawal](#outputwithdrawal)
+  - [OutputMessage](#outputmessage)
   - [OutputChange](#outputchange)
   - [OutputVariable](#outputvariable)
   - [OutputContractCreated](#outputcontractcreated)
@@ -33,6 +34,7 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64` |                 | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64` |                 | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64` |                 | Maximum length of script data, in bytes.      |
+| `MAX_MESSAGE_DATA_LENGTH`   | `uint16` |                 | Maximum length of message data, in bytes.     |
 | `MAX_STORAGE_SLOTS`         | `uint16` | `255`           | Maximum number of initial storage slots.      |
 | `MAX_WITNESSES`             | `uint64` | `16`            | Maximum number of witnesses.                  |
 
@@ -86,6 +88,7 @@ enum  ReceiptType : uint8 {
     Transfer = 7,
     TransferOut = 8,
     ScriptResult = 9,
+    MessageOut = 10,
 }
 ```
 
@@ -162,6 +165,7 @@ Creates a contract with contract ID as computed [here](./identifiers.md#contract
 enum  InputType : uint8 {
     Coin = 0,
     Contract = 1,
+    Message = 2,
 }
 ```
 
@@ -170,7 +174,7 @@ enum  InputType : uint8 {
 | name   | type                                                              | description    |
 |--------|-------------------------------------------------------------------|----------------|
 | `type` | [InputType](#inputtype)                                           | Type of input. |
-| `data` | One of [InputCoin](#inputcoin) or [InputContract](#inputcontract) | Input data.    |
+| `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract), or [InputMessage](#inputmessage) | Input data.    |
 
 Transaction is invalid if:
 
@@ -231,13 +235,41 @@ Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRo
 
 Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to zero.
 
+### InputMessage
+
+| name                  | type        | description                                                            |
+|-----------------------|-------------|------------------------------------------------------------------------|
+| `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#input-message-id).  |
+| `sender`              | `byte[32]`  | The address of the message sender.                                     |
+| `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
+| `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
+| `nonce`               | `byte[32]`  | The message nonce.                                                     |
+| `owner`               | `byte[32]`  | Owning address or predicate root.                                      |
+| `witnessIndex`        | `uint8`     | Index of witness that authorizes spending the coin.                    |
+| `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
+| `predicateLength`     | `uint16`    | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint16`    | Length of predicate input data, in bytes.                              |
+| `data`                | `byte[]`    | The message data.                                                      |
+| `predicate`           | `byte[]`    | Predicate bytecode.                                                    |
+| `predicateData`       | `byte[]`    | Predicate input data (parameters).                                     |
+
+Transaction is invalid if:
+
+- `witnessIndex >= tx.witnessesCount`
+- `dataLength > MAX_MESSAGE_DATA_LENGTH`
+- `predicateLength > MAX_PREDICATE_LENGTH`
+- `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
+- If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
+
+The predicate root is computed identically to the contract root, used to compute the contract ID, [here](./identifiers.md#contract-id).
+
 ## OutputType
 
 ```
 enum  OutputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Withdrawal = 2,
+    Message = 2,
     Change = 3,
     Variable = 4,
     ContractCreated = 5,
@@ -248,8 +280,8 @@ enum  OutputType : uint8 {
 
 | name   | type                                                                                                                                                                                                                             | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [OutputType](#outputtype)                                                                                                                                                                                                        | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputWithdrawal](#outputwithdrawal) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
+| `type` | [OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputMessage](#outputmessage) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
 
@@ -286,15 +318,18 @@ The balance root `balanceRoot` is the root of the [SMT](./cryptographic_primitiv
 
 The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
 
-### OutputWithdrawal
+### OutputMessage
 
-| name       | type       | description                  |
-|------------|------------|------------------------------|
-| `to`       | `byte[32]` | Receiving address.           |
-| `amount`   | `uint64`   | Amount of coins to withdraw. |
-| `asset_id` | `byte[32]` | Asset ID of coins.           |
+| name                  | type        | description                                                             |
+|-----------------------|-------------|-------------------------------------------------------------------------|
+| `recipient`           | `byte[32]`  | The address of the message recipient.                                   |
+| `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
 
-This output type is unspendable and can be pruned form the UTXO set.
+Note: when signing a transaction `recipient` and `amount` are set to zero.
+
+Note: when verifying a predicate or executing a script, `recipient` and `amount` are initialized to zero.
+
+Note: this output type is unspendable and can be pruned from the UTXO set.
 
 ### OutputChange
 
