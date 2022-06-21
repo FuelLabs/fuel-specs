@@ -79,14 +79,14 @@ For each asset ID `asset_id` in the input and output set:
 def sum_inputs(tx, col) -> int:
     total: int = 0
     for input in tx.inputs:
-        if input.type == InputType.Coin and input.asset_id == col:
+        if (input.type == InputType.Coin and input.asset_id == col) or (input.type == InputType.Message and col == 0):
             total += input.amount
     return total
 
 def sum_outputs(tx, col) -> int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin or output.type == OutputType.Withdrawal) and output.asset_id == col:
+        if (output.type == OutputType.Coin and output.asset_id == col) or (output.type == OutputType.Message and col == 0):
             total += output.amount
     return total
 
