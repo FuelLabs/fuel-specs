@@ -1,14 +1,13 @@
 # Identifiers
 
-- [Identifiers](#identifiers)
-  - [Transaction ID](#transaction-id)
-  - [Contract ID](#contract-id)
-  - [UTXO ID](#utxo-id)
-    - [Coin ID](#coin-id)
-    - [Input Message ID](#input-message-id)
-    - [Output Message ID](#output-message-id)
-      - [Output Message Nonce](#output-message-nonce)
-    - [Fee ID](#fee-id)
+- [Transaction ID](#transaction-id)
+- [Contract ID](#contract-id)
+- [UTXO ID](#utxo-id)
+  - [Coin ID](#coin-id)
+  - [Input Message ID](#input-message-id)
+  - [Output Message ID](#output-message-id)
+    - [Output Message Nonce](#output-message-nonce)
+  - [Fee ID](#fee-id)
 
 This document defines how to compute unique identifiers.
 
