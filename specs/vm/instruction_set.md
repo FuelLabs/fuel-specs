@@ -34,8 +34,6 @@
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Instructions](#control-flow-instructions)
-  - [CIMV: Check input maturity verify](#cimv-check-input-maturity-verify)
-  - [CTMV: Check transaction maturity verify](#ctmv-check-transaction-maturity-verify)
   - [JMP: Jump](#jmp-jump)
   - [JI: Jump immediate](#ji-jump-immediate)
   - [JNE: Jump if not equal](#jne-jump-if-not-equal)
@@ -665,46 +663,6 @@ Panic if:
 `$of` and `$err` are cleared.
 
 ## Control Flow Instructions
-
-### CIMV: Check input maturity verify
-
-|             |                                                             |
-|-------------|-------------------------------------------------------------|
-| Description | Set `$rA` to `true` if the `$rC <= tx.input[$rB].maturity`. |
-| Operation   | ```$rA = checkinputmaturityverify($rB, $rC);```             |
-| Syntax      | `cimv $rA $rB $rC`                                          |
-| Encoding    | `0x00 rA rB rC -`                                           |
-| Notes       |                                                             |
-
-Panic if:
-
-- `$rA` is a [reserved register](./main.md#semantics)
-- `$rC > tx.input[$rB].maturity`
-- the input `$rB` is not of type [`InputType.Coin`](../protocol/tx_format.md)
-- `$rB > tx.inputsCount`
-
-Otherwise, advance the program counter `$pc` by `4`.
-
-See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
-
-### CTMV: Check transaction maturity verify
-
-|             |                                                  |
-|-------------|--------------------------------------------------|
-| Description | Set `$rA` to `true` if `$rB <= tx.maturity`.     |
-| Operation   | ```$rA = checktransactionmaturityverify($rB);``` |
-| Syntax      | `ctmv $rA $rB`                                   |
-| Encoding    | `0x00 rA rB - -`                                 |
-| Notes       |                                                  |
-
-Panic if:
-
-- `$rA` is a [reserved register](./main.md#semantics)
-- `$rB > tx.maturity`
-
-Otherwise, advance the program counter `$pc` by `4`.
-
-See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
 
 ### JMP: Jump
 
