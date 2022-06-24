@@ -109,11 +109,15 @@ enum  ReceiptType : uint8 {
 | `outputs`          | [Output](#output)`[]`   | List of outputs.                         |
 | `witnesses`        | [Witness](#witness)`[]` | List of witnesses.                       |
 
+Given helper `len()` that returns the number of bytes of a field.
+
 Transaction is invalid if:
 
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
+- `scriptLength * 4 != len(script)`
+- `scriptDataLength != len(scriptData)`
 
 Note: when signing a transaction, `receiptsRoot` is set to zero.
 
@@ -197,12 +201,16 @@ Transaction is invalid if:
 | `predicate`           | `byte[]`                | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`                | Predicate input data (parameters).                                     |
 
+Given helper `len()` that returns the number of bytes of a field.
+
 Transaction is invalid if:
 
 - `witnessIndex >= tx.witnessesCount`
 - `predicateLength > MAX_PREDICATE_LENGTH`
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
 - If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
+- `predicateLength * 4 != len(predicate)`
+- `predicateDataLength != len(predicateData)`
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
@@ -253,6 +261,8 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 | `predicate`           | `byte[]`    | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`    | Predicate input data (parameters).                                     |
 
+Given helper `len()` that returns the number of bytes of a field.
+
 Transaction is invalid if:
 
 - `witnessIndex >= tx.witnessesCount`
@@ -260,6 +270,9 @@ Transaction is invalid if:
 - `predicateLength > MAX_PREDICATE_LENGTH`
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
 - If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
+- `dataLength != len(data)`
+- `predicateLength * 4 != len(predicate)`
+- `predicateDataLength != len(predicateData)`
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](./identifiers.md#contract-id).
 
