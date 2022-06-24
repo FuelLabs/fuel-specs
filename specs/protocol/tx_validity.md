@@ -33,24 +33,28 @@ Read-only access list:
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](./tx_format.md#inputcoin)
-  - The UTXO ID `(txID, outputIndex)`
+  - The [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)`
 - For each [input `InputType.Contract`](./tx_format.md#inputcontract)
-  - The UTXO_ID of `(txID, outputIndex)`
+  - The [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)`
+- For each [input `InputType.Message`](./tx_format.md#inputmessage)
+  - The [input message ID](./identifiers.md#input-message-id) `messageID`
 
 Write-create access list:
 
-- For each [output `OutputType.OutputContractCreated`](./tx_format.md#outputcontractcreated)
+- For each [output `OutputType.ContractCreated`](./tx_format.md#outputcontractcreated)
   - The contract ID `contractID`
 - For each output
   - The [created UTXO ID](./identifiers.md#utxo-id)
 
 Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format.md#inputcontract) and [`OutputType.Contract`](./tx_format.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
 
+Note that [`OutputType.Message` outputs](./tx_format.md#outputmessage) do not have a [UTXO ID](./identifiers.md#utxo-id), and are unspendable.
+
 ## VM Precondition Validity Rules
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
-For a transaction `tx`, UTXO set `state`, and contract set `contracts`, the following checks must pass.
+For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
 ### Base Sanity Checks
 
@@ -62,6 +66,9 @@ Base sanity checks are defined in the [transaction format](./tx_format.md).
 for input in tx.inputs:
     if input.type == InputType.Contract:
         if not input.contractID in contracts:
+                return False
+    elif input.type == InputType.Message:
+        if not input.messageID in messages:
                 return False
     else:
         if not (input.txID, input.outputIndex) in state:
@@ -118,7 +125,7 @@ def address_from(pubkey: bytes) -> bytes:
     return sha256(pubkey)[0:32]
 
 for input in tx.inputs:
-    if input.type == InputType.Coin and input.predicateLength == 0:
+    if (input.type == InputType.Coin || input.type == InputType.Message) and input.predicateLength == 0:
         # ECDSA signatures must be 64 bytes
         if tx.witnesses[input.witnessIndex].dataLength != 64:
             return False
@@ -134,7 +141,7 @@ The transaction hash is computed as defined [here](./identifiers.md#transaction-
 
 ## Predicate Verification
 
-For each input of type `InputType.Coin` and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).
+For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).
 
 ## Script Execution
 
