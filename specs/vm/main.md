@@ -18,12 +18,12 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 
 ## Parameters
 
-| name                       | type     | value   | note                                        |
-|----------------------------|----------|---------|---------------------------------------------|
-| `CONTRACT_MAX_SIZE`        | `uint64` |         | Maximum contract size, in bytes.            |
-| `MEM_MAX_ACCESS_SIZE`      | `uint64` |         | Maximum memory access size, in bytes.       |
-| `VM_MAX_RAM`               | `uint64` | `2**26` | 64 MiB.                                     |
-| `MESSAGE_MAX_DATA_SIZE`    | `uint16` |         | Maximum size of message data, in bytes.     |
+| name                    | type     | value   | note                                    |
+|-------------------------|----------|---------|-----------------------------------------|
+| `CONTRACT_MAX_SIZE`     | `uint64` |         | Maximum contract size, in bytes.        |
+| `MEM_MAX_ACCESS_SIZE`   | `uint64` |         | Maximum memory access size, in bytes.   |
+| `VM_MAX_RAM`            | `uint64` | `2**26` | 64 MiB.                                 |
+| `MESSAGE_MAX_DATA_SIZE` | `uint16` |         | Maximum size of message data, in bytes. |
 
 ## Semantics
 
