@@ -171,9 +171,9 @@ enum  InputType : uint8 {
 
 ## Input
 
-| name   | type                                                              | description    |
-|--------|-------------------------------------------------------------------|----------------|
-| `type` | [InputType](#inputtype)                                           | Type of input. |
+| name   | type                                                                                              | description    |
+|--------|---------------------------------------------------------------------------------------------------|----------------|
+| `type` | [InputType](#inputtype)                                                                           | Type of input. |
 | `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract), or [InputMessage](#inputmessage) | Input data.    |
 
 Transaction is invalid if:
@@ -237,21 +237,21 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 
 ### InputMessage
 
-| name                  | type        | description                                                            |
-|-----------------------|-------------|------------------------------------------------------------------------|
-| `messageID`           | `byte[32]`  | The messageID as described [here](./identifiers.md#input-message-id).  |
-| `sender`              | `byte[32]`  | The address of the message sender.                                     |
-| `recipient`           | `byte[32]`  | The address of the message recipient.                                  |
-| `amount`              | `uint64`    | Amount of base asset coins sent with message.                          |
-| `nonce`               | `uint64`    | The message nonce.                                                     |
-| `owner`               | `byte[32]`  | Owning address or predicate root.                                      |
-| `witnessIndex`        | `uint8`     | Index of witness that authorizes spending the coin.                    |
-| `dataLength`          | `uint16`    | Length of message data, in bytes.                                      |
-| `predicateLength`     | `uint16`    | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`    | Length of predicate input data, in bytes.                              |
-| `data`                | `byte[]`    | The message data.                                                      |
-| `predicate`           | `byte[]`    | Predicate bytecode.                                                    |
-| `predicateData`       | `byte[]`    | Predicate input data (parameters).                                     |
+| name                  | type       | description                                                           |
+|-----------------------|------------|-----------------------------------------------------------------------|
+| `messageID`           | `byte[32]` | The messageID as described [here](./identifiers.md#input-message-id). |
+| `sender`              | `byte[32]` | The address of the message sender.                                    |
+| `recipient`           | `byte[32]` | The address of the message recipient.                                 |
+| `amount`              | `uint64`   | Amount of base asset coins sent with message.                         |
+| `nonce`               | `uint64`   | The message nonce.                                                    |
+| `owner`               | `byte[32]` | Owning address or predicate root.                                     |
+| `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                   |
+| `dataLength`          | `uint16`   | Length of message data, in bytes.                                     |
+| `predicateLength`     | `uint16`   | Length of predicate, in instructions.                                 |
+| `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.                             |
+| `data`                | `byte[]`   | The message data.                                                     |
+| `predicate`           | `byte[]`   | Predicate bytecode.                                                   |
+| `predicateData`       | `byte[]`   | Predicate input data (parameters).                                    |
 
 Transaction is invalid if:
 
@@ -278,9 +278,9 @@ enum  OutputType : uint8 {
 
 ## Output
 
-| name   | type                                                                                                                                                                                                                             | description     |
-|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [OutputType](#outputtype)                                                                                                                                                                                                         | Type of output. |
+| name   | type                                                                                                                                                                                                                       | description     |
+|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| `type` | [OutputType](#outputtype)                                                                                                                                                                                                  | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputMessage](#outputmessage) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
@@ -320,10 +320,10 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 
 ### OutputMessage
 
-| name                  | type        | description                                                             |
-|-----------------------|-------------|-------------------------------------------------------------------------|
-| `recipient`           | `byte[32]`  | The address of the message recipient.                                   |
-| `amount`              | `uint64`    | Amount of base asset coins sent with message.                           |
+| name        | type       | description                                   |
+|-------------|------------|-----------------------------------------------|
+| `recipient` | `byte[32]` | The address of the message recipient.         |
+| `amount`    | `uint64`   | Amount of base asset coins sent with message. |
 
 Note: when signing a transaction `recipient` and `amount` are set to zero.
 

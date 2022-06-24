@@ -69,7 +69,7 @@
   - [MINT: Mint new coins](#mint-mint-new-coins)
   - [RETD: Return from context with data](#retd-return-from-context-with-data)
   - [RVRT: Revert](#rvrt-revert)
-  - [SMO: Send Message to output](#smo-send-message-to-output)
+  - [SMO: Send message to output](#smo-send-message-to-output)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
@@ -90,6 +90,7 @@
 - [Other Instructions](#other-instructions)
   - [FLAG: Set flags](#flag-set-flags)
   - [GM: Get metadata](#gm-get-metadata)
+  - [GTF: Get transaction fields](#gtf-get-transaction-fields)
 
 ## Reading Guide
 
@@ -1377,13 +1378,13 @@ Cease VM execution and revert script effects. After a revert:
 
 ### SMO: Send message to output
 
-|             |                                                                                     |
-|-------------|-------------------------------------------------------------------------------------|
+|             |                                                                                                                           |
+|-------------|---------------------------------------------------------------------------------------------------------------------------|
 | Description | Send a message to recipient address `MEM[$rA, 32]` with call abi `MEM[$rA + 32, $rB]` and `$rD` coins, with output `$rC`. |
-| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```      |
-| Syntax      | `smo $rA, $rB, $rC, $rD`                                                            |
-| Encoding    | `0x00 rA rB rC rD`                                                                  |
-| Notes       |                                                                                     |
+| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```                                            |
+| Syntax      | `smo $rA, $rB, $rC, $rD`                                                                                                  |
+| Encoding    | `0x00 rA rB rC rD`                                                                                                        |
+| Notes       |                                                                                                                           |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
@@ -1402,16 +1403,16 @@ Panic if:
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name         | type          | description                                                                              |
-|--------------|---------------|------------------------------------------------------------------------------------------|
-| `type`       | `ReceiptType` | `ReceiptType.MessageOut`                                                                 |
-| `messageID`  | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#output-message-id).         |
-| `sender`     | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                       |
-| `recipient`  | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                                    |
-| `amount`     | `uint64`      | Amount of base asset coins sent with message: `$rD`.                                     |
-| `nonce`      | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#output-message-nonce).  |
-| `len`        | `uint16`      | Length of message data, in bytes: `$rB`.                                                 |
-| `digest`     | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                         |
+| name        | type          | description                                                                             |
+|-------------|---------------|-----------------------------------------------------------------------------------------|
+| `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                                |
+| `messageID` | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#output-message-id).        |
+| `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                      |
+| `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                                   |
+| `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                                    |
+| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#output-message-nonce). |
+| `len`       | `uint16`      | Length of message data, in bytes: `$rB`.                                                |
+| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                        |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
 
@@ -1791,3 +1792,101 @@ Panic if:
 - `$fp->$fp == 0` (if parent context is external)
 
 Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
+
+### GTF: Get transaction fields
+
+|             |                         |
+|-------------|-------------------------|
+| Description | Get transaction fields. |
+| Operation   | Varies (see below).     |
+| Syntax      | `gtf $rA, $rB, imm`     |
+| Encoding    | `0x00 rA rB i i`        |
+| Notes       |                         |
+
+Get [fields from the transaction](../protocol/tx_format.md#transaction).
+
+| name                                      | `imm`   | set `$rA` to                                     |
+|-------------------------------------------|---------|--------------------------------------------------|
+| `GTF_TYPE`                                | `0x001` | `tx.type`                                        |
+| `GTF_SCRIPT_GAS_PRICE`                    | `0x002` | `tx.gasPrice`                                    |
+| `GTF_SCRIPT_GAS_LIMIT`                    | `0x003` | `tx.gasLimit`                                    |
+| `GTF_SCRIPT_MATURITY`                     | `0x004` | `tx.maturity`                                    |
+| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x005` | `tx.scriptLength`                                |
+| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x006` | `tx.scriptDataLength`                            |
+| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x007` | `tx.inputsCount`                                 |
+| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x008` | `tx.outputsCount`                                |
+| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x009` | `tx.witnessesCount`                              |
+| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x00A` | Memory address of `tx.receiptsRoot`              |
+| `GTF_SCRIPT_SCRIPT`                       | `0x00B` | Memory address of `tx.script`                    |
+| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x00C` | Memory address of `tx.scriptData`                |
+| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00D` | Memory address of `tx.inputs[$rB]`               |
+| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00E` | Memory address of `t.outputs[$rB]`               |
+| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00F` | Memory address of `tx.witnesses[$rB]`            |
+| `GTF_CREATE_GAS_PRICE`                    | `0x010` | `tx.gasPrice`                                    |
+| `GTF_CREATE_GAS_LIMIT`                    | `0x011` | `tx.gasLimit`                                    |
+| `GTF_CREATE_MATURITY`                     | `0x012` | `tx.maturity`                                    |
+| `GTF_CREATE_BYTECODE_LENGTH`              | `0x013` | `tx.bytecodeLength`                              |
+| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x014` | `tx.bytecodeWitnessIndex`                        |
+| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x015` | `tx.storageSlotsCount`                           |
+| `GTF_CREATE_INPUTS_COUNT`                 | `0x016` | `tx.inputsCount`                                 |
+| `GTF_CREATE_OUTPUTS_COUNT`                | `0x017` | `tx.outputsCount`                                |
+| `GTF_CREATE_WITNESSES_COUNT`              | `0x018` | `tx.witnessesCount`                              |
+| `GTF_CREATE_SALT`                         | `0x019` | Memory address of `tx.salt`                      |
+| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x01A` | Memory address of `tx.storageSlots[$rB]`         |
+| `GTF_CREATE_INPUT_AT_INDEX`               | `0x01B` | Memory address of `tx.inputs[$rB]`               |
+| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x01C` | Memory address of `t.outputs[$rB]`               |
+| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x01D` | Memory address of `tx.witnesses[$rB]`            |
+| `GTF_INPUT_TYPE`                          | `0x101` | `tx.inputs[$rB].type`                            |
+| `GTF_INPUT_COIN_TX_ID`                    | `0x102` | Memory address of `tx.inputs[$rB].txID`          |
+| `GTF_INPUT_COIN_OUTPUT_INDEX`             | `0x103` | `tx.inputs[$rB].outputIndex`                     |
+| `GTF_INPUT_COIN_OWNER`                    | `0x104` | Memory address of `tx.inputs[$rB].owner`         |
+| `GTF_INPUT_COIN_AMOUNT`                   | `0x105` | `tx.inputs[$rB].amount`                          |
+| `GTF_INPUT_COIN_ASSET_ID`                 | `0x106` | Memory address of `tx.inputs[$rB].asset_id`      |
+| `GTF_INPUT_COIN_TX_POINTER`               | `0x107` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x108` | `tx.inputs[$rB].witnessIndex`                    |
+| `GTF_INPUT_COIN_MATURITY`                 | `0x109` | `tx.inputs[$rB].maturity`                        |
+| `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x10A` | `tx.inputs[$rB].predicateLength`                 |
+| `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x10B` | `tx.inputs[$rB].predicateDataLength`             |
+| `GTF_INPUT_COIN_PREDICATE`                | `0x10C` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x10D` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_INPUT_CONTRACT_TX_ID`                | `0x10E` | Memory address of `tx.inputs[$rB].txID`          |
+| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x10F` | `tx.inputs[$rB].outputIndex`                     |
+| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x110` | Memory address of `tx.inputs[$rB].balanceRoot`   |
+| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x111` | Memory address of `tx.inputs[$rB].stateRoot`     |
+| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x112` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x113` | Memory address of `tx.inputs[$rB].contractID`    |
+| `GTF_INPUT_MESSAGE_MESSAGE_ID`            | `0x114` | Memory address of `tx.inputs[$rB].messageID`     |
+| `GTF_INPUT_MESSAGE_SENDER`                | `0x115` | Memory address of `tx.inputs[$rB].sender`        |
+| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
+| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
+| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | Memory address of `tx.inputs[$rB].nonce`         |
+| `GTF_INPUT_MESSAGE_OWNER`                 | `0x119` | Memory address of `tx.inputs[$rB].owner`         |
+| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x11A` | `tx.inputs[$rB].witnessIndex`                    |
+| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11B` | `tx.inputs[$rB].dataLength`                      |
+| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11C` | `tx.inputs[$rB].predicateLength`                 |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11D` | `tx.inputs[$rB].predicateDataLength`             |
+| `GTF_INPUT_MESSAGE_DATA`                  | `0x11E` | Memory address of `tx.inputs[$rB].data`          |
+| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x11F` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x120` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_OUTPUT_TYPE`                         | `0x201` | `tx.outputs[$rB].type`                           |
+| `GTF_OUTPUT_COIN_TO`                      | `0x202` | Memory address of `tx.outputs[$rB].to`           |
+| `GTF_OUTPUT_COIN_AMOUNT`                  | `0x203` | `tx.outputs[$rB].amount`                         |
+| `GTF_OUTPUT_COIN_ASSET_ID`                | `0x204` | Memory address of `tx.outputs[$rB].asset_id`     |
+| `GTF_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x205` | `tx.outputs[$rB].inputIndex`                     |
+| `GTF_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x206` | Memory address of `tx.outputs[$rB].balanceRoot`  |
+| `GTF_OUTPUT_CONTRACT_STATE_ROOT`          | `0x207` | Memory address of `tx.outputs[$rB].stateRoot`    |
+| `GTF_OUTPUT_MESSAGE_RECIPIENT`            | `0x208` | Memory address of `tx.outputs[$rB].recipient`    |
+| `GTF_OUTPUT_MESSAGE_AMOUNT`               | `0x209` | `tx.outputs[$rB].amount`                         |
+| `GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x20A` | Memory address of `tx.outputs[$rB].contractID`   |
+| `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x20B` | Memory address of `tx.outputs[$rB].stateRoot`    |
+| `GTF_WITNESS_DATA_LENGTH`                 | `0x301` | `tx.witnesses[$rB].dataLength`                   |
+| `GTF_WITNESS_DATA`                        | `0x302` | Memory address of `tx.witnesses[$rB].data`       |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+- `imm` is not one of the values listed above
+- The value of `$rB` results in an out of bounds access for variable-length fields
+- The input or output type does not match (`OutputChange` and `OutputVariable` count as `OutputCoin`)
+
+For fixed-length fields, the value of `$rB` is ignored.
