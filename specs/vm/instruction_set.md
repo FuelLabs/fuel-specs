@@ -1813,10 +1813,11 @@ All these instructions advance the program counter `$pc` by `4` after performing
 
 Read metadata from memory. A convenience instruction to avoid manually extracting metadata.
 
-| name                    | value     | description                |
-|-------------------------|-----------|----------------------------|
-| `GM_IS_CALLER_EXTERNAL` | `0x00001` | Get if caller is external. |
-| `GM_GET_CALLER`         | `0x00002` | Get caller's contract ID.  |
+| name                         | value     | description                     |
+|------------------------------|-----------|---------------------------------|
+| `GM_IS_CALLER_EXTERNAL`      | `0x00001` | Get if caller is external.      |
+| `GM_GET_CALLER`              | `0x00002` | Get caller's contract ID.       |
+| `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate. |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
@@ -1834,6 +1835,14 @@ Panic if:
 - `$fp->$fp == 0` (if parent context is external)
 
 Set `$rA` to `$fp->$fp` (i.e. `$rA` will point to the previous call frame's contract ID).
+
+If `imm == GM_GET_VERIFYING_PREDICATE`:
+
+Panic if:
+
+- not in a predicate context
+
+Set `$rA` to the index of the currently-verifying predicate.
 
 ### GTF: Get transaction fields
 
