@@ -37,7 +37,7 @@ Write-destroy access list:
 - For each [input `InputType.Contract`](./tx_format.md#inputcontract)
   - The [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)`
 - For each [input `InputType.Message`](./tx_format.md#inputmessage)
-  - The [Input Message ID](./identifiers.md#input-message-id) `messageID`
+  - The [input message ID](./identifiers.md#input-message-id) `messageID`
 
 Write-create access list:
 
@@ -48,13 +48,13 @@ Write-create access list:
 
 Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format.md#inputcontract) and [`OutputType.Contract`](./tx_format.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
 
-Note that [output `OutputType.Message`](./tx_format.md#outputmessage) do not have a [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)` and are unspendable.
+Note that [`OutputType.Message` outputs](./tx_format.md#outputmessage) do not have a [UTXO ID](./identifiers.md#utxo-id), and are unspendable.
 
 ## VM Precondition Validity Rules
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.
 
-For a transaction `tx`, UTXO set `state`, and contract set `contracts`, the following checks must pass.
+For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
 ### Base Sanity Checks
 
@@ -141,7 +141,7 @@ The transaction hash is computed as defined [here](./identifiers.md#transaction-
 
 ## Predicate Verification
 
-For each input of type `InputType.Coin` (or `InputType.Message`) and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).
+For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).
 
 ## Script Execution
 
