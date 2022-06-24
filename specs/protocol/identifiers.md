@@ -40,7 +40,7 @@ The ID of an input message is computed as the [hash](./cryptographic_primitives.
 
 ### Output Message ID
 
-The ID of an input message is computed as the [hash](./cryptographic_primitives.md#hashing) of:
+The ID of an output message is computed as the [hash](./cryptographic_primitives.md#hashing) of:
 
 1. the sender address as `byte[32]`,
 1. recipient address as `byte[32]`,

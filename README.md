@@ -7,8 +7,6 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 - [Specification](#specification)
   - [Protocol](#protocol)
   - [FuelVM](#fuelvm)
-  - [Chain-Specific Configuration](#chain-specific-configuration)
-    - [Ethereum](#ethereum)
 - [Contributing](#contributing)
 
 ## Specification
