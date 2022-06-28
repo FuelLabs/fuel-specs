@@ -375,17 +375,17 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON object represent
 All receipts will have a `type` property:
 
 - `type`: String; the type of the receipt. Can be one of:
-  - "[Call](#call-receipt)"
-  - "[Return](#return-receipt)"
-  - "[ReturnData](#returndata-receipt)
-  - "[Panic](#panic-receipt)
-  - "[Revert](#revert-receipt)
-  - "[Log](#log-receipt)
-  - "[LogData](#logdata-receipt)
-  - "[Transfer](#transfer-receipt)
-  - "[TransferOut](#transferout-receipt)
-  - "[ScriptResult](#scriptresult-receipt)
-  - "[MessageOut](#messageout-receipt)
+  - [Call](#call-receipt)
+  - [Return](#return-receipt)
+  - [ReturnData](#returndata-receipt)
+  - [Panic](#panic-receipt)
+  - [Revert](#revert-receipt)
+  - [Log](#log-receipt)
+  - [LogData](#logdata-receipt)
+  - [Transfer](#transfer-receipt)
+  - [TransferOut](#transferout-receipt)
+  - [ScriptResult](#scriptresult-receipt)
+  - [MessageOut](#messageout-receipt)
 
 Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../vm/instruction_set.md).
 
