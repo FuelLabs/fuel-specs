@@ -75,167 +75,167 @@ the JSON representation of this ABI looks like:
 
 Below is a list of the JSON ABI formats for each available type:
 
-- `bool`:
+#### `bool`
 
-    ```json
+```json
+{
+  "name": "<var_name>",
+  "type": "bool",
+  "components": null
+} 
+```
+
+#### `u8`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "u8",
+  "components": null
+} 
+```
+
+#### `u16`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "u16",
+  "components": null
+} 
+```
+
+#### `u32`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "u32",
+  "components": null
+} 
+```
+
+#### `u64`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "u64",
+  "components": null
+} 
+```
+
+#### `b256`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "b256",
+  "components": null
+} 
+```
+
+#### `struct`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "struct <decl_name>",
+  "components": [
     {
-      "name": "<var_name>",
-      "type": "bool",
-      "components": null
-    } 
-    ```
-
-- `u8`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "u8",
-      "components": null
-    } 
-    ```
-
-- `u16`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "u16",
-      "components": null
-    } 
-    ```
-
-- `u32`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "u32",
-      "components": null
-    } 
-    ```
-
-- `u64`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "u64",
-      "components": null
-    } 
-    ```
-
-- `b256`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "b256",
-      "components": null
-    } 
-    ```
-
-- `struct`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "struct <decl_name>",
-      "components": [
-        {
-          "name": "<field1_name>",
-          "type": "<field1_type>",
-          "components": ...
-        },
-        {
-          "name": "<field2_name>",
-          "type": "<field2_type>",
-          "components": ...
-        },
-        ...
-      ]
-    }
-    ```
-
-    `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
-
-- `enum`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "enum <decl_name>",
-      "components": [
-        {
-          "name": "<variant1_name>",
-          "type": "<variant1_type>",
-          "components": ...
-        },
-        {
-          "name": "<variant2_name>",
-          "type": "<variant2_type>",
-          "components": ...
-        },
-        ...
-      ]
-    }
-    ```
-
-    `<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section. The `components` entry for each variant is recursively formatted according to the rules of this section.
-
-- `str[<n>]`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "str[<n>]",
-      "components": null
-    } 
-    ```
-
-    `<n>` is the size of the string.
-
-- `array`:
-
-    ```json
-    {
-      "name": "<var_name>",
-      "type": "[<element_type>; <n>]",
-      "components": [
-        {
-          "name": "__array_element",
-          "type": "<element_type>",
-          "components": ...
-        }
-      ]
+      "name": "<field1_name>",
+      "type": "<field1_type>",
+      "components": ...
     },
-    ```
-
-    `<element_type>` is formatted according to the rules of this section. `<n>` is the size of the array. The `components` entry for `__array_element` is recursively formatted according to the rules of this section.
-
-- `tuple`:
-
-    ```json
     {
-      "name": "<var_name>",
-      "type": "(<field1_type>, <field2_type>, ...)",
-      "components": [
-        {
-          "name": "__tuple_element",
-          "type": "<field1_type>",
-          "components": ...
-        },
-        {
-          "name": "__tuple_element",
-          "type": "<field2_type>",
-          "components": ...
-        },
-        ...
-      ]
-    }
-    ```
+      "name": "<field2_name>",
+      "type": "<field2_type>",
+      "components": ...
+    },
+    ...
+  ]
+}
+```
 
-    `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
+`<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
+
+#### `enum`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "enum <decl_name>",
+  "components": [
+    {
+      "name": "<variant1_name>",
+      "type": "<variant1_type>",
+      "components": ...
+    },
+    {
+      "name": "<variant2_name>",
+      "type": "<variant2_type>",
+      "components": ...
+    },
+    ...
+  ]
+}
+```
+
+`<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section. The `components` entry for each variant is recursively formatted according to the rules of this section.
+
+#### `str[<n>]`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "str[<n>]",
+  "components": null
+} 
+```
+
+`<n>` is the size of the string.
+
+#### `array`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "[<element_type>; <n>]",
+  "components": [
+    {
+      "name": "__array_element",
+      "type": "<element_type>",
+      "components": ...
+    }
+  ]
+},
+```
+
+`<element_type>` is formatted according to the rules of this section. `<n>` is the size of the array. The `components` entry for `__array_element` is recursively formatted according to the rules of this section.
+
+#### `tuple`
+
+```json
+{
+  "name": "<var_name>",
+  "type": "(<field1_type>, <field2_type>, ...)",
+  "components": [
+    {
+      "name": "__tuple_element",
+      "type": "<field1_type>",
+      "components": ...
+    },
+    {
+      "name": "__tuple_element",
+      "type": "<field2_type>",
+      "components": ...
+    },
+    ...
+  ]
+}
+```
+
+`<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
 
 > **Note**: Because outputs don't have names, the field `"name"` should be set to `""` for each entry of the array `outputs`.
 
