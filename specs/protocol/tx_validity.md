@@ -83,39 +83,39 @@ If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract 
 For each asset ID `asset_id` in the input and output set:
 
 ```py
-def sum_inputs(tx, col) -> int:
+def sum_inputs(tx, asset_id) -> int:
     total: int = 0
     for input in tx.inputs:
-        if (input.type == InputType.Coin and input.asset_id == col) or (input.type == InputType.Message and col == 0):
+        if (input.type == InputType.Coin and input.asset_id == asset_id) or (input.type == InputType.Message and asset_id == 0):
             total += input.amount
     return total
 
-def sum_outputs(tx, col) -> int:
+def sum_outputs(tx, asset_id) -> int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin and output.asset_id == col) or (output.type == OutputType.Message and col == 0):
+        if (output.type == OutputType.Coin and output.asset_id == asset_id) or (output.type == OutputType.Message and asset_id == 0):
             total += output.amount
     return total
 
-def available_balance(tx, col) -> int:
-    availableBalance = sum_inputs(tx, col)
+def available_balance(tx, asset_id) -> int:
+    availableBalance = sum_inputs(tx, asset_id)
     return availableBalance
 
-def unavailable_balance(tx, col) -> int:
+def unavailable_balance(tx, asset_id) -> int:
     """
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of bytes should approximately makes up for this.
     """
-    sentBalance = sum_outputs(tx, col)
+    sentBalance = sum_outputs(tx, asset_id)
     gasBalance = ceiling((gasPrice * gasLimit) / GAS_PRICE_FACTOR)
     # Size excludes witness data as it is malleable (even by third parties!)
     bytesBalance = ceiling((size(tx) * gasPrice * GAS_PER_BYTE) / GAS_PRICE_FACTOR)
     # Only base asset can be used to pay for gas
-    if col != 0:
+    if asset_id != 0:
         return sentBalance
     return sentBalance + gasBalance + bytesBalance
 
-return available_balance(tx, col) >= unavailable_balance(tx, col)
+return available_balance(tx, asset_id) >= unavailable_balance(tx, asset_id)
 ```
 
 ### Valid Signatures
@@ -152,7 +152,7 @@ If `tx.scriptLength == 0`, there is no script and the transaction defines a simp
 If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_id` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[asset_id]`:
 
 ```py
-freeBalance[col] = available_balance(tx, col) - unavailable_balance(tx, col)
+freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
 ```
 
 Once the free balances are computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
