@@ -316,7 +316,7 @@ enum MyEnum<V> {
     Bar: bool,
 }
 struct MyStruct<T, U> {
-    bim: u8,
+    bim: T,
     bam: MyEnum<u64>,
 }
 struct MyOtherStruct {
@@ -347,8 +347,15 @@ its JSON representation would look like:
         "components": [
           {
             "name": "bim",
-            "type": "u8",
-            "components": null,
+            "type": "[b256; 3]",
+            "components": [
+              {
+                "name": "__array_element",
+                "type": "b256",
+                "components": null,
+                "typeArguments": null
+              }
+            ],
             "typeArguments": null
           },
           {
@@ -410,7 +417,7 @@ its JSON representation would look like:
             "components": [
               {
                 "name": "bim",
-                "type": "u8",
+                "type": "u64",
                 "components": null,
                 "typeArguments": null
               },
@@ -835,7 +842,7 @@ enum MyEnum<V> {
     Bar: bool,
 }
 struct MyStruct<T, U> {
-    bim: u8,
+    bim: T,
     bam: MyEnum<u64>,
 }
 
@@ -855,20 +862,20 @@ is encoded as:
 
 ```text
 abi MyContract {
-    complex_function(s<a[b256;3],u8>(u8,e<u64>(u64,bool)),a[s<u64,bool>(u8,e<u64>(u64,bool));4],(str[5],bool),s(u64))
+    complex_function(s<a[b256;3],u8>(a[b256;3],e<u64>(u64,bool)),a[s<u64,bool>(u64,e<u64>(u64,bool));4],(str[5],bool),s(u64))
 }
 ```
 
 which is then hashed into:
 
 ```text
-5a3b5df887b8722c21b5a9375bab6eec91c51e9a38dec0872ce0c5bf7fc21493
+51fdfdadc37ff569e281a622281af7ec055f8098c40bc566118cbb48ca5fd28b
 ```
 
 and then the encoded function selector is:
 
 ```text
-0x000000005a3b5df8
+0x0000000051fdfdad
 ```
 
 ## Argument Encoding
