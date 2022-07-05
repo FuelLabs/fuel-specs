@@ -16,7 +16,7 @@ The JSON of an ABI is the human-readable representation of an interface call to 
     - `"type"`: String, the type of the component;
     - `"components"`: Recursively following the format explained here;
     - `"typeArguments"`: Recursively following the format explained here.
-  - `"typeArguments"`: An array of type arguments of a given type if the type is a struct or an enum, and `null` otherwise. Type arguments are concrete types for the generic parameters that the struct or the enum might have. Each element of the `"typeArguments"` array contains:
+  - `"typeArguments"`: An array of type arguments of a given type if any and `null` otherwise. Type arguments are concrete types for the generic parameters that the struct or the enum might have. Each element of the `"typeArguments"` array contains:
     - `"name"`: String, the name of the type argument;
     - `"type"`: String, the type of the type argument;
     - `"components"`: Recursively following the format explained here;
@@ -483,7 +483,7 @@ its JSON representation would look like:
             "typeArguments": null
           }
         ],
-        "typeArguments": []
+        "typeArguments": null 
       }
     ],
     "outputs": [
