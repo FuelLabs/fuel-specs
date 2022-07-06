@@ -62,9 +62,12 @@ Transaction is invalid if:
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
-- No inputs are of type `InputType.Coin`
+- No inputs are of type `InputType.Coin` or `InputType.Message`
 - More than one output is of type `OutputType.Change` for any asset ID in the input set
 - Any output is of type `OutputType.Change` for any asset ID not in the input set
+- More than one input of type `InputType.Coin` for any [Coin ID](./identifiers.md#coin-id) in the input set
+- More than one input of type `InputType.Contract` for any [Contract ID](./identifiers.md#contract-id) in the input set
+- More than one input of type `InputType.Message` for any [Input Message ID](./identifiers.md#input-message-id) in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
