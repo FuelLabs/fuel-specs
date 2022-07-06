@@ -14,10 +14,16 @@ The JSON of an ABI is the human-readable representation of an interface call to 
   - `"components"`: An array of the components of a given type if any and `null` otherwise. Each element of this array contains:
     - `"name"`: String, the name of the component;
     - `"type"`: String, the type of the component;
-    - `"components"`: Recursively following the format explained here.
-- `"outputs"`: An array of objects similar to `"inputs"`;
+    - `"components"`: Recursively following the format explained here;
+    - `"typeArguments"`: Recursively following the format explained here.
+  - `"typeArguments"`: An array of type arguments of a given type if any and `null` otherwise. Type arguments are concrete types for the generic parameters that the struct or the enum might have. Each element of the `"typeArguments"` array contains:
+    - `"name"`: String, the name of the type argument;
+    - `"type"`: String, the type of the type argument;
+    - `"components"`: Recursively following the format explained here;
+    - `"typeArguments"`: Recursively following the format explained here.
+- `"outputs"`: An array of objects similar to `"inputs"` representing the outputs of this function;
 
-> **Note**: The order of entries in `"inputs"`, `"outputs"`, and `"components"`, is important and should be taken into account when encoding/decoding an ABI.
+> **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, and `"typeArguments"` is important and should be taken into account when encoding/decoding an ABI.
 
 For instance, given the following ABI declaration:
 
@@ -33,38 +39,42 @@ the JSON representation of this ABI looks like:
 ```json
 [
   {
+    "name": "first_function",
     "type": "function",
     "inputs": [
       {
         "name": "arg",
         "type": "u64",
-        "components": null
+        "components": null,
+        "typeArguments": null
       }
     ],
-    "name": "first_function",
     "outputs": [
       {
         "name": "",
         "type": "bool",
-        "components": null
+        "components": null,
+        "typeArguments": null
       }
     ]
   },
   {
+    "name": "second_function",
     "type": "function",
     "inputs": [
       {
         "name": "arg",
         "type": "b256",
-        "components": null
+        "components": null,
+        "typeArguments": null
       }
     ],
-    "name": "second_function",
     "outputs": [
       {
         "name": "",
         "type": "()",
-        "components": []
+        "components": [],
+        "typeArguments": null
       }
     ]
   }
@@ -81,7 +91,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "bool",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -91,7 +102,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "u8",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -101,7 +113,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "u16",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -111,7 +124,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "u32",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -121,7 +135,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "u64",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -131,7 +146,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "b256",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -145,19 +161,39 @@ Below is a list of the JSON ABI formats for each available type:
     {
       "name": "<field1_name>",
       "type": "<field1_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
     },
     {
       "name": "<field2_name>",
       "type": "<field2_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
+    },
+    ...
+  ],
+  "typeArguments": [
+    {
+      "name": "<type_param1_name>",
+      "type": "<type_param1_type>",
+      "components": ...,
+      "typeArguments": ...
+    },
+    {
+      "name": "<type_param2_name>",
+      "type": "<type_param2_type>",
+      "components": ...,
+      "typeArguments": ...
     },
     ...
   ]
 }
 ```
 
-`<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
+- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. 
+- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section. 
+- The array `components` for each field or type argument is recursively formatted according to the rules of this section.
+- The array `typeArguments` for each field or type argument is recursively formatted according to the rules of this section.
 
 #### `enum`
 
@@ -169,19 +205,39 @@ Below is a list of the JSON ABI formats for each available type:
     {
       "name": "<variant1_name>",
       "type": "<variant1_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
     },
     {
       "name": "<variant2_name>",
       "type": "<variant2_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
+    },
+    ...
+  ],
+  "typeArguments": [
+    {
+      "name": "<type_param1_name>",
+      "type": "<type_param1_type>",
+      "components": ...,
+      "typeArguments": ...
+    },
+    {
+      "name": "<type_param2_name>",
+      "type": "<type_param2_type>",
+      "components": ...,
+      "typeArguments": ...
     },
     ...
   ]
 }
 ```
 
-`<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section. The `components` entry for each variant is recursively formatted according to the rules of this section.
+- `<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section. 
+- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section. 
+- The array `components` for each variant or type argument is recursively formatted according to the rules of this section.
+- The array `typeArguments` for each variant or type argument is recursively formatted according to the rules of this section.
 
 #### `str[<n>]`
 
@@ -189,7 +245,8 @@ Below is a list of the JSON ABI formats for each available type:
 {
   "name": "<var_name>",
   "type": "str[<n>]",
-  "components": null
+  "components": null,
+  "typeArguments": null
 } 
 ```
 
@@ -205,13 +262,18 @@ Below is a list of the JSON ABI formats for each available type:
     {
       "name": "__array_element",
       "type": "<element_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
     }
-  ]
-},
+  ],
+  "typeArguments": null
+}
 ```
 
-`<element_type>` is formatted according to the rules of this section. `<n>` is the size of the array. The `components` entry for `__array_element` is recursively formatted according to the rules of this section.
+- `<element_type>` is formatted according to the rules of this section. 
+- `<n>` is the size of the array. 
+- The array `components` for `__array_element` is recursively formatted according to the rules of this section.
+- The array `typeArguments` for `__array_element` is recursively formatted according to the rules of this section.
 
 #### `tuple`
 
@@ -223,19 +285,24 @@ Below is a list of the JSON ABI formats for each available type:
     {
       "name": "__tuple_element",
       "type": "<field1_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
     },
     {
       "name": "__tuple_element",
       "type": "<field2_type>",
-      "components": ...
+      "components": ...,
+      "typeArguments": ...
     },
     ...
-  ]
+  ],
+  "typeArguments": null
 }
 ```
 
-`<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. The array `components` for each field is recursively formatted according to the rules of this section.
+- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. 
+- The array `components` for each field is recursively formatted according to the rules of this section.
+- The array `typeArguments` for each field is recursively formatted according to the rules of this section.
 
 > **Note**: Because outputs don't have names, the field `"name"` should be set to `""` for each entry of the array `outputs`.
 
@@ -244,17 +311,25 @@ Below is a list of the JSON ABI formats for each available type:
 Given the following ABI declaration:
 
 ```rust
-enum MyEnum {
+enum MyEnum<V> {
     Foo: u64,
     Bar: bool,
 }
-struct MyStruct {
-    bim: u8,
-    bam: MyEnum,
+struct MyStruct<T, U> {
+    bim: T,
+    bam: MyEnum<u64>,
+}
+struct MyOtherStruct {
+    bom: u64,
 }
 
 abi MyContract {
-    fn complex_function(arg1: MyStruct, arg2: [MyStruct; 4], arg3: (str[5], bool)) -> str[6];
+    fn complex_function(
+        arg1: MyStruct<[b256; 3], u8>, 
+        arg2: [MyStruct<u64, bool>; 4], 
+        arg3: (str[5], bool),
+        arg3: MyOtherStruct, 
+    ) -> str[6];
 }
 ```
 
@@ -263,6 +338,7 @@ its JSON representation would look like:
 ```json
 [
   {
+    "name": "complex_function",
     "type": "function",
     "inputs": [
       {
@@ -271,8 +347,16 @@ its JSON representation would look like:
         "components": [
           {
             "name": "bim",
-            "type": "u8",
-            "components": null
+            "type": "[b256; 3]",
+            "components": [
+              {
+                "name": "__array_element",
+                "type": "b256",
+                "components": null,
+                "typeArguments": null
+              }
+            ],
+            "typeArguments": null
           },
           {
             "name": "bam",
@@ -281,14 +365,45 @@ its JSON representation would look like:
               {
                 "name": "Foo",
                 "type": "u64",
-                "components": null
+                "components": null,
+                "typeArguments": null
               },
               {
                 "name": "Bar",
                 "type": "bool",
-                "components": null
+                "components": null,
+                "typeArguments": null
+              }
+            ],
+            "typeArguments": [
+              {
+                "name": "V",
+                "type": "u64",
+                "components": null,
+                "typeArguments": null
               }
             ]
+          }
+        ],
+        "typeArguments": [
+          {
+            "name": "T",
+            "type": "[b256; 3]",
+            "components": [
+              {
+                "name": "__array_element",
+                "type": "b256",
+                "components": null,
+                "typeArguments": null
+              }
+            ],
+            "typeArguments": null
+          },
+          {
+            "name": "U",
+            "type": "u8",
+            "components": null,
+            "typeArguments": null
           }
         ]
       },
@@ -302,8 +417,9 @@ its JSON representation would look like:
             "components": [
               {
                 "name": "bim",
-                "type": "u8",
-                "components": null
+                "type": "u64",
+                "components": null,
+                "typeArguments": null
               },
               {
                 "name": "bam",
@@ -312,18 +428,30 @@ its JSON representation would look like:
                   {
                     "name": "Foo",
                     "type": "u64",
-                    "components": null
+                    "components": null,
+                    "typeArguments": null
                   },
                   {
                     "name": "Bar",
                     "type": "bool",
-                    "components": null
+                    "components": null,
+                    "typeArguments": null
+                  }
+                ],
+                "typeArguments": [
+                  {
+                    "name": "V",
+                    "type": "u64",
+                    "components": null,
+                    "typeArguments": null
                   }
                 ]
               }
-            ]
+            ],
+            "typeArguments": null
           }
-        ]
+        ],
+        "typeArguments": null
       },
       {
         "name": "arg3",
@@ -332,22 +460,38 @@ its JSON representation would look like:
           {
             "name": "__tuple_element",
             "type": "str[5]",
-            "components": null
+            "components": null,
+            "typeArguments": null
           },
           {
             "name": "__tuple_element",
             "type": "bool",
-            "components": null
+            "components": null,
+            "typeArguments": null
           }
-        ]
+        ],
+        "typeArguments": null
+      },
+      {
+        "name": "arg4",
+        "type": "struct MyOtherStruct",
+        "components": [
+          {
+            "name": "bom",
+            "type": "u64",
+            "components": null,
+            "typeArguments": null
+          }
+        ],
+        "typeArguments": null 
       }
     ],
-    "name": "complex_function",
     "outputs": [
       {
         "name": "",
         "type": "str[6]",
-        "components": null
+        "components": null,
+        "typeArguments": null
       }
     ]
   }
@@ -652,7 +796,7 @@ _N.B.: the word size for the FuelVM is 8 bytes._
 
 ### Function signature
 
-The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8. For custom types such as `enum` and `struct`, there is a prefix added to the parenthesized list (see below).
+The signature is composed of the function name with the parenthesized list of comma-separated parameter types without spaces. All strings encoded with UTF-8. For custom types such as `enum` and `struct`, there is a prefix added to the parenthesized list (see below). Generic `struct` and `enum` types also accept a list of comma-separated type arguments in between angle brackets right after the prefix.
 
 For instance, to compute the selector for the following function:
 
@@ -674,53 +818,64 @@ Then we would get only the first 4 bytes of this digest and left-pad it to 8 byt
 
 The table below summarizes how each function argument type is encoded
 
-| Type       | Encoding                                                                                    |
-|------------|---------------------------------------------------------------------------------------------|
-| `bool`     | `bool`                                                                                      |
-| `u8`       | `u8`                                                                                        |
-| `u16`      | `u16`                                                                                       |
-| `u32`      | `u32`                                                                                       |
-| `u64`      | `u64`                                                                                       |
-| `b256`     | `b256`                                                                                      |
-| `struct`   | `s(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the struct fields |
-| `enum`     | `e(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the enum variants |
-| `str[<n>]` | `str[<n>]`                                                                                  |
-| `array`    | `a[<ty>;<n>]` where `<ty>` is the encoded element type of the array and `<n>` is its length |
-| `tuple`    | `(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the tuple fields   |
+| Type       | Encoding                                                                                                                                                                    |
+|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `bool`     | `bool`                                                                                                                                                                      |
+| `u8`       | `u8`                                                                                                                                                                        |
+| `u16`      | `u16`                                                                                                                                                                       |
+| `u32`      | `u32`                                                                                                                                                                       |
+| `u64`      | `u64`                                                                                                                                                                       |
+| `b256`     | `b256`                                                                                                                                                                      |
+| `struct`   | `s<<arg1>,<arg2>,...>(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the struct fields and `<arg1>`, `<arg2>`, ... are the encoded type arguments   |
+| `enum`     | `e<<arg1>>,<arg_2>,...>(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the enum variants and `<arg1>`, `<arg2>`, ... are the encoded type arguments |
+| `str[<n>]` | `str[<n>]`                                                                                                                                                                  |
+| `array`    | `a[<ty>;<n>]` where `<ty>` is the encoded element type of the array and `<n>` is its length                                                                                 |
+| `tuple`    | `(<ty1>,<ty2>,...)` where `<ty1>`, `<ty2>`, ... are the encoded types of the tuple fields                                                                                   |
+
+> **Note:** Non-generic structs and enums do not require angle brackets.
 
 #### Complex example for Function signature encoding
 
 ```rust
-enum MyEnum {
+enum MyEnum<V> {
     Foo: u64,
     Bar: bool,
 }
-struct MyStruct {
-    bim: u8,
-    bam: MyEnum,
+struct MyStruct<T, U> {
+    bim: T,
+    bam: MyEnum<u64>,
 }
 
-fn complex_function(arg1: MyStruct, arg2: [b256; 4], arg3: (str[5], bool));
+struct MyOtherStruct {
+    bom: u64,
+}
+
+fn complex_function(
+    arg1: MyStruct<[b256; 3], u8>, 
+    arg2: [MyStruct<u64, bool>; 4], 
+    arg3: (str[5], bool),
+    arg4: MyOtherStruct,
+);
 ```
 
 is encoded as:
 
 ```text
 abi MyContract {
-    complex_function(s(u8,e(u64,bool)),a[b256;4],(str[5],bool))
+    complex_function(s<a[b256;3],u8>(a[b256;3],e<u64>(u64,bool)),a[s<u64,bool>(u64,e<u64>(u64,bool));4],(str[5],bool),s(u64))
 }
 ```
 
 which is then hashed into:
 
 ```text
-0x99a4b52e832e718e30c8105f4d7f09e9c98c908b0ac93121e13171ddbbc82363
+51fdfdadc37ff569e281a622281af7ec055f8098c40bc566118cbb48ca5fd28b
 ```
 
 and then the encoded function selector is:
 
 ```text
-0x0000000099a4b52e
+0x0000000051fdfdad
 ```
 
 ## Argument Encoding
