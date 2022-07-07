@@ -106,14 +106,16 @@ def unavailable_balance(tx, asset_id) -> int:
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of bytes should approximately makes up for this.
     """
-    sentBalance = sum_outputs(tx, asset_id)
-    gasBalance = ceiling((gasPrice * gasLimit) / GAS_PRICE_FACTOR)
+    sentBalance = sum_outputs(tx, col)
+    gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
-    bytesBalance = ceiling((size(tx) * gasPrice * GAS_PER_BYTE) / GAS_PRICE_FACTOR)
+    bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
+    # Total fee balance
+    feeBalance = ceiling(gasBalance + bytesBalance)
     # Only base asset can be used to pay for gas
     if asset_id != 0:
         return sentBalance
-    return sentBalance + gasBalance + bytesBalance
+    return sentBalance + feeBalance
 
 return available_balance(tx, asset_id) >= unavailable_balance(tx, asset_id)
 ```
@@ -161,7 +163,7 @@ Once the free balances are computed, the [script is executed](../vm/main.md#scri
 1. The unspent free balance `unspentBalance` for each asset ID.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
-The fees incurred for a transaction are `ceiling(((tx.gasLimit - unspentGas) * tx.gasPrice) / GAS_PRICE_FACTOR)`.
+The fees incurred for a transaction are `ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas)) * tx.gasPrice / GAS_PRICE_FACTOR)`.
 
 If the transaction as included in a block does not match this final transaction, the block is invalid.
 
