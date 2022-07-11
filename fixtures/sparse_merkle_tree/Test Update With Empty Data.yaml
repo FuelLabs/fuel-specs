@@ -1,0 +1,12 @@
+expected_root:
+  encoding: hex
+  value: "0000000000000000000000000000000000000000000000000000000000000000"
+name: Test Update With Empty Data
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: ""
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119

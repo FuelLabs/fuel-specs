@@ -1,0 +1,40 @@
+expected_root:
+  encoding: hex
+  value: 108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b
+name: Test Update 5
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 88185d128d9922e0e6bcd32b07b6c7f20f27968eab447a1d8d1cdf250f79f7d3
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 1bc5d0e3df0ea12c4d0078668d14924f95106bbe173e196de50fe13a900b0937

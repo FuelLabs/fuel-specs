@@ -1,0 +1,40 @@
+expected_root:
+  encoding: hex
+  value: e912e97abc67707b2e6027338292943b53d01a7fbd7b244674128c7e468dd696
+name: Test Update Sparse Union
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 1bc5d0e3df0ea12c4d0078668d14924f95106bbe173e196de50fe13a900b0937
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b253668f6b59f1ff28522831931e4d3c5a3de533965af22e961735437c0172cb
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 17eb70034b5b71092521d184c5e7b069d47de657e51aef2be11a00c115036943

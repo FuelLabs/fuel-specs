@@ -1,0 +1,19 @@
+expected_root:
+  encoding: hex
+  value: 8d0ae412ca9ca0afcb3217af8bcd5a673e798bd6fd1dfacad17711e883f494cb
+name: Test Update 2
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d

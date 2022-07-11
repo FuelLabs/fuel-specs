@@ -1,0 +1,110 @@
+expected_root:
+  encoding: hex
+  value: 7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326
+name: Test Update Union
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 88185d128d9922e0e6bcd32b07b6c7f20f27968eab447a1d8d1cdf250f79f7d3
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 1bc5d0e3df0ea12c4d0078668d14924f95106bbe173e196de50fe13a900b0937
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: e084a105a7b7d599b8346d3cba5ac51b756d7e29c7ef77fd9eff31fdeae31389
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 390b36a09502b05d4f8c27aea2636c6b7fd05b27d742ed32074ffea1f888ebe4
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: c22ceee66b8ab104483c83053173b33f992dd4fcb457284c60ef9d699a1c7059
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 8092fe01b9ce31a49ce380fc2fe1ee6b6b7d5c15c5f1ecb6ad98c60c4273a435
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 7fde8eebf388fcff667a89be60430cc6e198b1a78cb603a39cdd09885a3336e3
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: a7911cdfdc28e6a1867e359ba426081aacfa692fdeb3e978d2a68dd924fa8c3e
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 21548c66b44347d877e7b405a250121cda87cd494b122f0324f7df3b6cd75f86
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: bc2d9ddc9857e53598677dbea82a2583879e89ce6c032c77d825187bf3f1a943
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 58ec452ede72799baf21664edc953297b592ad9e95f2381710593ad7a32f31ef
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 79a881f99a636d0ad75f16f53668982b59f8bb96c3fbb449155fe7a08dba9cb1
