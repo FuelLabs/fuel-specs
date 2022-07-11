@@ -328,7 +328,7 @@ abi MyContract {
         arg1: MyStruct<[b256; 3], u8>, 
         arg2: [MyStruct<u64, bool>; 4], 
         arg3: (str[5], bool),
-        arg3: MyOtherStruct, 
+        arg4: MyOtherStruct, 
     ) -> str[6];
 }
 ```
