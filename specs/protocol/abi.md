@@ -448,7 +448,20 @@ its JSON representation would look like:
                 ]
               }
             ],
-            "typeArguments": null
+            "typeArguments": [
+              {
+                "name": "T",
+                "type": "u64",
+                "components": null,
+                "typeArguments": null
+              },
+              {
+                "name": "U",
+                "type": "bool",
+                "components": null,
+                "typeArguments": null
+              }
+            ]
           }
         ],
         "typeArguments": null
@@ -483,7 +496,7 @@ its JSON representation would look like:
             "typeArguments": null
           }
         ],
-        "typeArguments": null 
+        "typeArguments": null
       }
     ],
     "outputs": [
