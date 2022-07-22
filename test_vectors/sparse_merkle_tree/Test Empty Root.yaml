@@ -1,0 +1,5 @@
+expected_root:
+  encoding: hex
+  value: "0000000000000000000000000000000000000000000000000000000000000000"
+name: Test Empty Root
+steps: []

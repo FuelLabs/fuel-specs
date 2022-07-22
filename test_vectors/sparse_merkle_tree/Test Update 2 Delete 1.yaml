@@ -1,0 +1,23 @@
+expected_root:
+  encoding: hex
+  value: 39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b
+name: Test Update 2 Delete 1
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d
+- action: delete
+  key:
+    encoding: hex
+    value: b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d

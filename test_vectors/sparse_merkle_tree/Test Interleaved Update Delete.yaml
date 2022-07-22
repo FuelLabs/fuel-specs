@@ -1,0 +1,335 @@
+expected_root:
+  encoding: hex
+  value: 7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326
+name: Test Interleaved Update Delete
+steps:
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 88185d128d9922e0e6bcd32b07b6c7f20f27968eab447a1d8d1cdf250f79f7d3
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 1bc5d0e3df0ea12c4d0078668d14924f95106bbe173e196de50fe13a900b0937
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 221f8af2372a95064f2ef7d7712216a9ab46e7ef98482fd237e106f83eaa7569
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: b253668f6b59f1ff28522831931e4d3c5a3de533965af22e961735437c0172cb
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 1561ade0621c5acf44b780521f95a1e0b19b4e5032945b860c4032fc28a3a23b
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 17eb70034b5b71092521d184c5e7b069d47de657e51aef2be11a00c115036943
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 3b28a6c3766c6295adad976d349705ef49393fbfdebe4facb5862d2cdfa285d3
+- action: delete
+  key:
+    encoding: hex
+    value: 221f8af2372a95064f2ef7d7712216a9ab46e7ef98482fd237e106f83eaa7569
+- action: delete
+  key:
+    encoding: hex
+    value: b253668f6b59f1ff28522831931e4d3c5a3de533965af22e961735437c0172cb
+- action: delete
+  key:
+    encoding: hex
+    value: 1561ade0621c5acf44b780521f95a1e0b19b4e5032945b860c4032fc28a3a23b
+- action: delete
+  key:
+    encoding: hex
+    value: 17eb70034b5b71092521d184c5e7b069d47de657e51aef2be11a00c115036943
+- action: delete
+  key:
+    encoding: hex
+    value: 3b28a6c3766c6295adad976d349705ef49393fbfdebe4facb5862d2cdfa285d3
+- action: delete
+  key:
+    encoding: hex
+    value: e084a105a7b7d599b8346d3cba5ac51b756d7e29c7ef77fd9eff31fdeae31389
+- action: delete
+  key:
+    encoding: hex
+    value: 390b36a09502b05d4f8c27aea2636c6b7fd05b27d742ed32074ffea1f888ebe4
+- action: delete
+  key:
+    encoding: hex
+    value: c22ceee66b8ab104483c83053173b33f992dd4fcb457284c60ef9d699a1c7059
+- action: delete
+  key:
+    encoding: hex
+    value: 8092fe01b9ce31a49ce380fc2fe1ee6b6b7d5c15c5f1ecb6ad98c60c4273a435
+- action: delete
+  key:
+    encoding: hex
+    value: 7fde8eebf388fcff667a89be60430cc6e198b1a78cb603a39cdd09885a3336e3
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: e084a105a7b7d599b8346d3cba5ac51b756d7e29c7ef77fd9eff31fdeae31389
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 390b36a09502b05d4f8c27aea2636c6b7fd05b27d742ed32074ffea1f888ebe4
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: c22ceee66b8ab104483c83053173b33f992dd4fcb457284c60ef9d699a1c7059
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 8092fe01b9ce31a49ce380fc2fe1ee6b6b7d5c15c5f1ecb6ad98c60c4273a435
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 7fde8eebf388fcff667a89be60430cc6e198b1a78cb603a39cdd09885a3336e3
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 9246be1e9ba9f5de5baf766a256eb725e9a7551fb93d7faa793c938e0f41de35
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 5085cb99dbe1e374ccd321e5b58182d2c42cf4840c68cfab17b0618a8285e7d6
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 8e00d1c0c8ffe94540e534e256d4589be3e3865dc0559a732697aef38a364e83
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: e9f3440e5518839aa600db07b5400f8ec287ce0321fad602afd103ce447a1c98
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 14236fe421fe9ddb8377a19b60ce71dd655704bcefc225c9287fb11127ba6569
+- action: delete
+  key:
+    encoding: hex
+    value: 9246be1e9ba9f5de5baf766a256eb725e9a7551fb93d7faa793c938e0f41de35
+- action: delete
+  key:
+    encoding: hex
+    value: 5085cb99dbe1e374ccd321e5b58182d2c42cf4840c68cfab17b0618a8285e7d6
+- action: delete
+  key:
+    encoding: hex
+    value: 8e00d1c0c8ffe94540e534e256d4589be3e3865dc0559a732697aef38a364e83
+- action: delete
+  key:
+    encoding: hex
+    value: e9f3440e5518839aa600db07b5400f8ec287ce0321fad602afd103ce447a1c98
+- action: delete
+  key:
+    encoding: hex
+    value: 14236fe421fe9ddb8377a19b60ce71dd655704bcefc225c9287fb11127ba6569
+- action: delete
+  key:
+    encoding: hex
+    value: a7911cdfdc28e6a1867e359ba426081aacfa692fdeb3e978d2a68dd924fa8c3e
+- action: delete
+  key:
+    encoding: hex
+    value: 21548c66b44347d877e7b405a250121cda87cd494b122f0324f7df3b6cd75f86
+- action: delete
+  key:
+    encoding: hex
+    value: bc2d9ddc9857e53598677dbea82a2583879e89ce6c032c77d825187bf3f1a943
+- action: delete
+  key:
+    encoding: hex
+    value: 58ec452ede72799baf21664edc953297b592ad9e95f2381710593ad7a32f31ef
+- action: delete
+  key:
+    encoding: hex
+    value: 79a881f99a636d0ad75f16f53668982b59f8bb96c3fbb449155fe7a08dba9cb1
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: a7911cdfdc28e6a1867e359ba426081aacfa692fdeb3e978d2a68dd924fa8c3e
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 21548c66b44347d877e7b405a250121cda87cd494b122f0324f7df3b6cd75f86
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: bc2d9ddc9857e53598677dbea82a2583879e89ce6c032c77d825187bf3f1a943
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 58ec452ede72799baf21664edc953297b592ad9e95f2381710593ad7a32f31ef
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 79a881f99a636d0ad75f16f53668982b59f8bb96c3fbb449155fe7a08dba9cb1
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 282a163f3e6f52ab35cf838079369bce33cf5a1f151d2822846095a6d07e1ae2
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: c1c3c8fdf22e3a4adef796c8fdaf739d7d3b222f995891eb8f495ca71fb932a8
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: 688e94a51ee508a95e761294afb7a6004b432c15d9890c80ddf23bde8caa4c26
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: c006af35e3b4ca022ab986593a148b4f196f186168ee96604eeaa7e338e66ac1
+- action: update
+  data:
+    encoding: utf-8
+    value: DATA
+  key:
+    encoding: hex
+    value: c1a9fae908008d34f389b1dba2a1a8e8301f7a942412ef6e6299c9e27e89dfaa
+- action: delete
+  key:
+    encoding: hex
+    value: 282a163f3e6f52ab35cf838079369bce33cf5a1f151d2822846095a6d07e1ae2
+- action: delete
+  key:
+    encoding: hex
+    value: c1c3c8fdf22e3a4adef796c8fdaf739d7d3b222f995891eb8f495ca71fb932a8
+- action: delete
+  key:
+    encoding: hex
+    value: 688e94a51ee508a95e761294afb7a6004b432c15d9890c80ddf23bde8caa4c26
+- action: delete
+  key:
+    encoding: hex
+    value: c006af35e3b4ca022ab986593a148b4f196f186168ee96604eeaa7e338e66ac1
+- action: delete
+  key:
+    encoding: hex
+    value: c1a9fae908008d34f389b1dba2a1a8e8301f7a942412ef6e6299c9e27e89dfaa
+- action: delete
+  key:
+    encoding: hex
+    value: 560231689713a5933b6c8ac3e6b2f243730e49e1c6b0c610c41e8e8dad26044c
+- action: delete
+  key:
+    encoding: hex
+    value: fe5b0deca006174e2151088e1a7d60fe91819467db5d709ae5a19c01a3cd3e3f
+- action: delete
+  key:
+    encoding: hex
+    value: 2de44621c76edf2debbc2df62ccb52c5036b1919dca3af0c0a886cc48dbfaeba
+- action: delete
+  key:
+    encoding: hex
+    value: 83440636eff7b2ec0f78ef7b8e480a033e8aeb67e6ecb657ce9bcdfdb21aa744
+- action: delete
+  key:
+    encoding: hex
+    value: eaaf1805f2ec6a18eee5a7909f79908651341965d9f0b9de8d45d9262e5735ae
