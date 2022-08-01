@@ -76,7 +76,7 @@ for input in tx.inputs:
 return True
 ```
 
-If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract input is set to the UTXO ID of the respective contract. The `txPointer` of each input is also set to the TX pointer of the UTXO with ID `utxoID`.
+If this check passes, the UTXO ID `(txID, outputIndex)`, `stateRoot`, and `balanceRoot` fields of each contract input are set to the current values of the respective contract. The `txPointer` of each input is also set to the TX pointer of the UTXO with ID `utxoID`.
 
 ### Sufficient Balance
 
