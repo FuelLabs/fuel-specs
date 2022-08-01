@@ -244,7 +244,7 @@ Note: when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRo
 
 Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
 
-Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, `stateRoot` and `txPointer`  are initialized to the transaction ID, output index, amount, state root and txPointer of the contract with ID `contractID`.
+Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, `stateRoot` and `txPointer` are initialized to the transaction ID, output index, amount, state root and txPointer of the contract with ID `contractID`.
 
 ### InputMessage
 
