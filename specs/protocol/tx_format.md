@@ -221,7 +221,7 @@ Note: when signing a transaction, `txPointer` is set to zero.
 
 Note: when verifying a predicate, `txPointer` is initialized to zero.
 
-Note: when executing a script, `txPointer` is initialized to zero.
+Note: when executing a script, `txPointer` is initialized to the transaction output being spent.
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](./identifiers.md#contract-id).
 
@@ -244,7 +244,7 @@ Note: when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRo
 
 Note: when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
 
-Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to zero.
+Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, `stateRoot` and `txPointer`  are initialized to the transaction ID, output index, amount, state root and txPointer of the contract with ID `contractID`.
 
 ### InputMessage
 
