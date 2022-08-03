@@ -1491,19 +1491,20 @@ Panic if:
 
 ### TIME: Current timstamp
 
-|             |                                |
-|-------------|--------------------------------|
-| Description | Get current block's timestamp. |
-| Operation   | ```$rA = time();```            |
-| Syntax      | `time $rA`                     |
-| Encoding    | `0x00 rA - - -`                |
-| Notes       |                                |
+|             |                                         |
+|-------------|-----------------------------------------|
+| Description | Get timestamp of block at given height. |
+| Operation   | ```$rA = time($rB);```                  |
+| Syntax      | `time $rA, $rB`                         |
+| Encoding    | `0x00 rA rB - -`                        |
+| Notes       |                                         |
 
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
+- `$rB` is greater than the current block height.
 
-Gets the timestamp of the current block. Time is in [TAI64](https://cr.yp.to/libtai/tai64.html) format.
+Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.yp.to/libtai/tai64.html) format.
 
 ### TR: Transfer coins to contract
 
