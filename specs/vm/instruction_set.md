@@ -1763,7 +1763,7 @@ Get [fields from the transaction](../protocol/tx_format.md#transaction).
 | `GTF_INPUT_MESSAGE_SENDER`                | `0x115` | Memory address of `tx.inputs[$rB].sender`        |
 | `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
 | `GTF_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
-| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | Memory address of `tx.inputs[$rB].nonce`         |
+| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | `tx.inputs[$rB].nonce`                           |
 | `GTF_INPUT_MESSAGE_OWNER`                 | `0x119` | Memory address of `tx.inputs[$rB].owner`         |
 | `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x11A` | `tx.inputs[$rB].witnessIndex`                    |
 | `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11B` | `tx.inputs[$rB].dataLength`                      |
