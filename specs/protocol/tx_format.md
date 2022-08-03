@@ -40,7 +40,7 @@
 
 ## TransactionType
 
-```
+```c++
 enum  TransactionType : uint8 {
     Script = 0,
     Create = 1,
@@ -79,7 +79,7 @@ When deserializing a transaction, the reverse is done. If there are insufficient
 
 ### TransactionScript
 
-```
+```c++
 enum  ReceiptType : uint8 {
     Call = 0,
     Return = 1,
@@ -168,7 +168,7 @@ Creates a contract with contract ID as computed [here](./identifiers.md#contract
 
 ## InputType
 
-```
+```c++
 enum  InputType : uint8 {
     Coin = 0,
     Contract = 1,
@@ -281,7 +281,7 @@ The predicate root is computed identically to the contract root, used to compute
 
 ## OutputType
 
-```
+```c++
 enum  OutputType : uint8 {
     Coin = 0,
     Contract = 1,
