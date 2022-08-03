@@ -25,19 +25,19 @@ The Binary Merkle Sum Tree is an extension of the tree defined in [RFC-6962](htt
 
 The root pair `(fee, digest)` of an empty tree is:
 
-```
+```text
 (0x0000000000000000, hash()) = (0x0000000000000000, 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)
 ```
 
 The root pair of a tree with one leaf:
 
-```
+```text
 (leaf.fee, hash(0x00 ++ leaf.fee ++ serialize(leaf)))
 ```
 
 The root pair of a tree with two or more leaves is defined recursively:
 
-```
+```text
 (left.fee + right.fee, hash(0x01 ++ left.fee ++ left.digest ++ right.fee ++ right.digest))
 ```
 
@@ -47,7 +47,7 @@ In other words, the root pair is 40 bytes (8 for fee sum, 32 for hash digest).
 
 A specification for the Sparse Merkle Tree is [here](https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#sparse-merkle-tree).
 
-A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse_merkle_tree_tests.md). 
+A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse_merkle_tree_tests.md).
 
 ## Public-Key Cryptography
 
