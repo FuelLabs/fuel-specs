@@ -74,7 +74,7 @@
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
-  - [TIME: Current timstamp](#time-current-timstamp)
+  - [TIME: Timstamp at height](#time-timstamp-at-height)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
@@ -1489,7 +1489,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-### TIME: Current timstamp
+### TIME: Timstamp at height
 
 |             |                                         |
 |-------------|-----------------------------------------|
