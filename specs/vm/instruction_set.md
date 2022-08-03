@@ -74,6 +74,7 @@
   - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
+  - [TIME: Timstamp at height](#time-timstamp-at-height)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
@@ -1487,6 +1488,23 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
+
+### TIME: Timstamp at height
+
+|             |                                         |
+|-------------|-----------------------------------------|
+| Description | Get timestamp of block at given height. |
+| Operation   | ```$rA = time($rB);```                  |
+| Syntax      | `time $rA, $rB`                         |
+| Encoding    | `0x00 rA rB - -`                        |
+| Notes       |                                         |
+
+Panic if:
+
+- `$rA` is a [reserved register](./main.md#semantics)
+- `$rB` is greater than the current block height.
+
+Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.yp.to/libtai/tai64.html) format.
 
 ### TR: Transfer coins to contract
 
