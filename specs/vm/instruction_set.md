@@ -1600,7 +1600,7 @@ Signatures and signature verification are specified [here](../protocol/cryptogra
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
-To get the address from the public key, hash the public key with [SHA-2-256](#sha256-sha-2-256).
+To get the address from the public key, hash the public key with [SHA-2-256](#s256-sha-2-256).
 
 ### K256: keccak-256
 
