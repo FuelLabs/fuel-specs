@@ -56,7 +56,7 @@ Tests the default root given no update or delete operations. The input set is de
 
 **Inputs**:
 
-_No inputs_
+_No inputs_.
 
 **Outputs**:
 
@@ -64,7 +64,7 @@ _No inputs_
 
 **Example pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 root = smt.root()
 expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
@@ -89,7 +89,7 @@ Tests the root after performing a single update call with the specified input.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 root = smt.root()
@@ -116,7 +116,7 @@ Tests the root after performing two update calls with the specified inputs.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x01"), b"DATA")
@@ -145,7 +145,7 @@ Tests the root after performing three update calls with the specified inputs.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x01"), b"DATA")
@@ -177,7 +177,7 @@ Tests the root after performing five update calls with the specified inputs.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..5 {
     key = &(i as u32).to_big_endian_bytes()
@@ -207,7 +207,7 @@ Tests the root after performing 10 update calls with the specified inputs.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..10 {
     key = &(i as u32).to_big_endian_bytes()
@@ -237,7 +237,7 @@ Tests the root after performing 100 update calls with the specified inputs.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..100 {
     key = &(i as u32).to_big_endian_bytes()
@@ -268,7 +268,7 @@ Tests the root after performing two update calls with the same inputs. The resul
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
@@ -296,7 +296,7 @@ Tests the root after performing two update calls with the same leaf keys but dif
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x00"), b"CHANGE")
@@ -325,7 +325,7 @@ Tests the root after performing update calls with discontinuous sets of inputs. 
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..5 {
     key = &(i as u32).to_big_endian_bytes()
@@ -365,7 +365,7 @@ Tests the root after performing update calls with discontinuous sets of inputs. 
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..5 {
     key = &(i as u32 * 2).to_big_endian_bytes()
@@ -395,7 +395,7 @@ Tests the root after performing one update call with empty data. Updating the em
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"")
 root = smt.root()
@@ -422,7 +422,7 @@ Tests the root after performing one update call with arbitrary data followed by 
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x00"), b"")
@@ -450,7 +450,7 @@ Tests the root after performing one update call followed by a subsequent delete 
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.delete(&sum(b"\x00\x00\x00\x00"))
@@ -479,7 +479,7 @@ Tests the root after performing two update calls followed by a subsequent delete
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x01"), b"DATA")
@@ -508,7 +508,7 @@ Tests the root after performing 10 update calls followed by 5 subsequent delete 
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..10 {
     key = &(i as u32).to_big_endian_bytes()
@@ -543,7 +543,7 @@ Tests the root after performing five update calls followed by a subsequent delet
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..5 {
     key = &(i as u32).to_big_endian_bytes()
@@ -580,7 +580,7 @@ Tests the root after performing a series of interleaved update and delete calls.
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..10 {
     key = &(i as u32).to_big_endian_bytes()
@@ -633,7 +633,7 @@ Tests the root after performing delete calls with discontinuous sets of inputs. 
 
 **Example Pseudocode**:
 
-```
+```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 for i in 0..10 {
     key = &(i as u32).to_big_endian_bytes()
