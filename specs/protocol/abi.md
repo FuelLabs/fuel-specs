@@ -190,8 +190,8 @@ Below is a list of the JSON ABI formats for each available type:
 }
 ```
 
-- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. 
-- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section. 
+- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section.
+- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section.
 - The array `components` for each field or type argument is recursively formatted according to the rules of this section.
 - The array `typeArguments` for each field or type argument is recursively formatted according to the rules of this section.
 
@@ -234,8 +234,8 @@ Below is a list of the JSON ABI formats for each available type:
 }
 ```
 
-- `<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section. 
-- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section. 
+- `<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section.
+- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section.
 - The array `components` for each variant or type argument is recursively formatted according to the rules of this section.
 - The array `typeArguments` for each variant or type argument is recursively formatted according to the rules of this section.
 
@@ -270,8 +270,8 @@ Below is a list of the JSON ABI formats for each available type:
 }
 ```
 
-- `<element_type>` is formatted according to the rules of this section. 
-- `<n>` is the size of the array. 
+- `<element_type>` is formatted according to the rules of this section.
+- `<n>` is the size of the array.
 - The array `components` for `__array_element` is recursively formatted according to the rules of this section.
 - The array `typeArguments` for `__array_element` is recursively formatted according to the rules of this section.
 
@@ -300,7 +300,7 @@ Below is a list of the JSON ABI formats for each available type:
 }
 ```
 
-- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section. 
+- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section.
 - The array `components` for each field is recursively formatted according to the rules of this section.
 - The array `typeArguments` for each field is recursively formatted according to the rules of this section.
 
