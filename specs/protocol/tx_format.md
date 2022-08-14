@@ -67,7 +67,7 @@ Transaction is invalid if:
 - Any output is of type `OutputType.Change` for any asset ID not in the input set
 - More than one input of type `InputType.Coin` for any [Coin ID](./identifiers.md#coin-id) in the input set
 - More than one input of type `InputType.Contract` for any [Contract ID](./identifiers.md#contract-id) in the input set
-- More than one input of type `InputType.Message` for any [Input Message ID](./identifiers.md#input-message-id) in the input set
+- More than one input of type `InputType.Message` for any [Message ID](./identifiers.md#message-id) in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
@@ -250,12 +250,11 @@ Note: when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateR
 
 | name                  | type       | description                                                           |
 |-----------------------|------------|-----------------------------------------------------------------------|
-| `messageID`           | `byte[32]` | The messageID as described [here](./identifiers.md#input-message-id). |
+| `messageID`           | `byte[32]` | The messageID as described [here](./identifiers.md#message-id). |
 | `sender`              | `byte[32]` | The address of the message sender.                                    |
-| `recipient`           | `byte[32]` | The address of the message recipient.                                 |
+| `recipient`           | `byte[32]` | The address or predicate root of the message recipient.               |
 | `amount`              | `uint64`   | Amount of base asset coins sent with message.                         |
 | `nonce`               | `uint64`   | The message nonce.                                                    |
-| `owner`               | `byte[32]` | Owning address or predicate root.                                     |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                   |
 | `dataLength`          | `uint16`   | Length of message data, in bytes.                                     |
 | `predicateLength`     | `uint16`   | Length of predicate, in instructions.                                 |
