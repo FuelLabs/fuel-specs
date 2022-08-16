@@ -1400,11 +1400,11 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | name        | type          | description                                                                             |
 |-------------|---------------|-----------------------------------------------------------------------------------------|
 | `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                                |
-| `messageID` | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#output-message-id).        |
+| `messageID` | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#message-id).        |
 | `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                      |
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                                   |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                                    |
-| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#output-message-nonce). |
+| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#message-nonce). |
 | `len`       | `uint16`      | Length of message data, in bytes: `$rB`.                                                |
 | `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                        |
 
@@ -1782,14 +1782,13 @@ Get [fields from the transaction](../protocol/tx_format.md#transaction).
 | `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
 | `GTF_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
 | `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | `tx.inputs[$rB].nonce`                           |
-| `GTF_INPUT_MESSAGE_OWNER`                 | `0x119` | Memory address of `tx.inputs[$rB].owner`         |
-| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x11A` | `tx.inputs[$rB].witnessIndex`                    |
-| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11B` | `tx.inputs[$rB].dataLength`                      |
-| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11C` | `tx.inputs[$rB].predicateLength`                 |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11D` | `tx.inputs[$rB].predicateDataLength`             |
-| `GTF_INPUT_MESSAGE_DATA`                  | `0x11E` | Memory address of `tx.inputs[$rB].data`          |
-| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x11F` | Memory address of `tx.inputs[$rB].predicate`     |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x120` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x119` | `tx.inputs[$rB].witnessIndex`                    |
+| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11A` | `tx.inputs[$rB].dataLength`                      |
+| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11B` | `tx.inputs[$rB].predicateLength`                 |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11C` | `tx.inputs[$rB].predicateDataLength`             |
+| `GTF_INPUT_MESSAGE_DATA`                  | `0x11D` | Memory address of `tx.inputs[$rB].data`          |
+| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x11E` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x11F` | Memory address of `tx.inputs[$rB].predicateData` |
 | `GTF_OUTPUT_TYPE`                         | `0x201` | `tx.outputs[$rB].type`                           |
 | `GTF_OUTPUT_COIN_TO`                      | `0x202` | Memory address of `tx.outputs[$rB].to`           |
 | `GTF_OUTPUT_COIN_AMOUNT`                  | `0x203` | `tx.outputs[$rB].amount`                         |

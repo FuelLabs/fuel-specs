@@ -37,7 +37,7 @@ Write-destroy access list:
 - For each [input `InputType.Contract`](./tx_format.md#inputcontract)
   - The [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)`
 - For each [input `InputType.Message`](./tx_format.md#inputmessage)
-  - The [input message ID](./identifiers.md#input-message-id) `messageID`
+  - The [message ID](./identifiers.md#message-id) `messageID`
 
 Write-create access list:
 
