@@ -185,7 +185,7 @@ enum  InputType : uint8 {
 
 Transaction is invalid if:
 
-- `type > InputType.Contract`
+- `type > InputType.Message`
 
 ### InputCoin
 
