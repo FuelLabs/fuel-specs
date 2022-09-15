@@ -5,6 +5,7 @@
 - [Transaction](#transaction)
   - [TransactionScript](#transactionscript)
   - [TransactionCreate](#transactioncreate)
+- [TransactionMint](#transactionmint)
 - [InputType](#inputtype)
 - [Input](#input)
   - [InputCoin](#inputcoin)
