@@ -44,6 +44,7 @@
 enum  TransactionType : uint8 {
     Script = 0,
     Create = 1,
+    Mint = 2,
 }
 ```
 
@@ -52,7 +53,7 @@ enum  TransactionType : uint8 {
 | name   | type                                                                                      | description       |
 |--------|-------------------------------------------------------------------------------------------|-------------------|
 | `type` | [TransactionType](#transactiontype)                                                       | Transaction type. |
-| `data` | One of [TransactionScript](#transactionscript) or [TransactionCreate](#transactioncreate) | Transaction data. |
+| `data` | One of [TransactionScript](#transactionscript), [TransactionCreate](#transactioncreate), or [TransactionMint](#transactionmint) | Transaction data. |
 
 Transaction is invalid if:
 
@@ -165,6 +166,18 @@ Transaction is invalid if:
 - The [Sparse Merkle tree](./cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
+
+## TransactionMint
+
+| name               | type                    | description                              |
+|--------------------|-------------------------|------------------------------------------|
+| `outputsCount`     | `uint8`                 | Number of outputs.                       |
+| `outputs`          | [Output](#output)`[]`   | List of outputs.                         |
+
+Transaction is invalid if:
+
+- Any output is not of type `OutputType.Coin`
+- Any two outputs have the same `asset_id`
 
 ## InputType
 
