@@ -99,12 +99,14 @@ Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, 
 
 On a non-predicate panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name   | type          | description                                                               |
-|--------|---------------|---------------------------------------------------------------------------|
-| `type` | `ReceiptType` | `ReceiptType.Panic`                                                       |
-| `id`   | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
-| `pc`   | `uint64`      | Value of register `$pc`.                                                  |
-| `is`   | `uint64`      | Value of register `$is`.                                                  |
+| name     | type          | description                                                                    |
+|----------|---------------|--------------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Panic`                                                            |
+| `id`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise.      |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                       |
+| `is`     | `uint64`      | Value of register `$is`.                                                       |
+| `reason` | `uint8`       | The panic reason identifier                                                    |
+| `data`   | `byte[32]`    | ContractId or AssetID associated with the panic if applicable, zero otherwise. |
 
 then append an additional receipt to the list of receipts, again modifying `tx.receiptsRoot`:
 
@@ -1002,7 +1004,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - `$rC + 32` overflows
 - `$rC + 32 > VM_MAX_RAM`
-- Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
+- Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rC, 32]` in panic receipt data.
 
 ### BHEI: Block height
 
@@ -1071,10 +1073,10 @@ Panic if:
 
 - `$rA + 32` overflows
 - `$rC + 32` overflows
-- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
+- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rA, 32]` in panic receipt data.
 - Reading past `MEM[VM_MAX_RAM - 1]`
-- In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
-- In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
+- In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`. Include asset ID `MEM[$rC, 32]` in panic receipt data.
+- In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`. Include asset ID `MEM[$rC, 32]` in panic receipt data.
 
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
 
@@ -1150,7 +1152,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./main.md#ownership)
 - `$rD > MEM_MAX_ACCESS_SIZE`
-- Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
+- Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rB, 32]` in panic receipt data.
 
 ### CROO: Code Merkle root
 
@@ -1169,7 +1171,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
-- Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
+- Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rB, 32]` in panic receipt data.
 
 Code root computation is defined [here](../protocol/identifiers.md#contract-id).
 
@@ -1188,7 +1190,7 @@ Panic if:
 - `$rA` is a [reserved register](./main.md#semantics)
 - `$rB + 32` overflows
 - `$rB + 32 > VM_MAX_RAM`
-- Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
+- Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rB, 32]` in panic receipt data.
 
 ### LDC: Load code from an external contract
 
@@ -1210,7 +1212,7 @@ Panic if:
 - `$ssp + $rC > $hp`
 - `$rC > CONTRACT_MAX_SIZE`
 - `$rC > MEM_MAX_ACCESS_SIZE`
-- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
+- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rA, 32]` in panic receipt data.
 
 Increment `$fp->codesize`, `$ssp`, and `$sp` by `$rC` padded to word alignment.
 
@@ -1524,9 +1526,9 @@ Panic if:
 - `$rC + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
-- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
-- In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
-- In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
+- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`. Include Contract ID `MEM[$rA, 32]` in panic receipt data.
+- In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`. Include asset ID `MEM[$rC, 32]` in panic receipt data.
+- In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`. Include asset ID `MEM[$rC, 32]` in panic receipt data.
 - `$rB == 0`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
@@ -1564,8 +1566,8 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rD + 32 > VM_MAX_RAM`
 - `$rB > tx.outputsCount`
-- In an external context, if `$rC > MEM[balanceOfStart(MEM[$rD, 32]), 8]`
-- In an internal context, if `$rC` is greater than the balance of asset ID `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`
+- In an external context, if `$rC > MEM[balanceOfStart(MEM[$rD, 32]), 8]`. Include asset ID `MEM[$rD, 32]` in panic receipt data.
+- In an internal context, if `$rC` is greater than the balance of asset ID `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`. Include asset ID `MEM[$rD, 32]` in panic receipt data.
 - `$rC == 0`
 - `tx.outputs[$rB].type != OutputType.Variable`
 - `tx.outputs[$rB].amount != 0`
