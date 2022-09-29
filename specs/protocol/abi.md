@@ -555,14 +555,17 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 - `reason`: Decimal string representation of an 8-bit unsigned integer; panic reason.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
+- `contractId`: Optional hexadecimal string representation of the 256-bit (32-byte) contract ID if applicable. `null` otherwise.
+Not included in canonical receipt form. Primary use is for access-list estimation by SDK.
 
 ```json
 {
-  "type":"Panic",
-  "id":"0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-  "reason":"1",
-  "pc":"0xffffffffffffffff",
-  "is":"0xfffffffffffffffe"
+  "type": "Panic",
+  "id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "reason": "1",
+  "pc": "0xffffffffffffffff",
+  "is": "0xfffffffffffffffe",
+  "contractId": "0x0000000000000000000000000000000000000000000000000000000000000000"
 }
 ```
 
