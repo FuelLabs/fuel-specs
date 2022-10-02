@@ -27,6 +27,12 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 1. [main.md](./specs/vm/main.md): Describes the FuelVM at a high level, from its architecture to how it is initialized.
 1. [instruction_set.md](./specs/vm/instruction_set.md): Defines the FuelVM instruction set.
 
+### Network-specific
+
+Specifications for network-specific components of the protocol.
+
+1. [PoA](./specs/network/poa.md): PoA network.
+
 ## Contributing
 
 Markdown files must conform to [GitHub Flavored Markdown](https://github.github.com/gfm/). Markdown must be formatted with:
