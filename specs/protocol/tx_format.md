@@ -349,14 +349,13 @@ The state root `stateRoot` is the root of the [SMT](./cryptographic_primitives.m
 
 ### OutputMessage
 
-| name        | type       | description                                   |
-|-------------|------------|-----------------------------------------------|
-| `recipient` | `byte[32]` | The address of the message recipient.         |
-| `amount`    | `uint64`   | Amount of base asset coins sent with message. |
+| name        | type       | description                                                                              |
+|-------------|------------|------------------------------------------------------------------------------------------|
+| `messageID` | `byte[32]` | The messageID as described [here](../protocol/identifiers.md#message-id). 0x00 if unset. |
 
-Note: when signing a transaction `recipient` and `amount` are set to zero.
+Note: when signing a transaction `messageID` is set to zero.
 
-Note: when verifying a predicate or executing a script, `recipient` and `amount` are initialized to zero.
+Note: when verifying a predicate or executing a script, `messageID` is initialized to zero.
 
 Note: this output type is unspendable and can be pruned from the UTXO set.
 
