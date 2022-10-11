@@ -1457,7 +1457,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./main.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be populated with `0` if the first word is unset and `1` if the value is set. 
+Register `rB` will be populated with `0` if the first word is unset and `1` if the value is set.
 
 ### SWW: State write word
 
