@@ -1423,7 +1423,7 @@ TODO: document output messages merkle tree construction and maintenance and link
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
 | Description | A sequential series of 32 bytes is cleared from the current contract's state. |
-| Operation   | ```STATE[MEM[$rA, 32 * rB]] = None;```                                        |
+| Operation   | ```STATE[MEM[$rA, 32], 32  * $rB] = None;```                                        |
 | Syntax      | `scwq $rA, $rB`                                                               |
 | Encoding    | `0x00 rA rB - -`                                                              |
 | Notes       |                                                                               |
