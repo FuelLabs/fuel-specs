@@ -1417,6 +1417,22 @@ This modifies the `balanceRoot` field of the appropriate output.
 `messageID` is added to the `OutputMessage` Merkle tree as part of block header.
 TODO: document output messages merkle tree construction and maintenance and link here
 
+### SCWQ: State clear sequential 32 byte slots
+
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | A sequential series of 32 bytes is cleared from the current contract's state. |
+| Operation   | ```STATE[MEM[$rA, 32 * rB]] = None;```                                        |
+| Syntax      | `scwq $rA, $rB`                                                               |
+| Encoding    | `0x00 rA rB - -`                                                              |
+| Notes       |                                                                               |
+
+Panic if:
+
+- `$rA + 32 * rB` overflows
+- `$rA + 32 * rB > VM_MAX_RAM`
+- `$fp == 0` (in the script context)
+
 ### SRW: State read word
 
 |             |                                                  |
@@ -1437,7 +1453,7 @@ Panic if:
 
 Register `rB` will be populated with `0` if the word is unset (default) and `1` if the value is set.
 
-### SRWQ: State read 32 bytes
+### SRWQ: State read sequential 32 byte slots
 
 |             |                                                                            |
 |-------------|----------------------------------------------------------------------------|
