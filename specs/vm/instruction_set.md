@@ -1419,39 +1419,45 @@ TODO: document output messages merkle tree construction and maintenance and link
 
 ### SRW: State read word
 
-|             |                                                   |
-|-------------|---------------------------------------------------|
+|             |                                                  |
+|-------------|--------------------------------------------------|
 | Description | A word is read from the current contract's state. |
-| Operation   | ```$rA = STATE[MEM[$rB, 32]][0, 8];```            |
-| Syntax      | `srw $rA, $rB`                                    |
-| Encoding    | `0x00 rA rB - -`                                  |
+| Operation   | ```$rA = STATE[MEM[$rB, 32]][0, 8];```           |
+| Syntax      | `srw $rA, $rB, $rC`                              |
+| Encoding    | `0x00 rA rB rC -`                                |
 | Notes       | Returns zero if the state element does not exist. |
 
 Panic if:
 
 - `$rA` is a [reserved register](./main.md#semantics)
-- `$rB + 32` overflows
-- `$rB + 32 > VM_MAX_RAM`
+- `$rB` is a [reserved register](./main.md#semantics)
+- `$rC + 32` overflows
+- `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
+
+Register `rB` will be populated with `0` if the word is unset (default) and `1` if the value is set.
 
 ### SRWQ: State read 32 bytes
 
-|             |                                                     |
-|-------------|-----------------------------------------------------|
-| Description | 32 bytes is read from the current contract's state. |
-| Operation   | ```MEM[$rA, 32] = STATE[MEM[$rB, 32]];```           |
-| Syntax      | `srwq $rA, $rB`                                     |
-| Encoding    | `0x00 rA rB - -`                                    |
-| Notes       | Returns zero if the state element does not exist.   |
+|             |                                                                            |
+|-------------|----------------------------------------------------------------------------|
+| Description | A sequential series of 32 bytes is read from the current contract's state. |
+| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rB, 32 * rD]];```                        |
+| Syntax      | `srwq $rA, $rB, $rC, $rD`                                                  |
+| Encoding    | `0x00 rA rB rC rD`                                                         |
+| Notes       | Returns zero if the state element does not exist.                          |
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rB + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- `$rA + 32 * rD` overflows
+- `$rA + 32 * rD > VM_MAX_RAM`
+- `$rB` is a [reserved register](./main.md#semantics)
+- `$rC + 32 * rD` overflows
+- `$rC + 32 * rD > VM_MAX_RAM`
+- The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./main.md#ownership)
 - `$fp == 0` (in the script context)
+
+Register `rB` will be populated with `0` if the first word is unset and `1` if the value is set.
 
 ### SWW: State write word
 
