@@ -1430,8 +1430,8 @@ TODO: document output messages merkle tree construction and maintenance and link
 
 Panic if:
 
-- `$rA + 32 * rB` overflows
-- `$rA + 32 * rB > VM_MAX_RAM`
+- `$rA + 32 * $rB` overflows
+- `$rA + 32 * $rB > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
 ### SRW: State read word
