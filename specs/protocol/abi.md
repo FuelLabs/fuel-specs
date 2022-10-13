@@ -4,28 +4,51 @@ This document describes and specifies the ABI (Application Binary Interface) of 
 
 ## JSON ABI Format
 
-The JSON of an ABI is the human-readable representation of an interface call to a Sway contract. It is an array of functions containing the following properties:
+The JSON of an ABI is the human-readable representation of an interface call to a Sway contract. It is a JSON object containing the following properties:
 
-- `"type"`: String, type of the function; right now only one is supported: `"function"`
-- `"name"`: String, the name of the contract's function being called;
-- `"inputs"`: An array of objects that represents the inputs to this function, each of which contains:
-  - `"name"`: String, the name of the parameter;
-  - `"type"`: String, the type of the parameter, can be a canonical Sway type or a custom type (struct, enum, or tuple). The format of `"type"` for each possible type is shown in the [JSON ABI format for each type](#json-abi-format-for-each-type) section;
-  - `"components"`: An array of the components of a given type if any and `null` otherwise. Each element of this array contains:
-    - `"name"`: String, the name of the component;
-    - `"type"`: String, the type of the component;
-    - `"components"`: Recursively following the format explained here;
-    - `"typeArguments"`: Recursively following the format explained here.
-  - `"typeArguments"`: An array of type arguments of a given type if any and `null` otherwise. Type arguments are concrete types for the generic parameters that the struct or the enum might have. Each element of the `"typeArguments"` array contains:
-    - `"name"`: String, the name of the type argument;
-    - `"type"`: String, the type of the type argument;
-    - `"components"`: Recursively following the format explained here;
-    - `"typeArguments"`: Recursively following the format explained here.
-- `"outputs"`: An array of objects similar to `"inputs"` representing the outputs of this function;
+- `"types`": an array describing all the _type declarations_ used (or transitively used) in the ABI. Each _type declaration_ is a JSON object that contains the following properties:
+  - `"type_id"`: a unique integer ID.
+  - `"type"`: a string representation of the _type declaration_. The section [JSON ABI format for each type](#json-abi-format-for-each-type) specifies the format for each possible type.
+  - `"components"`: An array of the components of a given type, if any, and `null` otherwise. Each component is a _type application_ and each _type application_ is a JSON object that contains the following properties:
+    - `"name"`: the name of the component.
+    - `"type"`: the ID of the type of the component.
+    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the component, if the type is generic, and `null` otherwise.
+  - `"typeParameters"`: An array of type IDs of the _type parameters_ of the type, if the type is generic, and `null` otherwise.
+- `"functions`": an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
+  - `"name"`: the name of the function
+  - `"inputs"`: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a _type application_ and each _type application_ is a JSON object that contains the following properties:
+    - `"name"`: the name of the input.
+    - `"type"`: the ID of the type of the input.
+    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the input, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ and each _type application_ is a JSON object that contains the following properties:
+      - `"name"`: an empty string.
+      - `"type"`: the ID of the type of the _type argument_.
+      - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+  - `"output"`: an object representing the output of the function (i.e. its return value). The output is a _type application_, which is a JSON object that contains the following properties:
+    - `"name"`: the name of the output, which is an empty string because outputs do not have names.
+    - `"type"`: the ID of the type of the output.
+    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise.
+- `"loggedTypes"`: an array describing all instances of `log` or `logd` in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+  - `"logId"`: a unique integer ID.
+  - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
+    - `"name"`: the name of the value being logged.
+    - `"type"`: the ID of the type of the value being logged.
+    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise.
 
-> **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, and `"typeArguments"` is important and should be taken into account when encoding/decoding an ABI.
+The distinction between a _type declaration_ and a _type application_ is important when the type is generic. For example, given the following:
 
-For instance, given the following ABI declaration:
+```rust
+struct Foo<T> { x: T }
+
+fn bar(input: Foo<u64>); // an ABI function
+```
+
+`struct Foo<T>` is a _type declaration_ and `T` is its only _type parameter_, while `Foo<u64>` is a _type application_ and `u64` is its only _type argument_.
+
+> **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
+
+#### Simple Example
+
+Below is a simple example showing how the JSON ABI for an example that does not use generic types or complex types. We will later go over more complex examples.
 
 ```rust
 abi MyContract {
@@ -37,62 +60,81 @@ abi MyContract {
 the JSON representation of this ABI looks like:
 
 ```json
-[
-  {
-    "name": "first_function",
-    "type": "function",
-    "inputs": [
-      {
-        "name": "arg",
-        "type": "u64",
-        "components": null,
-        "typeArguments": null
-      }
-    ],
-    "outputs": [
-      {
+{
+  "types": [
+    {
+      "typeId": 0,
+      "type": "()",
+      "components": [],
+      "typeParameters": null
+    },
+    {
+      "typeId": 1,
+      "type": "b256",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 2,
+      "type": "bool",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 3,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [
+        {
+          "name": "arg",
+          "type": 3,
+          "typeArguments": null
+        }
+      ],
+      "name": "first_function",
+      "output": {
         "name": "",
-        "type": "bool",
-        "components": null,
+        "type": 2,
         "typeArguments": null
       }
-    ]
-  },
-  {
-    "name": "second_function",
-    "type": "function",
-    "inputs": [
-      {
-        "name": "arg",
-        "type": "b256",
-        "components": null,
-        "typeArguments": null
-      }
-    ],
-    "outputs": [
-      {
+    },
+    {
+      "inputs": [
+        {
+          "name": "arg",
+          "type": 1,
+          "typeArguments": null
+        }
+      ],
+      "name": "second_function",
+      "output": {
         "name": "",
-        "type": "()",
-        "components": [],
+        "type": 0,
         "typeArguments": null
       }
-    ]
-  }
-]
+    }
+  ],
+  "loggedTypes": []
+}
 ```
 
 ### JSON ABI format for each type
 
-Below is a list of the JSON ABI formats for each available type:
+Below is a list of the JSON ABI formats for each possible type declaration:
 
 #### `bool`
 
 ```json
 {
-  "name": "<var_name>",
+  "typeId": <id>,
   "type": "bool",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
@@ -100,10 +142,10 @@ Below is a list of the JSON ABI formats for each available type:
 
 ```json
 {
-  "name": "<var_name>",
+  "typeId": <id>,
   "type": "u8",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
@@ -111,10 +153,10 @@ Below is a list of the JSON ABI formats for each available type:
 
 ```json
 {
-  "name": "<var_name>",
+  "typeId": <id>,
   "type": "u16",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
@@ -122,10 +164,10 @@ Below is a list of the JSON ABI formats for each available type:
 
 ```json
 {
-  "name": "<var_name>",
+  "name": <id>,
   "type": "u32",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
@@ -133,10 +175,10 @@ Below is a list of the JSON ABI formats for each available type:
 
 ```json
 {
-  "name": "<var_name>",
+  "name": <id>,
   "type": "u64",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
@@ -144,10 +186,10 @@ Below is a list of the JSON ABI formats for each available type:
 
 ```json
 {
-  "name": "<var_name>",
+  "name": <id>,
   "type": "b256",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
@@ -155,156 +197,213 @@ Below is a list of the JSON ABI formats for each available type:
 
 ```json
 {
-  "name": "<var_name>",
-  "type": "struct <decl_name>",
+  "name": <id>,
+  "type": "struct <struct_name>",
   "components": [
     {
       "name": "<field1_name>",
-      "type": "<field1_type>",
-      "components": ...,
-      "typeArguments": ...
+      "type": <field1_type_id>,
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
     },
     {
       "name": "<field2_name>",
-      "type": "<field2_type>",
-      "components": ...,
-      "typeArguments": ...
+      "type": "<field2_type_id>",
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
     },
     ...
   ],
-  "typeArguments": [
-    {
-      "name": "<type_param1_name>",
-      "type": "<type_param1_type>",
-      "components": ...,
-      "typeArguments": ...
-    },
-    {
-      "name": "<type_param2_name>",
-      "type": "<type_param2_type>",
-      "components": ...,
-      "typeArguments": ...
-    },
-    ...
+  "typeParameters": [
+    <type_param1_type_id>, 
+    <type_param2_type_id>, 
+    ... 
   ]
 }
 ```
-
-- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section.
-- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section.
-- The array `components` for each field or type argument is recursively formatted according to the rules of this section.
-- The array `typeArguments` for each field or type argument is recursively formatted according to the rules of this section.
 
 #### `enum`
 
 ```json
 {
-  "name": "<var_name>",
-  "type": "enum <decl_name>",
+  "name": <id>,
+  "type": "enum <struct_name>",
   "components": [
     {
       "name": "<variant1_name>",
-      "type": "<variant1_type>",
-      "components": ...,
-      "typeArguments": ...
+      "type": <variant1_type_id>,
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
     },
     {
       "name": "<variant2_name>",
-      "type": "<variant2_type>",
-      "components": ...,
-      "typeArguments": ...
+      "type": "<variant2_type_id>",
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
     },
     ...
   ],
-  "typeArguments": [
-    {
-      "name": "<type_param1_name>",
-      "type": "<type_param1_type>",
-      "components": ...,
-      "typeArguments": ...
-    },
-    {
-      "name": "<type_param2_name>",
-      "type": "<type_param2_type>",
-      "components": ...,
-      "typeArguments": ...
-    },
-    ...
+  "typeParameters": [
+    <type_param1_type_id>, 
+    <type_param2_type_id>, 
+    ... 
   ]
 }
 ```
-
-- `<variant1_type>`, `<variant2_type>`, ... are formatted according to the rules of this section.
-- `<type_param1_type>`, `<type_param2_type>`, ... are formatted according to the rules of this section.
-- The array `components` for each variant or type argument is recursively formatted according to the rules of this section.
-- The array `typeArguments` for each variant or type argument is recursively formatted according to the rules of this section.
 
 #### `str[<n>]`
 
 ```json
 {
-  "name": "<var_name>",
+  "typeId": <id>,
   "type": "str[<n>]",
   "components": null,
-  "typeArguments": null
+  "typeParameters": null
 } 
 ```
 
-`<n>` is the size of the string.
+`<n>` is the length of the string.
 
 #### `array`
 
 ```json
 {
-  "name": "<var_name>",
-  "type": "[<element_type>; <n>]",
+  "typeId": <id>,
+  "type": "[_; <n>]",
   "components": [
     {
       "name": "__array_element",
       "type": "<element_type>",
-      "components": ...,
       "typeArguments": ...
     }
+    {
+      "name": "__array_element",
+      "type": <element_type_id>,
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
+    },
+
   ],
-  "typeArguments": null
+  "typeParameters": null
 }
 ```
 
-- `<element_type>` is formatted according to the rules of this section.
 - `<n>` is the size of the array.
-- The array `components` for `__array_element` is recursively formatted according to the rules of this section.
-- The array `typeArguments` for `__array_element` is recursively formatted according to the rules of this section.
 
 #### `tuple`
 
 ```json
 {
-  "name": "<var_name>",
-  "type": "(<field1_type>, <field2_type>, ...)",
+  "typeId": <id>,
+  "type": "(_, _, ...)",
   "components": [
     {
       "name": "__tuple_element",
-      "type": "<field1_type>",
-      "components": ...,
-      "typeArguments": ...
+      "type": <field1_type_id>,
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
     },
     {
       "name": "__tuple_element",
-      "type": "<field2_type>",
-      "components": ...,
-      "typeArguments": ...
+      "type": "<field2_type_id>",
+      "typeArguments": [
+        {
+          "name": "",
+          "type": <type_arg1_type_id>,
+          "typeArguments": ...
+        },
+        {
+          "name": "",
+          "type": <type_arg2_type_id>,
+          "typeArguments": ...
+        },
+        ...
+      ]
     },
     ...
   ],
-  "typeArguments": null
+  "typeParameters": null
 }
 ```
 
-- `<field1_type>`, `<field2_type>`, ... are formatted according to the rules of this section.
-- The array `components` for each field is recursively formatted according to the rules of this section.
-- The array `typeArguments` for each field is recursively formatted according to the rules of this section.
+#### Generic Type Parameters
 
-> **Note**: Because outputs don't have names, the field `"name"` should be set to `""` for each entry of the array `outputs`.
+```json
+{
+  "typeId": <id>,
+  "type": "generic <name>",
+  "components": null,
+  "typeParameters": null
+} 
+```
+
+`<name>` is the name of the generic parameter as specified in the struct or enum declaration that uses it.
 
 #### Complex example for JSON ABI format
 
@@ -513,7 +612,7 @@ its JSON representation would look like:
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
 
-### Receipt
+## Receipt
 
 Upon execution of ABI calls, i.e scripts being executed, a JSON object representing a list of receipts will be returned to the caller. Below is the JSON specification of the possible receipt types. The root will be `receipts_root` which will include an array of `receipts`.
 
