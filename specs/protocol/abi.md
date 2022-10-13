@@ -4,7 +4,31 @@ This document describes and specifies the ABI (Application Binary Interface) of 
 
 ## JSON ABI Format
 
-The JSON of an ABI is the human-readable representation of the interface of a Sway contract. It is a JSON object containing the following properties:
+The JSON of an ABI is the human-readable representation of the interface of a Sway contract.
+
+### Notation
+
+Before describing the format of the JSON ABI, we provide some definitions that will make the JSON ABI spec easier to read.
+
+Given the example below:
+
+```rust
+struct Foo { x: bool }
+struct Bar<T> { y: T }
+
+fn baz(input1: Foo, input2: Bar<u64>); // an ABI function
+```
+
+we define the following expressions:
+
+- _type declaration_: the declaration or definition of a type which can be generic. `struct Foo { .. }` and `struct Bar<T> { .. }` in the example above are both type declarations.
+- _type application_: the application or use of a type. `Foo` and `Bar<u64>` in `fn baz(input1: Foo, input2: Bar<u64>);` in the example above are both applications of the type declarations `struct Foo { .. }` and `struct Bar<T> { .. }` respectively.
+- _type parameter_: a generic parameter used in a type declaration. `T` in `struct Bar<T>` in the example above is a type parameter.
+- _type argument_: an application of a type parameter used in a type application. `u64` in `input2: Bar<u64>` in the example above is a type argument.
+
+### JSON ABI Spec
+
+It is a JSON object containing the following properties:
 
 - `"types`": an array describing all the _type declarations_ used (or transitively used) in the ABI. Each _type declaration_ is a JSON object that contains the following properties:
   - `"typeId"`: a unique integer ID.
@@ -33,19 +57,9 @@ The JSON of an ABI is the human-readable representation of the interface of a Sw
 - `"loggedTypes"`: an array describing all instances of `log` or `logd` in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"logId"`: a unique integer ID.
   - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
-    - `"name"`: the name of the value being logged.
+    - `"name"`: an empty string for now.
     - `"type"`: the _type declaration_ ID of the type of the value being logged.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise.
-
-The distinction between a _type declaration_ and a _type application_ is important when the type is generic. For example, given the following:
-
-```rust
-struct Foo<T> { x: T }
-
-fn bar(input: Foo<u64>); // an ABI function
-```
-
-`struct Foo<T>` is a _type declaration_ and `T` is its only _type parameter_, while `Foo<u64>` is a _type application_ and `u64` is its only _type argument_.
 
 > **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
 
