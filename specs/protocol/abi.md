@@ -198,7 +198,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 ```json
 {
   "name": <id>,
-  "type": "struct <struct_name>",
+  "type": "struct <enum_name>",
   "components": [
     {
       "name": "<field1_name>",
@@ -405,209 +405,396 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 `<name>` is the name of the generic parameter as specified in the struct or enum declaration that uses it.
 
-#### Complex example for JSON ABI format
+### Complex example for JSON ABI format
+
+#### Custom Types
 
 Given the following ABI declaration:
 
 ```rust
-enum MyEnum<V> {
+enum MyEnum {
     Foo: u64,
     Bar: bool,
 }
-struct MyStruct<T, U> {
-    bim: T,
-    bam: MyEnum<u64>,
-}
-struct MyOtherStruct {
-    bom: u64,
+
+struct MyStruct {
+    bim: u64,
+    bam: MyEnum,
 }
 
 abi MyContract {
     fn complex_function(
-        arg1: MyStruct<[b256; 3], u8>, 
-        arg2: [MyStruct<u64, bool>; 4], 
-        arg3: (str[5], bool),
-        arg4: MyOtherStruct, 
-    ) -> str[6];
+        arg1: ([str[5]; 3], bool, b256),
+        arg2: MyStruct,
+    );
 }
 ```
 
 its JSON representation would look like:
 
 ```json
-[
-  {
-    "name": "complex_function",
-    "type": "function",
-    "inputs": [
-      {
-        "name": "arg1",
-        "type": "struct MyStruct",
-        "components": [
-          {
-            "name": "bim",
-            "type": "[b256; 3]",
-            "components": [
-              {
-                "name": "__array_element",
-                "type": "b256",
-                "components": null,
-                "typeArguments": null
-              }
-            ],
-            "typeArguments": null
-          },
-          {
-            "name": "bam",
-            "type": "enum MyEnum",
-            "components": [
-              {
-                "name": "Foo",
-                "type": "u64",
-                "components": null,
-                "typeArguments": null
-              },
-              {
-                "name": "Bar",
-                "type": "bool",
-                "components": null,
-                "typeArguments": null
-              }
-            ],
-            "typeArguments": [
-              {
-                "name": "V",
-                "type": "u64",
-                "components": null,
-                "typeArguments": null
-              }
-            ]
-          }
-        ],
+{
+  "types": [
+    {
+      "typeId": 0,
+      "type": "()",
+      "components": [],
+      "typeParameters": null
+    },
+    {
+      "typeId": 1,
+      "type": "(_, _, _)",
+      "components": [
+        {
+          "name": "__tuple_element",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "__tuple_element",
+          "type": 4,
+          "typeArguments": null
+        },
+        {
+          "name": "__tuple_element",
+          "type": 3,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 2,
+      "type": "[_; 3]",
+      "components": [
+        {
+          "name": "__array_element",
+          "type": 6,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 3,
+      "type": "b256",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 4,
+      "type": "bool",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 5,
+      "type": "enum MyEnum",
+      "components": [
+        {
+          "name": "Foo",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "Bar",
+          "type": 4,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 6,
+      "type": "str[5]",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 7,
+      "type": "struct MyStruct",
+      "components": [
+        {
+          "name": "bim",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "bam",
+          "type": 5,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 8,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [
+        {
+          "name": "arg1",
+          "type": 1,
+          "typeArguments": null
+        },
+        {
+          "name": "arg2",
+          "type": 7,
+          "typeArguments": null
+        }
+      ],
+      "name": "complex_function",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      }
+    }
+  ],
+  "loggedTypes": []
+}
+```
+
+#### Generic Types
+
+Given the following ABI declaration:
+
+```rust
+enum MyEnum<T, U> {
+    Foo: T,
+    Bar: U,
+}
+struct MyStruct<W> {
+    bam: MyEnum<W, W>,
+}
+
+abi MyContract {
+    fn complex_function(
+        arg1: MyStruct<b256>,
+    );
+}
+```
+
+its JSON representation would look like:
+
+```json
+{
+  "types": [
+    {
+      "typeId": 0,
+      "type": "()",
+      "components": [],
+      "typeParameters": null
+    },
+    {
+      "typeId": 1,
+      "type": "b256",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 2,
+      "type": "enum MyEnum",
+      "components": [
+        {
+          "name": "Foo",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "Bar",
+          "type": 4,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": [
+        3,
+        4
+      ]
+    },
+    {
+      "typeId": 3,
+      "type": "generic T",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 4,
+      "type": "generic U",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 5,
+      "type": "generic W",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 6,
+      "type": "struct MyStruct",
+      "components": [
+        {
+          "name": "bam",
+          "type": 2,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 5,
+              "typeArguments": null
+            },
+            {
+              "name": "",
+              "type": 5,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "typeParameters": [
+        5
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [
+        {
+          "name": "arg2",
+          "type": 6,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 1,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "complex_function",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      }
+    }
+  ],
+  "loggedTypes": []
+}
+```
+
+#### Logged Types
+
+Given the following contract:
+
+```rust
+struct MyStruct<W> {
+    x: W,
+}
+
+abi MyContract {
+    fn logging();
+}
+
+...
+
+fn logging() {
+    log(MyStruct { x: 42 });
+    log(MyStruct { x: true });
+}
+```
+
+its JSON representation would look like:
+
+```json
+{
+  "types": [
+    {
+      "typeId": 0,
+      "type": "()",
+      "components": [],
+      "typeParameters": null
+    },
+    {
+      "typeId": 1,
+      "type": "bool",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 2,
+      "type": "generic W",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 3,
+      "type": "struct MyStruct",
+      "components": [
+        {
+          "name": "x",
+          "type": 2,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": [
+        2
+      ]
+    },
+    {
+      "typeId": 4,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [],
+      "name": "logging",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      }
+    }
+  ],
+  "loggedTypes": [
+    {
+      "logId": 0,
+      "loggedType": {
+        "name": "",
+        "type": 3,
         "typeArguments": [
           {
-            "name": "T",
-            "type": "[b256; 3]",
-            "components": [
-              {
-                "name": "__array_element",
-                "type": "b256",
-                "components": null,
-                "typeArguments": null
-              }
-            ],
-            "typeArguments": null
-          },
-          {
-            "name": "U",
-            "type": "u8",
-            "components": null,
+            "name": "",
+            "type": 4,
             "typeArguments": null
           }
         ]
-      },
-      {
-        "name": "arg2",
-        "type": "[struct MyStruct; 4]",
-        "components": [
-          {
-            "name": "__array_element",
-            "type": "struct MyStruct",
-            "components": [
-              {
-                "name": "bim",
-                "type": "u64",
-                "components": null,
-                "typeArguments": null
-              },
-              {
-                "name": "bam",
-                "type": "enum MyEnum",
-                "components": [
-                  {
-                    "name": "Foo",
-                    "type": "u64",
-                    "components": null,
-                    "typeArguments": null
-                  },
-                  {
-                    "name": "Bar",
-                    "type": "bool",
-                    "components": null,
-                    "typeArguments": null
-                  }
-                ],
-                "typeArguments": [
-                  {
-                    "name": "V",
-                    "type": "u64",
-                    "components": null,
-                    "typeArguments": null
-                  }
-                ]
-              }
-            ],
-            "typeArguments": [
-              {
-                "name": "T",
-                "type": "u64",
-                "components": null,
-                "typeArguments": null
-              },
-              {
-                "name": "U",
-                "type": "bool",
-                "components": null,
-                "typeArguments": null
-              }
-            ]
-          }
-        ],
-        "typeArguments": null
-      },
-      {
-        "name": "arg3",
-        "type": "(str[5], bool)",
-        "components": [
-          {
-            "name": "__tuple_element",
-            "type": "str[5]",
-            "components": null,
-            "typeArguments": null
-          },
-          {
-            "name": "__tuple_element",
-            "type": "bool",
-            "components": null,
-            "typeArguments": null
-          }
-        ],
-        "typeArguments": null
-      },
-      {
-        "name": "arg4",
-        "type": "struct MyOtherStruct",
-        "components": [
-          {
-            "name": "bom",
-            "type": "u64",
-            "components": null,
-            "typeArguments": null
-          }
-        ],
-        "typeArguments": null
       }
-    ],
-    "outputs": [
-      {
+    },
+    {
+      "logId": 1,
+      "loggedType": {
         "name": "",
-        "type": "str[6]",
-        "components": null,
-        "typeArguments": null
+        "type": 3,
+        "typeArguments": [
+          {
+            "name": "",
+            "type": 1,
+            "typeArguments": null
+          }
+        ]
       }
-    ]
-  }
-]
+    }
+  ]
+}
 ```
 
 This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
