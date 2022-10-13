@@ -4,35 +4,38 @@ This document describes and specifies the ABI (Application Binary Interface) of 
 
 ## JSON ABI Format
 
-The JSON of an ABI is the human-readable representation of an interface call to a Sway contract. It is a JSON object containing the following properties:
+The JSON of an ABI is the human-readable representation of the interface of a Sway contract. It is a JSON object containing the following properties:
 
 - `"types`": an array describing all the _type declarations_ used (or transitively used) in the ABI. Each _type declaration_ is a JSON object that contains the following properties:
-  - `"type_id"`: a unique integer ID.
+  - `"typeId"`: a unique integer ID.
   - `"type"`: a string representation of the _type declaration_. The section [JSON ABI format for each type](#json-abi-format-for-each-type) specifies the format for each possible type.
-  - `"components"`: An array of the components of a given type, if any, and `null` otherwise. Each component is a _type application_ and each _type application_ is a JSON object that contains the following properties:
+  - `"components"`: an array of the components of a given type, if any, and `null` otherwise. Each component is a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the component.
-    - `"type"`: the ID of the type of the component.
-    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the component, if the type is generic, and `null` otherwise.
-  - `"typeParameters"`: An array of type IDs of the _type parameters_ of the type, if the type is generic, and `null` otherwise.
+    - `"type"`: the _type declaration_ ID of the type of the component.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"name"`: an empty string.
+      - `"type"`: the _type declaration_ ID of the type of the _type argument_.
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+  - `"typeParameters"`: an array of type IDs of the _type parameters_ of the type, if the type is generic, and `null` otherwise.
 - `"functions`": an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
   - `"name"`: the name of the function
-  - `"inputs"`: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a _type application_ and each _type application_ is a JSON object that contains the following properties:
+  - `"inputs"`: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the input.
-    - `"type"`: the ID of the type of the input.
-    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the input, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ and each _type application_ is a JSON object that contains the following properties:
+    - `"type"`: the _type declaration_ ID of the type of the input.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the input, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"name"`: an empty string.
-      - `"type"`: the ID of the type of the _type argument_.
-      - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+      - `"type"`: the _type declaration_ ID of the type of the _type argument_.
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
   - `"output"`: an object representing the output of the function (i.e. its return value). The output is a _type application_, which is a JSON object that contains the following properties:
     - `"name"`: the name of the output, which is an empty string because outputs do not have names.
-    - `"type"`: the ID of the type of the output.
-    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise.
+    - `"type"`: the _type declaration_ ID of the type of the output.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise.
 - `"loggedTypes"`: an array describing all instances of `log` or `logd` in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"logId"`: a unique integer ID.
   - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the value being logged.
-    - `"type"`: the ID of the type of the value being logged.
-    - `"typeArguments"`: An array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise.
+    - `"type"`: the _type declaration_ ID of the type of the value being logged.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise.
 
 The distinction between a _type declaration_ and a _type application_ is important when the type is generic. For example, given the following:
 
