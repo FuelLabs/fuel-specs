@@ -1423,16 +1423,19 @@ TODO: document output messages merkle tree construction and maintenance and link
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
 | Description | A sequential series of 32 bytes is cleared from the current contract's state. |
-| Operation   | ```STATE[MEM[$rA, 32], 32  * $rB] = None;```                                        |
-| Syntax      | `scwq $rA, $rB`                                                               |
-| Encoding    | `0x00 rA rB - -`                                                              |
+| Operation   | ```STATE[MEM[$rA, 32], 32 * $rC] = None;```                                   |
+| Syntax      | `scwq $rA, $rB, $rC`                                                          |
+| Encoding    | `0x00 rA rB rC -`                                                             |
 | Notes       |                                                                               |
 
 Panic if:
 
-- `$rA + 32 * $rB` overflows
-- `$rA + 32 * $rB > VM_MAX_RAM`
+- `$rA + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB` is a [reserved register](./main.md#semantics)
 - `$fp == 0` (in the script context)
+
+Register `rB` will be populated with `false` if the first word was already unset (default) and `true` if the value is set.
 
 ### SRW: State read word
 
