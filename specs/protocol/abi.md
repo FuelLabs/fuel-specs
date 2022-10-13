@@ -46,7 +46,7 @@ fn bar(input: Foo<u64>); // an ABI function
 
 > **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
 
-#### Simple Example
+### Simple Example
 
 Below is a simple example showing how the JSON ABI for an example that does not use generic types or complex types. We will later go over more complex examples.
 
@@ -647,7 +647,7 @@ Then, each receipt type will have its own properties. Some of these properties a
 
 _Important note:_ For the JSON representation of receipts, we represent 64-bit unsigned integers as a JSON `String` due to limitations around the type `Number` in the JSON specification, which only supports numbers up to `2^{53-1}`, while the FuelVM's registers hold values up to `2^64`.
 
-#### Panic receipt
+### Panic receipt
 
 - `type`: `Panic`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -668,7 +668,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### Return receipt
+### Return receipt
 
 - `type`: `Return`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
@@ -686,7 +686,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### Call receipt
+### Call receipt
 
 - `type`: `Call`.
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
@@ -714,7 +714,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### Log receipt
+### Log receipt
 
 - `type`: `Log`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -738,7 +738,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### LogData receipt
+### LogData receipt
 
 - `type`: `LogData`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -766,7 +766,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### ReturnData receipt
+### ReturnData receipt
 
 - `type`: `ReturnData`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -790,7 +790,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### Revert receipt
+### Revert receipt
 
 - `type`: `Revert`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -808,7 +808,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### Transfer receipt
+### Transfer receipt
 
 - `type`: `Transfer`.
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -830,7 +830,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### TransferOut receipt
+### TransferOut receipt
 
 - `type`: `TransferOut`.
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -852,7 +852,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### ScriptResult receipt
+### ScriptResult receipt
 
 - `type`: `ScriptResult`.
 - `result`: Hexadecimal string representation of a 64-bit unsigned integer; `0` if script exited successfully, `any` otherwise.
@@ -866,7 +866,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 }
 ```
 
-#### MessageOut receipt
+### MessageOut receipt
 
 - `type`: `MessageOut`.
 - `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](../protocol/identifiers.md#message-id).
