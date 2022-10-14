@@ -28,7 +28,7 @@ we define the following expressions:
 
 ### JSON ABI Spec
 
-It is a JSON object containing the following properties:
+The ABI of a contract is represented as a JSON object containing the following properties:
 
 - `"types`": an array describing all the _type declarations_ used (or transitively used) in the ABI. Each _type declaration_ is a JSON object that contains the following properties:
   - `"typeId"`: a unique integer ID.
@@ -37,29 +37,29 @@ It is a JSON object containing the following properties:
     - `"name"`: the name of the component.
     - `"type"`: the _type declaration_ ID of the type of the component.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
-      - `"name"`: an empty string.
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
-  - `"typeParameters"`: an array of type IDs of the _type parameters_ of the type, if the type is generic, and `null` otherwise.
+  - `"typeParameters"`: an array of type IDs of the _type parameters_ of the type, if the type is generic, and `null` otherwise. Each _type parameter_ is a type declaration and is represented as described in [Generic Type Parameter](#generic-type-parameter).
 - `"functions`": an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
   - `"name"`: the name of the function
   - `"inputs"`: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the input.
     - `"type"`: the _type declaration_ ID of the type of the input.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the input, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
-      - `"name"`: an empty string.
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
   - `"output"`: an object representing the output of the function (i.e. its return value). The output is a _type application_, which is a JSON object that contains the following properties:
-    - `"name"`: the name of the output, which is an empty string because outputs do not have names.
     - `"type"`: the _type declaration_ ID of the type of the output.
-    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise.
-- `"loggedTypes"`: an array describing all instances of `log` or `logd` in the contract's bytecode. Each instance is a JSON object that contains the following properties:
-  - `"logId"`: a unique integer ID.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"type"`: the _type declaration_ ID of the type of the _type argument_.
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+- `"loggedTypes"`: an array describing all instances of [`log`](../vm/instruction_set.md#log-log-event) or [`logd`](../vm/instruction_set.md#logd-log-data-event) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+  - `"logId"`: a unique integer ID. The [`log`](../vm/instruction_set.md#log-log-event) and [`logd`](../vm/instruction_set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
   - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
-    - `"name"`: an empty string for now.
     - `"type"`: the _type declaration_ ID of the type of the value being logged.
-    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"type"`: the _type declaration_ ID of the type of the _type argument_.
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
 
 > **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
 
@@ -409,7 +409,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 }
 ```
 
-#### Generic Type Parameters
+#### Generic Type Parameter
 
 ```json
 {
