@@ -1435,7 +1435,7 @@ Panic if:
 - `$rB` is a [reserved register](./main.md#semantics)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be populated with `false` if the first word was already unset (default) and `true` if the value is set.
+Register `rB` will be set to `false` if the first storage slot was already unset (default) and `true` if the slot was set.
 
 ### SRW: State read word
 
