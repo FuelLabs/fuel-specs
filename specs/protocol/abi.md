@@ -32,7 +32,7 @@ The ABI of a contract is represented as a JSON object containing the following p
 
 - `"types`": an array describing all the _type declarations_ used (or transitively used) in the ABI. Each _type declaration_ is a JSON object that contains the following properties:
   - `"typeId"`: a unique integer ID.
-  - `"type"`: a string representation of the _type declaration_. The section [JSON ABI format for each type](#json-abi-format-for-each-type) specifies the format for each possible type.
+  - `"type"`: a string representation of the _type declaration_. The section [JSON ABI Format for Each Possible Type Declaration](#json-abi-format-for-each-possible-type-declaration) specifies the format for each possible type.
   - `"components"`: an array of the components of a given type, if any, and `null` otherwise. Each component is a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the component.
     - `"type"`: the _type declaration_ ID of the type of the component.
