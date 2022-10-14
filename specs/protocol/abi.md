@@ -61,8 +61,6 @@ The ABI of a contract is represented as a JSON object containing the following p
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
 
-> **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
-
 > **Note**: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ### A Simple Example
