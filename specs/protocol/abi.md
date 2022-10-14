@@ -63,7 +63,7 @@ It is a JSON object containing the following properties:
 
 > **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
 
-### Simple Example
+### A Simple Example
 
 Below is a simple example showing how the JSON ABI for an example that does not use generic types or complex types. We will later go over more complex examples.
 
@@ -140,7 +140,7 @@ the JSON representation of this ABI looks like:
 }
 ```
 
-### JSON ABI format for each type
+### JSON ABI Format for Each Possible Type Declaration
 
 Below is a list of the JSON ABI formats for each possible type declaration:
 
@@ -422,7 +422,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 `<name>` is the name of the generic parameter as specified in the struct or enum declaration that uses it.
 
-### Complex example for JSON ABI format
+### Some Complex Examples
 
 #### Custom Types
 
@@ -1153,7 +1153,7 @@ The table below summarizes how each function argument type is encoded
 
 > **Note:** Non-generic structs and enums do not require angle brackets.
 
-#### Complex example for Function signature encoding
+### A Complex Example
 
 ```rust
 enum MyEnum<V> {
