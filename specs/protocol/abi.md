@@ -65,7 +65,7 @@ The ABI of a contract is represented as a JSON object containing the following p
 
 ### A Simple Example
 
-Below is a simple example showing how the JSON ABI for an example that does not use generic types or complex types. We will later go over more complex examples.
+Below is a simple example showing how the JSON ABI for an example that does not use generic or complex types. We will later go over more complex examples.
 
 ```rust
 abi MyContract {
@@ -115,7 +115,6 @@ the JSON representation of this ABI looks like:
       ],
       "name": "first_function",
       "output": {
-        "name": "",
         "type": 2,
         "typeArguments": null
       }
@@ -130,7 +129,6 @@ the JSON representation of this ABI looks like:
       ],
       "name": "second_function",
       "output": {
-        "name": "",
         "type": 0,
         "typeArguments": null
       }
@@ -143,6 +141,17 @@ the JSON representation of this ABI looks like:
 ### JSON ABI Format for Each Possible Type Declaration
 
 Below is a list of the JSON ABI formats for each possible type declaration:
+
+#### `()`
+
+```json
+{
+  "typeId": <id>,
+  "type": "()",
+  "components": null,
+  "typeParameters": null
+} 
+```
 
 #### `bool`
 
@@ -181,7 +190,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 ```json
 {
-  "name": <id>,
+  "typeId": <id>,
   "type": "u32",
   "components": null,
   "typeParameters": null
@@ -192,7 +201,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 ```json
 {
-  "name": <id>,
+  "typeId": <id>,
   "type": "u64",
   "components": null,
   "typeParameters": null
@@ -203,7 +212,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 ```json
 {
-  "name": <id>,
+  "typeId": <id>,
   "type": "b256",
   "components": null,
   "typeParameters": null
@@ -214,20 +223,18 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 ```json
 {
-  "name": <id>,
-  "type": "struct <enum_name>",
+  "typeId": <id>,
+  "type": "struct <struct_name>",
   "components": [
     {
       "name": "<field1_name>",
       "type": <field1_type_id>,
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -239,12 +246,10 @@ Below is a list of the JSON ABI formats for each possible type declaration:
       "type": "<field2_type_id>",
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -265,20 +270,18 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 ```json
 {
-  "name": <id>,
-  "type": "enum <struct_name>",
+  "typeId": <id>,
+  "type": "enum <enum_name>",
   "components": [
     {
       "name": "<variant1_name>",
       "type": <variant1_type_id>,
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -287,15 +290,13 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     },
     {
       "name": "<variant2_name>",
-      "type": "<variant2_type_id>",
+      "type": <variant2_type_id>,
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -342,12 +343,10 @@ Below is a list of the JSON ABI formats for each possible type declaration:
       "type": <element_type_id>,
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -374,12 +373,10 @@ Below is a list of the JSON ABI formats for each possible type declaration:
       "type": <field1_type_id>,
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -388,15 +385,13 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     },
     {
       "name": "__tuple_element",
-      "type": "<field2_type_id>",
+      "type": <field2_type_id>,
       "typeArguments": [
         {
-          "name": "",
           "type": <type_arg1_type_id>,
           "typeArguments": ...
         },
         {
-          "name": "",
           "type": <type_arg2_type_id>,
           "typeArguments": ...
         },
@@ -567,7 +562,6 @@ its JSON representation would look like:
       ],
       "name": "complex_function",
       "output": {
-        "name": "",
         "type": 0,
         "typeArguments": null
       }
@@ -661,12 +655,10 @@ its JSON representation would look like:
           "type": 2,
           "typeArguments": [
             {
-              "name": "",
               "type": 5,
               "typeArguments": null
             },
             {
-              "name": "",
               "type": 5,
               "typeArguments": null
             }
@@ -686,7 +678,6 @@ its JSON representation would look like:
           "type": 6,
           "typeArguments": [
             {
-              "name": "",
               "type": 1,
               "typeArguments": null
             }
@@ -695,7 +686,6 @@ its JSON representation would look like:
       ],
       "name": "complex_function",
       "output": {
-        "name": "",
         "type": 0,
         "typeArguments": null
       }
@@ -775,7 +765,6 @@ its JSON representation would look like:
       "inputs": [],
       "name": "logging",
       "output": {
-        "name": "",
         "type": 0,
         "typeArguments": null
       }
@@ -785,11 +774,9 @@ its JSON representation would look like:
     {
       "logId": 0,
       "loggedType": {
-        "name": "",
         "type": 3,
         "typeArguments": [
           {
-            "name": "",
             "type": 4,
             "typeArguments": null
           }
@@ -799,11 +786,9 @@ its JSON representation would look like:
     {
       "logId": 1,
       "loggedType": {
-        "name": "",
         "type": 3,
         "typeArguments": [
           {
-            "name": "",
             "type": 1,
             "typeArguments": null
           }
