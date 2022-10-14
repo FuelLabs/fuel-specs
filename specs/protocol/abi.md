@@ -63,6 +63,8 @@ The ABI of a contract is represented as a JSON object containing the following p
 
 > **Note**: The order of entries in `"inputs"`, `"outputs"`, `"components"`, `"typeArguments"`, and `"typeParameters"` is important and should be taken into account when encoding/decoding an ABI.
 
+> **Note**: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
+
 ### A Simple Example
 
 Below is a simple example showing how the JSON ABI for an example that does not use generic or complex types. We will later go over more complex examples.
@@ -243,7 +245,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     },
     {
       "name": "<field2_name>",
-      "type": "<field2_type_id>",
+      "type": <field2_type_id>,
       "typeArguments": [
         {
           "type": <type_arg1_type_id>,
@@ -419,7 +421,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
 
 ### Some Complex Examples
 
-#### Custom Types
+#### An Example with Non-Generic Custom Types
 
 Given the following ABI declaration:
 
@@ -571,7 +573,7 @@ its JSON representation would look like:
 }
 ```
 
-#### Generic Types
+#### An Example with Generic Types
 
 Given the following ABI declaration:
 
@@ -674,7 +676,7 @@ its JSON representation would look like:
     {
       "inputs": [
         {
-          "name": "arg2",
+          "name": "arg1",
           "type": 6,
           "typeArguments": [
             {
@@ -695,7 +697,7 @@ its JSON representation would look like:
 }
 ```
 
-#### Logged Types
+#### An Example with Logs
 
 Given the following contract:
 
@@ -798,8 +800,6 @@ its JSON representation would look like:
   ]
 }
 ```
-
-This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ## Receipt
 
@@ -1096,7 +1096,7 @@ abi MyContract {
 
 The function selector is the first 4 bytes of the SHA-256 hash function of the signature of the Sway function being called. Then, these 4 bytes are right-aligned to 8 bytes, left-padded with zeroes.
 
-_N.B.: the word size for the FuelVM is 8 bytes._
+> **Note**: The word size for the FuelVM is 8 bytes._
 
 ### Function signature
 
