@@ -1435,7 +1435,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `rB` will be populated with `false` if the word is unset (default) and `true` if the value is set.
+Register `rB` will be set to `false` if the storage slot is unset (default) and `true` if the slot is set.
 
 ### SRWQ: State read 32 bytes
 
@@ -1457,7 +1457,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./main.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be populated with `false` if the first word is unset and `true` if the value is set.
+Register `rB` will be set to `false` if the first storage slot is unset (default) and `true` if the slot is set.
 
 ### SWW: State write word
 
