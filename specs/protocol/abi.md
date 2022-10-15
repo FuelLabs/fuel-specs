@@ -60,6 +60,14 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+- `"configs"`: an array describing all `config` variables used in the contract. Each `config` variable is a JSON object that contains the following properties:
+  - `"name"`: the name of the `config` variable.
+  - `"configType"`: a _type application_ represented as a JSON object that contains the following properties:
+    - `"type"`: the _type declaration_ ID of the type of the `config` variable.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the `config` variable, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"type"`: the _type declaration_ ID of the type of the _type argument_.
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+  - `"offset"`: the specific offset within the contract's bytecode, in bytes, to the data section entry for the `config` variable.
 
 > **Note**: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](#function-selector-encoding) section specifies the encoding for the function being selected to be executed and each of the argument types.
 
