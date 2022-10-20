@@ -1419,12 +1419,12 @@ TODO: document output messages merkle tree construction and maintenance and link
 
 ### SRW: State read word
 
-|             |                                                  |
-|-------------|--------------------------------------------------|
+|             |                                                   |
+|-------------|---------------------------------------------------|
 | Description | A word is read from the current contract's state. |
-| Operation   | ```$rA = STATE[MEM[$rB, 32]][0, 8];```           |
-| Syntax      | `srw $rA, $rB, $rC`                              |
-| Encoding    | `0x00 rA rB rC -`                                |
+| Operation   | ```$rA = STATE[MEM[$rC, 32]][0, 8];```            |
+| Syntax      | `srw $rA, $rB, $rC`                               |
+| Encoding    | `0x00 rA rB rC -`                                 |
 | Notes       | Returns zero if the state element does not exist. |
 
 Panic if:
@@ -1435,14 +1435,14 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `rB` will be populated with `0` if the word is unset (default) and `1` if the value is set.
+Register `rB` will be set to `false` if the storage slot is unset (default) and `true` if the slot is set.
 
 ### SRWQ: State read 32 bytes
 
 |             |                                                                            |
 |-------------|----------------------------------------------------------------------------|
 | Description | A sequential series of 32 bytes is read from the current contract's state. |
-| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rB, 32 * rD]];```                        |
+| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32 * rD]];```                        |
 | Syntax      | `srwq $rA, $rB, $rC, $rD`                                                  |
 | Encoding    | `0x00 rA rB rC rD`                                                         |
 | Notes       | Returns zero if the state element does not exist.                          |
@@ -1457,7 +1457,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./main.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be populated with `0` if the first word is unset and `1` if the value is set.
+Register `rB` will be set to `false` if the first storage slot is unset (default) and `true` if the slot is set.
 
 ### SWW: State write word
 
