@@ -74,7 +74,7 @@
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
   - [SWW: State write word](#sww-state-write-word)
-  - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
+  - [SWWQ: State write sequential 32 byte slots](#swwq-state-write-sequential-32-bytes-slots)
   - [TIME: Timstamp at height](#time-timstamp-at-height)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
@@ -1484,36 +1484,40 @@ Register `rB` will be set to `false` if the first storage slot is unset (default
 |             |                                                                                 |
 |-------------|---------------------------------------------------------------------------------|
 | Description | A word is written to the current contract's state.                              |
-| Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rB;```<br>```STATE[MEM[$rA, 32]][8, 24] = 0;``` |
-| Syntax      | `sww $rA $rB`                                                                   |
-| Encoding    | `0x00 rA rB - -`                                                                |
+| Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rC;```<br>```STATE[MEM[$rA, 32]][8, 24] = 0;``` |
+| Syntax      | `sww $rA $rB $rC`                                                               |
+| Encoding    | `0x00 rA rB rC -`                                                               |
 | Notes       |                                                                                 |
 
 Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
+- `$rB` is a [reserved register](./main.md#semantics)
 - `$fp == 0` (in the script context)
 
-The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`.
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
 
-### SWWQ: State write 32 bytes
+### SWWQ: State write sequential 32 byte slots
 
-|             |                                                      |
-|-------------|------------------------------------------------------|
-| Description | 32 bytes is written to the current contract's state. |
-| Operation   | ```STATE[MEM[$rA, 32]] = MEM[$rB, 32];```            |
-| Syntax      | `swwq $rA, $rB`                                      |
-| Encoding    | `0x00 rA rB - -`                                     |
-| Notes       |                                                      |
+|             |                                                           |
+|-------------|-----------------------------------------------------------|
+| Description | 32 bytes is written to the current contract's state.      |
+| Operation   | ```STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];``` |
+| Syntax      | `swwq $rA, $rB, $rC, $rD`                                 |
+| Encoding    | `0x00 rA rB rC rD`                                        |
+| Notes       |                                                           |
 
 Panic if:
 
 - `$rA + 32` overflows
-- `$rB + 32` overflows
+- `$rB` is a [reserved register](./main.md#semantics)
+- `$rC + 32 * $rD` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- `$rB + 32 > VM_MAX_RAM`
+- `$rC + 32 * $rD > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
+
+Register `rB` will be set to `false` if the first storage slot was previously unset (default) and `true` if the slot was set.
 
 ### TIME: Timstamp at height
 
