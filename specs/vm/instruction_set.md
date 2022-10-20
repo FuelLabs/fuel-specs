@@ -74,7 +74,7 @@
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
   - [SWW: State write word](#sww-state-write-word)
-  - [SWWQ: State write sequential 32 byte slots](#swwq-state-write-sequential-32-bytes-slots)
+  - [SWWQ: State write sequential 32 byte slots](#swwq-state-write-sequential-32-byte-slots)
   - [TIME: Timstamp at height](#time-timstamp-at-height)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
