@@ -70,8 +70,9 @@
   - [RETD: Return from context with data](#retd-return-from-context-with-data)
   - [RVRT: Revert](#rvrt-revert)
   - [SMO: Send message to output](#smo-send-message-to-output)
+  - [SCWQ: State clear sequential 32 byte slots](#scwq-state-clear-sequential-32-byte-slots)
   - [SRW: State read word](#srw-state-read-word)
-  - [SRWQ: State read 32 bytes](#srwq-state-read-32-bytes)
+  - [SRWQ: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write 32 bytes](#swwq-state-write-32-bytes)
   - [TIME: Timstamp at height](#time-timstamp-at-height)
@@ -1417,6 +1418,25 @@ This modifies the `balanceRoot` field of the appropriate output.
 `messageID` is added to the `OutputMessage` Merkle tree as part of block header.
 TODO: document output messages merkle tree construction and maintenance and link here
 
+### SCWQ: State clear sequential 32 byte slots
+
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | A sequential series of 32 bytes is cleared from the current contract's state. |
+| Operation   | ```STATE[MEM[$rA, 32], 32 * $rC] = None;```                                   |
+| Syntax      | `scwq $rA, $rB, $rC`                                                          |
+| Encoding    | `0x00 rA rB rC -`                                                             |
+| Notes       |                                                                               |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB` is a [reserved register](./main.md#semantics)
+- `$fp == 0` (in the script context)
+
+Register `rB` will be set to `false` if the first storage slot was already unset (default) and `true` if the slot was set.
+
 ### SRW: State read word
 
 |             |                                                   |
@@ -1437,7 +1457,7 @@ Panic if:
 
 Register `rB` will be set to `false` if the storage slot is unset (default) and `true` if the slot is set.
 
-### SRWQ: State read 32 bytes
+### SRWQ: State read sequential 32 byte slots
 
 |             |                                                                            |
 |-------------|----------------------------------------------------------------------------|
