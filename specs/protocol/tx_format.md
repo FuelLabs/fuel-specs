@@ -168,16 +168,15 @@ Transaction is invalid if:
 
 Creates a contract with contract ID as computed [here](./identifiers.md#contract-id).
 
-## TransactionMint
+### TransactionMint
 
-The transaction is created by the block producer and is not signed.
-It is alive only during block execution, so all fields must be set upon creation.
+The transaction is created by the block producer and is not signed. Since it is not usable outside of block creation or execution, all fields must be fully set upon creation without any zeroing.
 
-| name            | type                     | description                                          |
-|-----------------|--------------------------|------------------------------------------------------|
-| `txPointer`     |  [TXPointer](#txpointer) | The location of the `Mint` transaction in the block. |
-| `outputsCount`  | `uint8`                  | Number of outputs.                                   |
-| `outputs`       | [Output](#output)`[]`    | List of outputs.                                     |
+| name            | type                    | description                                          |
+|-----------------|-------------------------|------------------------------------------------------|
+| `txPointer`     | [TXPointer](#txpointer) | The location of the `Mint` transaction in the block. |
+| `outputsCount`  | `uint8`                 | Number of outputs.                                   |
+| `outputs`       | [Output](#output)`[]`   | List of outputs.                                     |
 
 Transaction is invalid if:
 
@@ -413,8 +412,7 @@ This output type indicates that the output's amount and owner may vary based on 
 
 ## TXPointer
 
-The location of the transaction in the block. It can be used by utxos
-as a reference to the transaction or by the transaction itself to make it unique.
+The location of the transaction in the block. It can be used by UTXOs as a reference to the transaction or by the transaction itself to make it unique.
 
 | name          | type     | description        |
 |---------------|----------|--------------------|
