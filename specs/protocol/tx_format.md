@@ -413,7 +413,7 @@ This output type indicates that the output's amount and owner may vary based on 
 
 ## TXPointer
 
-The location of the transaction in the block. It can be used by utxos 
+The location of the transaction in the block. It can be used by utxos
 as a reference to the transaction or by the transaction itself to make it unique.
 
 | name          | type     | description        |
