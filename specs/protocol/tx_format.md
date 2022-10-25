@@ -5,7 +5,7 @@
 - [Transaction](#transaction)
   - [TransactionScript](#transactionscript)
   - [TransactionCreate](#transactioncreate)
-- [TransactionMint](#transactionmint)
+  - [TransactionMint](#transactionmint)
 - [InputType](#inputtype)
 - [Input](#input)
   - [InputCoin](#inputcoin)
@@ -51,10 +51,10 @@ enum  TransactionType : uint8 {
 
 ## Transaction
 
-| name   | type                                                                                      | description       |
-|--------|-------------------------------------------------------------------------------------------|-------------------|
-| `type` | [TransactionType](#transactiontype)                                                       | Transaction type. |
-| `data` | One of [TransactionScript](#transactionscript), [TransactionCreate](#transactioncreate), or [TransactionMint](#transactionmint) | Transaction data. |
+| name   | type                                                                                                                            | description         |
+|--------|---------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| `type` | [TransactionType](#transactiontype)                                                                                             | Transaction type.   |
+| `data` | One of [TransactionScript](#transactionscript), [TransactionCreate](#transactioncreate), or [TransactionMint](#transactionmint) | Transaction data.   |
 
 Transaction is invalid if:
 
@@ -170,15 +170,20 @@ Creates a contract with contract ID as computed [here](./identifiers.md#contract
 
 ## TransactionMint
 
-| name               | type                    | description                              |
-|--------------------|-------------------------|------------------------------------------|
-| `outputsCount`     | `uint8`                 | Number of outputs.                       |
-| `outputs`          | [Output](#output)`[]`   | List of outputs.                         |
+The transaction is created by the block producer and is not signed.
+It is alive only during block execution, so all fields must be set upon creation.
+
+| name            | type                     | description                                          |
+|-----------------|--------------------------|------------------------------------------------------|
+| `txPointer`     |  [TXPointer](#txpointer) | The location of the `Mint` transaction in the block. |
+| `outputsCount`  | `uint8`                  | Number of outputs.                                   |
+| `outputs`       | [Output](#output)`[]`    | List of outputs.                                     |
 
 Transaction is invalid if:
 
 - Any output is not of type `OutputType.Coin`
 - Any two outputs have the same `asset_id`
+- `txPointer` is zero or doesn't match the block.
 
 ## InputType
 
@@ -407,6 +412,9 @@ This output type indicates that the output's amount and owner may vary based on 
 | `data`       | `byte[]` | Witness data.                     |
 
 ## TXPointer
+
+The location of the transaction in the block. It can be used by utxos 
+as a reference to the transaction or by the transaction itself to make it unique.
 
 | name          | type     | description        |
 |---------------|----------|--------------------|
