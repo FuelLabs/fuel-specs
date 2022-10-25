@@ -171,7 +171,7 @@ Creates a contract with contract ID as computed [here](./identifiers.md#contract
 ## TransactionMint
 
 The transaction is created by the block producer and is not signed.
-It is alive only during block execution, so all fields must be set upon creation.
+It's not usable outside of block creation or execution, so all fields must be fully set upon creation without any zeroing.
 
 | name            | type                     | description                                          |
 |-----------------|--------------------------|------------------------------------------------------|
