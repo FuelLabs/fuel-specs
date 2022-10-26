@@ -1435,7 +1435,7 @@ Panic if:
 - `$rB` is a [reserved register](./main.md#semantics)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if the slot was set.
+Register `rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
 
 ### SRW: State read word
 
@@ -1455,7 +1455,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if the slot is set.
+Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
 
 ### SRWQ: State read sequential 32 byte slots
 
@@ -1477,7 +1477,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./main.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if the slot is set.
+Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
 
 ### SWW: State write word
 
