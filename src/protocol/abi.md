@@ -150,7 +150,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "()",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `bool`
@@ -161,7 +161,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "bool",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u8`
@@ -172,7 +172,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u8",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u16`
@@ -183,7 +183,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u16",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u32`
@@ -194,7 +194,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u32",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u64`
@@ -205,7 +205,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u64",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `b256`
@@ -216,7 +216,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "b256",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `struct`
@@ -259,9 +259,9 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     ...
   ],
   "typeParameters": [
-    <type_param1_type_id>, 
-    <type_param2_type_id>, 
-    ... 
+    <type_param1_type_id>,
+    <type_param2_type_id>,
+    ...
   ]
 }
 ```
@@ -306,9 +306,9 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     ...
   ],
   "typeParameters": [
-    <type_param1_type_id>, 
-    <type_param2_type_id>, 
-    ... 
+    <type_param1_type_id>,
+    <type_param2_type_id>,
+    ...
   ]
 }
 ```
@@ -321,7 +321,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "str[<n>]",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 `<n>` is the length of the string.
@@ -412,7 +412,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "generic <name>",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 `<name>` is the name of the generic parameter as specified in the struct or enum declaration that uses it.
@@ -1094,7 +1094,7 @@ abi MyContract {
 
 The function selector is the first 4 bytes of the SHA-256 hash function of the signature of the Sway function being called. Then, these 4 bytes are right-aligned to 8 bytes, left-padded with zeroes.
 
-> **Note**: The word size for the FuelVM is 8 bytes._
+> **Note**: The word size for the FuelVM is 8 bytes.
 
 ### Function signature
 
@@ -1153,8 +1153,8 @@ struct MyOtherStruct {
 }
 
 fn complex_function(
-    arg1: MyStruct<[b256; 3], u8>, 
-    arg2: [MyStruct<u64, bool>; 4], 
+    arg1: MyStruct<[b256; 3], u8>,
+    arg2: [MyStruct<u64, bool>; 4],
     arg3: (str[5], bool),
     arg4: MyOtherStruct,
 );
