@@ -131,6 +131,7 @@ If the [`F_WRAPPING`](./main.md#flags) flag is set, an operation that would have
 | Operation   | ```$rA = $rB + $rC;``` |
 | Syntax      | `add $rA, $rB, $rC`    |
 | Encoding    | `0x00 rA rB rC -`      |
+| Effects     | No effects             |
 | Notes       |                        |
 
 Panic if:
@@ -897,6 +898,7 @@ Panic if:
 | Operation   | ```MEM[$rA, $rC] = MEM[$rB, $rC];``` |
 | Syntax      | `mcp $rA, $rB, $rC`                  |
 | Encoding    | `0x00 rA rB rC -`                    |
+| Effects     | Storage read, storage write          |
 | Notes       |                                      |
 
 Panic if:
@@ -937,6 +939,7 @@ Panic if:
 | Operation   | ```$rA = MEM[$rB, $rD] == MEM[$rC, $rD];``` |
 | Syntax      | `meq $rA, $rB, $rC, $rD`                    |
 | Encoding    | `0x00 rA rB rC rD`                          |
+| Effects     | Storage read                                |
 | Notes       |                                             |
 
 Panic if:
@@ -992,6 +995,7 @@ All these instructions advance the program counter `$pc` by `4` after performing
 | Operation   | ```$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);```                             |
 | Syntax      | `bal $rA, $rB, $rC`                                                          |
 | Encoding    | `0x00 rA rB rC -`                                                            |
+| Effects     | Storage read                                                                 |
 | Notes       |                                                                              |
 
 Where helper `balance(asset_id: byte[32], contract_id: byte[32]) -> uint64` returns the current balance of `asset_id` of contract with ID `contract_id`.
@@ -1064,6 +1068,7 @@ This modifies the `balanceRoot` field of the appropriate output.
 | Operation   |                        |
 | Syntax      | `call $rA $rB $rC $rD` |
 | Encoding    | `0x00 rA rB rC rD`     |
+| Effects     | External call          |
 | Notes       |                        |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
@@ -1445,6 +1450,7 @@ Register `rB` will be set to `false` if any storage slot in the requested range 
 | Operation   | ```$rA = STATE[MEM[$rC, 32]][0, 8];```            |
 | Syntax      | `srw $rA, $rB, $rC`                               |
 | Encoding    | `0x00 rA rB rC -`                                 |
+| Effects     | Storage read                                      |
 | Notes       | Returns zero if the state element does not exist. |
 
 Panic if:
@@ -1487,6 +1493,7 @@ Register `rB` will be set to `false` if any storage slot in the requested range 
 | Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rB;```<br>```STATE[MEM[$rA, 32]][8, 24] = 0;``` |
 | Syntax      | `sww $rA $rB`                                                                   |
 | Encoding    | `0x00 rA rB - -`                                                                |
+| Effects     | Storage write                                                                   |
 | Notes       |                                                                                 |
 
 Panic if:
