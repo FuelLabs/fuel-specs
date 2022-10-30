@@ -106,4 +106,4 @@ Transaction is invalid if:
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
 
-The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../../identifiers.md#contract-id).
+The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).

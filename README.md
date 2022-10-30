@@ -5,8 +5,6 @@
 
 This repository specifies the Fuel protocol, including the Fuel Virtual Machine (short: FuelVM), a blazingly fast verifiable blockchain virtual machine.
 
-[fuellabs.github.io/fuel-specs](https://fuellabs.github.io/fuel-specs)
-
 ## mdbook
 
 The Fuel Specifications book is built with mdbook.
