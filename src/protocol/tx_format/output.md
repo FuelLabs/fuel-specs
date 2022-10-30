@@ -13,7 +13,7 @@ enum  OutputType : uint8 {
 
 | name   | type                                                                                                                                                                                                                       | description     |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [OutputType](#outputtype)                                                                                                                                                                                                  | Type of output. |
+| `type` | [OutputType](#output)                                                                                                                                                                                                      | Type of output. |
 | `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputMessage](#outputmessage) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
@@ -42,9 +42,9 @@ Transaction is invalid if:
 - `tx.inputs[inputIndex].type != InputType.Contract`
 
 > **Note:** when signing a transaction, `balanceRoot` and `stateRoot` are set to zero.
-
+>
 > **Note:** when verifying a predicate, `balanceRoot` and `stateRoot` are initialized to zero.
-
+>
 > **Note:** when executing a script, `balanceRoot` and `stateRoot` are initialized to the balance root and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
 The balance root `balanceRoot` is the root of the [SMT](../cryptographic_primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by asset ID (a `byte[32]`).
@@ -59,9 +59,9 @@ The state root `stateRoot` is the root of the [SMT](../cryptographic_primitives.
 | `amount`    | `uint64`   | Amount of base asset coins sent with message. |
 
 > **Note:** when signing a transaction `recipient` and `amount` are set to zero.
-
+>
 > **Note:** when verifying a predicate or executing a script, `recipient` and `amount` are initialized to zero.
-
+>
 > **Note:** this output type is unspendable and can be pruned from the UTXO set.
 
 ## OutputChange
@@ -77,7 +77,7 @@ Transaction is invalid if:
 - any other output has type `OutputType.OutputChange` and asset ID `asset_id` (i.e. only one change output per asset ID is allowed)
 
 > **Note:** when signing a transaction, `amount` is set to zero.
-
+>
 > **Note:** when verifying a predicate or executing a script, `amount` is initialized to zero.
 
 This output type indicates that the output's amount may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.
@@ -91,7 +91,7 @@ This output type indicates that the output's amount may vary based on transactio
 | `asset_id` | `byte[32]` | Asset ID of coins.                   |
 
 > **Note:** when signing a transaction, `to`, `amount`, and `asset_id` are set to zero.
-
+>
 > **Note:** when verifying a predicate or executing a script, `to`, `amount`, and `asset_id` are initialized to zero.
 
 This output type indicates that the output's amount and owner may vary based on transaction execution, but is otherwise identical to a [Coin](#outputcoin) output. An `amount` of zero after transaction execution indicates that the output is unspendable and can be pruned from the UTXO set.

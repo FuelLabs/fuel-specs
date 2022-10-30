@@ -1,11 +1,12 @@
 # Fuel Specifications
 
+<!-- markdownlint-disable-next-line MD036 -->
 **Fuel: A Secure Decentralized Generalized Massively Scalable Transaction Ledger**
 
 This book specifies the Fuel protocol, including the Fuel Virtual Machine
 (short: FuelVM), a blazingly fast verifiable blockchain virtual machine.
 
-### Protocol
+## Protocol
 
 - [**Transaction Format**](./protocol/tx_format/index.md) - The Fuel transaction format.
 - [**Computing Identifiers**](./protocol/id/index.md) - Computing unique IDs for transactions, contracts and UTXOs.
@@ -15,15 +16,15 @@ This book specifies the Fuel protocol, including the Fuel Virtual Machine
 - [**Storage Slot Initialization**](./protocol/storage_initialization.md) - JSON format for contract storage slot initialization.
 - [**Block Header Format**](./protocol/block_header.md) - The Fuel block header format.
 
-### FuelVM
+## FuelVM
 
 - [**Overview**](./vm/index.md) - Describes the FuelVM at a high level, from its architecture to how it is initialized.
 - [**Instruction Set**](./vm/instruction_set.md) - Defines the FuelVM instruction set.
 
-### Network-Specific
+## Network-Specific
 
 - [**Proof of Authority (PoA)**](./network/poa.md) - The Fuel Proof of Authority Network.
 
-### Testing
+## Testing
 
 - [**Sparse Merkle Tree**](./tests/sparse_merkle_tree_tests.md) - A test suite for verifying correctness of SMT outputs.

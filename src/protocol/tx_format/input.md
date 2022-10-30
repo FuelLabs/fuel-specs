@@ -10,7 +10,7 @@ enum  InputType : uint8 {
 
 | name   | type                                                                                              | description    |
 |--------|---------------------------------------------------------------------------------------------------|----------------|
-| `type` | [InputType](#inputtype)                                                                           | Type of input. |
+| `type` | [InputType](#input)                                                                               | Type of input. |
 | `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract), or [InputMessage](#inputmessage) | Input data.    |
 
 Transaction is invalid if:
@@ -48,9 +48,9 @@ Transaction is invalid if:
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
 > **Note:** when signing a transaction, `txPointer` is set to zero.
-
+>
 > **Note:** when verifying a predicate, `txPointer` is initialized to zero.
-
+>
 > **Note:** when executing a script, `txPointer` is initialized to zero.
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
@@ -71,9 +71,9 @@ Transaction is invalid if:
 - there is not exactly one output of type `OutputType.Contract` with `inputIndex` equal to this input's index
 
 > **Note:** when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are set to zero.
-
+>
 > **Note:** when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
-
+>
 > **Note:** when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to zero.
 
 ## InputMessage

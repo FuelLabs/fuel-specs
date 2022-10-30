@@ -10,7 +10,7 @@ enum  TransactionType : uint8 {
 
 | name   | type                                                                                                                            | description         |
 |--------|---------------------------------------------------------------------------------------------------------------------------------|---------------------|
-| `type` | [TransactionType](#transactiontype)                                                                                             | Transaction type.   |
+| `type` | [TransactionType](#transaction)                                                                                                 | Transaction type.   |
 | `data` | One of [TransactionScript](#transactionscript), [TransactionCreate](#transactioncreate), or [TransactionMint](#transactionmint) | Transaction data.   |
 
 Transaction is invalid if:
@@ -82,9 +82,9 @@ Transaction is invalid if:
 - `scriptDataLength != len(scriptData)`
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
-
+>
 > **Note:** when verifying a predicate, `receiptsRoot` is initialized to zero.
-
+>
 > **Note:** when executing a script, `receiptsRoot` is initialized to zero.
 
 The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../cryptographic_primitives.md#binary-merkle-tree) of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. `0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
