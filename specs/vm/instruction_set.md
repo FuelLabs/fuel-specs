@@ -898,7 +898,7 @@ Panic if:
 | Operation   | ```MEM[$rA, $rC] = MEM[$rB, $rC];``` |
 | Syntax      | `mcp $rA, $rB, $rC`                  |
 | Encoding    | `0x00 rA rB rC -`                    |
-| Effects     | Storage read, storage write          |
+| Effects     | No effects                           |
 | Notes       |                                      |
 
 Panic if:
@@ -939,7 +939,7 @@ Panic if:
 | Operation   | ```$rA = MEM[$rB, $rD] == MEM[$rC, $rD];``` |
 | Syntax      | `meq $rA, $rB, $rC, $rD`                    |
 | Encoding    | `0x00 rA rB rC rD`                          |
-| Effects     | Storage read                                |
+| Effects     | No effects                                  |
 | Notes       |                                             |
 
 Panic if:
