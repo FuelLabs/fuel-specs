@@ -93,7 +93,7 @@ This page provides a description of all instructions for the FuelVM. Encoding is
 
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
 
-Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./main.md#contexts):
+Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./index.md#contexts):
 
 - In a predicate context, cease VM execution and return `false`.
 - In other contexts, revert (described below).
@@ -119,9 +119,9 @@ then append an additional receipt to the list of receipts, again modifying `tx.r
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-If the [`F_UNSAFEMATH`](./main.md#flags) flag is set, an operation that would have panicked will instead set `$err` to a non-zero value.
+If the [`F_UNSAFEMATH`](./index.md#flags) flag is set, an operation that would have panicked will instead set `$err` to a non-zero value.
 
-If the [`F_WRAPPING`](./main.md#flags) flag is set, an operation that would have panicked will instead set `$of` to a non-zero value.
+If the [`F_WRAPPING`](./index.md#flags) flag is set, an operation that would have panicked will instead set `$of` to a non-zero value.
 
 ### ADD: Add
 
@@ -135,7 +135,7 @@ If the [`F_WRAPPING`](./main.md#flags) flag is set, an operation that would have
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -153,7 +153,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -171,7 +171,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -187,7 +187,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `imm` is extended to 64 bits, with the high 52 bits set to `0`.
 
@@ -205,7 +205,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If `$rC == 0`, `$rA` is cleared and `$err` is set to `true`.
 
@@ -225,7 +225,7 @@ Otherwise, `$err` is cleared.
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If `imm == 0`, `$rA` is cleared and `$err` is set to `true`.
 
@@ -245,7 +245,7 @@ Otherwise, `$err` is cleared.
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -261,7 +261,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If the result cannot fit in 8 bytes, `$of` is set to `1` and `$rA` is instead set to `0`, otherwise `$of` is cleared.
 
@@ -279,7 +279,7 @@ If the result cannot fit in 8 bytes, `$of` is set to `1` and `$rA` is instead se
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If the result cannot fit in 8 bytes, `$of` is set to `1` and `$rA` is instead set to `0`, otherwise `$of` is cleared.
 
@@ -297,7 +297,7 @@ If the result cannot fit in 8 bytes, `$of` is set to `1` and `$rA` is instead se
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -313,7 +313,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -329,7 +329,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If `$rB == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
@@ -349,7 +349,7 @@ Otherwise, `$of` and `$err` are cleared.
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
@@ -367,7 +367,7 @@ Otherwise, `$of` and `$err` are cleared.
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If `imm == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
@@ -385,7 +385,7 @@ Otherwise, `$of` and `$err` are cleared.
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -401,7 +401,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -417,7 +417,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
@@ -435,7 +435,7 @@ Otherwise, `$of` and `$err` are cleared.
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -453,7 +453,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the overflow of the operation.
 
@@ -483,7 +483,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -499,7 +499,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -515,7 +515,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `imm` is extended to 64 bits, with the high 52 bits set to `0`.
 
@@ -533,7 +533,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -549,7 +549,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -565,7 +565,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
@@ -583,7 +583,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
@@ -601,7 +601,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
@@ -619,7 +619,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
@@ -637,7 +637,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -653,7 +653,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` and `$err` are cleared.
 
@@ -733,7 +733,7 @@ Panic if:
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
-| Description | Returns from [context](./main.md#contexts) with value `$rA`. |
+| Description | Returns from [context](./index.md#contexts) with value `$rA`. |
 | Operation   | ```return($rA);```                                           |
 | Syntax      | `ret $rA`                                                    |
 | Encoding    | `0x00 rA - - -`                                              |
@@ -835,7 +835,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + imm + 1` overflows
 - `$rB + imm + 1 > VM_MAX_RAM`
 
@@ -851,7 +851,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + (imm * 8) + 8` overflows
 - `$rB + (imm * 8) + 8 > VM_MAX_RAM`
 
@@ -870,7 +870,7 @@ Panic if:
 - `$rA + $rB` overflows
 - `$rA + $rB > VM_MAX_RAM`
 - `$rB > MEM_MAX_ACCESS_SIZE`
-- The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCLI: Memory clear immediate
 
@@ -887,7 +887,7 @@ Panic if:
 - `$rA + imm` overflows
 - `$rA + imm > VM_MAX_RAM`
 - `imm > MEM_MAX_ACCESS_SIZE`
-- The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCP: Memory copy
 
@@ -907,7 +907,7 @@ Panic if:
 - `$rB + $rC > VM_MAX_RAM`
 - `$rC > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
-- The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCPI: Memory copy immediate
 
@@ -927,7 +927,7 @@ Panic if:
 - `$rB + imm > VM_MAX_RAM`
 - `imm > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
-- The memory range `MEM[$rA, imm]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
 ### MEQ: Memory equality
 
@@ -941,7 +941,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + $rD` overflows
 - `$rC + $rD` overflows
 - `$rB + $rD > VM_MAX_RAM`
@@ -962,7 +962,7 @@ Panic if:
 
 - `$rA + imm + 1` overflows
 - `$rA + imm + 1 > VM_MAX_RAM`
-- The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./index.md#ownership)
 
 ### SW: Store word
 
@@ -978,7 +978,7 @@ Panic if:
 
 - `$rA + (imm * 8) + 8` overflows
 - `$rA + (imm * 8) + 8 > VM_MAX_RAM`
-- The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./index.md#ownership)
 
 ## Contract Instructions
 
@@ -998,7 +998,7 @@ Where helper `balance(asset_id: byte[32], contract_id: byte[32]) -> uint64` retu
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + 32` overflows
 - `$rB + 32 > VM_MAX_RAM`
 - `$rC + 32` overflows
@@ -1017,7 +1017,7 @@ Panic if:
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 
 ### BHSH: Block hash
 
@@ -1033,7 +1033,7 @@ Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (```0x00**32```).
 
@@ -1104,7 +1104,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease asset ID `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
 
-A [call frame](./main.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
+A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
 1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
@@ -1128,7 +1128,7 @@ Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
 ### CCP: Code copy
 
@@ -1149,7 +1149,7 @@ Panic if:
 - `$rB + 32` overflows
 - `$rA + $rD > VM_MAX_RAM`
 - `$rB + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./index.md#ownership)
 - `$rD > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
@@ -1169,10 +1169,10 @@ Panic if:
 - `$rB + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-Code root computation is defined [here](../protocol/identifiers.md#contract-id).
+Code root computation is defined [here](../protocol/id/contract.md).
 
 ### CSIZ: Code size
 
@@ -1186,7 +1186,7 @@ Code root computation is defined [here](../protocol/identifiers.md#contract-id).
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + 32` overflows
 - `$rB + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
@@ -1289,7 +1289,7 @@ This modifies the `balanceRoot` field of the appropriate output.
 
 |             |                                                                        |
 |-------------|------------------------------------------------------------------------|
-| Description | Returns from [context](./main.md#contexts) with value `MEM[$rA, $rB]`. |
+| Description | Returns from [context](./index.md#contexts) with value `MEM[$rA, $rB]`. |
 | Operation   | ```returndata($rA, $rB);```                                            |
 | Syntax      | `retd $rA, $rB`                                                        |
 | Encoding    | `0x00 rA rB - -`                                                       |
@@ -1368,8 +1368,8 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 
 Cease VM execution and revert script effects. After a revert:
 
-1. All [OutputContract](../protocol/tx_format.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx_format.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+1. All [OutputContract](../protocol/tx_format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
+1. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SMO: Send message to output
 
@@ -1401,11 +1401,11 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | name        | type          | description                                                                             |
 |-------------|---------------|-----------------------------------------------------------------------------------------|
 | `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                                |
-| `messageID` | `byte[32]`    | The messageID as described [here](../protocol/identifiers.md#message-id).        |
+| `messageID` | `byte[32]`    | The messageID as described [here](../protocol/id/utxo.md#message-id).        |
 | `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                      |
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                                   |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                                    |
-| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/identifiers.md#message-nonce). |
+| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/id/utxo.md#message-nonce). |
 | `len`       | `uint16`      | Length of message data, in bytes: `$rB`.                                                |
 | `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                        |
 
@@ -1432,7 +1432,7 @@ Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
 Register `rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
@@ -1449,8 +1449,8 @@ Register `rB` will be set to `false` if any storage slot in the requested range 
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32` overflows
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
@@ -1471,10 +1471,10 @@ Panic if:
 
 - `$rA + 32 * rD` overflows
 - `$rA + 32 * rD > VM_MAX_RAM`
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32 * rD` overflows
 - `$rC + 32 * rD > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
 - `$fp == 0` (in the script context)
 
 Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
@@ -1493,7 +1493,7 @@ Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
 The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
@@ -1511,7 +1511,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `rB` will be
 Panic if:
 
 - `$rA + 32` overflows
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32 * $rD` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rC + 32 * $rD > VM_MAX_RAM`
@@ -1531,7 +1531,7 @@ Register `rB` will be set to `false` if the first storage slot was previously un
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `$rB` is greater than the current block height.
 
 Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.yp.to/libtai/tai64.html) format.
@@ -1642,7 +1642,7 @@ Panic if:
 - `$rA + 64 > VM_MAX_RAM`
 - `$rB + 64 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
-- The memory range `MEM[$rA, 64]` does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
 Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
 
@@ -1666,7 +1666,7 @@ Panic if:
 - `$rB + $rC` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - `$rC > MEM_MAX_ACCESS_SIZE`
 
 ### S256: SHA-2-256
@@ -1685,7 +1685,7 @@ Panic if:
 - `$rB + $rC` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./main.md#ownership)
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - `$rC > MEM_MAX_ACCESS_SIZE`
 
 ## Other Instructions
@@ -1755,7 +1755,7 @@ Set `$rA` to the index of the currently-verifying predicate.
 | Encoding    | `0x00 rA rB i i`        |
 | Notes       |                         |
 
-Get [fields from the transaction](../protocol/tx_format.md#transaction).
+Get [fields from the transaction](../protocol/tx_format/transaction.md).
 
 | name                                      | `imm`   | set `$rA` to                                     |
 |-------------------------------------------|---------|--------------------------------------------------|
@@ -1835,7 +1835,7 @@ Get [fields from the transaction](../protocol/tx_format.md#transaction).
 
 Panic if:
 
-- `$rA` is a [reserved register](./main.md#semantics)
+- `$rA` is a [reserved register](./index.md#semantics)
 - `imm` is not one of the values listed above
 - The value of `$rB` results in an out of bounds access for variable-length fields
 - The input or output type does not match (`OutputChange` and `OutputVariable` count as `OutputCoin`)
