@@ -1,0 +1,680 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sparse Merkle Tree - Fuel Specifications</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../fuel-specs.html">Fuel Specifications</a></li><li class="chapter-item expanded "><a href="../protocol/index.html"><strong aria-hidden="true">1.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol/tx_format/index.html"><strong aria-hidden="true">1.1.</strong> Transaction Format</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol/tx_format/constants.html"><strong aria-hidden="true">1.1.1.</strong> Constants</a></li><li class="chapter-item expanded "><a href="../protocol/tx_format/transaction.html"><strong aria-hidden="true">1.1.2.</strong> Transaction</a></li><li class="chapter-item expanded "><a href="../protocol/tx_format/input.html"><strong aria-hidden="true">1.1.3.</strong> Input</a></li><li class="chapter-item expanded "><a href="../protocol/tx_format/output.html"><strong aria-hidden="true">1.1.4.</strong> Output</a></li><li class="chapter-item expanded "><a href="../protocol/tx_format/witness.html"><strong aria-hidden="true">1.1.5.</strong> Witness</a></li><li class="chapter-item expanded "><a href="../protocol/tx_format/tx_pointer.html"><strong aria-hidden="true">1.1.6.</strong> TXPointer</a></li></ol></li><li class="chapter-item expanded "><a href="../protocol/id/index.html"><strong aria-hidden="true">1.2.</strong> Computing Identifiers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol/id/transaction.html"><strong aria-hidden="true">1.2.1.</strong> Transaction ID</a></li><li class="chapter-item expanded "><a href="../protocol/id/contract.html"><strong aria-hidden="true">1.2.2.</strong> Contract ID</a></li><li class="chapter-item expanded "><a href="../protocol/id/utxo.html"><strong aria-hidden="true">1.2.3.</strong> UTXO ID</a></li></ol></li><li class="chapter-item expanded "><a href="../protocol/tx_validity.html"><strong aria-hidden="true">1.3.</strong> Transaction Validity Rules</a></li><li class="chapter-item expanded "><a href="../protocol/cryptographic_primitives.html"><strong aria-hidden="true">1.4.</strong> Cryptographic Primitives</a></li><li class="chapter-item expanded "><a href="../protocol/abi.html"><strong aria-hidden="true">1.5.</strong> Application Binary Interface (ABI)</a></li><li class="chapter-item expanded "><a href="../protocol/storage_initialization.html"><strong aria-hidden="true">1.6.</strong> Storage Slot Initialization</a></li><li class="chapter-item expanded "><a href="../protocol/block_header.html"><strong aria-hidden="true">1.7.</strong> Block Header Format</a></li></ol></li><li class="chapter-item expanded "><a href="../vm/index.html"><strong aria-hidden="true">2.</strong> FuelVM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../vm/instruction_set.html"><strong aria-hidden="true">2.1.</strong> Instruction Set</a></li></ol></li><li class="chapter-item expanded "><a href="../network/index.html"><strong aria-hidden="true">3.</strong> Networks</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../network/poa.html"><strong aria-hidden="true">3.1.</strong> Proof of Authority (PoA)</a></li></ol></li><li class="chapter-item expanded "><a href="../tests/index.html"><strong aria-hidden="true">4.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tests/sparse_merkle_tree_tests.html" class="active"><strong aria-hidden="true">4.1.</strong> Sparse Merkle Tree</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Fuel Specifications</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/FuelLabs/fuel-specs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="sparse-merkle-tree-test-specifications"><a class="header" href="#sparse-merkle-tree-test-specifications">Sparse Merkle Tree Test Specifications</a></h1>
+<h2 id="version"><a class="header" href="#version">Version</a></h2>
+<p>0.1.1</p>
+<p>Last updated 2022/07/11</p>
+<h2 id="abstract"><a class="header" href="#abstract">Abstract</a></h2>
+<p>This document outlines a test suite specification that can be used to verify the correctness of a Sparse Merkle Tree's outputs. The scope of this document covers only Sparse Merkle Tree (SMT) implementations that are compliant with <a href="https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#sparse-merkle-tree">Celestia Sparse Merkle Tree Specification</a>. The goal of this document is to equip SMT library developers with a supplemental indicator of correctness. Libraries implementing an SMT can additionally implement this test suite specification in the code base's native language. Passing all tests in the concrete test suite is an indication of correctness and consistency with the reference specification; however, it is not an absolute guarantee.</p>
+<p>The tests described in this document are designed to test features common to most Sparse Merkle Tree implementations. Test specifications are agnostic of the implementation details or language, and therefore take a black-box testing approach. A test specification may provide an example of what a compliant test may look like in the form of pseudocode.</p>
+<p>A test specification follows the format:</p>
+<ul>
+<li>Test name</li>
+<li>Test description</li>
+<li>Test inputs</li>
+<li>Test outputs</li>
+<li>Example pseudocode</li>
+</ul>
+<p>For a concrete test to comply with its corresponding test specification, the System Under Test (SUT) must take in the prescribed inputs. When the SUT produces the prescribed outputs, the test passes. When the SUT produces any result or error that is not prescribed by the specification, the test fails. For a library to comply with the complete specification described herein, it must implement all test specifications, and each test must pass.</p>
+<p>All test specifications assume that the Merkle Tree implementation under test uses the SHA-2-256 hashing algorithm as defined in <a href="https://doi.org/10.6028/NIST.FIPS.180-4">FIPS PUB 180-4</a> to produce its outputs. The following test cases stipulate a theoretical function <code>Sum(N)</code> that takes in a big endian data slice <code>N</code> and returns the 32 byte SHA-256 hash of <code>N</code>.</p>
+<h2 id="root-signature-tests"><a class="header" href="#root-signature-tests">Root Signature Tests</a></h2>
+<ol>
+<li><a href="#test-empty-root">Test Empty Root</a></li>
+<li><a href="#test-update-1">Test Update 1</a></li>
+<li><a href="#test-update-2">Test Update 2</a></li>
+<li><a href="#test-update-3">Test Update 3</a></li>
+<li><a href="#test-update-5">Test Update 5</a></li>
+<li><a href="#test-update-10">Test Update 10</a></li>
+<li><a href="#test-update-100">Test Update 100</a></li>
+<li><a href="#test-update-with-repeated-inputs">Test Update With Repeated Inputs</a></li>
+<li><a href="#test-update-overwrite-key">Test Update Overwrite Key</a></li>
+<li><a href="#test-update-union">Test Update Union</a></li>
+<li><a href="#test-update-sparse-union">Test Update Sparse Union</a></li>
+<li><a href="#test-update-with-empty-data">Test Update With Empty Data</a></li>
+<li><a href="#test-update-with-empty-data-performs-delete">Test Update With Empty Data Performs Delete</a></li>
+<li><a href="#test-update-1-delete-1">Test Update 1 Delete 1</a></li>
+<li><a href="#test-update-2-delete-1">Test Update 2 Delete 1</a></li>
+<li><a href="#test-update-10-delete-5">Test Update 10 Delete 5</a></li>
+<li><a href="#test-delete-non-existent-key">Test Delete Non-existent Key</a></li>
+<li><a href="#test-interleaved-update-delete">Test Interleaved Update Delete</a></li>
+<li><a href="#test-delete-sparse-union">Test Delete Sparse Union</a></li>
+</ol>
+<hr />
+<h3 id="test-empty-root"><a class="header" href="#test-empty-root">Test Empty Root</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the default root given no update or delete operations. The input set is described by <code>S = {Ø}</code>.</p>
+<p><strong>Inputs</strong>:</p>
+<p><em>No inputs</em>.</p>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x0000000000000000000000000000000000000000000000000000000000000000</code></li>
+</ul>
+<p><strong>Example pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+root = smt.root()
+expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-1"><a class="header" href="#test-update-1">Test Update 1</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing a single update call with the specified input.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code> where leaf key <code>K = Sum(0u32)</code> (32 bytes) and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+root = smt.root()
+expected_root = '39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-2"><a class="header" href="#test-update-2">Test Update 2</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing two update calls with the specified inputs.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(1u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x8d0ae412ca9ca0afcb3217af8bcd5a673e798bd6fd1dfacad17711e883f494cb</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x01&quot;), b&quot;DATA&quot;)
+root = smt.root()
+expected_root = '8d0ae412ca9ca0afcb3217af8bcd5a673e798bd6fd1dfacad17711e883f494cb'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-3"><a class="header" href="#test-update-3">Test Update 3</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing three update calls with the specified inputs.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(1u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(2u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x52295e42d8de2505fdc0cc825ff9fead419cbcf540d8b30c7c4b9c9b94c268b7</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x01&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x02&quot;), b&quot;DATA&quot;)
+root = smt.root()
+expected_root = '52295e42d8de2505fdc0cc825ff9fead419cbcf540d8b30c7c4b9c9b94c268b7'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-5"><a class="header" href="#test-update-5">Test Update 5</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing five update calls with the specified inputs.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(1u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(2u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(3u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(4u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..5 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+root = smt.root()
+expected_root = '108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-10"><a class="header" href="#test-update-10">Test Update 10</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing 10 update calls with the specified inputs.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..10</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x21ca4917e99da99a61de93deaf88c400d4c082991cb95779e444d43dd13e8849</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..10 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+root = smt.root()
+expected_root = '21ca4917e99da99a61de93deaf88c400d4c082991cb95779e444d43dd13e8849'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-100"><a class="header" href="#test-update-100">Test Update 100</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing 100 update calls with the specified inputs.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..100</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x82bf747d455a55e2f7044a03536fc43f1f55d43b855e72c0110c986707a23e4d</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..100 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+root = smt.root()
+expected_root = '82bf747d455a55e2f7044a03536fc43f1f55d43b855e72c0110c986707a23e4d'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-with-repeated-inputs"><a class="header" href="#test-update-with-repeated-inputs">Test Update With Repeated Inputs</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing two update calls with the same inputs. The resulting input set is described by <code>S = {A} U {A} = {A}</code>, where <code>{A}</code> is the input. This test expects a root signature identical to that produced by <a href="#test-update-1">Test Update 1</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree again with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+root = smt.root()
+expected_root = '39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-overwrite-key"><a class="header" href="#test-update-overwrite-key">Test Update Overwrite Key</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing two update calls with the same leaf keys but different leaf data. The second update call is expected to overwrite the data originally written by the first update call.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;CHANGE&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0xdd97174c80e5e5aa3a31c61b05e279c1495c8a07b2a08bca5dbc9fb9774f9457</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;CHANGE&quot;)
+root = smt.root()
+expected_root = 'dd97174c80e5e5aa3a31c61b05e279c1495c8a07b2a08bca5dbc9fb9774f9457'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-union"><a class="header" href="#test-update-union">Test Update Union</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing update calls with discontinuous sets of inputs. The resulting input set is described by <code>S = [0..5) U [10..15) U [20..25)</code>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..5</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>10..15</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>20..25</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..5 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 10..15 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 20..25 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+root = smt.root()
+expected_root = '7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-sparse-union"><a class="header" href="#test-update-sparse-union">Test Update Sparse Union</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing update calls with discontinuous sets of inputs. The resulting input set is described by <code>S = [0, 2, 4, 6, 8]</code>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..5</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i * 2)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0xe912e97abc67707b2e6027338292943b53d01a7fbd7b244674128c7e468dd696</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..5 {
+    key = &amp;(i as u32 * 2).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+root = smt.root()
+expected_root = 'e912e97abc67707b2e6027338292943b53d01a7fbd7b244674128c7e468dd696'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-with-empty-data"><a class="header" href="#test-update-with-empty-data">Test Update With Empty Data</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing one update call with empty data. Updating the empty tree with empty data does not change the root, and the expected root remains the default root. The resulting input set is described by <code>S = {Ø} U {Ø} = {Ø}</code>. This test expects a root signature identical to that produced by <a href="#test-empty-root">Test Empty Root</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and empty leaf data <code>D = b&quot;&quot;</code> (0 bytes)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x0000000000000000000000000000000000000000000000000000000000000000</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;&quot;)
+root = smt.root()
+expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-with-empty-data-performs-delete"><a class="header" href="#test-update-with-empty-data-performs-delete">Test Update With Empty Data Performs Delete</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing one update call with arbitrary data followed by a second update call on the same key with empty data. Updating a key with empty data is equivalent to calling delete. By deleting the only key, we have an empty tree and expect to arrive at the default root. The resulting input set is described by <code>S = {0} - {0} = {Ø}</code>. This test expects a root signature identical to that produced by <a href="#test-empty-root">Test Empty Root</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and empty leaf data <code>D = b&quot;&quot;</code> (0 bytes)</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x0000000000000000000000000000000000000000000000000000000000000000</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;&quot;)
+root = smt.root()
+expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-1-delete-1"><a class="header" href="#test-update-1-delete-1">Test Update 1 Delete 1</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing one update call followed by a subsequent delete call on the same key. By deleting the only key, we have an empty tree and expect to arrive at the default root. The resulting input set is described by <code>S = {0} - {0} = {Ø}</code>. This test expects a root signature identical to that produced by <a href="#test-empty-root">Test Empty Root</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(0u32)</code></li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x0000000000000000000000000000000000000000000000000000000000000000</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.delete(&amp;sum(b&quot;\x00\x00\x00\x00&quot;))
+root = smt.root()
+expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-2-delete-1"><a class="header" href="#test-update-2-delete-1">Test Update 2 Delete 1</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing two update calls followed by a subsequent delete call on the first key. By deleting the second key, we have a tree with only one key remaining, equivalent to a single update. This test expects a root signature identical to that produced by <a href="#test-update-1">Test Update 1</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>Update the empty tree with <code>(K, D)</code>, where leaf key <code>K = Sum(0u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(1u32)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(1u32)</code></li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x00&quot;), b&quot;DATA&quot;)
+smt.update(&amp;sum(b&quot;\x00\x00\x00\x01&quot;), b&quot;DATA&quot;)
+smt.delete(&amp;sum(b&quot;\x00\x00\x00\x01&quot;))
+root = smt.root()
+expected_root = '39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-update-10-delete-5"><a class="header" href="#test-update-10-delete-5">Test Update 10 Delete 5</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing 10 update calls followed by 5 subsequent delete calls on the latter keys. By deleting the last five keys, we have a tree with the first five keys remaining, equivalent to five updates. This test expects a root signature identical to that produced by <a href="#test-update-5">Test Update 5</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..10</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>5..10</code>, delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(i)</code></li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..10 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 5..10 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    smt.delete(&amp;sum(key))
+}
+root = smt.root()
+expected_root = '108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-delete-non-existent-key"><a class="header" href="#test-delete-non-existent-key">Test Delete Non-existent Key</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing five update calls followed by a subsequent delete on a key that is not present in the input set. This test expects a root signature identical to that produced by <a href="#test-update-5">Test Update 5</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..5</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>Delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(1024u32)</code></li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..5 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+smt.delete(&amp;sum(b&quot;\x00\x00\x04\x00&quot;))
+
+root = smt.root()
+expected_root = '108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-interleaved-update-delete"><a class="header" href="#test-interleaved-update-delete">Test Interleaved Update Delete</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing a series of interleaved update and delete calls. The resulting input set is described by <code>[0..5) U [10..15) U [20..25)</code>. This test demonstrates the inverse relationship between operations <code>update</code> and <code>delete</code>. This test expects a root signature identical to that produced by <a href="#test-update-union">Test Update Union</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..10</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>5..15</code>, delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(i)</code> from the tree</li>
+<li>For each <code>i</code> in <code>10..20</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>15..25</code>, delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(i)</code> from the tree</li>
+<li>For each <code>i</code> in <code>20..30</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>25..35</code>, delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(i)</code> from the tree</li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0x7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..10 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 5..15 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    smt.delete(&amp;sum(key))
+}
+for i in 10..20 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 15..25 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    smt.delete(&amp;sum(key))
+}
+for i in 20..30 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 25..35 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    smt.delete(&amp;sum(key))
+}
+root = smt.root()
+expected_root = '7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+<hr />
+<h3 id="test-delete-sparse-union"><a class="header" href="#test-delete-sparse-union">Test Delete Sparse Union</a></h3>
+<p><strong>Description</strong>:</p>
+<p>Tests the root after performing delete calls with discontinuous sets of inputs. The resulting input set is described by <code>S = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] - [1, 3, 5, 7, 9] = [0, 2, 4, 6, 8]</code>. This test expects a root signature identical to that produced by <a href="#test-update-sparse-union">Test Update Sparse Union</a>.</p>
+<p><strong>Inputs</strong>:</p>
+<ol>
+<li>For each <code>i</code> in <code>0..10</code>, update the tree with <code>(K, D)</code>, where leaf key <code>K = Sum(i)</code> and leaf data <code>D = b&quot;DATA&quot;</code> (bytes, UTF-8)</li>
+<li>For each <code>i</code> in <code>0..5</code>, delete <code>(K)</code> from the tree, where leaf key <code>K = Sum(i * 2 + 1)</code></li>
+</ol>
+<p><strong>Outputs</strong>:</p>
+<ul>
+<li>The expected root signature: <code>0xe912e97abc67707b2e6027338292943b53d01a7fbd7b244674128c7e468dd696</code></li>
+</ul>
+<p><strong>Example Pseudocode</strong>:</p>
+<pre><code class="language-text">smt = SparseMerkleTree.new(Storage.new(), sha256.new())
+for i in 0..10 {
+    key = &amp;(i as u32).to_big_endian_bytes()
+    data = b&quot;DATA&quot;
+    smt.update(&amp;sum(key), data)
+}
+for i in 0..5 {
+    key = &amp;(i as u32 * 2 + 1).to_big_endian_bytes()
+    smt.delete(&amp;sum(key))
+}
+root = smt.root()
+expected_root = 'e912e97abc67707b2e6027338292943b53d01a7fbd7b244674128c7e468dd696'
+expect(hex_encode(root), expected_root).to_be_equal
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../tests/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../tests/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
