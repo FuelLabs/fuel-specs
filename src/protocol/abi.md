@@ -158,7 +158,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "()",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `bool`
@@ -169,7 +169,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "bool",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u8`
@@ -180,7 +180,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u8",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u16`
@@ -191,7 +191,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u16",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u32`
@@ -202,7 +202,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u32",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `u64`
@@ -213,7 +213,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "u64",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `b256`
@@ -224,7 +224,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "b256",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 #### `struct`
@@ -267,9 +267,9 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     ...
   ],
   "typeParameters": [
-    <type_param1_type_id>, 
-    <type_param2_type_id>, 
-    ... 
+    <type_param1_type_id>,
+    <type_param2_type_id>,
+    ...
   ]
 }
 ```
@@ -314,9 +314,9 @@ Below is a list of the JSON ABI formats for each possible type declaration:
     ...
   ],
   "typeParameters": [
-    <type_param1_type_id>, 
-    <type_param2_type_id>, 
-    ... 
+    <type_param1_type_id>,
+    <type_param2_type_id>,
+    ...
   ]
 }
 ```
@@ -329,7 +329,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "str[<n>]",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 `<n>` is the length of the string.
@@ -420,7 +420,7 @@ Below is a list of the JSON ABI formats for each possible type declaration:
   "type": "generic <name>",
   "components": null,
   "typeParameters": null
-} 
+}
 ```
 
 `<name>` is the name of the generic parameter as specified in the struct or enum declaration that uses it.
@@ -1064,11 +1064,11 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 ### MessageOut receipt
 
 - `type`: `MessageOut`.
-- `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](../protocol/identifiers.md#message-id).
+- `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](./id/utxo.md#message-id).
 - `sender`: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: `MEM[$fp, 32]`.
 - `recipient`: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: `MEM[$rA, 32]`.
 - `amount`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rD`.
-- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described [here](../protocol/identifiers.md#message-nonce).
+- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described [here](./id/utxo.md#message-nonce).
 - `len`: Decimal string representation of a 16-bit unsigned integer; value of register `$rB`.
 - `digest`: Hexadecimal string representation of 256-bit (32-byte), hash of `MEM[$rA + 32, $rB]`.
 - `data`: Hexadecimal string representation of the value of the memory range `MEM[$rA + 32, $rB]`.
@@ -1102,7 +1102,7 @@ abi MyContract {
 
 The function selector is the first 4 bytes of the SHA-256 hash function of the signature of the Sway function being called. Then, these 4 bytes are right-aligned to 8 bytes, left-padded with zeroes.
 
-> **Note**: The word size for the FuelVM is 8 bytes._
+> **Note**: The word size for the FuelVM is 8 bytes.
 
 ### Function signature
 
@@ -1161,8 +1161,8 @@ struct MyOtherStruct {
 }
 
 fn complex_function(
-    arg1: MyStruct<[b256; 3], u8>, 
-    arg2: [MyStruct<u64, bool>; 4], 
+    arg1: MyStruct<[b256; 3], u8>,
+    arg2: [MyStruct<u64, bool>; 4],
     arg3: (str[5], bool),
     arg4: MyOtherStruct,
 );
