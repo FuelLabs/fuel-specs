@@ -15,7 +15,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-      - uses: Swatinem/rust-cache@v1
       - name: mdbook build
         uses: peaceiris/actions-mdbook@v1
         with:
