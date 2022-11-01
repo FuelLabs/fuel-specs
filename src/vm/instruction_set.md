@@ -1493,7 +1493,7 @@ Panic if:
 
 - `$rA + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
 The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
@@ -1511,7 +1511,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `rB` will be
 Panic if:
 
 - `$rA + 32` overflows
-- `$rB` is a [reserved register](./main.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32 * $rD` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rC + 32 * $rD > VM_MAX_RAM`
