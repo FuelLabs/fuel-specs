@@ -885,6 +885,23 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </li>
 </ul>
 </li>
+<li><code>&quot;configurables&quot;</code>: an array describing all <code>configurable</code> variables used in the contract. Each <code>configurable</code> variable is represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the <code>configurable</code> variable.</li>
+<li><code>&quot;configurableType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <code>configurable</code> variable.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <code>configurable</code> variable, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;offset&quot;</code>: the specific offset within the contract's bytecode, in bytes, to the data section entry for the <code>configurable</code> variable.</li>
+</ul>
+</li>
 </ul>
 <blockquote>
 <p><strong>Note</strong>: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The <a href="protocol/abi.html#function-selector-encoding">Function Selector Encoding</a> section specifies the encoding for the function being selected to be executed and each of the argument types.</p>
