@@ -78,17 +78,17 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 To initialize the VM, the following is pushed on the stack sequentially:
 
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/id/transaction.md).
-1. [`MAX_INPUTS`](../protocol/tx_format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
+2. [`MAX_INPUTS`](../protocol/tx_format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate verification](#predicate-verification), zeroes.
-    1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
-1. Transaction length, in bytes (`uint64`, word-aligned).
-1. The [transaction, serialized](../protocol/tx_format/index.md).
+    2. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
+3. Transaction length, in bytes (`uint64`, word-aligned).
+4. The [transaction, serialized](../protocol/tx_format/index.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
 
 1. `$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
-1. `$sp = $ssp`: writable stack area is empty to start.
-1. `$hp = VM_MAX_RAM - 1`: the heap area begins at the top and is empty to start.
+2. `$sp = $ssp`: writable stack area is empty to start.
+3. `$hp = VM_MAX_RAM - 1`: the heap area begins at the top and is empty to start.
 
 ## Contexts
 
@@ -110,7 +110,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
 
 1. Any [contract instruction](./instruction_set.md#contract-instructions).
-1. [JI](./instruction_set.md#ji-jump-immediate), [JNEI](./instruction_set.md#jnei-jump-if-not-equal-immediate), [JMP](./instruction_set.md#jmp-jump) or [JNE](./instruction_set.md#jne-jump-if-not-equal) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
+2. [JI](./instruction_set.md#ji-jump-immediate), [JNEI](./instruction_set.md#jnei-jump-if-not-equal-immediate), [JMP](./instruction_set.md#jmp-jump) or [JNE](./instruction_set.md#jne-jump-if-not-equal) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
@@ -123,7 +123,7 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+2. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
 Following initialization, execution begins.
 
@@ -134,7 +134,7 @@ For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, dedu
 Cross-contract calls push a _call frame_ onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that targets the FuelVM). The distinction is as follows:
 
 1. Stack frames: store metadata across trusted internal (i.e. intra-contract) function calls. Not supported natively by the FuelVM, but may be used as an abstraction at a higher layer.
-1. Call frames: store metadata across untrusted external (i.e. inter-contract) calls. Supported natively by the FuelVM.
+2. Call frames: store metadata across untrusted external (i.e. inter-contract) calls. Supported natively by the FuelVM.
 
 Call frames are needed to ensure that the called contract cannot mutate the running state of the current executing contract. They segment access rights for memory: the currently-executing contracts may only write to their own call frame and their own heap.
 
@@ -160,9 +160,9 @@ Whenever memory is written to (i.e. with [`SB`](./instruction_set.md#sb-store-by
 If the context is external, the owned memory range is:
 
 1. `[$ssp, $sp)`: the writable stack area.
-1. `($hp, VM_MAX_RAM - 1]`: the heap area allocated by this script or predicate.
+2. `($hp, VM_MAX_RAM - 1]`: the heap area allocated by this script or predicate.
 
 If the context is internal, the owned memory range for a call frame is:
 
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
-1. `($hp, $fp->$hp]`: the heap area allocated by this call frame.
+2. `($hp, $fp->$hp]`: the heap area allocated by this call frame.
