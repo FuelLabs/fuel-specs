@@ -75,7 +75,7 @@
   - [SRWQ: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
   - [SWW: State write word](#sww-state-write-word)
   - [SWWQ: State write sequential 32 byte slots](#swwq-state-write-sequential-32-byte-slots)
-  - [TIME: Timstamp at height](#time-timstamp-at-height)
+  - [TIME: Timestamp at height](#time-timestamp-at-height)
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
@@ -92,6 +92,7 @@
 This page provides a description of all instructions for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single `i` indicates a 6-bit immediate value, `i i` indicates a 12-bit immediate value, `i i i` indicates an 18-bit immediate value, and `i i i i` indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.
 
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
+- The syntax `STATE[x, y]` used in this page means the sequence of storage slots starting at key `x` and spanning `y` bytes.
 
 Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./index.md#contexts):
 
@@ -731,13 +732,13 @@ Panic if:
 
 ### RET: Return from context
 
-|             |                                                              |
-|-------------|--------------------------------------------------------------|
+|             |                                                               |
+|-------------|---------------------------------------------------------------|
 | Description | Returns from [context](./index.md#contexts) with value `$rA`. |
-| Operation   | ```return($rA);```                                           |
-| Syntax      | `ret $rA`                                                    |
-| Encoding    | `0x00 rA - - -`                                              |
-| Notes       |                                                              |
+| Operation   | ```return($rA);```                                            |
+| Syntax      | `ret $rA`                                                     |
+| Encoding    | `0x00 rA - - -`                                               |
+| Notes       |                                                               |
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
@@ -768,7 +769,7 @@ Return the unused forwarded gas to the caller:
 Set the return value:
 
 1. `$ret = $rA`
-1. `$retl = 0`
+2. `$retl = 0`
 
 Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
@@ -1107,10 +1108,10 @@ For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$r
 A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
-1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
-1. Set `$pc` and `$is` to the starting address of the code.
-1. `$bal = $rB` (forward coins)
-1. `$cgas = $rD` or all available gas (forward gas)
+2. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
+3. Set `$pc` and `$is` to the starting address of the code.
+4. `$bal = $rB` (forward coins)
+5. `$cgas = $rD` or all available gas (forward gas)
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
@@ -1287,13 +1288,13 @@ This modifies the `balanceRoot` field of the appropriate output.
 
 ### RETD: Return from context with data
 
-|             |                                                                        |
-|-------------|------------------------------------------------------------------------|
+|             |                                                                         |
+|-------------|-------------------------------------------------------------------------|
 | Description | Returns from [context](./index.md#contexts) with value `MEM[$rA, $rB]`. |
-| Operation   | ```returndata($rA, $rB);```                                            |
-| Syntax      | `retd $rA, $rB`                                                        |
-| Encoding    | `0x00 rA rB - -`                                                       |
-| Notes       |                                                                        |
+| Operation   | ```returndata($rA, $rB);```                                             |
+| Syntax      | `retd $rA, $rB`                                                         |
+| Encoding    | `0x00 rA rB - -`                                                        |
+| Notes       |                                                                         |
 
 Panic if:
 
@@ -1332,7 +1333,7 @@ Return the unused forwarded gas to the caller:
 Set the return value:
 
 1. `$ret = $rA`
-1. `$retl = $rB`
+2. `$retl = $rB`
 
 Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
@@ -1369,7 +1370,7 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 Cease VM execution and revert script effects. After a revert:
 
 1. All [OutputContract](../protocol/tx_format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+2. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SMO: Send message to output
 
@@ -1398,16 +1399,16 @@ Panic if:
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name        | type          | description                                                                             |
-|-------------|---------------|-----------------------------------------------------------------------------------------|
-| `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                                |
+| name        | type          | description                                                                  |
+|-------------|---------------|------------------------------------------------------------------------------|
+| `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                     |
 | `messageID` | `byte[32]`    | The messageID as described [here](../protocol/id/utxo.md#message-id).        |
-| `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                                      |
-| `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                                   |
-| `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                                    |
+| `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                           |
+| `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                        |
+| `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                         |
 | `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/id/utxo.md#message-nonce). |
-| `len`       | `uint16`      | Length of message data, in bytes: `$rB`.                                                |
-| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                                        |
+| `len`       | `uint16`      | Length of message data, in bytes: `$rB`.                                     |
+| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                             |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
 
@@ -1416,7 +1417,7 @@ In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an int
 
 This modifies the `balanceRoot` field of the appropriate output.
 `messageID` is added to the `OutputMessage` Merkle tree as part of block header.
-TODO: document output messages merkle tree construction and maintenance and link here
+TODO: document output messages Merkle tree construction and maintenance and link here
 
 ### SCWQ: State clear sequential 32 byte slots
 
@@ -1435,7 +1436,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
 
 ### SRW: State read word
 
@@ -1455,7 +1456,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
 
 ### SRWQ: State read sequential 32 byte slots
 
@@ -1477,7 +1478,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
 
 ### SWW: State write word
 
@@ -1496,17 +1497,17 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
-The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
 
 ### SWWQ: State write sequential 32 byte slots
 
-|             |                                                           |
-|-------------|-----------------------------------------------------------|
-| Description | 32 bytes is written to the current contract's state.      |
-| Operation   | ```STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];``` |
-| Syntax      | `swwq $rA, $rB, $rC, $rD`                                 |
-| Encoding    | `0x00 rA rB rC rD`                                        |
-| Notes       |                                                           |
+|             |                                                                             |
+|-------------|-----------------------------------------------------------------------------|
+| Description | A sequential series of 32 bytes is written to the current contract's state. |
+| Operation   | ```STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];```                   |
+| Syntax      | `swwq $rA, $rB, $rC, $rD`                                                   |
+| Encoding    | `0x00 rA rB rC rD`                                                          |
+| Notes       |                                                                             |
 
 Panic if:
 
@@ -1517,9 +1518,9 @@ Panic if:
 - `$rC + 32 * $rD > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `rB` will be set to `false` if the first storage slot was previously unset (default) and `true` if the slot was set.
+Register `$rB` will be set to `false` if the first storage slot was previously unset (default) and `true` if the slot was set.
 
-### TIME: Timstamp at height
+### TIME: Timestamp at height
 
 |             |                                         |
 |-------------|-----------------------------------------|
