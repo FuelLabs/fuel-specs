@@ -142,7 +142,7 @@
 <p>Wraps the <a href="../protocol/block_header.html#application-header">application header</a>.</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>prevRoot</code></td><td><code>byte[32]</code></td><td><a href="../protocol/cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of all previous consensus header hashes (i.e. not including this block).</td></tr>
-<tr><td><code>height</code></td><td><code>uint64</code></td><td>Height of this block.</td></tr>
+<tr><td><code>height</code></td><td><code>uint32</code></td><td>Height of this block.</td></tr>
 <tr><td><code>timestamp</code></td><td><code>uint64</code></td><td>Time this block was created, in <a href="https://cr.yp.to/libtai/tai64.html">TAI64</a> format.</td></tr>
 <tr><td><code>applicationHash</code></td><td><code>byte[32]</code></td><td><a href="../protocol/cryptographic_primitives.html#hashing">Hash</a> of serialized <a href="../protocol/block_header.html#application-header">application header</a> for this block.</td></tr>
 </tbody></table>
