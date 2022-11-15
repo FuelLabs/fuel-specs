@@ -12,7 +12,7 @@ This book specifies the Fuel protocol, including the Fuel Virtual Machine
 - [**Computing Identifiers**](./protocol/id/index.md) - Computing unique IDs for transactions, contracts and UTXOs.
 - [**Transaction Validity**](./protocol/tx_validity.md) - Defines transaction validity rules.
 - [**Cryptographic Primitives**](./protocol/cryptographic_primitives.md) - Cryptographic primitives used in Fuel.
-- [**Application Binary Interface (ABI)**](./protocol/abi.md) - Low-level details on interfacing with Fuel bytecode.
+- [**Application Binary Interface (ABI)**](./protocol/abi/index.md) - Low-level details on interfacing with Fuel bytecode.
 - [**Storage Slot Initialization**](./protocol/storage_initialization.md) - JSON format for contract storage slot initialization.
 - [**Block Header Format**](./protocol/block_header.md) - The Fuel block header format.
 
