@@ -1,0 +1,434 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Receipts - Fuel Specifications</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../fuel-specs.html">Fuel Specifications</a></li><li class="chapter-item expanded "><a href="../../protocol/index.html"><strong aria-hidden="true">1.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../protocol/tx_format/index.html"><strong aria-hidden="true">1.1.</strong> Transaction Format</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../protocol/tx_format/constants.html"><strong aria-hidden="true">1.1.1.</strong> Constants</a></li><li class="chapter-item expanded "><a href="../../protocol/tx_format/transaction.html"><strong aria-hidden="true">1.1.2.</strong> Transaction</a></li><li class="chapter-item expanded "><a href="../../protocol/tx_format/input.html"><strong aria-hidden="true">1.1.3.</strong> Input</a></li><li class="chapter-item expanded "><a href="../../protocol/tx_format/output.html"><strong aria-hidden="true">1.1.4.</strong> Output</a></li><li class="chapter-item expanded "><a href="../../protocol/tx_format/witness.html"><strong aria-hidden="true">1.1.5.</strong> Witness</a></li><li class="chapter-item expanded "><a href="../../protocol/tx_format/tx_pointer.html"><strong aria-hidden="true">1.1.6.</strong> TXPointer</a></li></ol></li><li class="chapter-item expanded "><a href="../../protocol/id/index.html"><strong aria-hidden="true">1.2.</strong> Computing Identifiers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../protocol/id/transaction.html"><strong aria-hidden="true">1.2.1.</strong> Transaction ID</a></li><li class="chapter-item expanded "><a href="../../protocol/id/contract.html"><strong aria-hidden="true">1.2.2.</strong> Contract ID</a></li><li class="chapter-item expanded "><a href="../../protocol/id/utxo.html"><strong aria-hidden="true">1.2.3.</strong> UTXO ID</a></li></ol></li><li class="chapter-item expanded "><a href="../../protocol/tx_validity.html"><strong aria-hidden="true">1.3.</strong> Transaction Validity Rules</a></li><li class="chapter-item expanded "><a href="../../protocol/cryptographic_primitives.html"><strong aria-hidden="true">1.4.</strong> Cryptographic Primitives</a></li><li class="chapter-item expanded "><a href="../../protocol/abi/index.html"><strong aria-hidden="true">1.5.</strong> Application Binary Interface (ABI)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../protocol/abi/json_abi_format.html"><strong aria-hidden="true">1.5.1.</strong> JSON ABI Format</a></li><li class="chapter-item expanded "><a href="../../protocol/abi/receipts.html" class="active"><strong aria-hidden="true">1.5.2.</strong> Receipts</a></li><li class="chapter-item expanded "><a href="../../protocol/abi/fn_selector_encoding.html"><strong aria-hidden="true">1.5.3.</strong> Function Selector Encoding</a></li></ol></li><li class="chapter-item expanded "><a href="../../protocol/storage_initialization.html"><strong aria-hidden="true">1.6.</strong> Storage Slot Initialization</a></li><li class="chapter-item expanded "><a href="../../protocol/block_header.html"><strong aria-hidden="true">1.7.</strong> Block Header Format</a></li></ol></li><li class="chapter-item expanded "><a href="../../vm/index.html"><strong aria-hidden="true">2.</strong> FuelVM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../vm/instruction_set.html"><strong aria-hidden="true">2.1.</strong> Instruction Set</a></li></ol></li><li class="chapter-item expanded "><a href="../../network/index.html"><strong aria-hidden="true">3.</strong> Networks</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../network/poa.html"><strong aria-hidden="true">3.1.</strong> Proof of Authority (PoA)</a></li></ol></li><li class="chapter-item expanded "><a href="../../tests/index.html"><strong aria-hidden="true">4.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../tests/sparse_merkle_tree_tests.html"><strong aria-hidden="true">4.1.</strong> Sparse Merkle Tree</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Fuel Specifications</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/FuelLabs/fuel-specs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="receipts"><a class="header" href="#receipts">Receipts</a></h1>
+<p>Upon execution of ABI calls, i.e scripts being executed, a JSON object representing a list of receipts will be returned to the caller. Below is the JSON specification of the possible receipt types. The root will be <code>receipts_root</code> which will include an array of <code>receipts</code>.</p>
+<pre><code class="language-json">{
+  &quot;receipts_list&quot;:[
+    {
+      &quot;type&quot;:&quot;&lt;receipt_type&gt;&quot;,
+      ...
+    },
+    ...
+  ]
+}
+</code></pre>
+<p>All receipts will have a <code>type</code> property:</p>
+<ul>
+<li><code>type</code>: String; the type of the receipt. Can be one of:
+<ul>
+<li><a href="#call-receipt">Call</a></li>
+<li><a href="#return-receipt">Return</a></li>
+<li><a href="#returndata-receipt">ReturnData</a></li>
+<li><a href="#panic-receipt">Panic</a></li>
+<li><a href="#revert-receipt">Revert</a></li>
+<li><a href="#log-receipt">Log</a></li>
+<li><a href="#logdata-receipt">LogData</a></li>
+<li><a href="#transfer-receipt">Transfer</a></li>
+<li><a href="#transferout-receipt">TransferOut</a></li>
+<li><a href="#scriptresult-receipt">ScriptResult</a></li>
+<li><a href="#messageout-receipt">MessageOut</a></li>
+</ul>
+</li>
+</ul>
+<p>Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail <a href="../../vm/instruction_set.html">here</a>.</p>
+<p><em>Important note:</em> For the JSON representation of receipts, we represent 64-bit unsigned integers as a JSON <code>String</code> due to limitations around the type <code>Number</code> in the JSON specification, which only supports numbers up to <code>2^{53-1}</code>, while the FuelVM's registers hold values up to <code>2^64</code>.</p>
+<h2 id="panic-receipt"><a class="header" href="#panic-receipt">Panic Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Panic</code>.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>reason</code>: Decimal string representation of an 8-bit unsigned integer; panic reason.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+<li><code>contractId</code>: Optional hexadecimal string representation of the 256-bit (32-byte) contract ID if applicable. <code>null</code> otherwise.
+Not included in canonical receipt form. Primary use is for access-list estimation by SDK.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Panic&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;reason&quot;: &quot;1&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;,
+  &quot;contractId&quot;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;
+}
+</code></pre>
+<h2 id="return-receipt"><a class="header" href="#return-receipt">Return Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Return</code>.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; <code>null</code> otherwise.</li>
+<li><code>val</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Return&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val&quot;: &quot;18446744073709551613&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="call-receipt"><a class="header" href="#call-receipt">Call Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Call</code>.</li>
+<li><code>from</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; <code>null</code> otherwise.</li>
+<li><code>to</code>: Hexadecimal representation of the 256-bit (32-byte) contract ID of the callee.</li>
+<li><code>amount</code>: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.</li>
+<li><code>asset_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.</li>
+<li><code>gas</code>: Decimal string representation of a 64-bit unsigned integer; amount gas to forward; value in register <code>$rD</code>.</li>
+<li><code>param1</code>: Hexadecimal string representation of a 64-bit unsigned integer; first parameter, holds the function selector.</li>
+<li><code>param2</code>: Hexadecimal string representation of a 64-bit unsigned integer; second parameter, typically used for the user-specified input to the ABI function being selected.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Call&quot;,
+  &quot;from&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;to&quot;: &quot;0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d&quot;,
+  &quot;amount&quot;: &quot;10000&quot;,
+  &quot;asset_id&quot;: &quot;0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61&quot;,
+  &quot;gas&quot;: &quot;500&quot;,
+  &quot;param1&quot;: &quot;0x28f5c28f5c28f5c&quot;,
+  &quot;param2&quot;: &quot;0x68db8bac710cb&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="log-receipt"><a class="header" href="#log-receipt">Log Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Log</code>.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>val0</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>val1</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code>.</li>
+<li><code>val2</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rC</code>.</li>
+<li><code>val3</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Log&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val0&quot;: &quot;1844674407370&quot;,
+  &quot;val1&quot;: &quot;1844674407371&quot;,
+  &quot;val2&quot;: &quot;1844674407372&quot;,
+  &quot;val3&quot;: &quot;1844674407373&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="logdata-receipt"><a class="header" href="#logdata-receipt">LogData Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>LogData</code>.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>val0</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code></li>
+<li><code>val1</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code></li>
+<li><code>ptr</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rC</code>.</li>
+<li><code>len</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
+<li><code>digest</code>: Hexadecimal string representation of the 256-bit (32-byte) hash of <code>MEM[$rC, $rD]</code>.</li>
+<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rC, $rD]</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;LogData&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val0&quot;: &quot;1844674407370&quot;,
+  &quot;val1&quot;: &quot;1844674407371&quot;,
+  &quot;ptr&quot;: &quot;0x1ad7f29abcc&quot;,
+  &quot;len&quot;: &quot;66544&quot;,
+  &quot;digest&quot;: &quot;0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;data&quot;: &quot;0xa7c5ac471b47&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="returndata-receipt"><a class="header" href="#returndata-receipt">ReturnData Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>ReturnData</code>.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>ptr</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>len</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code>.</li>
+<li><code>digest</code>: Hexadecimal string representation of 256-bit (32-byte), hash of <code>MEM[$rA, $rB]</code>.</li>
+<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rA, $rB]</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;ReturnData&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;ptr&quot;: &quot;0x1ad7f29abcc&quot;,
+  &quot;len&quot;: &quot;1844&quot;,
+  &quot;digest&quot;: &quot;0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;data&quot;: &quot;0xa7c5ac471b47&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="revert-receipt"><a class="header" href="#revert-receipt">Revert Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Revert</code>.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>val</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Revert&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val&quot;: &quot;1844674407372&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="transfer-receipt"><a class="header" href="#transfer-receipt">Transfer Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Transfer</code>.</li>
+<li><code>from</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>to</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the recipient contract.</li>
+<li><code>amount</code>: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.</li>
+<li><code>asset_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Transfer&quot;,
+  &quot;from&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;to&quot;: &quot;0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d&quot;,
+  &quot;amount&quot;: &quot;10000&quot;,
+  &quot;asset_id&quot;: &quot;0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="transferout-receipt"><a class="header" href="#transferout-receipt">TransferOut Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>TransferOut</code>.</li>
+<li><code>from</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>to</code>: Hexadecimal string representation of the 256-bit (32-byte) <em>address</em> to transfer coins to.</li>
+<li><code>amount</code>: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.</li>
+<li><code>asset_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;TransferOut&quot;,
+  &quot;from&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;to&quot;: &quot;0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d&quot;,
+  &quot;amount&quot;: &quot;10000&quot;,
+  &quot;asset_id&quot;: &quot;0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="scriptresult-receipt"><a class="header" href="#scriptresult-receipt">ScriptResult Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>ScriptResult</code>.</li>
+<li><code>result</code>: Hexadecimal string representation of a 64-bit unsigned integer; <code>0</code> if script exited successfully, <code>any</code> otherwise.</li>
+<li><code>gas_used</code>: Decimal string representation of a 64-bit unsigned integer; amount of gas consumed by the script.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;ScriptResult&quot;,
+  &quot;result&quot;: &quot;0x00&quot;,
+  &quot;gas_used&quot;: &quot;400&quot;
+}
+</code></pre>
+<h2 id="messageout-receipt"><a class="header" href="#messageout-receipt">MessageOut Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>MessageOut</code>.</li>
+<li><code>messageID</code>: Hexadecimal string representation of the 256-bit (32-byte) message ID as described <a href="../id/utxo.html#message-id">here</a>.</li>
+<li><code>sender</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: <code>MEM[$fp, 32]</code>.</li>
+<li><code>recipient</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: <code>MEM[$rA, 32]</code>.</li>
+<li><code>amount</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
+<li><code>nonce</code>: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described <a href="../id/utxo.html#message-nonce">here</a>.</li>
+<li><code>len</code>: Decimal string representation of a 16-bit unsigned integer; value of register <code>$rB</code>.</li>
+<li><code>digest</code>: Hexadecimal string representation of 256-bit (32-byte), hash of <code>MEM[$rA + 32, $rB]</code>.</li>
+<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rA + 32, $rB]</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;MessageOut&quot;,
+  &quot;messageID&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;sender&quot;: &quot;0x38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff05139150017c9e&quot;,
+  &quot;recipient&quot;: &quot;0x4710162c2e3a95a6faff05139150017c9e38e5e280432d546fae345d6ce6d8fe&quot;,
+  &quot;amount&quot;: &quot;0xe6d8fe4710162c2e&quot;,
+  &quot;nonce&quot;: &quot;0x47101017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;len&quot;: &quot;65535&quot;,
+  &quot;digest&quot;: &quot;0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa&quot;,
+  &quot;data&quot;: &quot;0xa7c5ac471b47&quot;
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../protocol/abi/json_abi_format.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../protocol/abi/fn_selector_encoding.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../protocol/abi/json_abi_format.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../protocol/abi/fn_selector_encoding.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
