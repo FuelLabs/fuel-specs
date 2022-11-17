@@ -9,4 +9,4 @@ title = "Fuel Specifications"
 git-repository-url = "https://github.com/FuelLabs/fuel-specs"
 
 [output.html.redirect]
-"/protocol/abi.html" = "/protocol/abi/index.html"
+"/protocol/abi.html" = "./abi/index.html"
