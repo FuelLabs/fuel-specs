@@ -7,7 +7,7 @@ Wraps the [application header](../protocol/block_header.md#application-header).
 name              | type       | description
 ------------------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------
 `prevRoot`        | `byte[32]` | [Merkle root](../protocol/cryptographic_primitives.md#binary-merkle-tree) of all previous consensus header hashes (i.e. not including this block).
-`height`          | `uint64`   | Height of this block.
+`height`          | `uint32`   | Height of this block.
 `timestamp`       | `uint64`   | Time this block was created, in [TAI64](https://cr.yp.to/libtai/tai64.html) format.
 `applicationHash` | `byte[32]` | [Hash](../protocol/cryptographic_primitives.md#hashing) of serialized [application header](../protocol/block_header.md#application-header) for this block.
 
