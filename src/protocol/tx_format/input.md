@@ -1,7 +1,7 @@
 # Input
 
 ```c++
-enum  InputType : uint8 {
+enum InputType : uint8 {
     Coin = 0,
     Contract = 1,
     Message = 2,
@@ -78,20 +78,20 @@ Transaction is invalid if:
 
 ## InputMessage
 
-| name                  | type       | description                                                         |
-|-----------------------|------------|---------------------------------------------------------------------|
+| name                  | type       | description                                                  |
+|-----------------------|------------|--------------------------------------------------------------|
 | `messageID`           | `byte[32]` | The messageID as described [here](../id/utxo.md#message-id). |
-| `sender`              | `byte[32]` | The address of the message sender.                                  |
-| `recipient`           | `byte[32]` | The address or predicate root of the message recipient.             |
-| `amount`              | `uint64`   | Amount of base asset coins sent with message.                       |
-| `nonce`               | `uint64`   | The message nonce.                                                  |
-| `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.                 |
-| `dataLength`          | `uint16`   | Length of message data, in bytes.                                   |
-| `predicateLength`     | `uint16`   | Length of predicate, in instructions.                               |
-| `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.                           |
-| `data`                | `byte[]`   | The message data.                                                   |
-| `predicate`           | `byte[]`   | Predicate bytecode.                                                 |
-| `predicateData`       | `byte[]`   | Predicate input data (parameters).                                  |
+| `sender`              | `byte[32]` | The address of the message sender.                           |
+| `recipient`           | `byte[32]` | The address or predicate root of the message recipient.      |
+| `amount`              | `uint64`   | Amount of base asset coins sent with message.                |
+| `nonce`               | `uint64`   | The message nonce.                                           |
+| `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.          |
+| `dataLength`          | `uint16`   | Length of message data, in bytes.                            |
+| `predicateLength`     | `uint16`   | Length of predicate, in instructions.                        |
+| `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.                    |
+| `data`                | `byte[]`   | The message data.                                            |
+| `predicate`           | `byte[]`   | Predicate bytecode.                                          |
+| `predicateData`       | `byte[]`   | Predicate input data (parameters).                           |
 
 Given helper `len()` that returns the number of bytes of a field.
 

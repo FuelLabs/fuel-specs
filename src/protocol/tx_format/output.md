@@ -1,7 +1,7 @@
 # Output
 
 ```c++
-enum  OutputType : uint8 {
+enum OutputType : uint8 {
     Coin = 0,
     Contract = 1,
     Message = 2,
