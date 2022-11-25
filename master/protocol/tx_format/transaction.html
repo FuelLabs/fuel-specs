@@ -138,7 +138,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="transaction"><a class="header" href="#transaction">Transaction</a></h1>
-<pre><code class="language-c++">enum  TransactionType : uint8 {
+<pre><code class="language-c++">enum TransactionType : uint8 {
     Script = 0,
     Create = 1,
     Mint = 2,
@@ -172,7 +172,7 @@
 </ol>
 <p>When deserializing a transaction, the reverse is done. If there are insufficient bytes or too many bytes, the transaction is invalid.</p>
 <h2 id="transactionscript"><a class="header" href="#transactionscript">TransactionScript</a></h2>
-<pre><code class="language-c++">enum  ReceiptType : uint8 {
+<pre><code class="language-c++">enum ReceiptType : uint8 {
     Call = 0,
     Return = 1,
     ReturnData = 2,

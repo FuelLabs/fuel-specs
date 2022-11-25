@@ -235,7 +235,7 @@
 <p>During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean <code>false</code>:</p>
 <ol>
 <li>Any <a href="./instruction_set.html#contract-instructions">contract instruction</a>.</li>
-<li><a href="./instruction_set.html#ji-jump-immediate">JI</a>, <a href="./instruction_set.html#jnei-jump-if-not-equal-immediate">JNEI</a>, <a href="./instruction_set.html#jmp-jump">JMP</a> or <a href="./instruction_set.html#jne-jump-if-not-equal">JNE</a> with jump-to value less than or equal to <code>$pc</code> (these would allow loops). In other words, <code>$pc</code> must be strictly increasing.</li>
+<li><a href="./instruction_set.html#jmp-jump">JMP</a>, <a href="./instruction_set.html#ji-jump-immediate">JI</a>, <a href="./instruction_set.html#jne-jump-if-not-equal">JNE</a>, <a href="./instruction_set.html#jnei-jump-if-not-equal-immediate">JNEI</a>, or <a href="./instruction_set.html#jnzi-jump-if-not-zero-immediate">JNZI</a> with jump-to value less than or equal to <code>$pc</code> (these would allow loops). In other words, <code>$pc</code> must be strictly increasing.</li>
 </ol>
 <p>In addition, during predicate mode if <code>$pc</code> is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean <code>false</code>.</p>
 <p>A predicate that halts without returning Boolean <code>true</code> does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>

@@ -224,7 +224,7 @@
 <li><a href="#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></li>
 <li><a href="#sww-state-write-word">SWW: State write word</a></li>
 <li><a href="#swwq-state-write-sequential-32-byte-slots">SWWQ: State write sequential 32 byte slots</a></li>
-<li><a href="#time-timstamp-at-height">TIME: Timstamp at height</a></li>
+<li><a href="#time-timestamp-at-height">TIME: Timestamp at height</a></li>
 <li><a href="#tr-transfer-coins-to-contract">TR: Transfer coins to contract</a></li>
 <li><a href="#tro-transfer-coins-to-output">TRO: Transfer coins to output</a></li>
 </ul>
@@ -248,6 +248,7 @@
 <p>This page provides a description of all instructions for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single <code>i</code> indicates a 6-bit immediate value, <code>i i</code> indicates a 12-bit immediate value, <code>i i i</code> indicates an 18-bit immediate value, and <code>i i i i</code> indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.</p>
 <ul>
 <li>The syntax <code>MEM[x, y]</code> used in this page means the memory range starting at byte <code>x</code>, of length <code>y</code> bytes.</li>
+<li>The syntax <code>STATE[x, y]</code> used in this page means the sequence of storage slots starting at key <code>x</code> and spanning <code>y</code> bytes.</li>
 </ul>
 <p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on <a href="./index.html#contexts">context</a>:</p>
 <ul>
@@ -1413,7 +1414,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 </ul>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output.
 <code>messageID</code> is added to the <code>OutputMessage</code> Merkle tree as part of block header.
-TODO: document output messages merkle tree construction and maintenance and link here</p>
+TODO: document output messages Merkle tree construction and maintenance and link here</p>
 <h3 id="scwq-state-clear-sequential-32-byte-slots"><a class="header" href="#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is cleared from the current contract's state.</td></tr>
@@ -1430,7 +1431,7 @@ TODO: document output messages merkle tree construction and maintenance and link
 <li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>rB</code> will be set to <code>false</code> if any storage slot in the requested range was already unset (default) and <code>true</code> if all the slots were set.</p>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range was already unset (default) and <code>true</code> if all the slots were set.</p>
 <h3 id="srw-state-read-word"><a class="header" href="#srw-state-read-word">SRW: State read word</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A word is read from the current contract's state.</td></tr>
@@ -1448,7 +1449,7 @@ TODO: document output messages merkle tree construction and maintenance and link
 <li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
 <h3 id="srwq-state-read-sequential-32-byte-slots"><a class="header" href="#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is read from the current contract's state.</td></tr>
@@ -1468,7 +1469,7 @@ TODO: document output messages merkle tree construction and maintenance and link
 <li>The memory range <code>MEM[$rA, 32 * rD]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
 <h3 id="sww-state-write-word"><a class="header" href="#sww-state-write-word">SWW: State write word</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A word is written to the current contract's state.</td></tr>
@@ -1485,10 +1486,10 @@ TODO: document output messages merkle tree construction and maintenance and link
 <li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>rB</code> will be set to <code>false</code> if the storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
+<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>$rB</code> will be set to <code>false</code> if the storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
 <h3 id="swwq-state-write-sequential-32-byte-slots"><a class="header" href="#swwq-state-write-sequential-32-byte-slots">SWWQ: State write sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>32 bytes is written to the current contract's state.</td></tr>
+<tr><td>Description</td><td>A sequential series of 32 bytes is written to the current contract's state.</td></tr>
 <tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];</code></td></tr>
 <tr><td>Syntax</td><td><code>swwq $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
@@ -1504,8 +1505,8 @@ TODO: document output messages merkle tree construction and maintenance and link
 <li><code>$rC + 32 * $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>rB</code> will be set to <code>false</code> if the first storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
-<h3 id="time-timstamp-at-height"><a class="header" href="#time-timstamp-at-height">TIME: Timstamp at height</a></h3>
+<p>Register <code>$rB</code> will be set to <code>false</code> if the first storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
+<h3 id="time-timestamp-at-height"><a class="header" href="#time-timestamp-at-height">TIME: Timestamp at height</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Get timestamp of block at given height.</td></tr>
 <tr><td>Operation</td><td><code>$rA = time($rB);</code></td></tr>
