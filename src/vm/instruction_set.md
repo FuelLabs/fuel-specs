@@ -769,7 +769,7 @@ Return the unused forwarded gas to the caller:
 Set the return value:
 
 1. `$ret = $rA`
-2. `$retl = 0`
+1. `$retl = 0`
 
 Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
@@ -1108,10 +1108,10 @@ For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$r
 A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to filling in the values of the call frame, the following registers are set:
 
 1. `$fp = $sp` (on top of the previous call frame is the beginning of this call frame)
-2. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
-3. Set `$pc` and `$is` to the starting address of the code.
-4. `$bal = $rB` (forward coins)
-5. `$cgas = $rD` or all available gas (forward gas)
+1. Set `$ssp` and `$sp` to the start of the writable stack area of the call frame.
+1. Set `$pc` and `$is` to the starting address of the code.
+1. `$bal = $rB` (forward coins)
+1. `$cgas = $rD` or all available gas (forward gas)
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
@@ -1333,7 +1333,7 @@ Return the unused forwarded gas to the caller:
 Set the return value:
 
 1. `$ret = $rA`
-2. `$retl = $rB`
+1. `$retl = $rB`
 
 Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
 
@@ -1370,7 +1370,7 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 Cease VM execution and revert script effects. After a revert:
 
 1. All [OutputContract](../protocol/tx_format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-2. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+1. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SMO: Send message to output
 

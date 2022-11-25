@@ -31,8 +31,8 @@ Transaction is invalid if:
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
 1. `uint8`, `uint16`, `uint32`, `uint64`: big-endian right-aligned to 8 bytes.
-2. `byte[32]`: as-is.
-3. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
+1. `byte[32]`: as-is.
+1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
 
 When deserializing a transaction, the reverse is done. If there are insufficient bytes or too many bytes, the transaction is invalid.
 
