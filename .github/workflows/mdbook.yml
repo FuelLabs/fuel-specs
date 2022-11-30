@@ -1,0 +1,21 @@
+name: mdbook checks
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  mdbook-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - name: mdbook build
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: "0.4.21"
