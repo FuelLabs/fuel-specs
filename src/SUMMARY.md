@@ -20,6 +20,7 @@
     - [JSON ABI Format](./protocol/abi/json_abi_format.md)
     - [Receipts](./protocol/abi/receipts.md)
     - [Function Selector Encoding](./protocol/abi/fn_selector_encoding.md)
+    - [Argument Encoding](./protocol/abi/argument_encoding.md)
   - [Storage Slot Initialization](./protocol/storage_initialization.md)
   - [Block Header Format](./protocol/block_header.md)
 - [FuelVM](./vm/index.md)
