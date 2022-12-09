@@ -56,6 +56,8 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
+> **Note:** [InputMessages](./tx_format/input.md#inputmessage) don't exit the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
+
 ### Base Sanity Checks
 
 Base sanity checks are defined in the [transaction format](./tx_format/index.md).
@@ -83,22 +85,30 @@ If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract 
 For each asset ID `asset_id` in the input and output set:
 
 ```py
+def sum_messages(tx, asset_id) -> int:
+    total: int = 0
+    if asset_id == 0:
+        for input in tx.inputs:
+            if input.type == InputType.Message:
+                total += input.amount
+    return total
+
 def sum_inputs(tx, asset_id) -> int:
     total: int = 0
     for input in tx.inputs:
-        if (input.type == InputType.Coin and input.asset_id == asset_id) or (input.type == InputType.Message and asset_id == 0):
+        if input.type == InputType.Coin and input.asset_id == asset_id:
             total += input.amount
     return total
 
 def sum_outputs(tx, asset_id) -> int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin and output.asset_id == asset_id) or (output.type == OutputType.Message and asset_id == 0):
+        if output.type == OutputType.Coin and output.asset_id == asset_id:
             total += output.amount
     return total
 
 def available_balance(tx, asset_id) -> int:
-    availableBalance = sum_inputs(tx, asset_id)
+    availableBalance = sum_inputs(tx, asset_id) + sum_messages(tx, asset_id)
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -> int:
@@ -106,16 +116,18 @@ def unavailable_balance(tx, asset_id) -> int:
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of bytes should approximately makes up for this.
     """
-    sentBalance = sum_outputs(tx, col)
+    sentBalance = sum_outputs(tx, asset_id)
     gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance)
+    # Total message balance
+    messageBalance = sum_messages(tx, asset_id)
     # Only base asset can be used to pay for gas
-    if asset_id != 0:
-        return sentBalance
-    return sentBalance + feeBalance
+    if asset_id == 0:
+        return sentBalance + feeBalance + messageBalance
+    return sentBalance
 
 return available_balance(tx, asset_id) >= unavailable_balance(tx, asset_id)
 ```

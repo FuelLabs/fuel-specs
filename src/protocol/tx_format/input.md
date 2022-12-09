@@ -107,3 +107,5 @@ Transaction is invalid if:
 - `predicateDataLength != len(predicateData)`
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
+
+> **Note:** `InputMessages` are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
