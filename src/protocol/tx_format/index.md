@@ -20,3 +20,4 @@ The Fuel Transaction Format.
   - [OutputContractCreated](./output.md#outputcontractcreated)
 - [Witness](./witness.md)
 - [TXPointer](./tx_pointer.md)
+- [MessagePointer](./message_pointer.md)

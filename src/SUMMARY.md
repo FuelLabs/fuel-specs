@@ -10,6 +10,7 @@
     - [Output](./protocol/tx_format/output.md)
     - [Witness](./protocol/tx_format/witness.md)
     - [TXPointer](./protocol/tx_format/tx_pointer.md)
+    - [MessagePointer](./protocol/tx_format/message_pointer.md)
   - [Computing Identifiers](./protocol/id/index.md)
     - [Transaction ID](./protocol/id/transaction.md)
     - [Contract ID](./protocol/id/contract.md)
