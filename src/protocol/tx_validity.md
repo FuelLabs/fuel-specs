@@ -109,6 +109,10 @@ def sum_outputs(tx, asset_id) -> int:
             total += output.amount
     return total
 
+def message_balance(tx, asset_id) -> int:
+    messageBalance = sum_messages(tx, asset_id)
+    return messageBalance
+
 def available_balance(tx, asset_id) -> int:
     availableBalance = sum_inputs(tx, asset_id) + sum_messages(tx, asset_id)
     return availableBalance
@@ -165,10 +169,11 @@ Given transaction `tx`, the following checks must pass:
 
 If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, so no further checks are required.
 
-If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_id` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[asset_id]`:
+If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_id` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[asset_id]`. The initial message balance available to be moved around by the script and called contracts is `messageBalance`:
 
 ```py
 freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
+messageBalance = message_balance(tx, 0)
 ```
 
 Once the free balances are computed, the [script is executed](../vm/index.md#script-execution). After execution, the following is extracted:
@@ -191,8 +196,12 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 If change outputs are present, they must have:
 
-1. if the transaction does not revert; an `amount` of `unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)` if their asset ID is `0`, or an `amount` of the unspent free balance for that asset ID after VM execution is complete, or
-1. if the transaction reverts; an `amount` of the initial free balance plus `unspentGas * tx.gasPrice` if their asset ID is `0`, or an `amount` of the initial free balance for that asset ID.
+- if the transaction does not revert; 
+  - if the asset ID is `0`; an `amount` of `unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)`
+  - otherwise; an `amount` of the unspent free balance for that asset ID after VM execution is complete
+- if the transaction reverts; 
+  - if the asset ID is `0`; an `amount` of the initial free balance plus `(unspentGas * tx.gasPrice) - messageBalance`
+  - otherwise; an `amount` of the initial free balance for that asset ID.
 
 ### State Changes
 
