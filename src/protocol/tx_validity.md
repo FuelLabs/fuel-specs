@@ -196,10 +196,10 @@ Given transaction `tx`, state `state`, and contract set `contracts`, the followi
 
 If change outputs are present, they must have:
 
-- if the transaction does not revert; 
+- if the transaction does not revert;
   - if the asset ID is `0`; an `amount` of `unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)`
   - otherwise; an `amount` of the unspent free balance for that asset ID after VM execution is complete
-- if the transaction reverts; 
+- if the transaction reverts;
   - if the asset ID is `0`; an `amount` of the initial free balance plus `(unspentGas * tx.gasPrice) - messageBalance`
   - otherwise; an `amount` of the initial free balance for that asset ID.
 
