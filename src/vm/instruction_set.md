@@ -1463,7 +1463,7 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 |             |                                                                            |
 |-------------|----------------------------------------------------------------------------|
 | Description | A sequential series of 32 bytes is read from the current contract's state. |
-| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32 * rD]];```                        |
+| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];```                    |
 | Syntax      | `srwq $rA, $rB, $rC, $rD`                                                  |
 | Encoding    | `0x00 rA rB rC rD`                                                         |
 | Notes       | Returns zero if the state element does not exist.                          |
