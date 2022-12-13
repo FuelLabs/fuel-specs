@@ -3600,7 +3600,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <h3 id="srwq-state-read-sequential-32-byte-slots"><a class="header" href="#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is read from the current contract's state.</td></tr>
-<tr><td>Operation</td><td><code>MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32 * rD]];</code></td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];</code></td></tr>
 <tr><td>Syntax</td><td><code>srwq $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
 <tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
