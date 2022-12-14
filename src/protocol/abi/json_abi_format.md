@@ -56,6 +56,13 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+- `"messagesTypes"`: an array describing all instances of [`smo`](../../vm/instruction_set.md#smo-send-message-to-output) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+  - `"messageId"`: a unique integer ID. The [`smo`](../../vm/instruction_set.md#smo-send-message-to-output) instruction must set the first word of the message data to that ID.
+  - `"messageDataType"`: a _type application_ represented as a JSON object that contains the following properties:
+    - `"type"`: the _type declaration_ ID of the type of the message data being sent.
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the message data being sent, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"type"`: the _type declaration_ ID of the type of the _type argument_.
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
 - `"configurables"`: an array describing all `configurable` variables used in the contract. Each `configurable` variable is represented as a JSON object that contains the following properties:
   - `"name"`: the name of the `configurable` variable.
   - `"configurableType"`: a _type application_ represented as a JSON object that contains the following properties:
