@@ -223,6 +223,22 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </li>
 </ul>
 </li>
+<li><code>&quot;messagesTypes&quot;</code>: an array describing all instances of <a href="../../vm/instruction_set.html#smo-send-message-to-output"><code>smo</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;messageId&quot;</code>: a unique integer ID. The <a href="../../vm/instruction_set.html#smo-send-message-to-output"><code>smo</code></a> instruction must set the first word of the message data to that ID.</li>
+<li><code>&quot;messageDataType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the message data being sent.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the message data being sent, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>&quot;configurables&quot;</code>: an array describing all <code>configurable</code> variables used in the contract. Each <code>configurable</code> variable is represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;name&quot;</code>: the name of the <code>configurable</code> variable.</li>
