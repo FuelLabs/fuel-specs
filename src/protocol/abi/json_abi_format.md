@@ -49,6 +49,7 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
+  - `"attributes"`: an optional array of attribute names.
 - `"loggedTypes"`: an array describing all instances of [`log`](../../vm/instruction_set.md#log-log-event) or [`logd`](../../vm/instruction_set.md#logd-log-data-event) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"logId"`: a unique integer ID. The [`log`](../../vm/instruction_set.md#log-log-event) and [`logd`](../../vm/instruction_set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
   - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
@@ -439,6 +440,7 @@ struct MyStruct {
 }
 
 abi MyContract {
+    #[payable]
     fn complex_function(
         arg1: ([str[5]; 3], bool, b256),
         arg2: MyStruct,
@@ -568,7 +570,8 @@ its JSON representation would look like:
       "output": {
         "type": 0,
         "typeArguments": null
-      }
+      },
+      "attributes": ["payable"]
     }
   ],
   "loggedTypes": []
