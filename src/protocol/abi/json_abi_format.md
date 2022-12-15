@@ -49,7 +49,7 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
-  - `"attributes"`: an optional array of _attributes_. Each _attribute_ is represented as a JSON object that contains
+  - `"attributes"`: an array of _attributes_. Each _attribute_ is represented as a JSON object that contains
   the following properties:
     - `"name"`: the name of the attribute (the only valid attribute names are `storage`, `payable`, `test`, `inline`,
     `doc`, `doc-comment`).
@@ -133,7 +133,8 @@ the JSON representation of this ABI looks like:
       "output": {
         "type": 2,
         "typeArguments": null
-      }
+      },
+      "attributes": []
     },
     {
       "inputs": [
@@ -147,7 +148,8 @@ the JSON representation of this ABI looks like:
       "output": {
         "type": 0,
         "typeArguments": null
-      }
+      },
+      "attributes": []
     }
   ],
   "loggedTypes": []
@@ -714,7 +716,8 @@ its JSON representation would look like:
       "output": {
         "type": 0,
         "typeArguments": null
-      }
+      },
+      "attributes": []
     }
   ],
   "loggedTypes": []
@@ -791,7 +794,8 @@ its JSON representation would look like:
       "output": {
         "type": 0,
         "typeArguments": null
-      }
+      },
+      "attributes": []
     }
   ],
   "loggedTypes": [
