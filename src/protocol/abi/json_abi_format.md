@@ -49,7 +49,11 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the output, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
-  - `"attributes"`: an optional array of attribute names.
+  - `"attributes"`: an optional array of _attributes_. Each _attribute_ is represented as a JSON object that contains
+  the following properties:
+    - `"name"`: the name of the attribute (the only valid attribute names are `storage`, `payable`, `test`, `inline`,
+    `doc`, `doc-comment`).
+    - `"arguments"`: an optional array of attribute arguments.
 - `"loggedTypes"`: an array describing all instances of [`log`](../../vm/instruction_set.md#log-log-event) or [`logd`](../../vm/instruction_set.md#logd-log-data-event) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"logId"`: a unique integer ID. The [`log`](../../vm/instruction_set.md#log-log-event) and [`logd`](../../vm/instruction_set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
   - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
@@ -447,7 +451,8 @@ struct MyStruct {
 }
 
 abi MyContract {
-    #[payable]
+    /// this is a doc comment
+    #[payable, storage(read, write)]
     fn complex_function(
         arg1: ([str[5]; 3], bool, b256),
         arg2: MyStruct,
@@ -578,7 +583,19 @@ its JSON representation would look like:
         "type": 0,
         "typeArguments": null
       },
-      "attributes": ["payable"]
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [" this is a doc comment"]
+        },
+        {
+          "name": "payable",
+        },
+        {
+          "name": "storage",
+          "arguments": ["read", "write"]
+        }
+      ]
     }
   ],
   "loggedTypes": []
