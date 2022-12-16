@@ -79,14 +79,14 @@ The ABI of a contract is represented as a JSON object containing the following p
 
 ### Attributes Semantics
 
-| Attribute name | Attribute arguments               | Semantics |
-| -------------- | --------------------------------- | --------- |
-| `storage`      | `read` and/or `write`             | Specifies if a function reads or writes to/from storage |
+| Attribute name | Attribute arguments               | Semantics                                                                                              |
+|----------------|-----------------------------------|--------------------------------------------------------------------------------------------------------|
+| `storage`      | `read` and/or `write`             | Specifies if a function reads or writes to/from storage                                                |
 | `payable`      | None                              | Specifies if a function can accept coins: a function without `payable` attribute must not accept coins |
-| `test`         | None                              | Specifies if a function is a unit test |
-| `inline`       | `never` or `always`, but not both | Specifies if a function should be inlined during code generation |
-| `doc-comment`  | String                            | Documentation comment |
-| `doc`          | Not defined yet                   | Not defined yet |
+| `test`         | None                              | Specifies if a function is a unit test                                                                 |
+| `inline`       | `never` or `always`, but not both | Specifies if a function should be inlined during code generation                                       |
+| `doc-comment`  | String                            | Documentation comment                                                                                  |
+| `doc`          | Not defined yet                   | Not defined yet                                                                                        |
 
 ## A Simple Example
 
