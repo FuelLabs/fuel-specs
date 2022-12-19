@@ -205,6 +205,12 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </li>
 </ul>
 </li>
+<li><code>&quot;attributes&quot;</code>: an optional array of <em>attributes</em>. Each <em>attribute</em> is explained in the <a href="#attributes-semantics">dedicated section</a> and is represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the attribute.</li>
+<li><code>&quot;arguments&quot;</code>: an array of attribute arguments.</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><code>&quot;loggedTypes&quot;</code>: an array describing all instances of <a href="../../vm/instruction_set.html#log-log-event"><code>log</code></a> or <a href="../../vm/instruction_set.html#logd-log-data-event"><code>logd</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
@@ -260,6 +266,16 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 <blockquote>
 <p><strong>Note</strong>: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The <a href="./fn_selector_encoding.html">Function Selector Encoding</a> section specifies the encoding for the function being selected to be executed and each of the argument types.</p>
 </blockquote>
+<h3 id="attributes-semantics"><a class="header" href="#attributes-semantics">Attributes Semantics</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Attribute name</th><th>Attribute arguments</th><th>Semantics</th></tr></thead><tbody>
+<tr><td><code>storage</code></td><td><code>read</code> and/or <code>write</code></td><td>Specifies if a function reads or writes to/from storage</td></tr>
+<tr><td><code>payable</code></td><td>None</td><td>Specifies if a function can accept coins: a function without <code>payable</code> attribute must not accept coins</td></tr>
+<tr><td><code>test</code></td><td>None</td><td>Specifies if a function is a unit test</td></tr>
+<tr><td><code>inline</code></td><td><code>never</code> or <code>always</code>, but not both</td><td>Specifies if a function should be inlined during code generation</td></tr>
+<tr><td><code>doc-comment</code></td><td>String</td><td>Documentation comment</td></tr>
+<tr><td><code>doc</code></td><td>Not defined yet</td><td>Not defined yet</td></tr>
+</tbody></table>
+</div>
 <h2 id="a-simple-example"><a class="header" href="#a-simple-example">A Simple Example</a></h2>
 <p>Below is a simple example showing how the JSON ABI for an example that does not use generic or complex types. We will later go over more complex examples.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -584,6 +600,8 @@ struct MyStruct {
 }
 
 abi MyContract {
+    /// this is a doc comment
+    #[payable, storage(read, write)]
     fn complex_function(
         arg1: ([str[5]; 3], bool, b256),
         arg2: MyStruct,
@@ -711,7 +729,20 @@ abi MyContract {
       &quot;output&quot;: {
         &quot;type&quot;: 0,
         &quot;typeArguments&quot;: null
-      }
+      },
+      &quot;attributes&quot;: [
+        {
+          &quot;name&quot;: &quot;doc-comment&quot;,
+          &quot;arguments&quot;: [&quot; this is a doc comment&quot;]
+        },
+        {
+          &quot;name&quot;: &quot;payable&quot;,
+        },
+        {
+          &quot;name&quot;: &quot;storage&quot;,
+          &quot;arguments&quot;: [&quot;read&quot;, &quot;write&quot;]
+        }
+      ]
     }
   ],
   &quot;loggedTypes&quot;: []
