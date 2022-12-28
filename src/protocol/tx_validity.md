@@ -32,23 +32,23 @@ Read-only access list:
 
 Write-destroy access list:
 
-- For each [input `InputType.Coin`](./tx_format.md#inputcoin)
-  - The [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)`
-- For each [input `InputType.Contract`](./tx_format.md#inputcontract)
-  - The [UTXO ID](./identifiers.md#utxo-id) `(txID, outputIndex)`
-- For each [input `InputType.Message`](./tx_format.md#inputmessage)
-  - The [message ID](./identifiers.md#message-id) `messageID`
+- For each [input `InputType.Coin`](./tx_format/input.md#inputcoin)
+  - The [UTXO ID](./id/utxo.md) `(txID, outputIndex)`
+- For each [input `InputType.Contract`](./tx_format/input.md#inputcontract)
+  - The [UTXO ID](./id/utxo.md) `(txID, outputIndex)`
+- For each [input `InputType.Message`](./tx_format/input.md#inputmessage)
+  - The [message ID](./id/utxo.md#message-id) `messageID`
 
 Write-create access list:
 
-- For each [output `OutputType.ContractCreated`](./tx_format.md#outputcontractcreated)
+- For each [output `OutputType.ContractCreated`](./tx_format/output.md#outputcontractcreated)
   - The contract ID `contractID`
 - For each output
-  - The [created UTXO ID](./identifiers.md#utxo-id)
+  - The [created UTXO ID](./id/utxo.md)
 
-Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format.md#inputcontract) and [`OutputType.Contract`](./tx_format.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
+Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format/input.md#inputcontract) and [`OutputType.Contract`](./tx_format/output.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
 
-Note that [`OutputType.Message` outputs](./tx_format.md#outputmessage) do not have a [UTXO ID](./identifiers.md#utxo-id), and are unspendable.
+Note that [`OutputType.Message` outputs](./tx_format/output.md#outputmessage) do not have a [UTXO ID](./id/utxo.md), and are unspendable.
 
 ## VM Precondition Validity Rules
 
@@ -58,7 +58,7 @@ For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message 
 
 ### Base Sanity Checks
 
-Base sanity checks are defined in the [transaction format](./tx_format.md).
+Base sanity checks are defined in the [transaction format](./tx_format/index.md).
 
 ### Spending UTXOs and Created Contracts
 
@@ -139,11 +139,11 @@ return True
 
 Signatures and signature verification are specified [here](./cryptographic_primitives.md#public-key-cryptography).
 
-The transaction hash is computed as defined [here](./identifiers.md#transaction-id).
+The transaction hash is computed as defined [here](./id/transaction.md).
 
 ## Predicate Verification
 
-For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../vm/main.md#predicate-verification).
+For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../vm/index.md#predicate-verification).
 
 ## Script Execution
 
@@ -157,7 +157,7 @@ If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_
 freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
 ```
 
-Once the free balances are computed, the [script is executed](../vm/main.md#script-execution). After execution, the following is extracted:
+Once the free balances are computed, the [script is executed](../vm/index.md#script-execution). After execution, the following is extracted:
 
 1. The transaction in-memory on VM termination is used as the final transaction which is included in the block.
 1. The unspent free balance `unspentBalance` for each asset ID.

@@ -34,6 +34,7 @@ FuelVM instructions are exactly 32 bits (4 bytes) wide and comprise of a combina
 - Immediate value: 12, 18, or 24 bits, depending on operation
 
 Of the 64 registers (6-bit register address space), the first `16` are reserved:
+
 | value  | register | name                | description                                                                   |
 |--------|----------|---------------------|-------------------------------------------------------------------------------|
 | `0x00` | `$zero`  | zero                | Contains zero (`0`), for convenience.                                         |
@@ -68,7 +69,7 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 
 ## Instruction Set
 
-A complete instruction set of the Fuel VM is documented [here](./instruction_set.md).
+A complete instruction set of the Fuel VM is documented in [the following page](./instruction_set.md).
 
 ## VM Initialization
 
@@ -76,12 +77,12 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 
 To initialize the VM, the following is pushed on the stack sequentially:
 
-1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/identifiers.md#transaction-id).
-1. [`MAX_INPUTS`](../protocol/tx_format.md#constants) pairs of `(asset_id: byte[32], balance: uint64)`, of:
+1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/id/transaction.md).
+1. [`MAX_INPUTS`](../protocol/tx_format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate verification](#predicate-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
-1. The [transaction, serialized](../protocol/tx_format.md).
+1. The [transaction, serialized](../protocol/tx_format/index.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
 
@@ -100,7 +101,7 @@ There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [sc
 
 ## Predicate Verification
 
-For any input of type [`InputType.Coin`](../protocol/tx_format.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -109,7 +110,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
 
 1. Any [contract instruction](./instruction_set.md#contract-instructions).
-1. [JI](./instruction_set.md#ji-jump-immediate), [JNEI](./instruction_set.md#jnei-jump-if-not-equal-immediate), [JMP](./instruction_set.md#jmp-jump) or [JNE](./instruction_set.md#jne-jump-if-not-equal) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
+1. [JMP](./instruction_set.md#jmp-jump), [JI](./instruction_set.md#ji-jump-immediate), [JNE](./instruction_set.md#jne-jump-if-not-equal), [JNEI](./instruction_set.md#jnei-jump-if-not-equal-immediate), or [JNZI](./instruction_set.md#jnzi-jump-if-not-zero-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
