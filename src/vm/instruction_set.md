@@ -116,6 +116,19 @@ then append an additional receipt to the list of receipts, again modifying `tx.r
 | `result`   | `uint64`      | `1`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
 
+A few instructions are annotated with the _effects_ they produce, the table below explains each effect:
+
+| effect name        | description                                        |
+|--------------------|----------------------------------------------------|
+| Storage read       | Instruction reads from storage slots               |
+| Storage write      | Instruction writes to storage slots                |
+| External call      | External contract call instruction                 |
+| Balance tree read  | Instruction reads from the balance tree            |
+| Balance tree write | Instruction writes to the balance tree             |
+| Output message     | Instruction sends a message to a recipient address |
+
+If an instruction is not annotated with an effect, it means it does not produce any of the aforementioned affects.
+
 ## Arithmetic/Logic (ALU) Instructions
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
@@ -132,7 +145,6 @@ If the [`F_WRAPPING`](./index.md#flags) flag is set, an operation that would hav
 | Operation   | ```$rA = $rB + $rC;``` |
 | Syntax      | `add $rA, $rB, $rC`    |
 | Encoding    | `0x00 rA rB rC -`      |
-| Effects     | No effects             |
 | Notes       |                        |
 
 Panic if:
@@ -899,7 +911,6 @@ Panic if:
 | Operation   | ```MEM[$rA, $rC] = MEM[$rB, $rC];``` |
 | Syntax      | `mcp $rA, $rB, $rC`                  |
 | Encoding    | `0x00 rA rB rC -`                    |
-| Effects     | No effects                           |
 | Notes       |                                      |
 
 Panic if:
@@ -940,7 +951,6 @@ Panic if:
 | Operation   | ```$rA = MEM[$rB, $rD] == MEM[$rC, $rD];``` |
 | Syntax      | `meq $rA, $rB, $rC, $rD`                    |
 | Encoding    | `0x00 rA rB rC rD`                          |
-| Effects     | No effects                                  |
 | Notes       |                                             |
 
 Panic if:
@@ -996,7 +1006,7 @@ All these instructions advance the program counter `$pc` by `4` after performing
 | Operation   | ```$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);```                             |
 | Syntax      | `bal $rA, $rB, $rC`                                                          |
 | Encoding    | `0x00 rA rB rC -`                                                            |
-| Effects     | Storage read                                                                 |
+| Effects     | Balance tree read                                                            |
 | Notes       |                                                                              |
 
 Where helper `balance(asset_id: byte[32], contract_id: byte[32]) -> uint64` returns the current balance of `asset_id` of contract with ID `contract_id`.
@@ -1385,6 +1395,7 @@ Cease VM execution and revert script effects. After a revert:
 | Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```                                            |
 | Syntax      | `smo $rA, $rB, $rC, $rD`                                                                                                  |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                        |
+| Effects     | Output message                                                                                                            |
 | Notes       |                                                                                                                           |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
@@ -1472,6 +1483,7 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 | Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];```                    |
 | Syntax      | `srwq $rA, $rB, $rC, $rD`                                                  |
 | Encoding    | `0x00 rA rB rC rD`                                                         |
+| Effects     | Storage read                                                               |
 | Notes       | Returns zero if the state element does not exist.                          |
 
 Panic if:
@@ -1514,6 +1526,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will b
 | Operation   | ```STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];```                   |
 | Syntax      | `swwq $rA, $rB, $rC, $rD`                                                   |
 | Encoding    | `0x00 rA rB rC rD`                                                          |
+| Effects     | Storage write                                                               |
 | Notes       |                                                                             |
 
 Panic if:
@@ -1552,6 +1565,7 @@ Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.y
 | Operation   | ```transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);```                          |
 | Syntax      | `tr $rA, $rB, $rC`                                                        |
 | Encoding    | `0x00 rA rB rC -`                                                         |
+| Effects     | Balance tree read, balance tree write                                     |
 | Notes       |                                                                           |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
@@ -1591,6 +1605,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 | Operation   | ```transferout(MEM[$rA, 32], $rB, $rC, MEM[$rD, 32]);```                            |
 | Syntax      | `tro $rA, $rB, $rC, $rD`                                                            |
 | Encoding    | `0x00 rA rB rC rD`                                                                  |
+| Effects     | Balance tree read, balance tree write                                               |
 | Notes       |                                                                                     |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
