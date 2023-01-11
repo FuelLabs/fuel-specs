@@ -120,9 +120,9 @@ then append an additional receipt to the list of receipts, again modifying `tx.r
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-If the [`F_UNSAFEMATH`](./index.md#flags) flag is set, an operation that would have panicked will instead set `$err` to a non-zero value.
+If the [`F_UNSAFEMATH`](./index.md#flags) flag is set, an `ALU` operation that would have panicked will instead set `$err` to `true`.
 
-If the [`F_WRAPPING`](./index.md#flags) flag is set, an operation that would have panicked will instead set `$of` to a non-zero value.
+If the [`F_WRAPPING`](./index.md#flags) flag is set, an `ALU` operation that would have panicked will instead set `$of` to the overflow of the operation.
 
 ### ADD: Add
 
