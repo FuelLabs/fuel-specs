@@ -272,8 +272,8 @@
 </div>
 <h2 id="arithmeticlogic-alu-instructions"><a class="header" href="#arithmeticlogic-alu-instructions">Arithmetic/Logic (ALU) Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
-<p>If the <a href="./index.html#flags"><code>F_UNSAFEMATH</code></a> flag is set, an operation that would have panicked will instead set <code>$err</code> to a non-zero value.</p>
-<p>If the <a href="./index.html#flags"><code>F_WRAPPING</code></a> flag is set, an operation that would have panicked will instead set <code>$of</code> to a non-zero value.</p>
+<p>If the <a href="./index.html#flags"><code>F_UNSAFEMATH</code></a> flag is set, an <code>ALU</code> operation that would have panicked will instead set <code>$err</code> to <code>true</code>.</p>
+<p>If the <a href="./index.html#flags"><code>F_WRAPPING</code></a> flag is set, an <code>ALU</code> operation that would have panicked will instead set <code>$of</code> to the overflow of the operation.</p>
 <h3 id="add-add"><a class="header" href="#add-add">ADD: Add</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Adds two registers.</td></tr>
