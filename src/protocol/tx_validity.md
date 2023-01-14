@@ -190,7 +190,7 @@ The coinbase is a mechanism for block creators to convert fees into spendable UT
 
 In order for a coinbase to be valid:
 
-1. It must issued in the form of a [Mint](../protocol/tx_format/transaction.md#TransactionMint) transaction.
+1. It must be a [Mint](../protocol/tx_format/transaction.md#TransactionMint) transaction.
 2. The coinbase must be the first transaction within a block.
 3. The total output value of the coinbase cannot exceed the total amount of fees processed from all other transactions within the same block.
 4. The `asset_id` for coinbase outputs must match the `asset_id` that fees are paid in (`asset_id == 0`).
