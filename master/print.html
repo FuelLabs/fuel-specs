@@ -2464,6 +2464,17 @@ abi MyContract {
 <tr><td><code>gas_used</code></td><td><code>uint64</code></td><td>Gas consumed by the script.</td></tr>
 </tbody></table>
 </div>
+<p>A few instructions are annotated with the <em>effects</em> they produce, the table below explains each effect:</p>
+<div class="table-wrapper"><table><thead><tr><th>effect name</th><th>description</th></tr></thead><tbody>
+<tr><td>Storage read</td><td>Instruction reads from storage slots</td></tr>
+<tr><td>Storage write</td><td>Instruction writes to storage slots</td></tr>
+<tr><td>External call</td><td>External contract call instruction</td></tr>
+<tr><td>Balance tree read</td><td>Instruction reads from the balance tree</td></tr>
+<tr><td>Balance tree write</td><td>Instruction writes to the balance tree</td></tr>
+<tr><td>Output message</td><td>Instruction sends a message to a recipient address</td></tr>
+</tbody></table>
+</div>
+<p>If an instruction is not annotated with an effect, it means it does not produce any of the aforementioned affects.</p>
 <h2 id="arithmeticlogic-alu-instructions"><a class="header" href="#arithmeticlogic-alu-instructions">Arithmetic/Logic (ALU) Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
 <p>If the <a href="vm/./index.html#flags"><code>F_UNSAFEMATH</code></a> flag is set, an <code>ALU</code> operation that would have panicked will instead set <code>$err</code> to <code>true</code>.</p>
@@ -3225,6 +3236,7 @@ abi MyContract {
 <tr><td>Operation</td><td><code>$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);</code></td></tr>
 <tr><td>Syntax</td><td><code>bal $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Balance tree read</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
@@ -3289,6 +3301,7 @@ abi MyContract {
 <tr><td>Operation</td><td></td></tr>
 <tr><td>Syntax</td><td><code>call $rA $rB $rC $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>External call</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
@@ -3572,6 +3585,7 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <tr><td>Operation</td><td><code>outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);</code></td></tr>
 <tr><td>Syntax</td><td><code>smo $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Output message</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
@@ -3632,6 +3646,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td>Operation</td><td><code>$rA = STATE[MEM[$rC, 32]][0, 8];</code></td></tr>
 <tr><td>Syntax</td><td><code>srw $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
 <tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
 </tbody></table>
 </div>
@@ -3650,6 +3665,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td>Operation</td><td><code>MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];</code></td></tr>
 <tr><td>Syntax</td><td><code>srwq $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
 <tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
 </tbody></table>
 </div>
@@ -3670,6 +3686,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td>Operation</td><td><code>STATE[MEM[$rA, 32]][0, 8] = $rC;</code><br><code>STATE[MEM[$rA, 32]][8, 24] = 0;</code></td></tr>
 <tr><td>Syntax</td><td><code>sww $rA $rB $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
@@ -3687,6 +3704,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];</code></td></tr>
 <tr><td>Syntax</td><td><code>swwq $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
@@ -3721,6 +3739,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td>Operation</td><td><code>transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);</code></td></tr>
 <tr><td>Syntax</td><td><code>tr $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Balance tree read, balance tree write</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
@@ -3755,6 +3774,7 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td>Operation</td><td><code>transferout(MEM[$rA, 32], $rB, $rC, MEM[$rD, 32]);</code></td></tr>
 <tr><td>Syntax</td><td><code>tro $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Balance tree read, balance tree write</td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
