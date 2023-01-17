@@ -54,22 +54,22 @@ enum ReceiptType : uint8 {
 }
 ```
 
-| name               | type                        | description                              |
-|--------------------|-----------------------------|------------------------------------------|
-| `gasPrice`         | `uint64`                    | Gas price for transaction.               |
-| `gasLimit`         | `uint64`                    | Gas limit for transaction.               |
-| `maturity`         | `uint32`                    | Block until which tx cannot be included. |
-| `scriptLength`     | `uint16`                    | Script length, in instructions.          |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.   |
-| `inputsCount`      | `uint8`                     | Number of inputs.                        |
-| `outputsCount`     | `uint8`                     | Number of outputs.                       |
-| `witnessesCount`   | `uint8`                     | Number of witnesses.                     |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                 |
-| `script`           | `byte[]`                    | Script to execute.                       |
-| `scriptData`       | `byte[]`                    | Script input data (parameters).          |
-| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                          |
-| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                         |
-| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                       |
+| name               | type                        | description                                          |
+|--------------------|-----------------------------|------------------------------------------------------|
+| `gasPrice`         | `uint64`                    | Gas price for transaction.                           |
+| `gasLimit`         | `uint64`                    | Gas limit for transaction (including predicate gas). |
+| `maturity`         | `uint32`                    | Block until which tx cannot be included.             |
+| `scriptLength`     | `uint16`                    | Script length, in instructions.                      |
+| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.               |
+| `inputsCount`      | `uint8`                     | Number of inputs.                                    |
+| `outputsCount`     | `uint8`                     | Number of outputs.                                   |
+| `witnessesCount`   | `uint8`                     | Number of witnesses.                                 |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                             |
+| `script`           | `byte[]`                    | Script to execute.                                   |
+| `scriptData`       | `byte[]`                    | Script input data (parameters).                      |
+| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                                      |
+| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
+| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -91,22 +91,22 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../cryp
 
 ## TransactionCreate
 
-| name                   | type                        | description                                       |
-|------------------------|-----------------------------|---------------------------------------------------|
-| `gasPrice`             | `uint64`                    | Gas price for transaction.                        |
-| `gasLimit`             | `uint64`                    | Gas limit for transaction.                        |
-| `maturity`             | `uint32`                    | Block until which tx cannot be included.          |
-| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.        |
-| `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.     |
-| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.            |
-| `inputsCount`          | `uint8`                     | Number of inputs.                                 |
-| `outputsCount`         | `uint8`                     | Number of outputs.                                |
-| `witnessesCount`       | `uint8`                     | Number of witnesses.                              |
-| `salt`                 | `byte[32]`                  | Salt.                                             |
-| `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value). |
-| `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                   |
-| `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
-| `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
+| name                   | type                        | description                                          |
+|------------------------|-----------------------------|------------------------------------------------------|
+| `gasPrice`             | `uint64`                    | Gas price for transaction.                           |
+| `gasLimit`             | `uint64`                    | Gas limit for transaction (including predicate gas). |
+| `maturity`             | `uint32`                    | Block until which tx cannot be included.             |
+| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.           |
+| `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.        |
+| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.               |
+| `inputsCount`          | `uint8`                     | Number of inputs.                                    |
+| `outputsCount`         | `uint8`                     | Number of outputs.                                   |
+| `witnessesCount`       | `uint8`                     | Number of witnesses.                                 |
+| `salt`                 | `byte[32]`                  | Salt.                                                |
+| `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value).    |
+| `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                      |
+| `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                     |
+| `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                   |
 
 Transaction is invalid if:
 

@@ -105,7 +105,7 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
-1. `$pc`  and `$is` are set to the start of the input's `predicate` field.
+1. `$pc` and `$is` are set to the start of the input's `predicate` field.
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
 
@@ -123,7 +123,7 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to `tx.gasLimit`. If predicate execution has decreased remaining gas, gas limit is initialized to remaining gas.
 
 Following initialization, execution begins.
 

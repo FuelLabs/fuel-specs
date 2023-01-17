@@ -102,10 +102,6 @@ def available_balance(tx, asset_id) -> int:
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -> int:
-    """
-    Note: we don't charge for predicate verification because predicates are
-    monotonic and the cost of bytes should approximately makes up for this.
-    """
     sentBalance = sum_outputs(tx, col)
     gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
