@@ -106,6 +106,9 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
+1. `$ggas` and `$cgas` are set to the lower of `tx.gasLimit` or the remaining gas following the previous predicate execution.
+
+Predicate verification will fail if gas is exhausted during execution.
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
 
