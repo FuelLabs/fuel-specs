@@ -110,7 +110,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 
 Predicate verification will fail if gas is exhausted during execution. The remaining gas field is set as follows:
 ```math
-${remaining\_gas} =  \sum_{i=0}^p gas(predicates[i])$
+{remaining\_gas} =  \sum_{i=0}^p gas(predicates[i])
 ```
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
