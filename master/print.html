@@ -1985,18 +1985,18 @@ fn complex_function(
 <li>Address : <code>address</code>, a 256-bit (32-byte) address.</li>
 <li>Fixed size string</li>
 <li>Array</li>
-<li>Sum types</li>
+<li>Enums (sum types)</li>
 <li>Structs</li>
 </ul>
 <p>These types are encoded in-place. Here's how to encode them. We define <code>enc(X)</code> the encoding of the type <code>X</code>.</p>
 <h2 id="unsigned-integers"><a class="header" href="#unsigned-integers">Unsigned Integers</a></h2>
 <p><code>u&lt;M&gt;</code> where <code>M</code> is either 8, 16, 32, or 64 bits.</p>
-<p><code>enc(X)</code> is the big-endian representation of <code>X</code> left-padded with zero-bytes. Total length must be 8 bytes.</p>
+<p><code>enc(X)</code> is the big-endian (i.e. right-aligned) representation of <code>X</code> left-padded with zero-bytes. Total length must be 8 bytes.</p>
 <blockquote>
 <p><strong>Note:</strong> since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._</p>
 </blockquote>
 <p><strong>Example:</strong></p>
-<p>Encoding <code>42</code> yields: <code>0x000000000000002a</code>, which is the binary representation of the decimal number <code>42</code>, right-aligned to 8 bytes.</p>
+<p>Encoding <code>42</code> yields: <code>0x000000000000002a</code>, which is the hexadecimal representation of the decimal number <code>42</code>, right-aligned to 8 bytes.</p>
 <h2 id="boolean"><a class="header" href="#boolean">Boolean</a></h2>
 <p><code>enc(X)</code> is <code>0</code> if <code>X</code> is false or <code>1</code> if <code>X</code> is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the <code>u8</code> encoding.</p>
 <p><strong>Example:</strong></p>
@@ -2019,7 +2019,7 @@ fn complex_function(
 <p>An array of a certain type <code>T</code>, <code>[T; n]</code>, where <code>n</code> is the length of the array.</p>
 <p>Arrays in Sway have a fixed-length which is known at compile time. This means the ABI encoding for arrays also happens in-place, with no need to account for dynamic sizing.</p>
 <p>The encoding for the array contains, in order, the encoding of each element in <code>[T; n]</code>, recursively following the encoding for the type <code>T</code>.</p>
-<p>For instance, consider the function signature <code>my_func(bool,[u64; 2])</code> with the values <code>(true,[1, 2])</code>.</p>
+<p>For instance, consider the function signature <code>my_func(bool, [u64; 2])</code> with the values <code>(true, [1, 2])</code>.</p>
 <p>The encoding will be:</p>
 <ol>
 <li><code>0x0000000000000001</code>, the <code>true</code> bool encoded in-place.</li>
@@ -2056,7 +2056,7 @@ abi MyContract {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Calling <code>bar</code> with <code>InputStruct{field_1: true, field_2: 5}</code> yields:</p>
+<p>Calling <code>bar</code> with <code>InputStruct { field_1: true, field_2: 5 }</code> yields:</p>
 <pre><code class="language-plaintext">0x
 0000000000000001 // `true` encoded as a bool
 0000000000000005 // `5` encoded as u8
@@ -2078,14 +2078,14 @@ abi MyContract {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Calling <code>bar</code> with <code>InputStruct{field_1: true, field_2: [1,2]}</code> yields:</p>
+<p>Calling <code>bar</code> with <code>InputStruct { field_1: true, field_2: [1, 2] }</code> yields:</p>
 <pre><code class="language-plaintext">0x
 0000000000000001 // `true` encoded as a bool
 0000000000000001 // `1` encoded as u8
 0000000000000002 // `2` encoded as u8
 </code></pre>
-<h2 id="sum-types-enums"><a class="header" href="#sum-types-enums">Sum types (Enums)</a></h2>
-<p>ABI calls containing sum types (enums) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.</p>
+<h2 id="enums-sum-types"><a class="header" href="#enums-sum-types">Enums (sum types)</a></h2>
+<p>ABI calls containing enums (sum types) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum MySumType
