@@ -184,13 +184,13 @@ If change outputs are present, they must have:
 
 Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.
 
-### Coinbase
+### Coinbase Transaction
 
-The coinbase is a mechanism for block creators to convert fees into spendable UTXOs.
+The coinbase transaction is a mechanism for block creators to convert fees into spendable UTXOs.
 
-In order for a coinbase to be valid:
+In order for a coinbase transaction to be valid:
 
 1. It must be a [Mint](../protocol/tx_format/transaction.md#TransactionMint) transaction.
-2. The coinbase must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.
-3. The total output value of the coinbase cannot exceed the total amount of fees processed from all other transactions within the same block.
-4. The `asset_id` for coinbase outputs must match the `asset_id` that fees are paid in (`asset_id == 0`).
+2. The coinbase transaction must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.
+3. The total output value of the coinbase transaction cannot exceed the total amount of fees processed from all other transactions within the same block.
+4. The `asset_id` for coinbase transaction outputs must match the `asset_id` that fees are paid in (`asset_id == 0`).
