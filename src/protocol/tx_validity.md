@@ -87,11 +87,14 @@ If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract 
 For each asset ID `asset_id` in the input and output set:
 
 ```py
-def sum_messages(tx, asset_id) -> int:
+def sum_data_messages(tx, asset_id) -> int:
+    """
+    Returns the total balance available from messages containing data
+    """
     total: int = 0
     if asset_id == 0:
         for input in tx.inputs:
-            if input.type == InputType.Message:
+            if input.type == InputType.Message and input.dataLength > 0:
                 total += input.amount
     return total
 
@@ -99,6 +102,8 @@ def sum_inputs(tx, asset_id) -> int:
     total: int = 0
     for input in tx.inputs:
         if input.type == InputType.Coin and input.asset_id == asset_id:
+            total += input.amount
+        elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
             total += input.amount
     return total
 
@@ -109,12 +114,11 @@ def sum_outputs(tx, asset_id) -> int:
             total += output.amount
     return total
 
-def message_balance(tx, asset_id) -> int:
-    messageBalance = sum_messages(tx, asset_id)
-    return messageBalance
-
 def available_balance(tx, asset_id) -> int:
-    availableBalance = sum_inputs(tx, asset_id) + sum_messages(tx, asset_id)
+    """
+    Make the data message balance available to the script
+    """
+    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id)
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -> int:
@@ -128,14 +132,15 @@ def unavailable_balance(tx, asset_id) -> int:
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance)
-    # Total message balance
-    messageBalance = sum_messages(tx, asset_id)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
-        return sentBalance + feeBalance + messageBalance
+        return sentBalance + feeBalance
     return sentBalance
 
-return available_balance(tx, asset_id) >= unavailable_balance(tx, asset_id)
+# The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
+# is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
+# cover gas costs since they are retryable.
+return available_balance(tx, asset_id) >= (unavailable_balance(tx, asset_id) + sum_data_messages(tx, asset_id))
 ```
 
 ### Valid Signatures
@@ -173,7 +178,7 @@ If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_
 
 ```py
 freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
-messageBalance = message_balance(tx, 0)
+messageBalance = sum_data_messages(tx, 0)
 ```
 
 Once the free balances are computed, the [script is executed](../vm/index.md#script-execution). After execution, the following is extracted:
