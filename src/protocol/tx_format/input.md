@@ -19,21 +19,19 @@ Transaction is invalid if:
 
 ## InputCoin
 
-| name                  | type                                   | description                                                            |
-|-----------------------|----------------------------------------|------------------------------------------------------------------------|
-| `txID`                | `byte[32]`                             | Hash of transaction or ID of originating message ID.                   |
-| `outputIndex`         | `uint8`                                | Index of transaction output.                                           |
-| `owner`               | `byte[32]`                             | Owning address or predicate root.                                      |
-| `amount`              | `uint64`                               | Amount of coins.                                                       |
-| `asset_id`            | `byte[32]`                             | Asset ID of the coins.                                                 |
-| `txPointer`           | [TXPointer](./tx_pointer.md)           | Points to the TX whose output is being spent.                          |
-| `messagePointer`      | [MessagePointer](./message_pointer.md) | Points to the message being spent.                                     |
-| `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint32`                               | UTXO being spent must have been created at least this many blocks ago. |
-| `predicateLength`     | `uint16`                               | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`                               | Length of predicate input data, in bytes.                              |
-| `predicate`           | `byte[]`                               | Predicate bytecode.                                                    |
-| `predicateData`       | `byte[]`                               | Predicate input data (parameters).                                     |
+| name                  | type                                   | description                                         |
+|-----------------------|----------------------------------------|-----------------------------------------------------|
+| `txID`                | `byte[32]`                             | Hash of transaction.                                |
+| `outputIndex`         | `uint8`                                | Index of transaction output.                        |
+| `owner`               | `byte[32]`                             | Owning address or predicate root.                   |
+| `amount`              | `uint64`                               | Amount of coins.                                    |
+| `asset_id`            | `byte[32]`                             | Asset ID of the coins.                              |
+| `txPointer`           | [TXPointer](./tx_pointer.md)           | Points to the TX whose output is being spent.       |
+| `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin. |
+| `predicateLength`     | `uint16`                               | Length of predicate, in instructions.               |
+| `predicateDataLength` | `uint16`                               | Length of predicate input data, in bytes.           |
+| `predicate`           | `byte[]`                               | Predicate bytecode.                                 |
+| `predicateData`       | `byte[]`                               | Predicate input data (parameters).                  |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -48,13 +46,11 @@ Transaction is invalid if:
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
-> **Note:** when signing a transaction, `txPointer` and `messagePointer` are set to zero.
+> **Note:** when signing a transaction, `txPointer` is set to zero.
 >
-> **Note:** when verifying a predicate, `txPointer` and `messagePointer` are initialized to zero.
+> **Note:** when verifying a predicate, `txPointer` is initialized to zero.
 >
-> **Note:** when executing a script, `txPointer` and `messagePointer` are initialized to zero.
->
-> **Note:** a message from the base chain with data length of zero is spent as a coin input using the message ID as the `txID` and `outputIndex` set to zero.
+> **Note:** when executing a script, `txPointer` is initialized to zero.
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
 
@@ -102,11 +98,10 @@ Given helper `len()` that returns the number of bytes of a field.
 Transaction is invalid if:
 
 - `witnessIndex >= tx.witnessesCount`
-- `dataLength == 0`
 - `dataLength > MAX_MESSAGE_DATA_LENGTH`
 - `predicateLength > MAX_PREDICATE_LENGTH`
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
-- If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
+- If `predicateLength > 0`; the computed predicate root (see below) is not equal `recipient`
 - `dataLength != len(data)`
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
@@ -119,6 +114,6 @@ The predicate root is computed identically to the contract root, used to compute
 >
 > **Note:** when executing a script, `messagePointer` is initialized to zero.
 >
-> **Note:** a message from the base chain with data length of zero is spent as a coin input using the message ID as the `txID` and `outputIndex` set to zero.
+> **Note:** a message from the base chain with data length of zero is spendable in a similar manner to `InputType.Coin`.
 >
-> **Note:** `InputMessages` are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
+> **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
