@@ -137,9 +137,9 @@ def unavailable_balance(tx, asset_id) -> int:
         return sentBalance + feeBalance
     return sentBalance
 
-# sum_data_messages is not included in the unavailable_balance since it is spendable as long as there is enough
-# base asset amount to cover gas costs without using data messages. Messages containing data can't cover gas costs
-# since they are retryable.
+# The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
+# is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
+# cover gas costs since they are retryable.
 return available_balance(tx, asset_id) >= (unavailable_balance(tx, asset_id) + sum_data_messages(tx, asset_id))
 ```
 
