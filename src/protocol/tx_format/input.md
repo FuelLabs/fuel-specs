@@ -19,19 +19,20 @@ Transaction is invalid if:
 
 ## InputCoin
 
-| name                  | type                                   | description                                         |
-|-----------------------|----------------------------------------|-----------------------------------------------------|
-| `txID`                | `byte[32]`                             | Hash of transaction.                                |
-| `outputIndex`         | `uint8`                                | Index of transaction output.                        |
-| `owner`               | `byte[32]`                             | Owning address or predicate root.                   |
-| `amount`              | `uint64`                               | Amount of coins.                                    |
-| `asset_id`            | `byte[32]`                             | Asset ID of the coins.                              |
-| `txPointer`           | [TXPointer](./tx_pointer.md)           | Points to the TX whose output is being spent.       |
-| `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin. |
-| `predicateLength`     | `uint16`                               | Length of predicate, in instructions.               |
-| `predicateDataLength` | `uint16`                               | Length of predicate input data, in bytes.           |
-| `predicate`           | `byte[]`                               | Predicate bytecode.                                 |
-| `predicateData`       | `byte[]`                               | Predicate input data (parameters).                  |
+| name                  | type                         | description                                                            |
+|-----------------------|------------------------------|------------------------------------------------------------------------|
+| `txID`                | `byte[32]`                   | Hash of transaction.                                                   |
+| `outputIndex`         | `uint8`                      | Index of transaction output.                                           |
+| `owner`               | `byte[32]`                   | Owning address or predicate root.                                      |
+| `amount`              | `uint64`                     | Amount of coins.                                                       |
+| `asset_id`            | `byte[32]`                   | Asset ID of the coins.                                                 |
+| `txPointer`           | [TXPointer](./tx_pointer.md) | Points to the TX whose output is being spent.                          |
+| `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
+| `maturity`            | `uint32`                     | UTXO being spent must have been created at least this many blocks ago. |
+| `predicateLength`     | `uint16`                     | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
+| `predicate`           | `byte[]`                     | Predicate bytecode.                                                    |
+| `predicateData`       | `byte[]`                     | Predicate input data (parameters).                                     |
 
 Given helper `len()` that returns the number of bytes of a field.
 
