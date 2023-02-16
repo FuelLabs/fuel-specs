@@ -16,7 +16,7 @@ These are the available types that can be encoded in the ABI:
 - Address : `address`, a 256-bit (32-byte) address.
 - Fixed size string
 - Array
-- Sum types
+- Enums (sum types)
 - Structs
 
 These types are encoded in-place. Here's how to encode them. We define `enc(X)` the encoding of the type `X`.
@@ -25,13 +25,13 @@ These types are encoded in-place. Here's how to encode them. We define `enc(X)` 
 
 `u<M>` where `M` is either 8, 16, 32, or 64 bits.
 
-`enc(X)` is the big-endian representation of `X` left-padded with zero-bytes. Total length must be 8 bytes.
+`enc(X)` is the big-endian (i.e. right-aligned) representation of `X` left-padded with zero-bytes. Total length must be 8 bytes.
 
 > **Note:** since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._
 
 **Example:**
 
-Encoding `42` yields: `0x000000000000002a`, which is the binary representation of the decimal number `42`, right-aligned to 8 bytes.
+Encoding `42` yields: `0x000000000000002a`, which is the hexadecimal representation of the decimal number `42`, right-aligned to 8 bytes.
 
 ## Boolean
 
@@ -77,7 +77,7 @@ Arrays in Sway have a fixed-length which is known at compile time. This means th
 
 The encoding for the array contains, in order, the encoding of each element in `[T; n]`, recursively following the encoding for the type `T`.
 
-For instance, consider the function signature `my_func(bool,[u64; 2])` with the values `(true,[1, 2])`.
+For instance, consider the function signature `my_func(bool, [u64; 2])` with the values `(true, [1, 2])`.
 
 The encoding will be:
 
@@ -128,7 +128,7 @@ abi MyContract {
 }
 ```
 
-Calling `bar` with `InputStruct{field_1: true, field_2: 5}` yields:
+Calling `bar` with `InputStruct { field_1: true, field_2: 5 }` yields:
 
 ```plaintext
 0x
@@ -153,7 +153,7 @@ abi MyContract {
 }
 ```
 
-Calling `bar` with `InputStruct{field_1: true, field_2: [1,2]}` yields:
+Calling `bar` with `InputStruct { field_1: true, field_2: [1, 2] }` yields:
 
 ```plaintext
 0x
@@ -162,9 +162,9 @@ Calling `bar` with `InputStruct{field_1: true, field_2: [1,2]}` yields:
 0000000000000002 // `2` encoded as u8
 ```
 
-## Sum types (Enums)
+## Enums (sum types)
 
-ABI calls containing sum types (enums) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.
+ABI calls containing enums (sum types) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.
 
 ```rust
 enum MySumType
