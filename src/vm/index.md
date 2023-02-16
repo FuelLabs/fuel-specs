@@ -115,7 +115,7 @@ remainingGas = tx.gasLimit
 for predicate in predicates:
    remainingGas -= predicate.gasUsed
    if remainingGas < 0:
-      return false
+      panic with "out of gas"
 ```
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
