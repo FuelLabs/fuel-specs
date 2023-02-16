@@ -106,12 +106,16 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to the lower of `tx.gasLimit` or the remaining gas following the previous predicate execution.
+1. `$ggas` and `$cgas` are set to the lowest of `tx.gasLimit` or the remaining gas following the previous predicate execution.
 
 Predicate verification will fail if gas is exhausted during execution. The remaining gas field is set as follows:
 
-```math
-{remaining\_gas} =  \sum_{i=0}^p gas(predicates[i])
+```pseudo
+remainingGas = tx.gasLimit
+for predicate in predicates:
+   remainingGas -= predicate.gasUsed
+   if remainingGas < 0:
+      return false
 ```
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
