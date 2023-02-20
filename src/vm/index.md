@@ -125,7 +125,7 @@ In addition, during predicate mode if `$pc` is set to a value greater than the e
 
 A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
-After execution, `predicate.gasUsed` is set to the amount of gas consumed during predicate verification. If the predicate halts without returning Boolean `true`, `predicate.gasUsed` is set to `0`. ???
+After successful execution, `predicate.gasUsed` is set to the amount of gas consumed during predicate verification.
 
 ## Script Execution
 
