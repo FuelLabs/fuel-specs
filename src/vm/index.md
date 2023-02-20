@@ -134,13 +134,11 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$ggas` and `$cgas` are set to lower of `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to `tx.gasLimit` minus the sum of `predicate.gasUsed` for all predicates.
 
 Following initialization, execution begins.
 
 For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction_set.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
-
-After execution, `tx.gasUsed` is set to the amount of gas consumed during script execution. If the sum of `predicate.gasUsed` for all predicates and `tx.gasUsed` is greater than `tx.gasLimit`, the transaction will be out of gas.
 
 ## Call Frames
 
