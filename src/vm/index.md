@@ -106,16 +106,14 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to the lowest of `tx.gasLimit` or the remaining gas following the previous predicate execution.
+1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
-Predicate verification will fail if gas is exhausted during execution. The remaining gas field is set as follows:
+Predicate verification will fail if gas is exhausted during execution. Additionally,  a check will be performed to ensure that less than `predicate.gasUsed` gas was consumed:
 
 ```pseudo
-remainingGas = tx.gasLimit
-for predicate in predicates:
-   remainingGas -= predicate.gasUsed
-   if remainingGas < 0:
-      panic with "out of gas"
+if $cgas < tx.gasLimit - predicate.gasUsed {
+    return false
+}
 ```
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
@@ -127,6 +125,8 @@ In addition, during predicate mode if `$pc` is set to a value greater than the e
 
 A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
+After execution, `predicate.gasUsed` is set to the amount of gas consumed during predicate verification. If the predicate halts without returning Boolean `true`, `predicate.gasUsed` is set to `0`. ???
+
 ## Script Execution
 
 If script bytecode is present, transaction validation requires execution.
@@ -134,11 +134,13 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$ggas` and `$cgas` are set to lower of `tx.gasLimit` or `remaining_gas`. `remaining_gas` is determined by deducting any gas consumed during predicate execution from `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to lower of `tx.gasLimit`.
 
 Following initialization, execution begins.
 
 For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction_set.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
+
+After execution, `tx.gasUsed` is set to the amount of gas consumed during script execution. If the sum of `predicate.gasUsed` for all predicates and `tx.gasUsed` is greater than `tx.gasLimit`, the transaction will be out of gas.
 
 ## Call Frames
 

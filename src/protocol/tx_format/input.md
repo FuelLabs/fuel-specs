@@ -33,6 +33,7 @@ Transaction is invalid if:
 | `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`                     | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`                     | Predicate input data (parameters).                                     |
+| `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -44,6 +45,7 @@ Transaction is invalid if:
 - If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
+- `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
@@ -92,6 +94,7 @@ Transaction is invalid if:
 | `data`                | `byte[]`   | The message data.                                            |
 | `predicate`           | `byte[]`   | Predicate bytecode.                                          |
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                           |
+| `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                             |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -105,5 +108,6 @@ Transaction is invalid if:
 - `dataLength != len(data)`
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
+- `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
