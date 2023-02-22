@@ -7,6 +7,7 @@
 - [Instruction Set](#instruction-set)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
+- [Predicate Estmation](#predicate-estimation)
 - [Predicate Verification](#predicate-verification)
 - [Script Execution](#script-execution)
 - [Call Frames](#call-frames)
@@ -79,7 +80,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/id/transaction.md).
 1. [`MAX_INPUTS`](../protocol/tx_format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
-    1. For [predicate verification](#predicate-verification), zeroes.
+    1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
 1. The [transaction, serialized](../protocol/tx_format/index.md).
@@ -92,12 +93,25 @@ Then the following registers are initialized (without explicit initialization, a
 
 ## Contexts
 
-There are 3 _contexts_ in the FuelVM: [predicates](#predicate-verification), [scripts](#script-execution), and [calls](./instruction_set.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
+There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimation), [predicate verification](#predicate-verification), [scripts](#script-execution), and [calls](./instruction_set.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
 
 - External: predicate and script. `$fp` will be zero.
 - Internal: call. `$fp` will be non-zero.
 
 [Returning](./instruction_set.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
+
+## Predicate Estimation
+
+For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+
+For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
+
+1. `$pc` and `$is` are set to the start of the input's `predicate` field.
+1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+
+Predicate verification will fail if gas is exhausted during execution.
+
+After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $cgas`.
 
 ## Predicate Verification
 
@@ -108,7 +122,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
 1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
-Predicate verification will fail if gas is exhausted during execution. Additionally,  a check will be performed to ensure that less than `predicate.gasUsed` gas was consumed:
+Predicate verification will fail if gas is exhausted during execution. Additionally, if `predicate.gasUsed` is nonzero, a check will be performed to ensure that less than `predicate.gasUsed` gas is consumed:
 
 ```pseudo
 if $cgas < tx.gasLimit - predicate.gasUsed {
@@ -125,7 +139,7 @@ In addition, during predicate mode if `$pc` is set to a value greater than the e
 
 A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
-After successful execution, `predicate.gasUsed` is set to the amount of gas consumed during predicate verification.
+After successful execution, `predicate.gasUsed` is updated to be the amount of gas consumed during predicate verification.
 
 ## Script Execution
 
