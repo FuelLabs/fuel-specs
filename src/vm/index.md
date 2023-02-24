@@ -113,7 +113,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 
 Predicate verification will fail if gas is exhausted during execution.
 
-After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $cgas`.
+After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $ggas`.
 
 ## Predicate Verification
 
