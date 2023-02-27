@@ -1239,13 +1239,12 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + 32</code> overflows</li>
 <li><code>$ssp + $rC &gt; VM_MAX_RAM</code></li>
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$ssp != $sp</code></li>
 <li><code>$ssp + $rC &gt; $hp</code></li>
 <li><code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
 <li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
-<p>Increment <code>$fp-&gt;codesize</code>, <code>$ssp</code>, and <code>$sp</code> by <code>$rC</code> padded to word alignment.</p>
+<p>Increment <code>$fp-&gt;codesize</code>, <code>$ssp</code> by <code>$rC</code> padded to word alignment. Then set <code>$sp</code> to <code>$ssp</code>.</p>
 <p>This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).</p>
 <h3 id="log-log-event"><a class="header" href="#log-log-event">LOG: Log event</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
