@@ -14,7 +14,6 @@ The Fuel Transaction Format.
 - [Output](./output.md)
   - [OutputCoin](./output.md#outputcoin)
   - [OutputContract](./output.md#outputcontract)
-  - [OutputMessage](./output.md#outputmessage)
   - [OutputChange](./output.md#outputchange)
   - [OutputVariable](./output.md#outputvariable)
   - [OutputContractCreated](./output.md#outputcontractcreated)

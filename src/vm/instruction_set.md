@@ -1387,31 +1387,29 @@ Cease VM execution and revert script effects. After a revert:
 1. All [OutputContract](../protocol/tx_format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
 1. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
-### SMO: Send message to output
+### SMO: Send message out
 
-|             |                                                                                                                           |
-|-------------|---------------------------------------------------------------------------------------------------------------------------|
-| Description | Send a message to recipient address `MEM[$rA, 32]` with call abi `MEM[$rA + 32, $rB]` and `$rD` coins, with output `$rC`. |
-| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);```                                            |
-| Syntax      | `smo $rA, $rB, $rC, $rD`                                                                                                  |
-| Encoding    | `0x00 rA rB rC rD`                                                                                                        |
-| Effects     | Output message                                                                                                            |
-| Notes       |                                                                                                                           |
+|             |                                                                                                                  |
+|-------------|------------------------------------------------------------------------------------------------------------------|
+| Description | Send a message to recipient address `MEM[$rA, 32]` with message data `MEM[$rB, $rC]` and `$rD` base asset coins. |
+| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);```                                             |
+| Syntax      | `smo $rA, $rB, $rC, $rD`                                                                                         |
+| Encoding    | `0x00 rA rB rC rD`                                                                                               |
+| Effects     | Output message                                                                                                   |
+| Notes       |                                                                                                                  |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
 Panic if:
 
-- `$rA + $rB + 32` overflows
-- `$rA + $rB + 32 > VM_MAX_RAM`
-- `$rB > MEM_MAX_ACCESS_SIZE`
-- `$rB > MESSAGE_MAX_DATA_SIZE`
-- `$rC > tx.outputsCount`
+- `$rA + 32` overflows
+- `$rB + $rC` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB + $rC > VM_MAX_RAM`
+- `$rC > MEM_MAX_ACCESS_SIZE`
+- `$rC > MESSAGE_MAX_DATA_SIZE`
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
-- `tx.outputs[$rC].type != OutputType.Message`
-- `tx.outputs[$rC].recipient != 0`
-- `MEM[$rA, 32] == 0`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
@@ -1423,17 +1421,11 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                        |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                         |
 | `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/id/utxo.md#message-nonce). |
-| `len`       | `uint16`      | Length of message data, in bytes: `$rB`.                                     |
-| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rA + 32, $rB]`.                             |
+| `len`       | `uint16`      | Length of message data, in bytes: `$rC`.                                     |
+| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                  |
 
-In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. Then set:
-
-- `tx.outputs[$rC].recipient = MEM[$rA, 32]`
-- `tx.outputs[$rC].amount = $rD`
-
-This modifies the `balanceRoot` field of the appropriate output.
-`messageID` is added to the `OutputMessage` Merkle tree as part of block header.
-TODO: document output messages Merkle tree construction and maintenance and link here
+In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. This modifies the `balanceRoot` field of the appropriate contract that had its' funds deducted.
+`messageID` is added to the MessageReceipts Merkle tree as part of block header.
 
 ### SCWQ: State clear sequential 32 byte slots
 

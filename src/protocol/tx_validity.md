@@ -48,8 +48,6 @@ Write-create access list:
 
 Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format/input.md#inputcontract) and [`OutputType.Contract`](./tx_format/output.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
 
-Note that [`OutputType.Message` outputs](./tx_format/output.md#outputmessage) do not have a [UTXO ID](./id/utxo.md), and are unspendable.
-
 ## VM Precondition Validity Rules
 
 This section defines _VM precondition validity rules_ for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.

@@ -4,17 +4,16 @@
 enum OutputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Message = 2,
-    Change = 3,
-    Variable = 4,
-    ContractCreated = 5,
+    Change = 2,
+    Variable = 3,
+    ContractCreated = 4,
 }
 ```
 
-| name   | type                                                                                                                                                                                                                       | description     |
-|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [OutputType](#output)                                                                                                                                                                                                      | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputMessage](#outputmessage) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
+| name   | type                                                                                                                                                                                       | description     |
+|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| `type` | [OutputType](#output)                                                                                                                                                                      | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
 
