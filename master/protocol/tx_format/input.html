@@ -207,7 +207,6 @@
 </blockquote>
 <h2 id="inputmessage"><a class="header" href="#inputmessage">InputMessage</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>messageID</code></td><td><code>byte[32]</code></td><td>The messageID as described <a href="../id/utxo.html#message-id">here</a>.</td></tr>
 <tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender.</td></tr>
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address or predicate root of the message recipient.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
@@ -228,12 +227,15 @@
 <li><code>dataLength &gt; MAX_MESSAGE_DATA_LENGTH</code></li>
 <li><code>predicateLength &gt; MAX_PREDICATE_LENGTH</code></li>
 <li><code>predicateDataLength &gt; MAX_PREDICATE_DATA_LENGTH</code></li>
-<li>If <code>predicateLength &gt; 0</code>; the computed predicate root (see below) is not equal <code>owner</code></li>
+<li>If <code>predicateLength &gt; 0</code>; the computed predicate root (see below) is not equal <code>recipient</code></li>
 <li><code>dataLength != len(data)</code></li>
 <li><code>predicateLength * 4 != len(predicate)</code></li>
 <li><code>predicateDataLength != len(predicateData)</code></li>
 </ul>
 <p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="../id/contract.html">here</a>.</p>
+<blockquote>
+<p><strong>Note:</strong> <code>InputMessages</code> with data length greater than zero are not considered spent until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit</p>
+</blockquote>
 
                     </main>
 

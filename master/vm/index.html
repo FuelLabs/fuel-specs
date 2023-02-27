@@ -228,7 +228,7 @@
 </ul>
 <p><a href="./instruction_set.html#return-return-from-call">Returning</a> from a context behaves differently depending on whether the context is external or internal.</p>
 <h2 id="predicate-verification"><a class="header" href="#predicate-verification">Predicate Verification</a></h2>
-<p>For any input of type <a href="../protocol/tx_format/index.html"><code>InputType.Coin</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
+<p>For any input of type <a href="../protocol/tx_format/input.html#inputcoin"><code>InputType.Coin</code></a> or <a href="../protocol/tx_format/input.html#inputmessage"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
 <p>For each such input in the transaction, the VM is <a href="#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code>  and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>

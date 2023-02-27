@@ -141,15 +141,14 @@
 <pre><code class="language-c++">enum OutputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Message = 2,
-    Change = 3,
-    Variable = 4,
-    ContractCreated = 5,
+    Change = 2,
+    Variable = 3,
+    ContractCreated = 4,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><a href="#output">OutputType</a></td><td>Type of output.</td></tr>
-<tr><td><code>data</code></td><td>One of <a href="#outputcoin">OutputCoin</a>, <a href="#outputcontract">OutputContract</a>, <a href="#outputmessage">OutputMessage</a> <a href="#outputchange">OutputChange</a>, <a href="#outputvariable">OutputVariable</a>, or <a href="#outputcontractcreated">OutputContractCreated</a>.</td><td>Output data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="#outputcoin">OutputCoin</a>, <a href="#outputcontract">OutputContract</a>, <a href="#outputchange">OutputChange</a>, <a href="#outputvariable">OutputVariable</a>, or <a href="#outputcontractcreated">OutputContractCreated</a>.</td><td>Output data.</td></tr>
 </tbody></table>
 </div>
 <p>Transaction is invalid if:</p>
@@ -182,17 +181,6 @@
 </blockquote>
 <p>The balance root <code>balanceRoot</code> is the root of the <a href="../cryptographic_primitives.html#sparse-merkle-tree">SMT</a> of balance leaves. Each balance is a <code>uint64</code>, keyed by asset ID (a <code>byte[32]</code>).</p>
 <p>The state root <code>stateRoot</code> is the root of the <a href="../cryptographic_primitives.html#sparse-merkle-tree">SMT</a> of storage slots. Each storage slot is a <code>byte[32]</code>, keyed by a <code>byte[32]</code>.</p>
-<h2 id="outputmessage"><a class="header" href="#outputmessage">OutputMessage</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient.</td></tr>
-<tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
-</tbody></table>
-</div>
-<blockquote>
-<p><strong>Note:</strong> when signing a transaction <code>recipient</code> and <code>amount</code> are set to zero.</p>
-<p><strong>Note:</strong> when verifying a predicate or executing a script, <code>recipient</code> and <code>amount</code> are initialized to zero.</p>
-<p><strong>Note:</strong> this output type is unspendable and can be pruned from the UTXO set.</p>
-</blockquote>
 <h2 id="outputchange"><a class="header" href="#outputchange">OutputChange</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>to</code></td><td><code>byte[32]</code></td><td>Receiving address or predicate root.</td></tr>

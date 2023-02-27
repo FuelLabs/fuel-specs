@@ -198,7 +198,6 @@
 <ul>
 <li><a href="protocol/tx_format/./output.html#outputcoin">OutputCoin</a></li>
 <li><a href="protocol/tx_format/./output.html#outputcontract">OutputContract</a></li>
-<li><a href="protocol/tx_format/./output.html#outputmessage">OutputMessage</a></li>
 <li><a href="protocol/tx_format/./output.html#outputchange">OutputChange</a></li>
 <li><a href="protocol/tx_format/./output.html#outputvariable">OutputVariable</a></li>
 <li><a href="protocol/tx_format/./output.html#outputcontractcreated">OutputContractCreated</a></li>
@@ -242,7 +241,7 @@
 <li><code>inputsCount &gt; MAX_INPUTS</code></li>
 <li><code>outputsCount &gt; MAX_OUTPUTS</code></li>
 <li><code>witnessesCount &gt; MAX_WITNESSES</code></li>
-<li>No inputs are of type <code>InputType.Coin</code> or <code>InputType.Message</code></li>
+<li>No inputs are of type <code>InputType.Coin</code> or <code>InputType.Message</code> with <code>input.dataLength</code> == 0</li>
 <li>More than one output is of type <code>OutputType.Change</code> for any asset ID in the input set</li>
 <li>Any output is of type <code>OutputType.Change</code> for any asset ID not in the input set</li>
 <li>More than one input of type <code>InputType.Coin</code> for any <a href="protocol/tx_format/../id/utxo.html#coin-id">Coin ID</a> in the input set</li>
@@ -323,8 +322,8 @@
 </div>
 <p>Transaction is invalid if:</p>
 <ul>
-<li>Any input is of type <code>InputType.Contract</code></li>
-<li>Any output is of type <code>OutputType.Contract</code> or <code>OutputType.Variable</code></li>
+<li>Any input is of type <code>InputType.Contract</code> or <code>InputType.Message</code> where <code>input.dataLength &gt; 0</code></li>
+<li>Any output is of type <code>OutputType.Contract</code> or <code>OutputType.Variable</code> or <code>OutputType.Message</code></li>
 <li>More than one output is of type <code>OutputType.Change</code> with <code>asset_id</code> of zero</li>
 <li>Any output is of type <code>OutputType.Change</code> with non-zero <code>asset_id</code></li>
 <li>It does not have exactly one output of type <code>OutputType.ContractCreated</code></li>
@@ -421,7 +420,6 @@
 </blockquote>
 <h2 id="inputmessage"><a class="header" href="#inputmessage">InputMessage</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>messageID</code></td><td><code>byte[32]</code></td><td>The messageID as described <a href="protocol/tx_format/../id/utxo.html#message-id">here</a>.</td></tr>
 <tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender.</td></tr>
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address or predicate root of the message recipient.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
@@ -442,25 +440,27 @@
 <li><code>dataLength &gt; MAX_MESSAGE_DATA_LENGTH</code></li>
 <li><code>predicateLength &gt; MAX_PREDICATE_LENGTH</code></li>
 <li><code>predicateDataLength &gt; MAX_PREDICATE_DATA_LENGTH</code></li>
-<li>If <code>predicateLength &gt; 0</code>; the computed predicate root (see below) is not equal <code>owner</code></li>
+<li>If <code>predicateLength &gt; 0</code>; the computed predicate root (see below) is not equal <code>recipient</code></li>
 <li><code>dataLength != len(data)</code></li>
 <li><code>predicateLength * 4 != len(predicate)</code></li>
 <li><code>predicateDataLength != len(predicateData)</code></li>
 </ul>
 <p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="protocol/tx_format/../id/contract.html">here</a>.</p>
+<blockquote>
+<p><strong>Note:</strong> <code>InputMessages</code> with data length greater than zero are not considered spent until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="output"><a class="header" href="#output">Output</a></h1>
 <pre><code class="language-c++">enum OutputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Message = 2,
-    Change = 3,
-    Variable = 4,
-    ContractCreated = 5,
+    Change = 2,
+    Variable = 3,
+    ContractCreated = 4,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><a href="protocol/tx_format/output.html#output">OutputType</a></td><td>Type of output.</td></tr>
-<tr><td><code>data</code></td><td>One of <a href="protocol/tx_format/output.html#outputcoin">OutputCoin</a>, <a href="protocol/tx_format/output.html#outputcontract">OutputContract</a>, <a href="protocol/tx_format/output.html#outputmessage">OutputMessage</a> <a href="protocol/tx_format/output.html#outputchange">OutputChange</a>, <a href="protocol/tx_format/output.html#outputvariable">OutputVariable</a>, or <a href="protocol/tx_format/output.html#outputcontractcreated">OutputContractCreated</a>.</td><td>Output data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="protocol/tx_format/output.html#outputcoin">OutputCoin</a>, <a href="protocol/tx_format/output.html#outputcontract">OutputContract</a>, <a href="protocol/tx_format/output.html#outputchange">OutputChange</a>, <a href="protocol/tx_format/output.html#outputvariable">OutputVariable</a>, or <a href="protocol/tx_format/output.html#outputcontractcreated">OutputContractCreated</a>.</td><td>Output data.</td></tr>
 </tbody></table>
 </div>
 <p>Transaction is invalid if:</p>
@@ -493,17 +493,6 @@
 </blockquote>
 <p>The balance root <code>balanceRoot</code> is the root of the <a href="protocol/tx_format/../cryptographic_primitives.html#sparse-merkle-tree">SMT</a> of balance leaves. Each balance is a <code>uint64</code>, keyed by asset ID (a <code>byte[32]</code>).</p>
 <p>The state root <code>stateRoot</code> is the root of the <a href="protocol/tx_format/../cryptographic_primitives.html#sparse-merkle-tree">SMT</a> of storage slots. Each storage slot is a <code>byte[32]</code>, keyed by a <code>byte[32]</code>.</p>
-<h2 id="outputmessage"><a class="header" href="#outputmessage">OutputMessage</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient.</td></tr>
-<tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
-</tbody></table>
-</div>
-<blockquote>
-<p><strong>Note:</strong> when signing a transaction <code>recipient</code> and <code>amount</code> are set to zero.</p>
-<p><strong>Note:</strong> when verifying a predicate or executing a script, <code>recipient</code> and <code>amount</code> are initialized to zero.</p>
-<p><strong>Note:</strong> this output type is unspendable and can be pruned from the UTXO set.</p>
-</blockquote>
 <h2 id="outputchange"><a class="header" href="#outputchange">OutputChange</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>to</code></td><td><code>byte[32]</code></td><td>Receiving address or predicate root.</td></tr>
@@ -583,7 +572,7 @@
 </ol>
 <p><code>hash(byte[32] ++ byte[32] ++ byte[32] ++ uint64 ++ byte[])</code>. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard <a href="protocol/id/../tx_format/transaction.html">transaction serialization</a>. Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.</p>
 <h3 id="message-nonce"><a class="header" href="#message-nonce">Message Nonce</a></h3>
-<p>The nonce value for <code>InputMessage</code> is determined by the sending system and is published at the time the message is sent. The nonce value for <code>OutputMessage</code> is computed as the <a href="protocol/id/../cryptographic_primitives.html#hashing">hash</a> of the <a href="protocol/id/./transaction.html">Transaction ID</a> that the message is an output for and the index of the output as a <code>uint8</code>: <code>hash(byte[32] ++ uint8)</code>.</p>
+<p>The nonce value for <code>InputMessage</code> is determined by the sending system and is published at the time the message is sent. The nonce value for <code>OutputMessage</code> is computed as the <a href="protocol/id/../cryptographic_primitives.html#hashing">hash</a> of the <a href="protocol/id/./transaction.html">Transaction ID</a> that emitted the message and the index of the message receipt <code>uint8</code>: <code>hash(byte[32] ++ uint8)</code>.</p>
 <h2 id="fee-id"><a class="header" href="#fee-id">Fee ID</a></h2>
 <p>The UTXO ID of collected fees in a block is the block height as a 32-byte big-endian unsigned integer (i.e. the first byte of the 32-byte array is the most significant byte, and so on).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="transaction-validity"><a class="header" href="#transaction-validity">Transaction Validity</a></h1>
@@ -651,10 +640,12 @@
 </li>
 </ul>
 <p>Note that block proposers use the contract ID <code>contractID</code> for inputs and outputs of type <a href="protocol/./tx_format/input.html#inputcontract"><code>InputType.Contract</code></a> and <a href="protocol/./tx_format/output.html#outputcontract"><code>OutputType.Contract</code></a> rather than the pair of <code>txID</code> and <code>outputIndex</code>.</p>
-<p>Note that <a href="protocol/./tx_format/output.html#outputmessage"><code>OutputType.Message</code> outputs</a> do not have a <a href="protocol/./id/utxo.html">UTXO ID</a>, and are unspendable.</p>
 <h2 id="vm-precondition-validity-rules"><a class="header" href="#vm-precondition-validity-rules">VM Precondition Validity Rules</a></h2>
 <p>This section defines <em>VM precondition validity rules</em> for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.</p>
 <p>For a transaction <code>tx</code>, UTXO set <code>state</code>, contract set <code>contracts</code>, and message set <code>messages</code>, the following checks must pass.</p>
+<blockquote>
+<p><strong>Note:</strong> <a href="protocol/./tx_format/input.html#inputmessage">InputMessages</a> where <code>input.dataLength &gt; 0</code> are not dropped from the <code>messages</code> message set until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit.</p>
+</blockquote>
 <h3 id="base-sanity-checks"><a class="header" href="#base-sanity-checks">Base Sanity Checks</a></h3>
 <p>Base sanity checks are defined in the <a href="protocol/./tx_format/index.html">transaction format</a>.</p>
 <h3 id="spending-utxos-and-created-contracts"><a class="header" href="#spending-utxos-and-created-contracts">Spending UTXOs and Created Contracts</a></h3>
@@ -663,7 +654,7 @@
         if not input.contractID in contracts:
                 return False
     elif input.type == InputType.Message:
-        if not input.messageID in messages:
+        if not input.nonce in messages:
                 return False
     else:
         if not (input.txID, input.outputIndex) in state:
@@ -673,22 +664,38 @@ return True
 <p>If this check passes, the UTXO ID <code>(txID, outputIndex)</code> fields of each contract input is set to the UTXO ID of the respective contract. The <code>txPointer</code> of each input is also set to the TX pointer of the UTXO with ID <code>utxoID</code>.</p>
 <h3 id="sufficient-balance"><a class="header" href="#sufficient-balance">Sufficient Balance</a></h3>
 <p>For each asset ID <code>asset_id</code> in the input and output set:</p>
-<pre><code class="language-py">def sum_inputs(tx, asset_id) -&gt; int:
+<pre><code class="language-py">def sum_data_messages(tx, asset_id) -&gt; int:
+    &quot;&quot;&quot;
+    Returns the total balance available from messages containing data
+    &quot;&quot;&quot;
+    total: int = 0
+    if asset_id == 0:
+        for input in tx.inputs:
+            if input.type == InputType.Message and input.dataLength &gt; 0:
+                total += input.amount
+    return total
+
+def sum_inputs(tx, asset_id) -&gt; int:
     total: int = 0
     for input in tx.inputs:
-        if (input.type == InputType.Coin and input.asset_id == asset_id) or (input.type == InputType.Message and asset_id == 0):
+        if input.type == InputType.Coin and input.asset_id == asset_id:
+            total += input.amount
+        elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
             total += input.amount
     return total
 
 def sum_outputs(tx, asset_id) -&gt; int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin and output.asset_id == asset_id) or (output.type == OutputType.Message and asset_id == 0):
+        if output.type == OutputType.Coin and output.asset_id == asset_id:
             total += output.amount
     return total
 
 def available_balance(tx, asset_id) -&gt; int:
-    availableBalance = sum_inputs(tx, asset_id)
+    &quot;&quot;&quot;
+    Make the data message balance available to the script
+    &quot;&quot;&quot;
+    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id)
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -&gt; int:
@@ -696,18 +703,21 @@ def unavailable_balance(tx, asset_id) -&gt; int:
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of bytes should approximately makes up for this.
     &quot;&quot;&quot;
-    sentBalance = sum_outputs(tx, col)
+    sentBalance = sum_outputs(tx, asset_id)
     gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance)
     # Only base asset can be used to pay for gas
-    if asset_id != 0:
-        return sentBalance
-    return sentBalance + feeBalance
+    if asset_id == 0:
+        return sentBalance + feeBalance
+    return sentBalance
 
-return available_balance(tx, asset_id) &gt;= unavailable_balance(tx, asset_id)
+# The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
+# is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
+# cover gas costs since they are retryable.
+return available_balance(tx, asset_id) &gt;= (unavailable_balance(tx, asset_id) + sum_data_messages(tx, asset_id))
 </code></pre>
 <h3 id="valid-signatures"><a class="header" href="#valid-signatures">Valid Signatures</a></h3>
 <pre><code class="language-py">def address_from(pubkey: bytes) -&gt; bytes:
@@ -730,8 +740,9 @@ return True
 <h2 id="script-execution"><a class="header" href="#script-execution">Script Execution</a></h2>
 <p>Given transaction <code>tx</code>, the following checks must pass:</p>
 <p>If <code>tx.scriptLength == 0</code>, there is no script and the transaction defines a simple balance transfer, so no further checks are required.</p>
-<p>If <code>tx.scriptLength &gt; 0</code>, the script must be executed. For each asset ID <code>asset_id</code> in the input set, the free balance available to be moved around by the script and called contracts is <code>freeBalance[asset_id]</code>:</p>
+<p>If <code>tx.scriptLength &gt; 0</code>, the script must be executed. For each asset ID <code>asset_id</code> in the input set, the free balance available to be moved around by the script and called contracts is <code>freeBalance[asset_id]</code>. The initial message balance available to be moved around by the script and called contracts is <code>messageBalance</code>:</p>
 <pre><code class="language-py">freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
+messageBalance = sum_data_messages(tx, 0)
 </code></pre>
 <p>Once the free balances are computed, the <a href="protocol/../vm/index.html#script-execution">script is executed</a>. After execution, the following is extracted:</p>
 <ol>
@@ -746,10 +757,20 @@ return True
 <p>Given transaction <code>tx</code>, state <code>state</code>, and contract set <code>contracts</code>, the following checks must pass.</p>
 <h3 id="correct-change"><a class="header" href="#correct-change">Correct Change</a></h3>
 <p>If change outputs are present, they must have:</p>
-<ol>
-<li>if the transaction does not revert; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)</code> if their asset ID is <code>0</code>, or an <code>amount</code> of the unspent free balance for that asset ID after VM execution is complete, or</li>
-<li>if the transaction reverts; an <code>amount</code> of the initial free balance plus <code>unspentGas * tx.gasPrice</code> if their asset ID is <code>0</code>, or an <code>amount</code> of the initial free balance for that asset ID.</li>
-</ol>
+<ul>
+<li>if the transaction does not revert;
+<ul>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)</code></li>
+<li>otherwise; an <code>amount</code> of the unspent free balance for that asset ID after VM execution is complete</li>
+</ul>
+</li>
+<li>if the transaction reverts;
+<ul>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of the initial free balance plus <code>(unspentGas * tx.gasPrice) - messageBalance</code></li>
+<li>otherwise; an <code>amount</code> of the initial free balance for that asset ID.</li>
+</ul>
+</li>
+</ul>
 <h3 id="state-changes"><a class="header" href="#state-changes">State Changes</a></h3>
 <p>Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cryptographic-primitives"><a class="header" href="#cryptographic-primitives">Cryptographic Primitives</a></h1>
@@ -1868,9 +1889,9 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <li><code>recipient</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: <code>MEM[$rA, 32]</code>.</li>
 <li><code>amount</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
 <li><code>nonce</code>: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described <a href="protocol/abi/../id/utxo.html#message-nonce">here</a>.</li>
-<li><code>len</code>: Decimal string representation of a 16-bit unsigned integer; value of register <code>$rB</code>.</li>
-<li><code>digest</code>: Hexadecimal string representation of 256-bit (32-byte), hash of <code>MEM[$rA + 32, $rB]</code>.</li>
-<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rA + 32, $rB]</code>.</li>
+<li><code>len</code>: Decimal string representation of a 16-bit unsigned integer; value of register <code>$rC</code>.</li>
+<li><code>digest</code>: Hexadecimal string representation of 256-bit (32-byte), hash of <code>MEM[$rB, $rC]</code>.</li>
+<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rB, $rC]</code>.</li>
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;MessageOut&quot;,
@@ -2183,9 +2204,9 @@ abi MyContract {
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>da_height</code></td><td><code>uint64</code></td><td>Height of the data availability layer up to which (inclusive) input messages are processed.</td></tr>
 <tr><td><code>txCount</code></td><td><code>uint64</code></td><td>Number of <a href="protocol/./tx_format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>outputMessagesCount</code></td><td><code>uint64</code></td><td>Number of <a href="protocol/./tx_format/output.html#outputmessage">output message</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_count</code></td><td><code>uint64</code></td><td>Number of <a href="protocol/../protocol/abi/receipts.html#messageout_receipt">output message</a>s in this block.</td></tr>
 <tr><td><code>txRoot</code></td><td><code>byte[32]</code></td><td><a href="protocol/./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="protocol/./tx_format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>outputMessagesRoot</code></td><td><code>byte[32]</code></td><td><a href="protocol/./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="protocol/./tx_format/output.html#outputmessage">output message</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_root</code></td><td><code>byte[32]</code></td><td><a href="protocol/./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="protocol/../protocol/abi/receipts.html#messageout_receipt">output message</a>s in this block.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="fuel-vm-specification"><a class="header" href="#fuel-vm-specification">Fuel VM Specification</a></h1>
 <ul>
@@ -2278,7 +2299,7 @@ abi MyContract {
 </ul>
 <p><a href="vm/./instruction_set.html#return-return-from-call">Returning</a> from a context behaves differently depending on whether the context is external or internal.</p>
 <h2 id="predicate-verification-1"><a class="header" href="#predicate-verification-1">Predicate Verification</a></h2>
-<p>For any input of type <a href="vm/../protocol/tx_format/index.html"><code>InputType.Coin</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
+<p>For any input of type <a href="vm/../protocol/tx_format/input.html#inputcoin"><code>InputType.Coin</code></a> or <a href="vm/../protocol/tx_format/input.html#inputmessage"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
 <p>For each such input in the transaction, the VM is <a href="vm/index.html#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code>  and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
@@ -2413,7 +2434,7 @@ abi MyContract {
 <li><a href="vm/instruction_set.html#mint-mint-new-coins">MINT: Mint new coins</a></li>
 <li><a href="vm/instruction_set.html#retd-return-from-context-with-data">RETD: Return from context with data</a></li>
 <li><a href="vm/instruction_set.html#rvrt-revert">RVRT: Revert</a></li>
-<li><a href="vm/instruction_set.html#smo-send-message-to-output">SMO: Send message to output</a></li>
+<li><a href="vm/instruction_set.html#smo-send-message-out">SMO: Send message to output</a></li>
 <li><a href="vm/instruction_set.html#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></li>
 <li><a href="vm/instruction_set.html#srw-state-read-word">SRW: State read word</a></li>
 <li><a href="vm/instruction_set.html#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></li>
@@ -3580,10 +3601,10 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <li>All <a href="vm/../protocol/tx_format/output.html#outputcontract">OutputContract</a> outputs will have the same <code>balanceRoot</code> and <code>stateRoot</code> as on initialization.</li>
 <li>All <a href="vm/../protocol/tx_format/output.html#outputvariable">OutputVariable</a> outputs will have <code>to</code>, <code>amount</code>, and <code>asset_id</code> of zero.</li>
 </ol>
-<h3 id="smo-send-message-to-output"><a class="header" href="#smo-send-message-to-output">SMO: Send message to output</a></h3>
+<h3 id="smo-send-message-out"><a class="header" href="#smo-send-message-out">SMO: Send message out</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> with call abi <code>MEM[$rA + 32, $rB]</code> and <code>$rD</code> coins, with output <code>$rC</code>.</td></tr>
-<tr><td>Operation</td><td><code>outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rA + 32, $rB], $rD, $rC);</code></td></tr>
+<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> with message data <code>MEM[$rB, $rC]</code> and <code>$rD</code> base asset coins.</td></tr>
+<tr><td>Operation</td><td><code>outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);</code></td></tr>
 <tr><td>Syntax</td><td><code>smo $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
 <tr><td>Effects</td><td>Output message</td></tr>
@@ -3593,16 +3614,14 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <p>Given helper <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> which returns the memory address of the remaining free balance of <code>asset_id</code>, or panics if <code>asset_id</code> has no free balance remaining.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + $rB + 32</code> overflows</li>
-<li><code>$rA + $rB + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB &gt; MEM_MAX_ACCESS_SIZE</code></li>
-<li><code>$rB &gt; MESSAGE_MAX_DATA_SIZE</code></li>
-<li><code>$rC &gt; tx.outputsCount</code></li>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB + $rC</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li><code>$rC &gt; MESSAGE_MAX_DATA_SIZE</code></li>
 <li>In an external context, if <code>$rD &gt; MEM[balanceOfStart(0), 8]</code></li>
 <li>In an internal context, if <code>$rD</code> is greater than the balance of asset ID 0 of output with contract ID <code>MEM[$fp, 32]</code></li>
-<li><code>tx.outputs[$rC].type != OutputType.Message</code></li>
-<li><code>tx.outputs[$rC].recipient != 0</code></li>
-<li><code>MEM[$rA, 32] == 0</code></li>
 </ul>
 <p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
@@ -3612,18 +3631,12 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient: <code>MEM[$rA, 32]</code>.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message: <code>$rD</code>.</td></tr>
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce as described <a href="vm/../protocol/id/utxo.html#message-nonce">here</a>.</td></tr>
-<tr><td><code>len</code></td><td><code>uint16</code></td><td>Length of message data, in bytes: <code>$rB</code>.</td></tr>
-<tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="vm/instruction_set.html#s256-sha-2-256">Hash</a> of <code>MEM[$rA + 32, $rB]</code>.</td></tr>
+<tr><td><code>len</code></td><td><code>uint16</code></td><td>Length of message data, in bytes: <code>$rC</code>.</td></tr>
+<tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="vm/instruction_set.html#s256-sha-2-256">Hash</a> of <code>MEM[$rB, $rC]</code>.</td></tr>
 </tbody></table>
 </div>
-<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. Then set:</p>
-<ul>
-<li><code>tx.outputs[$rC].recipient = MEM[$rA, 32]</code></li>
-<li><code>tx.outputs[$rC].amount = $rD</code></li>
-</ul>
-<p>This modifies the <code>balanceRoot</code> field of the appropriate output.
-<code>messageID</code> is added to the <code>OutputMessage</code> Merkle tree as part of block header.
-TODO: document output messages Merkle tree construction and maintenance and link here</p>
+<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.
+<code>messageID</code> is added to the MessageReceipts Merkle tree as part of block header.</p>
 <h3 id="scwq-state-clear-sequential-32-byte-slots"><a class="header" href="#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is cleared from the current contract's state.</td></tr>
@@ -3980,18 +3993,17 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x111</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
 <tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x112</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
 <tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x113</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_MESSAGE_ID</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].messageID</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x116</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11C</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11F</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x116</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11C</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
 <tr><td><code>GTF_OUTPUT_TYPE</code></td><td><code>0x201</code></td><td><code>tx.outputs[$rB].type</code></td></tr>
 <tr><td><code>GTF_OUTPUT_COIN_TO</code></td><td><code>0x202</code></td><td>Memory address of <code>tx.outputs[$rB].to</code></td></tr>
 <tr><td><code>GTF_OUTPUT_COIN_AMOUNT</code></td><td><code>0x203</code></td><td><code>tx.outputs[$rB].amount</code></td></tr>
@@ -3999,10 +4011,8 @@ TODO: document output messages Merkle tree construction and maintenance and link
 <tr><td><code>GTF_OUTPUT_CONTRACT_INPUT_INDEX</code></td><td><code>0x205</code></td><td><code>tx.outputs[$rB].inputIndex</code></td></tr>
 <tr><td><code>GTF_OUTPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x206</code></td><td>Memory address of <code>tx.outputs[$rB].balanceRoot</code></td></tr>
 <tr><td><code>GTF_OUTPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x207</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
-<tr><td><code>GTF_OUTPUT_MESSAGE_RECIPIENT</code></td><td><code>0x208</code></td><td>Memory address of <code>tx.outputs[$rB].recipient</code></td></tr>
-<tr><td><code>GTF_OUTPUT_MESSAGE_AMOUNT</code></td><td><code>0x209</code></td><td><code>tx.outputs[$rB].amount</code></td></tr>
-<tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID</code></td><td><code>0x20A</code></td><td>Memory address of <code>tx.outputs[$rB].contractID</code></td></tr>
-<tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT</code></td><td><code>0x20B</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID</code></td><td><code>0x208</code></td><td>Memory address of <code>tx.outputs[$rB].contractID</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT</code></td><td><code>0x209</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA_LENGTH</code></td><td><code>0x301</code></td><td><code>tx.witnesses[$rB].dataLength</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA</code></td><td><code>0x302</code></td><td>Memory address of <code>tx.witnesses[$rB].data</code></td></tr>
 </tbody></table>

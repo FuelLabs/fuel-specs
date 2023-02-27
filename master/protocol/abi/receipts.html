@@ -376,9 +376,9 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <li><code>recipient</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: <code>MEM[$rA, 32]</code>.</li>
 <li><code>amount</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
 <li><code>nonce</code>: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described <a href="../id/utxo.html#message-nonce">here</a>.</li>
-<li><code>len</code>: Decimal string representation of a 16-bit unsigned integer; value of register <code>$rB</code>.</li>
-<li><code>digest</code>: Hexadecimal string representation of 256-bit (32-byte), hash of <code>MEM[$rA + 32, $rB]</code>.</li>
-<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rA + 32, $rB]</code>.</li>
+<li><code>len</code>: Decimal string representation of a 16-bit unsigned integer; value of register <code>$rC</code>.</li>
+<li><code>digest</code>: Hexadecimal string representation of 256-bit (32-byte), hash of <code>MEM[$rB, $rC]</code>.</li>
+<li><code>data</code>: Hexadecimal string representation of the value of the memory range <code>MEM[$rB, $rC]</code>.</li>
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;MessageOut&quot;,

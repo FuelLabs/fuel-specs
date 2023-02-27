@@ -157,7 +157,7 @@
 <li><code>inputsCount &gt; MAX_INPUTS</code></li>
 <li><code>outputsCount &gt; MAX_OUTPUTS</code></li>
 <li><code>witnessesCount &gt; MAX_WITNESSES</code></li>
-<li>No inputs are of type <code>InputType.Coin</code> or <code>InputType.Message</code></li>
+<li>No inputs are of type <code>InputType.Coin</code> or <code>InputType.Message</code> with <code>input.dataLength</code> == 0</li>
 <li>More than one output is of type <code>OutputType.Change</code> for any asset ID in the input set</li>
 <li>Any output is of type <code>OutputType.Change</code> for any asset ID not in the input set</li>
 <li>More than one input of type <code>InputType.Coin</code> for any <a href="../id/utxo.html#coin-id">Coin ID</a> in the input set</li>
@@ -238,8 +238,8 @@
 </div>
 <p>Transaction is invalid if:</p>
 <ul>
-<li>Any input is of type <code>InputType.Contract</code></li>
-<li>Any output is of type <code>OutputType.Contract</code> or <code>OutputType.Variable</code></li>
+<li>Any input is of type <code>InputType.Contract</code> or <code>InputType.Message</code> where <code>input.dataLength &gt; 0</code></li>
+<li>Any output is of type <code>OutputType.Contract</code> or <code>OutputType.Variable</code> or <code>OutputType.Message</code></li>
 <li>More than one output is of type <code>OutputType.Change</code> with <code>asset_id</code> of zero</li>
 <li>Any output is of type <code>OutputType.Change</code> with non-zero <code>asset_id</code></li>
 <li>It does not have exactly one output of type <code>OutputType.ContractCreated</code></li>

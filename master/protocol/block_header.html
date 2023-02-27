@@ -143,9 +143,9 @@
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>da_height</code></td><td><code>uint64</code></td><td>Height of the data availability layer up to which (inclusive) input messages are processed.</td></tr>
 <tr><td><code>txCount</code></td><td><code>uint64</code></td><td>Number of <a href="./tx_format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>outputMessagesCount</code></td><td><code>uint64</code></td><td>Number of <a href="./tx_format/output.html#outputmessage">output message</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_count</code></td><td><code>uint64</code></td><td>Number of <a href="../protocol/abi/receipts.html#messageout_receipt">output message</a>s in this block.</td></tr>
 <tr><td><code>txRoot</code></td><td><code>byte[32]</code></td><td><a href="./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="./tx_format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>outputMessagesRoot</code></td><td><code>byte[32]</code></td><td><a href="./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="./tx_format/output.html#outputmessage">output message</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_root</code></td><td><code>byte[32]</code></td><td><a href="./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="../protocol/abi/receipts.html#messageout_receipt">output message</a>s in this block.</td></tr>
 </tbody></table>
 </div>
                     </main>

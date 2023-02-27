@@ -202,10 +202,12 @@
 </li>
 </ul>
 <p>Note that block proposers use the contract ID <code>contractID</code> for inputs and outputs of type <a href="./tx_format/input.html#inputcontract"><code>InputType.Contract</code></a> and <a href="./tx_format/output.html#outputcontract"><code>OutputType.Contract</code></a> rather than the pair of <code>txID</code> and <code>outputIndex</code>.</p>
-<p>Note that <a href="./tx_format/output.html#outputmessage"><code>OutputType.Message</code> outputs</a> do not have a <a href="./id/utxo.html">UTXO ID</a>, and are unspendable.</p>
 <h2 id="vm-precondition-validity-rules"><a class="header" href="#vm-precondition-validity-rules">VM Precondition Validity Rules</a></h2>
 <p>This section defines <em>VM precondition validity rules</em> for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.</p>
 <p>For a transaction <code>tx</code>, UTXO set <code>state</code>, contract set <code>contracts</code>, and message set <code>messages</code>, the following checks must pass.</p>
+<blockquote>
+<p><strong>Note:</strong> <a href="./tx_format/input.html#inputmessage">InputMessages</a> where <code>input.dataLength &gt; 0</code> are not dropped from the <code>messages</code> message set until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit.</p>
+</blockquote>
 <h3 id="base-sanity-checks"><a class="header" href="#base-sanity-checks">Base Sanity Checks</a></h3>
 <p>Base sanity checks are defined in the <a href="./tx_format/index.html">transaction format</a>.</p>
 <h3 id="spending-utxos-and-created-contracts"><a class="header" href="#spending-utxos-and-created-contracts">Spending UTXOs and Created Contracts</a></h3>
@@ -214,7 +216,7 @@
         if not input.contractID in contracts:
                 return False
     elif input.type == InputType.Message:
-        if not input.messageID in messages:
+        if not input.nonce in messages:
                 return False
     else:
         if not (input.txID, input.outputIndex) in state:
@@ -224,22 +226,38 @@ return True
 <p>If this check passes, the UTXO ID <code>(txID, outputIndex)</code> fields of each contract input is set to the UTXO ID of the respective contract. The <code>txPointer</code> of each input is also set to the TX pointer of the UTXO with ID <code>utxoID</code>.</p>
 <h3 id="sufficient-balance"><a class="header" href="#sufficient-balance">Sufficient Balance</a></h3>
 <p>For each asset ID <code>asset_id</code> in the input and output set:</p>
-<pre><code class="language-py">def sum_inputs(tx, asset_id) -&gt; int:
+<pre><code class="language-py">def sum_data_messages(tx, asset_id) -&gt; int:
+    &quot;&quot;&quot;
+    Returns the total balance available from messages containing data
+    &quot;&quot;&quot;
+    total: int = 0
+    if asset_id == 0:
+        for input in tx.inputs:
+            if input.type == InputType.Message and input.dataLength &gt; 0:
+                total += input.amount
+    return total
+
+def sum_inputs(tx, asset_id) -&gt; int:
     total: int = 0
     for input in tx.inputs:
-        if (input.type == InputType.Coin and input.asset_id == asset_id) or (input.type == InputType.Message and asset_id == 0):
+        if input.type == InputType.Coin and input.asset_id == asset_id:
+            total += input.amount
+        elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
             total += input.amount
     return total
 
 def sum_outputs(tx, asset_id) -&gt; int:
     total: int = 0
     for output in tx.outputs:
-        if (output.type == OutputType.Coin and output.asset_id == asset_id) or (output.type == OutputType.Message and asset_id == 0):
+        if output.type == OutputType.Coin and output.asset_id == asset_id:
             total += output.amount
     return total
 
 def available_balance(tx, asset_id) -&gt; int:
-    availableBalance = sum_inputs(tx, asset_id)
+    &quot;&quot;&quot;
+    Make the data message balance available to the script
+    &quot;&quot;&quot;
+    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id)
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -&gt; int:
@@ -247,18 +265,21 @@ def unavailable_balance(tx, asset_id) -&gt; int:
     Note: we don't charge for predicate verification because predicates are
     monotonic and the cost of bytes should approximately makes up for this.
     &quot;&quot;&quot;
-    sentBalance = sum_outputs(tx, col)
+    sentBalance = sum_outputs(tx, asset_id)
     gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance)
     # Only base asset can be used to pay for gas
-    if asset_id != 0:
-        return sentBalance
-    return sentBalance + feeBalance
+    if asset_id == 0:
+        return sentBalance + feeBalance
+    return sentBalance
 
-return available_balance(tx, asset_id) &gt;= unavailable_balance(tx, asset_id)
+# The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
+# is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
+# cover gas costs since they are retryable.
+return available_balance(tx, asset_id) &gt;= (unavailable_balance(tx, asset_id) + sum_data_messages(tx, asset_id))
 </code></pre>
 <h3 id="valid-signatures"><a class="header" href="#valid-signatures">Valid Signatures</a></h3>
 <pre><code class="language-py">def address_from(pubkey: bytes) -&gt; bytes:
@@ -281,8 +302,9 @@ return True
 <h2 id="script-execution"><a class="header" href="#script-execution">Script Execution</a></h2>
 <p>Given transaction <code>tx</code>, the following checks must pass:</p>
 <p>If <code>tx.scriptLength == 0</code>, there is no script and the transaction defines a simple balance transfer, so no further checks are required.</p>
-<p>If <code>tx.scriptLength &gt; 0</code>, the script must be executed. For each asset ID <code>asset_id</code> in the input set, the free balance available to be moved around by the script and called contracts is <code>freeBalance[asset_id]</code>:</p>
+<p>If <code>tx.scriptLength &gt; 0</code>, the script must be executed. For each asset ID <code>asset_id</code> in the input set, the free balance available to be moved around by the script and called contracts is <code>freeBalance[asset_id]</code>. The initial message balance available to be moved around by the script and called contracts is <code>messageBalance</code>:</p>
 <pre><code class="language-py">freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
+messageBalance = sum_data_messages(tx, 0)
 </code></pre>
 <p>Once the free balances are computed, the <a href="../vm/index.html#script-execution">script is executed</a>. After execution, the following is extracted:</p>
 <ol>
@@ -297,10 +319,20 @@ return True
 <p>Given transaction <code>tx</code>, state <code>state</code>, and contract set <code>contracts</code>, the following checks must pass.</p>
 <h3 id="correct-change"><a class="header" href="#correct-change">Correct Change</a></h3>
 <p>If change outputs are present, they must have:</p>
-<ol>
-<li>if the transaction does not revert; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)</code> if their asset ID is <code>0</code>, or an <code>amount</code> of the unspent free balance for that asset ID after VM execution is complete, or</li>
-<li>if the transaction reverts; an <code>amount</code> of the initial free balance plus <code>unspentGas * tx.gasPrice</code> if their asset ID is <code>0</code>, or an <code>amount</code> of the initial free balance for that asset ID.</li>
-</ol>
+<ul>
+<li>if the transaction does not revert;
+<ul>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)</code></li>
+<li>otherwise; an <code>amount</code> of the unspent free balance for that asset ID after VM execution is complete</li>
+</ul>
+</li>
+<li>if the transaction reverts;
+<ul>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of the initial free balance plus <code>(unspentGas * tx.gasPrice) - messageBalance</code></li>
+<li>otherwise; an <code>amount</code> of the initial free balance for that asset ID.</li>
+</ul>
+</li>
+</ul>
 <h3 id="state-changes"><a class="header" href="#state-changes">State Changes</a></h3>
 <p>Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.</p>
 
