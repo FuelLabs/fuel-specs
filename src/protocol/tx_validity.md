@@ -118,7 +118,7 @@ def available_balance(tx, asset_id) -> int:
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -> int:
-    sentBalance = sum_outputs(tx, col)
+    sentBalance = sum_outputs(tx, asset_id)
     gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
