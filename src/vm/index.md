@@ -68,6 +68,8 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 | `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
 | `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
 
+All other flags are reserved, any must be set to zero.
+
 ## Instruction Set
 
 A complete instruction set of the Fuel VM is documented in [the following page](./instruction_set.md).
@@ -111,7 +113,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 
 Predicate verification will fail if gas is exhausted during execution.
 
-After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $cgas`.
+After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $ggas`.
 
 ## Predicate Verification
 
