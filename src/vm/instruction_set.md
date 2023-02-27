@@ -1851,8 +1851,6 @@ Get [fields from the transaction](../protocol/tx_format/transaction.md).
 | `GTF_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x205` | `tx.outputs[$rB].inputIndex`                     |
 | `GTF_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x206` | Memory address of `tx.outputs[$rB].balanceRoot`  |
 | `GTF_OUTPUT_CONTRACT_STATE_ROOT`          | `0x207` | Memory address of `tx.outputs[$rB].stateRoot`    |
-| `GTF_OUTPUT_MESSAGE_RECIPIENT`            | `0x208` | Memory address of `tx.outputs[$rB].recipient`    |
-| `GTF_OUTPUT_MESSAGE_AMOUNT`               | `0x209` | `tx.outputs[$rB].amount`                         |
 | `GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x20A` | Memory address of `tx.outputs[$rB].contractID`   |
 | `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x20B` | Memory address of `tx.outputs[$rB].stateRoot`    |
 | `GTF_WITNESS_DATA_LENGTH`                 | `0x301` | `tx.witnesses[$rB].dataLength`                   |

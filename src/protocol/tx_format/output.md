@@ -51,19 +51,6 @@ The balance root `balanceRoot` is the root of the [SMT](../cryptographic_primiti
 
 The state root `stateRoot` is the root of the [SMT](../cryptographic_primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
 
-## OutputMessage
-
-| name        | type       | description                                   |
-|-------------|------------|-----------------------------------------------|
-| `recipient` | `byte[32]` | The address of the message recipient.         |
-| `amount`    | `uint64`   | Amount of base asset coins sent with message. |
-
-> **Note:** when signing a transaction `recipient` and `amount` are set to zero.
->
-> **Note:** when verifying a predicate or executing a script, `recipient` and `amount` are initialized to zero.
->
-> **Note:** this output type is unspendable and can be pruned from the UTXO set.
-
 ## OutputChange
 
 | name       | type       | description                          |
