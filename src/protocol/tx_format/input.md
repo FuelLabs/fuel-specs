@@ -80,20 +80,20 @@ Transaction is invalid if:
 
 ## InputMessage
 
-| name                  | type                                   | description                                                  |
-|-----------------------|----------------------------------------|--------------------------------------------------------------|
-| `sender`              | `byte[32]`                             | The address of the message sender.                           |
-| `recipient`           | `byte[32]`                             | The address or predicate root of the message recipient.      |
-| `amount`              | `uint64`                               | Amount of base asset coins sent with message.                |
-| `nonce`               | `uint64`                               | The message nonce.                                           |
-| `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin.          |
-| `dataLength`          | `uint16`                               | Length of message data, in bytes.                            |
-| `predicateLength`     | `uint16`                               | Length of predicate, in instructions.                        |
-| `predicateDataLength` | `uint16`                               | Length of predicate input data, in bytes.                    |
-| `data`                | `byte[]`                               | The message data.                                            |
-| `predicate`           | `byte[]`                               | Predicate bytecode.                                          |
-| `predicateData`       | `byte[]`                               | Predicate input data (parameters).                           |
-| `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                             |
+| name                  | type         | description                                             |
+|-----------------------|--------------|---------------------------------------------------------|
+| `sender`              | `byte[32]`   | The address of the message sender.                      |
+| `recipient`           | `byte[32]`   | The address or predicate root of the message recipient. |
+| `amount`              | `uint64`     | Amount of base asset coins sent with message.           |
+| `nonce`               | `uint64`     | The message nonce.                                      |
+| `witnessIndex`        | `uint8`      | Index of witness that authorizes spending the coin.     |
+| `dataLength`          | `uint16`     | Length of message data, in bytes.                       |
+| `predicateLength`     | `uint16`     | Length of predicate, in instructions.                   |
+| `predicateDataLength` | `uint16`     | Length of predicate input data, in bytes.               |
+| `data`                | `byte[]`     | The message data.                                       |
+| `predicate`           | `byte[]`     | Predicate bytecode.                                     |
+| `predicateData`       | `byte[]`     | Predicate input data (parameters).                      |
+| `predicateGasUsed`    | `uint64`     | Gas used by predicate execution.                        |
 
 Given helper `len()` that returns the number of bytes of a field.
 
