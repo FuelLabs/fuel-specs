@@ -136,7 +136,9 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 Predicate verification will fail if gas is exhausted during execution. Additionally, a check will be performed to ensure that less than `predicate.gasUsed` gas is consumed:
 
 ```pseudo
-if $cgas < tx.gasLimit - predicate.gasUsed {
+# invert predicate.gasUsed by the tx.gasLimit to simplify comparison with $ggas
+min_allowed_available_gas = tx.gasLimit - predicate.gasUsed
+if $ggas < min_allowed_available_gas {
     return false
 }
 ```
