@@ -80,7 +80,6 @@ Transaction is invalid if:
 
 | name                  | type                                   | description                                                  |
 |-----------------------|----------------------------------------|--------------------------------------------------------------|
-| `messageID`           | `byte[32]`                             | The messageID as described [here](../id/utxo.md#message-id). |
 | `sender`              | `byte[32]`                             | The address of the message sender.                           |
 | `recipient`           | `byte[32]`                             | The address or predicate root of the message recipient.      |
 | `amount`              | `uint64`                               | Amount of base asset coins sent with message.                |

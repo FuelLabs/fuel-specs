@@ -54,9 +54,7 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
-> **Note:** [InputMessages](./tx_format/input.md#inputmessage) don't exit the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
->
-> **Note:** Messages with no data are included as part of the UTXO set `state` using the message ID as `txID` and `outputIndex` set to zero. Messages with no data are not included in the `messages` message set.
+> **Note:** [InputMessages](./tx_format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
 
 ### Base Sanity Checks
 
@@ -70,7 +68,7 @@ for input in tx.inputs:
         if not input.contractID in contracts:
                 return False
     elif input.type == InputType.Message:
-        if not input.messageID in messages:
+        if not input.nonce in messages:
                 return False
     else:
         if not (input.txID, input.outputIndex) in state:

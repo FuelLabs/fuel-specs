@@ -1823,7 +1823,6 @@ Get [fields from the transaction](../protocol/tx_format/transaction.md).
 | `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x112` | Memory address of `tx.inputs[$rB].stateRoot`     |
 | `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x113` | Memory address of `tx.inputs[$rB].txPointer`     |
 | `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x114` | Memory address of `tx.inputs[$rB].contractID`    |
-| `GTF_INPUT_MESSAGE_MESSAGE_ID`            | `0x115` | Memory address of `tx.inputs[$rB].messageID`     |
 | `GTF_INPUT_MESSAGE_SENDER`                | `0x116` | Memory address of `tx.inputs[$rB].sender`        |
 | `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x117` | Memory address of `tx.inputs[$rB].recipient`     |
 | `GTF_INPUT_MESSAGE_AMOUNT`                | `0x118` | `tx.inputs[$rB].amount`                          |
