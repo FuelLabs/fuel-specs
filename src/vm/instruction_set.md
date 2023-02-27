@@ -69,7 +69,7 @@
   - [MINT: Mint new coins](#mint-mint-new-coins)
   - [RETD: Return from context with data](#retd-return-from-context-with-data)
   - [RVRT: Revert](#rvrt-revert)
-  - [SMO: Send message to output](#smo-send-message-to-output)
+  - [SMO: Send message to output](#smo-send-message-out)
   - [SCWQ: State clear sequential 32 byte slots](#scwq-state-clear-sequential-32-byte-slots)
   - [SRW: State read word](#srw-state-read-word)
   - [SRWQ: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
