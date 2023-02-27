@@ -773,6 +773,15 @@ messageBalance = sum_data_messages(tx, 0)
 </ul>
 <h3 id="state-changes"><a class="header" href="#state-changes">State Changes</a></h3>
 <p>Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.</p>
+<h3 id="coinbase-transaction"><a class="header" href="#coinbase-transaction">Coinbase Transaction</a></h3>
+<p>The coinbase transaction is a mechanism for block creators to convert fees into spendable UTXOs.</p>
+<p>In order for a coinbase transaction to be valid:</p>
+<ol>
+<li>It must be a <a href="protocol/../protocol/tx_format/transaction.html#TransactionMint">Mint</a> transaction.</li>
+<li>The coinbase transaction must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.</li>
+<li>The total output value of the coinbase transaction cannot exceed the total amount of fees processed from all other transactions within the same block.</li>
+<li>The <code>asset_id</code> for coinbase transaction outputs must match the <code>asset_id</code> that fees are paid in (<code>asset_id == 0</code>).</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cryptographic-primitives"><a class="header" href="#cryptographic-primitives">Cryptographic Primitives</a></h1>
 <ul>
 <li><a href="protocol/cryptographic_primitives.html#hashing">Hashing</a></li>
