@@ -49,9 +49,11 @@ Transaction is invalid if:
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
-> **Note:** when signing a transaction, `txPointer` is set to zero.
+> **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` is set to zero.
 >
 > **Note:** when verifying a predicate, `txPointer` is initialized to zero.
+>
+> **Note:** when estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
 >
 > **Note:** when executing a script, `txPointer` is initialized to zero.
 
@@ -112,3 +114,7 @@ Transaction is invalid if:
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
 
 > **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
+>
+> **Note:** when signing a transaction, `predicateGasUsed` is set to zero.
+>
+> **Note:** when estimating a predicate, `predicateGasUsed` is initialized to zero.
