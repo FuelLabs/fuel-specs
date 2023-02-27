@@ -4,17 +4,16 @@
 enum OutputType : uint8 {
     Coin = 0,
     Contract = 1,
-    Message = 2,
-    Change = 3,
-    Variable = 4,
-    ContractCreated = 5,
+    Change = 2,
+    Variable = 3,
+    ContractCreated = 4,
 }
 ```
 
-| name   | type                                                                                                                                                                                                                       | description     |
-|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `type` | [OutputType](#output)                                                                                                                                                                                                      | Type of output. |
-| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputMessage](#outputmessage) [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
+| name   | type                                                                                                                                                                                       | description     |
+|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| `type` | [OutputType](#output)                                                                                                                                                                      | Type of output. |
+| `data` | One of [OutputCoin](#outputcoin), [OutputContract](#outputcontract), [OutputChange](#outputchange), [OutputVariable](#outputvariable), or [OutputContractCreated](#outputcontractcreated). | Output data.    |
 
 Transaction is invalid if:
 
@@ -50,19 +49,6 @@ Transaction is invalid if:
 The balance root `balanceRoot` is the root of the [SMT](../cryptographic_primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by asset ID (a `byte[32]`).
 
 The state root `stateRoot` is the root of the [SMT](../cryptographic_primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
-
-## OutputMessage
-
-| name        | type       | description                                   |
-|-------------|------------|-----------------------------------------------|
-| `recipient` | `byte[32]` | The address of the message recipient.         |
-| `amount`    | `uint64`   | Amount of base asset coins sent with message. |
-
-> **Note:** when signing a transaction `recipient` and `amount` are set to zero.
->
-> **Note:** when verifying a predicate or executing a script, `recipient` and `amount` are initialized to zero.
->
-> **Note:** this output type is unspendable and can be pruned from the UTXO set.
 
 ## OutputChange
 
