@@ -130,17 +130,9 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/input.md#inputcoi
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to `predicate.gasUsed`.
 
-Predicate verification will fail if gas is exhausted during execution. Additionally, a check will be performed to ensure that less than `predicate.gasUsed` gas is consumed:
-
-```pseudo
-# invert predicate.gasUsed by the tx.gasLimit to simplify comparison with $ggas
-min_allowed_available_gas = tx.gasLimit - predicate.gasUsed
-if $ggas < min_allowed_available_gas {
-    return false
-}
-```
+Predicate verification will fail if gas is exhausted during execution.
 
 During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
 
