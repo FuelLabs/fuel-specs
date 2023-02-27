@@ -80,20 +80,19 @@ Transaction is invalid if:
 
 ## InputMessage
 
-| name                  | type       | description                                                  |
-|-----------------------|------------|--------------------------------------------------------------|
-| `messageID`           | `byte[32]` | The messageID as described [here](../id/utxo.md#message-id). |
-| `sender`              | `byte[32]` | The address of the message sender.                           |
-| `recipient`           | `byte[32]` | The address or predicate root of the message recipient.      |
-| `amount`              | `uint64`   | Amount of base asset coins sent with message.                |
-| `nonce`               | `uint64`   | The message nonce.                                           |
-| `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.          |
-| `dataLength`          | `uint16`   | Length of message data, in bytes.                            |
-| `predicateLength`     | `uint16`   | Length of predicate, in instructions.                        |
-| `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.                    |
-| `data`                | `byte[]`   | The message data.                                            |
-| `predicate`           | `byte[]`   | Predicate bytecode.                                          |
-| `predicateData`       | `byte[]`   | Predicate input data (parameters).                           |
+| name                  | type                                   | description                                                  |
+|-----------------------|----------------------------------------|--------------------------------------------------------------|
+| `sender`              | `byte[32]`                             | The address of the message sender.                           |
+| `recipient`           | `byte[32]`                             | The address or predicate root of the message recipient.      |
+| `amount`              | `uint64`                               | Amount of base asset coins sent with message.                |
+| `nonce`               | `uint64`                               | The message nonce.                                           |
+| `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin.          |
+| `dataLength`          | `uint16`                               | Length of message data, in bytes.                            |
+| `predicateLength`     | `uint16`                               | Length of predicate, in instructions.                        |
+| `predicateDataLength` | `uint16`                               | Length of predicate input data, in bytes.                    |
+| `data`                | `byte[]`                               | The message data.                                            |
+| `predicate`           | `byte[]`                               | Predicate bytecode.                                          |
+| `predicateData`       | `byte[]`                               | Predicate input data (parameters).                           |
 | `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                             |
 
 Given helper `len()` that returns the number of bytes of a field.
@@ -104,10 +103,12 @@ Transaction is invalid if:
 - `dataLength > MAX_MESSAGE_DATA_LENGTH`
 - `predicateLength > MAX_PREDICATE_LENGTH`
 - `predicateDataLength > MAX_PREDICATE_DATA_LENGTH`
-- If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
+- If `predicateLength > 0`; the computed predicate root (see below) is not equal `recipient`
 - `dataLength != len(data)`
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
 - `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
+
+> **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit

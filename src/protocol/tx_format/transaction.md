@@ -21,7 +21,7 @@ Transaction is invalid if:
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
-- No inputs are of type `InputType.Coin` or `InputType.Message`
+- No inputs are of type `InputType.Coin` or `InputType.Message` with `input.dataLength` == 0
 - More than one output is of type `OutputType.Change` for any asset ID in the input set
 - Any output is of type `OutputType.Change` for any asset ID not in the input set
 - More than one input of type `InputType.Coin` for any [Coin ID](../id/utxo.md#coin-id) in the input set
@@ -110,8 +110,8 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../cryp
 
 Transaction is invalid if:
 
-- Any input is of type `InputType.Contract`
-- Any output is of type `OutputType.Contract` or `OutputType.Variable`
+- Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
+- Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message`
 - More than one output is of type `OutputType.Change` with `asset_id` of zero
 - Any output is of type `OutputType.Change` with non-zero `asset_id`
 - It does not have exactly one output of type `OutputType.ContractCreated`

@@ -117,7 +117,7 @@ After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $ggas`.
 
 ## Predicate Verification
 
-For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../protocol/tx_format/input.md#inputcoin) or [`InputType.Message`](../protocol/tx_format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
