@@ -1717,6 +1717,10 @@ All these instructions advance the program counter `$pc` by `4` after performing
 | Encoding    | `0x00 rA - - -`       |
 | Notes       |                       |
 
+Panic if:
+
+- Any reserved flags are set
+
 ### GM: Get metadata
 
 |             |                           |
