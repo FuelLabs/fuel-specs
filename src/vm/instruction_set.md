@@ -1810,7 +1810,6 @@ Get [fields from the transaction](../protocol/tx_format/transaction.md).
 | `GTF_INPUT_COIN_AMOUNT`                   | `0x105` | `tx.inputs[$rB].amount`                          |
 | `GTF_INPUT_COIN_ASSET_ID`                 | `0x106` | Memory address of `tx.inputs[$rB].asset_id`      |
 | `GTF_INPUT_COIN_TX_POINTER`               | `0x107` | Memory address of `tx.inputs[$rB].txPointer`     |
-| `GTF_INPUT_COIN_MESSAGE_POINTER`          | `0x108` | Memory address of `tx.inputs[$rB].messagePointer`|
 | `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x109` | `tx.inputs[$rB].witnessIndex`                    |
 | `GTF_INPUT_COIN_MATURITY`                 | `0x10A` | `tx.inputs[$rB].maturity`                        |
 | `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x10B` | `tx.inputs[$rB].predicateLength`                 |
@@ -1827,7 +1826,6 @@ Get [fields from the transaction](../protocol/tx_format/transaction.md).
 | `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x117` | Memory address of `tx.inputs[$rB].recipient`     |
 | `GTF_INPUT_MESSAGE_AMOUNT`                | `0x118` | `tx.inputs[$rB].amount`                          |
 | `GTF_INPUT_MESSAGE_NONCE`                 | `0x119` | `tx.inputs[$rB].nonce`                           |
-| `GTF_INPUT_MESSAGE_MESSAGE_POINTER`       | `0x11A` | Memory address of `tx.inputs[$rB].messagePointer`|
 | `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x11B` | `tx.inputs[$rB].witnessIndex`                    |
 | `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11C` | `tx.inputs[$rB].dataLength`                      |
 | `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11D` | `tx.inputs[$rB].predicateLength`                 |

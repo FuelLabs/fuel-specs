@@ -84,7 +84,6 @@ Transaction is invalid if:
 | `recipient`           | `byte[32]`                             | The address or predicate root of the message recipient.      |
 | `amount`              | `uint64`                               | Amount of base asset coins sent with message.                |
 | `nonce`               | `uint64`                               | The message nonce.                                           |
-| `messagePointer`      | [MessagePointer](./message_pointer.md) | Points to the message being spent.                           |
 | `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin.          |
 | `dataLength`          | `uint16`                               | Length of message data, in bytes.                            |
 | `predicateLength`     | `uint16`                               | Length of predicate, in instructions.                        |
@@ -108,12 +107,4 @@ Transaction is invalid if:
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
 
-> **Note:** when signing a transaction, `messagePointer` is set to zero.
->
-> **Note:** when verifying a predicate, `messagePointer` is initialized to zero.
->
-> **Note:** when executing a script, `messagePointer` is initialized to zero.
->
-> **Note:** a message from the base chain with data length of zero is spendable in a similar manner to `InputType.Coin`.
->
 > **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
