@@ -110,7 +110,7 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../cryp
 
 Transaction is invalid if:
 
-- Any input is of type `InputType.Contract` or `InputType.Message`
+- Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
 - Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message`
 - More than one output is of type `OutputType.Change` with `asset_id` of zero
 - Any output is of type `OutputType.Change` with non-zero `asset_id`
