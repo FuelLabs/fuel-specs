@@ -122,7 +122,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
 1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
-Predicate verification will fail if gas is exhausted during execution. Additionally, if `predicate.gasUsed` is nonzero, a check will be performed to ensure that less than `predicate.gasUsed` gas is consumed:
+Predicate verification will fail if gas is exhausted during execution. Additionally, a check will be performed to ensure that less than `predicate.gasUsed` gas is consumed:
 
 ```pseudo
 if $cgas < tx.gasLimit - predicate.gasUsed {
@@ -139,7 +139,7 @@ In addition, during predicate mode if `$pc` is set to a value greater than the e
 
 A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
-After successful execution, `predicate.gasUsed` is updated to be the amount of gas consumed during predicate verification.
+After successful execution, `predicate.gasUsed` is updated to be the amount of gas actually consumed during predicate verification.
 
 ## Script Execution
 
