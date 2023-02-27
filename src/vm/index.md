@@ -104,14 +104,23 @@ There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimati
 
 ## Predicate Estimation
 
-For any input of type [`InputType.Coin`](../protocol/tx_format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../protocol/tx_format/index.md) or [`InputType.Message`](../protocol/tx_format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
 1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
-Predicate verification will fail if gas is exhausted during execution.
+Predicate estimation will fail if gas is exhausted during execution.
+
+During predicate mode, hitting any of the following instructions causes predicate estimation to halt, returning Boolean `false`:
+
+1. Any [contract instruction](./instruction_set.md#contract-instructions).
+1. [JMP](./instruction_set.md#jmp-jump), [JI](./instruction_set.md#ji-jump-immediate), [JNE](./instruction_set.md#jne-jump-if-not-equal), [JNEI](./instruction_set.md#jnei-jump-if-not-equal-immediate), or [JNZI](./instruction_set.md#jnzi-jump-if-not-zero-immediate) with jump-to value less than or equal to `$pc` (these would allow loops). In other words, `$pc` must be strictly increasing.
+
+In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate estimation halts returning Boolean `false`.
+
+A predicate that halts without returning Boolean `true` would not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
 After successful execution, `predicate.gasUsed` is set to `tx.gasLimit - $ggas`.
 
