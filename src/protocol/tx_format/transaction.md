@@ -80,7 +80,7 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `gasLimit` is less than the sum of all `predicateGasUsed` for `InputeType.Coin` or `InputType.Message` where predicate length is greater than zero.
+- `gasLimit` is less than the sum of all `predicateGasUsed` for `InputType.Coin` or `InputType.Message` where predicate length is greater than zero.
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
