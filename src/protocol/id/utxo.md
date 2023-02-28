@@ -8,13 +8,14 @@ Is represented as an _outpoint_: a pair of [transaction ID](./transaction.md) as
 
 The ID of a message is computed as the [hash](../cryptographic_primitives.md#hashing) of:
 
+1. the `CHAIN_ID` configured for the network,
 1. the sender address as `byte[32]`,
 1. the recipient address as `byte[32]`,
 1. the [Message nonce](#message-nonce) as `byte[32]`,
 1. the amount being sent with the message as `uint64`,
 1. the message data as `byte[]`
 
-`hash(byte[32] ++ byte[32] ++ byte[32] ++ uint64 ++ byte[])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](../tx_format/transaction.md). Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.
+`hash(uint64 ++ byte[32] ++ byte[32] ++ byte[32] ++ uint64 ++ byte[])`. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard [transaction serialization](../tx_format/transaction.md). Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.
 
 ### Message Nonce
 
