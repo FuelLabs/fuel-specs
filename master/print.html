@@ -220,6 +220,7 @@
 <tr><td><code>MAX_MESSAGE_DATA_LENGTH</code></td><td><code>uint16</code></td><td></td><td>Maximum length of message data, in bytes.</td></tr>
 <tr><td><code>MAX_STORAGE_SLOTS</code></td><td><code>uint16</code></td><td><code>255</code></td><td>Maximum number of initial storage slots.</td></tr>
 <tr><td><code>MAX_WITNESSES</code></td><td><code>uint64</code></td><td><code>16</code></td><td>Maximum number of witnesses.</td></tr>
+<tr><td><code>MAX_NESTED_CALLS</code></td><td><code>uint64</code></td><td><code>64</code></td><td>Maximum number of nested contract calls.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="transaction"><a class="header" href="#transaction">Transaction</a></h1>
 <pre><code class="language-c++">enum TransactionType : uint8 {
@@ -3345,6 +3346,7 @@ abi MyContract {
 <li>Reading past <code>MEM[VM_MAX_RAM - 1]</code></li>
 <li>In an external context, if <code>$rB &gt; MEM[balanceOfStart(MEM[$rC, 32]), 8]</code></li>
 <li>In an internal context, if <code>$rB</code> is greater than the balance of asset ID <code>MEM[$rC, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
+<li>If there would be more than <code>MAX_NESTED_CALLS</code> levels of nested calls</li>
 </ul>
 <p>Register <code>$rA</code> is a memory address from which the following fields are set (word-aligned):</p>
 <div class="table-wrapper"><table><thead><tr><th>bytes</th><th>type</th><th>value</th><th>description</th></tr></thead><tbody>
