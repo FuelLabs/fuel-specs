@@ -804,8 +804,8 @@ All these instructions advance the program counter `$pc` by `4` after performing
 
 Panic if:
 
-- `$hp - $rA` underflows
-- `$hp - $rA < $sp`
+- `$hp - $rA - 1` underflows
+- `$hp - $rA - 1 < $sp`
 
 ### CFEI: Extend call frame immediate
 
@@ -820,7 +820,7 @@ Panic if:
 Panic if:
 
 - `$sp + imm` overflows
-- `$sp + imm > $hp`
+- `$sp + imm > $hp - 1`
 
 ### CFSI: Shrink call frame immediate
 
@@ -1223,7 +1223,7 @@ Panic if:
 - `$rA + 32` overflows
 - `$ssp + $rC > VM_MAX_RAM`
 - `$rA + 32 > VM_MAX_RAM`
-- `$ssp + $rC > $hp`
+- `$ssp + $rC > $hp - 1`
 - `$rC > CONTRACT_MAX_SIZE`
 - `$rC > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
