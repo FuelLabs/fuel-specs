@@ -1092,6 +1092,7 @@ Panic if:
 - Reading past `MEM[VM_MAX_RAM - 1]`
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
 - In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
+- If there would be more than `MAX_NESTED_CALLS` levels of nested calls
 
 Register `$rA` is a memory address from which the following fields are set (word-aligned):
 
