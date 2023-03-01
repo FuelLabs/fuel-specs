@@ -134,9 +134,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 
 Predicate verification will fail if gas is exhausted during execution.
 
-During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean `false`:
-
-1. Any [contract instruction](./instruction_set.md#contract-instructions).
+During predicate mode, hitting any [contract instruction](./instruction_set.md#contract-instructions) causes predicate verification to halt, returning Boolean `false`.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
