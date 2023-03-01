@@ -2257,7 +2257,7 @@ abi MyContract {
 <tr><td><code>0x04</code></td><td><code>$ssp</code></td><td>stack start pointer</td><td>Memory address of bottom of current writable stack area.</td></tr>
 <tr><td><code>0x05</code></td><td><code>$sp</code></td><td>stack pointer</td><td>Memory address on top of current writable stack area (points to free memory).</td></tr>
 <tr><td><code>0x06</code></td><td><code>$fp</code></td><td>frame pointer</td><td>Memory address of beginning of current call frame.</td></tr>
-<tr><td><code>0x07</code></td><td><code>$hp</code></td><td>heap pointer</td><td>Memory address below the current bottom of the heap (points to free memory).</td></tr>
+<tr><td><code>0x07</code></td><td><code>$hp</code></td><td>heap pointer</td><td>Memory address below the current bottom of the heap (points to used/oob memory).</td></tr>
 <tr><td><code>0x08</code></td><td><code>$err</code></td><td>error</td><td>Error codes for particular operations.</td></tr>
 <tr><td><code>0x09</code></td><td><code>$ggas</code></td><td>global gas</td><td>Remaining gas globally.</td></tr>
 <tr><td><code>0x0A</code></td><td><code>$cgas</code></td><td>context gas</td><td>Remaining gas in the context.</td></tr>
@@ -2298,7 +2298,7 @@ abi MyContract {
 <ol>
 <li><code>$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))</code>: the writable stack area starts immediately after the serialized transaction in memory (see above).</li>
 <li><code>$sp = $ssp</code>: writable stack area is empty to start.</li>
-<li><code>$hp = VM_MAX_RAM - 1</code>: the heap area begins at the top and is empty to start.</li>
+<li><code>$hp = VM_MAX_RAM</code>: the heap area begins at the top and is empty to start.</li>
 </ol>
 <h2 id="contexts"><a class="header" href="#contexts">Contexts</a></h2>
 <p>There are 3 <em>contexts</em> in the FuelVM: <a href="vm/index.html#predicate-verification">predicates</a>, <a href="vm/index.html#script-execution">scripts</a>, and <a href="vm/./instruction_set.html#call-call-contract">calls</a>. A context is an isolated execution environment with defined <a href="vm/index.html#ownership">memory ownership</a> and can be <em>external</em> or <em>internal</em>:</p>
@@ -2355,12 +2355,12 @@ abi MyContract {
 <p>If the context is external, the owned memory range is:</p>
 <ol>
 <li><code>[$ssp, $sp)</code>: the writable stack area.</li>
-<li><code>($hp, VM_MAX_RAM - 1]</code>: the heap area allocated by this script or predicate.</li>
+<li><code>($hp - 1, VM_MAX_RAM - 1]</code>: the heap area allocated by this script or predicate.</li>
 </ol>
 <p>If the context is internal, the owned memory range for a call frame is:</p>
 <ol>
 <li><code>[$ssp, $sp)</code>: the writable stack area of the call frame.</li>
-<li><code>($hp, $fp-&gt;$hp]</code>: the heap area allocated by this call frame.</li>
+<li><code>($hp - 1, $fp-&gt;$hp - 1]</code>: the heap area allocated by this call frame.</li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fuelvm-instruction-set"><a class="header" href="#fuelvm-instruction-set">FuelVM Instruction Set</a></h1>
 <ul>
@@ -3080,8 +3080,8 @@ abi MyContract {
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$hp - $rA</code> underflows</li>
-<li><code>$hp - $rA &lt; $sp</code></li>
+<li><code>$hp - $rA - 1</code> underflows</li>
+<li><code>$hp - $rA - 1 &lt; $sp</code></li>
 </ul>
 <h3 id="cfei-extend-call-frame-immediate"><a class="header" href="#cfei-extend-call-frame-immediate">CFEI: Extend call frame immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -3095,7 +3095,7 @@ abi MyContract {
 <p>Panic if:</p>
 <ul>
 <li><code>$sp + imm</code> overflows</li>
-<li><code>$sp + imm &gt; $hp</code></li>
+<li><code>$sp + imm &gt; $hp - 1</code></li>
 </ul>
 <h3 id="cfsi-shrink-call-frame-immediate"><a class="header" href="#cfsi-shrink-call-frame-immediate">CFSI: Shrink call frame immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -3464,7 +3464,7 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <li><code>$rA + 32</code> overflows</li>
 <li><code>$ssp + $rC &gt; VM_MAX_RAM</code></li>
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$ssp + $rC &gt; $hp</code></li>
+<li><code>$ssp + $rC &gt; $hp - 1</code></li>
 <li><code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
 <li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>

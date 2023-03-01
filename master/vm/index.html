@@ -177,7 +177,7 @@
 <tr><td><code>0x04</code></td><td><code>$ssp</code></td><td>stack start pointer</td><td>Memory address of bottom of current writable stack area.</td></tr>
 <tr><td><code>0x05</code></td><td><code>$sp</code></td><td>stack pointer</td><td>Memory address on top of current writable stack area (points to free memory).</td></tr>
 <tr><td><code>0x06</code></td><td><code>$fp</code></td><td>frame pointer</td><td>Memory address of beginning of current call frame.</td></tr>
-<tr><td><code>0x07</code></td><td><code>$hp</code></td><td>heap pointer</td><td>Memory address below the current bottom of the heap (points to free memory).</td></tr>
+<tr><td><code>0x07</code></td><td><code>$hp</code></td><td>heap pointer</td><td>Memory address below the current bottom of the heap (points to used/oob memory).</td></tr>
 <tr><td><code>0x08</code></td><td><code>$err</code></td><td>error</td><td>Error codes for particular operations.</td></tr>
 <tr><td><code>0x09</code></td><td><code>$ggas</code></td><td>global gas</td><td>Remaining gas globally.</td></tr>
 <tr><td><code>0x0A</code></td><td><code>$cgas</code></td><td>context gas</td><td>Remaining gas in the context.</td></tr>
@@ -218,7 +218,7 @@
 <ol>
 <li><code>$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))</code>: the writable stack area starts immediately after the serialized transaction in memory (see above).</li>
 <li><code>$sp = $ssp</code>: writable stack area is empty to start.</li>
-<li><code>$hp = VM_MAX_RAM - 1</code>: the heap area begins at the top and is empty to start.</li>
+<li><code>$hp = VM_MAX_RAM</code>: the heap area begins at the top and is empty to start.</li>
 </ol>
 <h2 id="contexts"><a class="header" href="#contexts">Contexts</a></h2>
 <p>There are 3 <em>contexts</em> in the FuelVM: <a href="#predicate-verification">predicates</a>, <a href="#script-execution">scripts</a>, and <a href="./instruction_set.html#call-call-contract">calls</a>. A context is an isolated execution environment with defined <a href="#ownership">memory ownership</a> and can be <em>external</em> or <em>internal</em>:</p>
@@ -275,12 +275,12 @@
 <p>If the context is external, the owned memory range is:</p>
 <ol>
 <li><code>[$ssp, $sp)</code>: the writable stack area.</li>
-<li><code>($hp, VM_MAX_RAM - 1]</code>: the heap area allocated by this script or predicate.</li>
+<li><code>($hp - 1, VM_MAX_RAM - 1]</code>: the heap area allocated by this script or predicate.</li>
 </ol>
 <p>If the context is internal, the owned memory range for a call frame is:</p>
 <ol>
 <li><code>[$ssp, $sp)</code>: the writable stack area of the call frame.</li>
-<li><code>($hp, $fp-&gt;$hp]</code>: the heap area allocated by this call frame.</li>
+<li><code>($hp - 1, $fp-&gt;$hp - 1]</code>: the heap area allocated by this call frame.</li>
 </ol>
 
                     </main>
