@@ -4,6 +4,7 @@ This chapter defines how to compute unique identifiers.
 
 - [Transaction ID](./transaction.md)
 - [Contract ID](./contract.md)
+- [Predicate ID](./predicate.md)
 - [UTXO ID](./utxo.md)
   - [Coin ID](./utxo.md#coin-id)
   - [Message ID](./utxo.md#message-id)
