@@ -1740,7 +1740,6 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate. |
 | `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`     |
 
-
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
 Panic if:
