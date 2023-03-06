@@ -188,7 +188,7 @@
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>Gas price for transaction.</td></tr>
-<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction.</td></tr>
+<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction (including predicate gas).</td></tr>
 <tr><td><code>maturity</code></td><td><code>uint32</code></td><td>Block until which tx cannot be included.</td></tr>
 <tr><td><code>scriptLength</code></td><td><code>uint16</code></td><td>Script length, in instructions.</td></tr>
 <tr><td><code>scriptDataLength</code></td><td><code>uint16</code></td><td>Length of script input data, in bytes.</td></tr>
@@ -211,6 +211,7 @@
 <li><code>scriptDataLength &gt; MAX_SCRIPT_DATA_LENGTH</code></li>
 <li><code>scriptLength * 4 != len(script)</code></li>
 <li><code>scriptDataLength != len(scriptData)</code></li>
+<li><code>gasLimit</code> is less than the sum of all <code>predicateGasUsed</code> for <code>InputType.Coin</code> or <code>InputType.Message</code> where predicate length is greater than zero.</li>
 </ul>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>receiptsRoot</code> is set to zero.</p>
@@ -221,7 +222,7 @@
 <h2 id="transactioncreate"><a class="header" href="#transactioncreate">TransactionCreate</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>Gas price for transaction.</td></tr>
-<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction.</td></tr>
+<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction (including predicate gas).</td></tr>
 <tr><td><code>maturity</code></td><td><code>uint32</code></td><td>Block until which tx cannot be included.</td></tr>
 <tr><td><code>bytecodeLength</code></td><td><code>uint16</code></td><td>Contract bytecode length, in instructions.</td></tr>
 <tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint8</code></td><td>Witness index of contract bytecode to create.</td></tr>

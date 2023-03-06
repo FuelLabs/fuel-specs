@@ -1771,23 +1771,25 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA_LENGTH</code></td><td><code>0x10B</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE</code></td><td><code>0x10C</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA</code></td><td><code>0x10D</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_TX_ID</code></td><td><code>0x10E</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_OUTPUT_INDEX</code></td><td><code>0x10F</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x110</code></td><td>Memory address of <code>tx.inputs[$rB].balanceRoot</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x111</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x112</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x113</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x116</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11C</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE_GAS_USED</code></td><td><code>0x10E</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_TX_ID</code></td><td><code>0x10F</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_OUTPUT_INDEX</code></td><td><code>0x110</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x111</code></td><td>Memory address of <code>tx.inputs[$rB].balanceRoot</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x112</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x113</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x116</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11C</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11F</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_GAS_USED</code></td><td><code>0x120</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
 <tr><td><code>GTF_OUTPUT_TYPE</code></td><td><code>0x201</code></td><td><code>tx.outputs[$rB].type</code></td></tr>
 <tr><td><code>GTF_OUTPUT_COIN_TO</code></td><td><code>0x202</code></td><td>Memory address of <code>tx.outputs[$rB].to</code></td></tr>
 <tr><td><code>GTF_OUTPUT_COIN_AMOUNT</code></td><td><code>0x203</code></td><td><code>tx.outputs[$rB].amount</code></td></tr>

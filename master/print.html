@@ -214,6 +214,7 @@
 <tr><td><code>MAX_INPUTS</code></td><td><code>uint64</code></td><td><code>8</code></td><td>Maximum number of inputs.</td></tr>
 <tr><td><code>MAX_OUTPUTS</code></td><td><code>uint64</code></td><td><code>8</code></td><td>Maximum number of outputs.</td></tr>
 <tr><td><code>MAX_PREDICATE_LENGTH</code></td><td><code>uint64</code></td><td></td><td>Maximum length of predicate, in instructions.</td></tr>
+<tr><td><code>MAX_GAS_PER_PREDICATE</code></td><td><code>uint64</code></td><td></td><td>Maximum gas per predicate.</td></tr>
 <tr><td><code>MAX_PREDICATE_DATA_LENGTH</code></td><td><code>uint64</code></td><td></td><td>Maximum length of predicate data, in bytes.</td></tr>
 <tr><td><code>MAX_SCRIPT_LENGTH</code></td><td><code>uint64</code></td><td></td><td>Maximum length of script, in instructions.</td></tr>
 <tr><td><code>MAX_SCRIPT_DATA_LENGTH</code></td><td><code>uint64</code></td><td></td><td>Maximum length of script data, in bytes.</td></tr>
@@ -273,7 +274,7 @@
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>Gas price for transaction.</td></tr>
-<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction.</td></tr>
+<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction (including predicate gas).</td></tr>
 <tr><td><code>maturity</code></td><td><code>uint32</code></td><td>Block until which tx cannot be included.</td></tr>
 <tr><td><code>scriptLength</code></td><td><code>uint16</code></td><td>Script length, in instructions.</td></tr>
 <tr><td><code>scriptDataLength</code></td><td><code>uint16</code></td><td>Length of script input data, in bytes.</td></tr>
@@ -296,6 +297,7 @@
 <li><code>scriptDataLength &gt; MAX_SCRIPT_DATA_LENGTH</code></li>
 <li><code>scriptLength * 4 != len(script)</code></li>
 <li><code>scriptDataLength != len(scriptData)</code></li>
+<li><code>gasLimit</code> is less than the sum of all <code>predicateGasUsed</code> for <code>InputType.Coin</code> or <code>InputType.Message</code> where predicate length is greater than zero.</li>
 </ul>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>receiptsRoot</code> is set to zero.</p>
@@ -306,7 +308,7 @@
 <h2 id="transactioncreate"><a class="header" href="#transactioncreate">TransactionCreate</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>Gas price for transaction.</td></tr>
-<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction.</td></tr>
+<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction (including predicate gas).</td></tr>
 <tr><td><code>maturity</code></td><td><code>uint32</code></td><td>Block until which tx cannot be included.</td></tr>
 <tr><td><code>bytecodeLength</code></td><td><code>uint16</code></td><td>Contract bytecode length, in instructions.</td></tr>
 <tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint8</code></td><td>Witness index of contract bytecode to create.</td></tr>
@@ -381,6 +383,7 @@
 <tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
+<tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 </tbody></table>
 </div>
 <p>Given helper <code>len()</code> that returns the number of bytes of a field.</p>
@@ -392,11 +395,13 @@
 <li>If <code>predicateLength &gt; 0</code>; the computed predicate root (see below) is not equal <code>owner</code></li>
 <li><code>predicateLength * 4 != len(predicate)</code></li>
 <li><code>predicateDataLength != len(predicateData)</code></li>
+<li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
 <p>If <code>h</code> is the block height the UTXO being spent was created, transaction is invalid if <code>blockheight() &lt; h + maturity</code>.</p>
 <blockquote>
-<p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> is set to zero.</p>
+<p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> and <code>predicateGasUsed</code> is set to zero.</p>
 <p><strong>Note:</strong> when verifying a predicate, <code>txPointer</code> is initialized to zero.</p>
+<p><strong>Note:</strong> when estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
 <p><strong>Note:</strong> when executing a script, <code>txPointer</code> is initialized to zero.</p>
 </blockquote>
 <p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="protocol/tx_format/../id/contract.html">here</a>.</p>
@@ -432,6 +437,7 @@
 <tr><td><code>data</code></td><td><code>byte[]</code></td><td>The message data.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
+<tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
 </tbody></table>
 </div>
 <p>Given helper <code>len()</code> that returns the number of bytes of a field.</p>
@@ -445,10 +451,13 @@
 <li><code>dataLength != len(data)</code></li>
 <li><code>predicateLength * 4 != len(predicate)</code></li>
 <li><code>predicateDataLength != len(predicateData)</code></li>
+<li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
 <p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="protocol/tx_format/../id/contract.html">here</a>.</p>
 <blockquote>
 <p><strong>Note:</strong> <code>InputMessages</code> with data length greater than zero are not considered spent until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit</p>
+<p><strong>Note:</strong> when signing a transaction, <code>predicateGasUsed</code> is set to zero.</p>
+<p><strong>Note:</strong> when estimating a predicate, <code>predicateGasUsed</code> is initialized to zero.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="output"><a class="header" href="#output">Output</a></h1>
 <pre><code class="language-c++">enum OutputType : uint8 {
@@ -700,10 +709,6 @@ def available_balance(tx, asset_id) -&gt; int:
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -&gt; int:
-    &quot;&quot;&quot;
-    Note: we don't charge for predicate verification because predicates are
-    monotonic and the cost of bytes should approximately makes up for this.
-    &quot;&quot;&quot;
     sentBalance = sum_outputs(tx, asset_id)
     gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
     # Size excludes witness data as it is malleable (even by third parties!)
@@ -2227,6 +2232,7 @@ abi MyContract {
 <li><a href="vm/index.html#instruction-set">Instruction Set</a></li>
 <li><a href="vm/index.html#vm-initialization">VM Initialization</a></li>
 <li><a href="vm/index.html#contexts">Contexts</a></li>
+<li><a href="vm/index.html#predicate-estimation">Predicate Estmation</a></li>
 <li><a href="vm/index.html#predicate-verification">Predicate Verification</a></li>
 <li><a href="vm/index.html#script-execution">Script Execution</a></li>
 <li><a href="vm/index.html#call-frames">Call Frames</a></li>
@@ -2288,7 +2294,7 @@ abi MyContract {
 <li>Transaction hash (<code>byte[32]</code>, word-aligned), computed as defined <a href="vm/../protocol/id/transaction.html">here</a>.</li>
 <li><a href="vm/../protocol/tx_format/constants.html"><code>MAX_INPUTS</code></a> pairs of <code>(asset_id: byte[32], balance: uint64)</code>, of:
 <ol>
-<li>For <a href="vm/index.html#predicate-verification">predicate verification</a>, zeroes.</li>
+<li>For <a href="vm/index.html#predicate-estimation">predicate estimation</a> and <a href="vm/index.html#predicate-verification">predicate verification</a>, zeroes.</li>
 <li>For <a href="vm/index.html#script-execution">script execution</a>, the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than <code>MAX_INPUTS</code> asset IDs, the pair has a value of zero.</li>
 </ol>
 </li>
@@ -2302,31 +2308,45 @@ abi MyContract {
 <li><code>$hp = VM_MAX_RAM</code>: the heap area begins at the top and is empty to start.</li>
 </ol>
 <h2 id="contexts"><a class="header" href="#contexts">Contexts</a></h2>
-<p>There are 3 <em>contexts</em> in the FuelVM: <a href="vm/index.html#predicate-verification">predicates</a>, <a href="vm/index.html#script-execution">scripts</a>, and <a href="vm/./instruction_set.html#call-call-contract">calls</a>. A context is an isolated execution environment with defined <a href="vm/index.html#ownership">memory ownership</a> and can be <em>external</em> or <em>internal</em>:</p>
+<p>There are 4 <em>contexts</em> in the FuelVM: <a href="vm/index.html#predicate-estimation">predicate estimation</a>, <a href="vm/index.html#predicate-verification">predicate verification</a>, <a href="vm/index.html#script-execution">scripts</a>, and <a href="vm/./instruction_set.html#call-call-contract">calls</a>. A context is an isolated execution environment with defined <a href="vm/index.html#ownership">memory ownership</a> and can be <em>external</em> or <em>internal</em>:</p>
 <ul>
 <li>External: predicate and script. <code>$fp</code> will be zero.</li>
 <li>Internal: call. <code>$fp</code> will be non-zero.</li>
 </ul>
 <p><a href="vm/./instruction_set.html#return-return-from-call">Returning</a> from a context behaves differently depending on whether the context is external or internal.</p>
+<h2 id="predicate-estimation"><a class="header" href="#predicate-estimation">Predicate Estimation</a></h2>
+<p>For any input of type <a href="vm/../protocol/tx_format/index.html"><code>InputType.Coin</code></a> or <a href="vm/../protocol/tx_format/index.html"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
+<p>For each such input in the transaction, the VM is <a href="vm/index.html#vm-initialization">initialized</a>, then:</p>
+<ol>
+<li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code>.</li>
+</ol>
+<p>Predicate estimation will fail if gas is exhausted during execution.</p>
+<p>During predicate mode, hitting any of the following instructions causes predicate estimation to halt, returning Boolean <code>false</code>:</p>
+<ol>
+<li>Any <a href="vm/./instruction_set.html#contract-instructions">contract instruction</a>.</li>
+</ol>
+<p>In addition, during predicate mode if <code>$pc</code> is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate estimation halts returning Boolean <code>false</code>.</p>
+<p>A predicate that halts without returning Boolean <code>true</code> would not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>
+<p>After successful execution, <code>predicateGasUsed</code> is set to <code>tx.gasLimit - $ggas</code>.</p>
 <h2 id="predicate-verification-1"><a class="header" href="#predicate-verification-1">Predicate Verification</a></h2>
 <p>For any input of type <a href="vm/../protocol/tx_format/input.html#inputcoin"><code>InputType.Coin</code></a> or <a href="vm/../protocol/tx_format/input.html#inputmessage"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
 <p>For each such input in the transaction, the VM is <a href="vm/index.html#vm-initialization">initialized</a>, then:</p>
 <ol>
-<li><code>$pc</code>  and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
+<li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to <code>predicateGasUsed</code>.</li>
 </ol>
-<p>During predicate mode, hitting any of the following instructions causes predicate verification to halt, returning Boolean <code>false</code>:</p>
-<ol>
-<li>Any <a href="vm/./instruction_set.html#contract-instructions">contract instruction</a>.</li>
-<li><a href="vm/./instruction_set.html#jmp-jump">JMP</a>, <a href="vm/./instruction_set.html#ji-jump-immediate">JI</a>, <a href="vm/./instruction_set.html#jne-jump-if-not-equal">JNE</a>, <a href="vm/./instruction_set.html#jnei-jump-if-not-equal-immediate">JNEI</a>, or <a href="vm/./instruction_set.html#jnzi-jump-if-not-zero-immediate">JNZI</a> with jump-to value less than or equal to <code>$pc</code> (these would allow loops). In other words, <code>$pc</code> must be strictly increasing.</li>
-</ol>
+<p>Predicate verification will fail if gas is exhausted during execution.</p>
+<p>During predicate mode, hitting any <a href="vm/./instruction_set.html#contract-instructions">contract instruction</a> causes predicate verification to halt, returning Boolean <code>false</code>.</p>
 <p>In addition, during predicate mode if <code>$pc</code> is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean <code>false</code>.</p>
 <p>A predicate that halts without returning Boolean <code>true</code> does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>
+<p>After execution, if <code>$ggas</code> is non-zero, predicate verification fails.</p>
 <h2 id="script-execution-1"><a class="header" href="#script-execution-1">Script Execution</a></h2>
 <p>If script bytecode is present, transaction validation requires execution.</p>
 <p>The VM is <a href="vm/index.html#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the transaction's script bytecode.</li>
-<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code>.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code> minus the sum of <code>predicateGasUsed</code> for all predicates.</li>
 </ol>
 <p>Following initialization, execution begins.</p>
 <p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="vm/./instruction_set.html#revert-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
@@ -3997,23 +4017,25 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA_LENGTH</code></td><td><code>0x10B</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE</code></td><td><code>0x10C</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA</code></td><td><code>0x10D</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_TX_ID</code></td><td><code>0x10E</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_OUTPUT_INDEX</code></td><td><code>0x10F</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x110</code></td><td>Memory address of <code>tx.inputs[$rB].balanceRoot</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x111</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x112</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x113</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x116</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11C</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE_GAS_USED</code></td><td><code>0x10E</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_TX_ID</code></td><td><code>0x10F</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_OUTPUT_INDEX</code></td><td><code>0x110</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x111</code></td><td>Memory address of <code>tx.inputs[$rB].balanceRoot</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x112</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x113</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x116</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11C</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11F</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_GAS_USED</code></td><td><code>0x120</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
 <tr><td><code>GTF_OUTPUT_TYPE</code></td><td><code>0x201</code></td><td><code>tx.outputs[$rB].type</code></td></tr>
 <tr><td><code>GTF_OUTPUT_COIN_TO</code></td><td><code>0x202</code></td><td>Memory address of <code>tx.outputs[$rB].to</code></td></tr>
 <tr><td><code>GTF_OUTPUT_COIN_AMOUNT</code></td><td><code>0x203</code></td><td><code>tx.outputs[$rB].amount</code></td></tr>
