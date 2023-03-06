@@ -1820,23 +1820,25 @@ Get [fields from the transaction](../protocol/tx_format/transaction.md).
 | `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x10B` | `tx.inputs[$rB].predicateDataLength`             |
 | `GTF_INPUT_COIN_PREDICATE`                | `0x10C` | Memory address of `tx.inputs[$rB].predicate`     |
 | `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x10D` | Memory address of `tx.inputs[$rB].predicateData` |
-| `GTF_INPUT_CONTRACT_TX_ID`                | `0x10E` | Memory address of `tx.inputs[$rB].txID`          |
-| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x10F` | `tx.inputs[$rB].outputIndex`                     |
-| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x110` | Memory address of `tx.inputs[$rB].balanceRoot`   |
-| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x111` | Memory address of `tx.inputs[$rB].stateRoot`     |
-| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x112` | Memory address of `tx.inputs[$rB].txPointer`     |
-| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x113` | Memory address of `tx.inputs[$rB].contractID`    |
-| `GTF_INPUT_MESSAGE_SENDER`                | `0x114` | Memory address of `tx.inputs[$rB].sender`        |
-| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x115` | Memory address of `tx.inputs[$rB].recipient`     |
-| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x116` | `tx.inputs[$rB].amount`                          |
-| `GTF_INPUT_MESSAGE_NONCE`                 | `0x117` | `tx.inputs[$rB].nonce`                           |
-| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x118` | `tx.inputs[$rB].witnessIndex`                    |
-| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x119` | `tx.inputs[$rB].dataLength`                      |
-| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11A` | `tx.inputs[$rB].predicateLength`                 |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11B` | `tx.inputs[$rB].predicateDataLength`             |
-| `GTF_INPUT_MESSAGE_DATA`                  | `0x11C` | Memory address of `tx.inputs[$rB].data`          |
-| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x11D` | Memory address of `tx.inputs[$rB].predicate`     |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x11E` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_INPUT_COIN_PREDICATE_GAS_USED`       | `0x10E` | `tx.inputs[$rB].predicateGasUsed`                |
+| `GTF_INPUT_CONTRACT_TX_ID`                | `0x10F` | Memory address of `tx.inputs[$rB].txID`          |
+| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x110` | `tx.inputs[$rB].outputIndex`                     |
+| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x111` | Memory address of `tx.inputs[$rB].balanceRoot`   |
+| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x112` | Memory address of `tx.inputs[$rB].stateRoot`     |
+| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x113` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x114` | Memory address of `tx.inputs[$rB].contractID`    |
+| `GTF_INPUT_MESSAGE_SENDER`                | `0x115` | Memory address of `tx.inputs[$rB].sender`        |
+| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
+| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
+| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | `tx.inputs[$rB].nonce`                           |
+| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x119` | `tx.inputs[$rB].witnessIndex`                    |
+| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11A` | `tx.inputs[$rB].dataLength`                      |
+| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11B` | `tx.inputs[$rB].predicateLength`                 |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11C` | `tx.inputs[$rB].predicateDataLength`             |
+| `GTF_INPUT_MESSAGE_DATA`                  | `0x11D` | Memory address of `tx.inputs[$rB].data`          |
+| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x11E` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x11F` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_INPUT_MESSAGE_PREDICATE_GAS_USED`    | `0x120` | `tx.inputs[$rB].predicateGasUsed`                |
 | `GTF_OUTPUT_TYPE`                         | `0x201` | `tx.outputs[$rB].type`                           |
 | `GTF_OUTPUT_COIN_TO`                      | `0x202` | Memory address of `tx.outputs[$rB].to`           |
 | `GTF_OUTPUT_COIN_AMOUNT`                  | `0x203` | `tx.outputs[$rB].amount`                         |

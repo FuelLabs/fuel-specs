@@ -33,6 +33,7 @@ Transaction is invalid if:
 | `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`                     | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`                     | Predicate input data (parameters).                                     |
+| `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -44,12 +45,15 @@ Transaction is invalid if:
 - If `predicateLength > 0`; the computed predicate root (see below) is not equal `owner`
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
+- `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
-> **Note:** when signing a transaction, `txPointer` is set to zero.
+> **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` is set to zero.
 >
 > **Note:** when verifying a predicate, `txPointer` is initialized to zero.
+>
+> **Note:** when estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
 >
 > **Note:** when executing a script, `txPointer` is initialized to zero.
 
@@ -78,19 +82,20 @@ Transaction is invalid if:
 
 ## InputMessage
 
-| name                  | type                                   | description                                                  |
-|-----------------------|----------------------------------------|--------------------------------------------------------------|
-| `sender`              | `byte[32]`                             | The address of the message sender.                           |
-| `recipient`           | `byte[32]`                             | The address or predicate root of the message recipient.      |
-| `amount`              | `uint64`                               | Amount of base asset coins sent with message.                |
-| `nonce`               | `uint64`                               | The message nonce.                                           |
-| `witnessIndex`        | `uint8`                                | Index of witness that authorizes spending the coin.          |
-| `dataLength`          | `uint16`                               | Length of message data, in bytes.                            |
-| `predicateLength`     | `uint16`                               | Length of predicate, in instructions.                        |
-| `predicateDataLength` | `uint16`                               | Length of predicate input data, in bytes.                    |
-| `data`                | `byte[]`                               | The message data.                                            |
-| `predicate`           | `byte[]`                               | Predicate bytecode.                                          |
-| `predicateData`       | `byte[]`                               | Predicate input data (parameters).                           |
+| name                  | type         | description                                             |
+|-----------------------|--------------|---------------------------------------------------------|
+| `sender`              | `byte[32]`   | The address of the message sender.                      |
+| `recipient`           | `byte[32]`   | The address or predicate root of the message recipient. |
+| `amount`              | `uint64`     | Amount of base asset coins sent with message.           |
+| `nonce`               | `uint64`     | The message nonce.                                      |
+| `witnessIndex`        | `uint8`      | Index of witness that authorizes spending the coin.     |
+| `dataLength`          | `uint16`     | Length of message data, in bytes.                       |
+| `predicateLength`     | `uint16`     | Length of predicate, in instructions.                   |
+| `predicateDataLength` | `uint16`     | Length of predicate input data, in bytes.               |
+| `data`                | `byte[]`     | The message data.                                       |
+| `predicate`           | `byte[]`     | Predicate bytecode.                                     |
+| `predicateData`       | `byte[]`     | Predicate input data (parameters).                      |
+| `predicateGasUsed`    | `uint64`     | Gas used by predicate execution.                        |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -104,7 +109,12 @@ Transaction is invalid if:
 - `dataLength != len(data)`
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
+- `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
 The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
 
 > **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
+>
+> **Note:** when signing a transaction, `predicateGasUsed` is set to zero.
+>
+> **Note:** when estimating a predicate, `predicateGasUsed` is initialized to zero.
