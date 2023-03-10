@@ -290,12 +290,12 @@
 <p>If the context is external, the owned memory range is:</p>
 <ol>
 <li><code>[$ssp, $sp)</code>: the writable stack area.</li>
-<li><code>($hp - 1, VM_MAX_RAM - 1]</code>: the heap area allocated by this script or predicate.</li>
+<li><code>[$hp, VM_MAX_RAM)</code>: the heap area allocated by this script or predicate.</li>
 </ol>
 <p>If the context is internal, the owned memory range for a call frame is:</p>
 <ol>
 <li><code>[$ssp, $sp)</code>: the writable stack area of the call frame.</li>
-<li><code>($hp - 1, $fp-&gt;$hp - 1]</code>: the heap area allocated by this call frame.</li>
+<li><code>[$hp, $fp-&gt;$hp)</code>: the heap area allocated by this call frame.</li>
 </ol>
 
                     </main>

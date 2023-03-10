@@ -855,8 +855,8 @@
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$hp - $rA - 1</code> underflows</li>
-<li><code>$hp - $rA - 1 &lt; $sp</code></li>
+<li><code>$hp - $rA</code> underflows</li>
+<li><code>$hp - $rA &lt; $sp</code></li>
 </ul>
 <h3 id="cfei-extend-call-frame-immediate"><a class="header" href="#cfei-extend-call-frame-immediate">CFEI: Extend call frame immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -870,7 +870,7 @@
 <p>Panic if:</p>
 <ul>
 <li><code>$sp + imm</code> overflows</li>
-<li><code>$sp + imm &gt; $hp - 1</code></li>
+<li><code>$sp + imm &gt; $hp</code></li>
 </ul>
 <h3 id="cfsi-shrink-call-frame-immediate"><a class="header" href="#cfsi-shrink-call-frame-immediate">CFSI: Shrink call frame immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -1240,7 +1240,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + 32</code> overflows</li>
 <li><code>$ssp + $rC &gt; VM_MAX_RAM</code></li>
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$ssp + $rC &gt; $hp - 1</code></li>
+<li><code>$ssp + $rC &gt;= $hp</code></li>
 <li><code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
 <li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
