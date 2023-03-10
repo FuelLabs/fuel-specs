@@ -1224,7 +1224,7 @@ Panic if:
 - `$rA + 32` overflows
 - `$ssp + $rC > VM_MAX_RAM`
 - `$rA + 32 > VM_MAX_RAM`
-- `$ssp + $rC > $hp`
+- `$ssp + $rC >= $hp`
 - `$rC > CONTRACT_MAX_SIZE`
 - `$rC > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
