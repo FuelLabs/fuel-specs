@@ -191,4 +191,4 @@ If the context is external, the owned memory range is:
 If the context is internal, the owned memory range for a call frame is:
 
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
-1. `($hp, $fp->$hp - 1]`: the heap area allocated by this call frame.
+1. `[$hp, $fp->$hp)`: the heap area allocated by this call frame.
