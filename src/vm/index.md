@@ -186,7 +186,7 @@ Whenever memory is written to (i.e. with [`SB`](./instruction_set.md#sb-store-by
 If the context is external, the owned memory range is:
 
 1. `[$ssp, $sp)`: the writable stack area.
-1. `($hp, VM_MAX_RAM - 1]`: the heap area allocated by this script or predicate.
+1. `[$hp, VM_MAX_RAM)`: the heap area allocated by this script or predicate.
 
 If the context is internal, the owned memory range for a call frame is:
 
