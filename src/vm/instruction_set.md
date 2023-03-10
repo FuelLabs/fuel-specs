@@ -1738,6 +1738,7 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_IS_CALLER_EXTERNAL`      | `0x00001` | Get if caller is external.      |
 | `GM_GET_CALLER`              | `0x00002` | Get caller's contract ID.       |
 | `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate. |
+| `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`     |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 

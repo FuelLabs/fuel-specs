@@ -15,4 +15,5 @@
 | `MAX_MESSAGE_DATA_LENGTH`   | `uint16` |                 | Maximum length of message data, in bytes.     |
 | `MAX_STORAGE_SLOTS`         | `uint16` | `255`           | Maximum number of initial storage slots.      |
 | `MAX_WITNESSES`             | `uint64` | `16`            | Maximum number of witnesses.                  |
+| `CHAIN_ID`                  | `uint64` |                 | A unique per-chain identifier.                |
 | `MAX_NESTED_CALLS`          | `uint64` | `64`            | Maximum number of nested contract calls.      |

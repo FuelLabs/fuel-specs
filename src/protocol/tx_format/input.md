@@ -57,7 +57,7 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 >
 > **Note:** when executing a script, `txPointer` is initialized to zero.
 
-The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
+The predicate root is computed [here](../id/predicate.md).
 
 ## InputContract
 
@@ -111,7 +111,7 @@ Transaction is invalid if:
 - `predicateDataLength != len(predicateData)`
 - `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
-The predicate root is computed identically to the contract root, used to compute the contract ID, [here](../id/contract.md).
+The predicate root is computed [here](../id/predicate.md).
 
 > **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
 >
