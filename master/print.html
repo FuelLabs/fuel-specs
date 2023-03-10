@@ -221,6 +221,7 @@
 <tr><td><code>MAX_MESSAGE_DATA_LENGTH</code></td><td><code>uint16</code></td><td></td><td>Maximum length of message data, in bytes.</td></tr>
 <tr><td><code>MAX_STORAGE_SLOTS</code></td><td><code>uint16</code></td><td><code>255</code></td><td>Maximum number of initial storage slots.</td></tr>
 <tr><td><code>MAX_WITNESSES</code></td><td><code>uint64</code></td><td><code>16</code></td><td>Maximum number of witnesses.</td></tr>
+<tr><td><code>CHAIN_ID</code></td><td><code>uint64</code></td><td></td><td>A unique per-chain identifier.</td></tr>
 <tr><td><code>MAX_NESTED_CALLS</code></td><td><code>uint64</code></td><td><code>64</code></td><td>Maximum number of nested contract calls.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="transaction"><a class="header" href="#transaction">Transaction</a></h1>
@@ -404,7 +405,7 @@
 <p><strong>Note:</strong> when estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
 <p><strong>Note:</strong> when executing a script, <code>txPointer</code> is initialized to zero.</p>
 </blockquote>
-<p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="protocol/tx_format/../id/contract.html">here</a>.</p>
+<p>The predicate root is computed <a href="protocol/tx_format/../id/predicate.html">here</a>.</p>
 <h2 id="inputcontract"><a class="header" href="#inputcontract">InputContract</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txID</code></td><td><code>byte[32]</code></td><td>Hash of transaction.</td></tr>
@@ -453,7 +454,7 @@
 <li><code>predicateDataLength != len(predicateData)</code></li>
 <li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
-<p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="protocol/tx_format/../id/contract.html">here</a>.</p>
+<p>The predicate root is computed <a href="protocol/tx_format/../id/predicate.html">here</a>.</p>
 <blockquote>
 <p><strong>Note:</strong> <code>InputMessages</code> with data length greater than zero are not considered spent until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit</p>
 <p><strong>Note:</strong> when signing a transaction, <code>predicateGasUsed</code> is set to zero.</p>
@@ -552,6 +553,7 @@
 <ul>
 <li><a href="protocol/id/./transaction.html">Transaction ID</a></li>
 <li><a href="protocol/id/./contract.html">Contract ID</a></li>
+<li><a href="protocol/id/./predicate.html">Predicate ID</a></li>
 <li><a href="protocol/id/./utxo.html">UTXO ID</a>
 <ul>
 <li><a href="protocol/id/./utxo.html#coin-id">Coin ID</a></li>
@@ -565,7 +567,13 @@
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="transaction-id"><a class="header" href="#transaction-id">Transaction ID</a></h1>
-<p>The <em>transaction ID</em> (also called <em>transaction hash</em>) of a transaction is computed as the <a href="protocol/id/../cryptographic_primitives.html#hashing">hash</a> of the <a href="protocol/id/../tx_format/transaction.html">serialized transaction</a> with <a href="protocol/id/../tx_format/index.html">fields zeroed out for signing</a> (see different inputs and outputs for which fields are set to zero), and without witness data. In other words, only all non-witness data is hashed.</p>
+<p>The <em>transaction ID</em> (also called <em>transaction hash</em>) of a transaction is computed as
+the <a href="protocol/id/../cryptographic_primitives.html#hashing">hash</a> of <code>CHAIN_ID</code> and the
+<a href="protocol/id/../tx_format/transaction.html">serialized transaction</a> with <a href="protocol/id/../tx_format/index.html">fields zeroed out for signing</a>
+(see different inputs and outputs for which fields are set to zero), and without witness data. In other words, only
+all non-witness data is hashed.</p>
+<pre><code class="language-python">sha256(CHAIN_ID ++ serialized_tx(tx))
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="contract-id"><a class="header" href="#contract-id">Contract ID</a></h1>
 <p>For a transaction of type <code>TransactionType.Create</code>, <code>tx</code>, the contract ID is <code>sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.witnesses[bytecodeWitnessIndex].data) ++ root_smt(tx.storageSlots))</code>, where <code>root</code> is the Merkle root of <a href="protocol/id/../cryptographic_primitives.html#binary-merkle-tree">the binary Merkle tree</a> with each leaf being an 8-byte word of two instructions, and <code>root_smt</code> is the <a href="protocol/id/../cryptographic_primitives.html#sparse-merkle-tree">Sparse Merkle tree</a> root of the provided key-value pairs. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last instruction is padded with 4-byte zero.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="utxo-id"><a class="header" href="#utxo-id">UTXO ID</a></h1>
@@ -3943,6 +3951,7 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <tr><td><code>GM_IS_CALLER_EXTERNAL</code></td><td><code>0x00001</code></td><td>Get if caller is external.</td></tr>
 <tr><td><code>GM_GET_CALLER</code></td><td><code>0x00002</code></td><td>Get caller's contract ID.</td></tr>
 <tr><td><code>GM_GET_VERIFYING_PREDICATE</code></td><td><code>0x00003</code></td><td>Get index of current predicate.</td></tr>
+<tr><td><code>GM_GET_CHAIN_ID</code></td><td><code>0x00004</code></td><td>Get the value of <code>CHAIN_ID</code></td></tr>
 </tbody></table>
 </div>
 <p>If <code>imm == GM_IS_CALLER_EXTERNAL</code>:</p>

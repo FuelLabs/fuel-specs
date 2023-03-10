@@ -138,7 +138,13 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="transaction-id"><a class="header" href="#transaction-id">Transaction ID</a></h1>
-<p>The <em>transaction ID</em> (also called <em>transaction hash</em>) of a transaction is computed as the <a href="../cryptographic_primitives.html#hashing">hash</a> of the <a href="../tx_format/transaction.html">serialized transaction</a> with <a href="../tx_format/index.html">fields zeroed out for signing</a> (see different inputs and outputs for which fields are set to zero), and without witness data. In other words, only all non-witness data is hashed.</p>
+<p>The <em>transaction ID</em> (also called <em>transaction hash</em>) of a transaction is computed as
+the <a href="../cryptographic_primitives.html#hashing">hash</a> of <code>CHAIN_ID</code> and the
+<a href="../tx_format/transaction.html">serialized transaction</a> with <a href="../tx_format/index.html">fields zeroed out for signing</a>
+(see different inputs and outputs for which fields are set to zero), and without witness data. In other words, only
+all non-witness data is hashed.</p>
+<pre><code class="language-python">sha256(CHAIN_ID ++ serialized_tx(tx))
+</code></pre>
 
                     </main>
 

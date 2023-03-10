@@ -188,7 +188,7 @@
 <p><strong>Note:</strong> when estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
 <p><strong>Note:</strong> when executing a script, <code>txPointer</code> is initialized to zero.</p>
 </blockquote>
-<p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="../id/contract.html">here</a>.</p>
+<p>The predicate root is computed <a href="../id/predicate.html">here</a>.</p>
 <h2 id="inputcontract"><a class="header" href="#inputcontract">InputContract</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txID</code></td><td><code>byte[32]</code></td><td>Hash of transaction.</td></tr>
@@ -237,7 +237,7 @@
 <li><code>predicateDataLength != len(predicateData)</code></li>
 <li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
-<p>The predicate root is computed identically to the contract root, used to compute the contract ID, <a href="../id/contract.html">here</a>.</p>
+<p>The predicate root is computed <a href="../id/predicate.html">here</a>.</p>
 <blockquote>
 <p><strong>Note:</strong> <code>InputMessages</code> with data length greater than zero are not considered spent until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit</p>
 <p><strong>Note:</strong> when signing a transaction, <code>predicateGasUsed</code> is set to zero.</p>
