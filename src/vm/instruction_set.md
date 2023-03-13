@@ -1395,14 +1395,14 @@ Cease VM execution and revert script effects. After a revert:
 
 ### SMO: Send message out
 
-|             |                                                                                                                  |
-|-------------|------------------------------------------------------------------------------------------------------------------|
-| Description | Send a message to recipient address `MEM[$rA, 32]` with message data `MEM[$rB, $rC]` and `$rD` base asset coins. |
-| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);```                                             |
-| Syntax      | `smo $rA, $rB, $rC, $rD`                                                                                         |
-| Encoding    | `0x00 rA rB rC rD`                                                                                               |
-| Effects     | Output message                                                                                                   |
-| Notes       |                                                                                                                  |
+|             |                                                                                                                                                               |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Description | Send a message to recipient address `MEM[$rA, 32]` from the `MEM[$fp, 32]` sender with message data `MEM[$rB, $rC]` and the `$rD` amount of base asset coins. |
+| Operation   | ```outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);```                                                                                          |
+| Syntax      | `smo $rA, $rB, $rC, $rD`                                                                                                                                      |
+| Encoding    | `0x00 rA rB rC rD`                                                                                                                                            |
+| Effects     | Output message                                                                                                                                                |
+| Notes       |                                                                                                                                                               |
 
 Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
 
@@ -1422,7 +1422,6 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | name        | type          | description                                                                  |
 |-------------|---------------|------------------------------------------------------------------------------|
 | `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                     |
-| `messageID` | `byte[32]`    | The messageID as described [here](../protocol/id/utxo.md#message-id).        |
 | `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                           |
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                        |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                         |
@@ -1431,7 +1430,6 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                  |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. This modifies the `balanceRoot` field of the appropriate contract that had its' funds deducted.
-`messageID` is added to the MessageReceipts Merkle tree as part of block header.
 
 ### SCWQ: State clear sequential 32 byte slots
 

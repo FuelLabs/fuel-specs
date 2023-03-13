@@ -21,7 +21,7 @@ A specification for the Binary Merkle Tree is [here](https://github.com/celestia
 
 ### Binary Merkle Sum Tree
 
-The Binary Merkle Sum Tree is an extension of the tree defined in [RFC-6962](https://tools.ietf.org/html/rfc6962).
+The Binary Merkle Sum Tree is an extension of the tree defined in [RFC-6962](https://www.rfc-editor.org/rfc/rfc9162).
 
 The root pair `(fee, digest)` of an empty tree is:
 
@@ -55,7 +55,7 @@ Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1
 
 Public keys are encoded in uncompressed form, as the concatenation of the `x` and `y` values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.
 
-Deterministic signatures ([RFC-6979](https://tools.ietf.org/rfc/rfc6979.txt)) should be used when signing, but this is not enforced at the protocol level as it cannot be.
+Deterministic signatures ([RFC-6979](https://www.rfc-editor.org/rfc/rfc6979)) should be used when signing, but this is not enforced at the protocol level as it cannot be.
 
 Signatures are represented as the `r` and `s` (each 32 bytes), and `v` (1-bit) values of the signature. `r` and `s` take on their usual meaning (see: [SEC 1, 4.1.3 Signing Operation](https://www.secg.org/sec1-v2.pdf)), while `v` is used for recovering the public key from a signature more quickly (see: [SEC 1, 4.1.6 Public Key Recovery Operation](https://www.secg.org/sec1-v2.pdf)). Only low-`s` values in signatures are valid (i.e. `s <= secp256k1.n//2`); `s` can be replaced with `-s mod secp256k1.n` during the signing process if it is high. Given this, the first bit of `s` will always be `0`, and can be used to store the 1-bit `v` value.
 
