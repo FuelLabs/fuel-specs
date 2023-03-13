@@ -1387,7 +1387,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 </ol>
 <h3 id="smo-send-message-out"><a class="header" href="#smo-send-message-out">SMO: Send message out</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> with message data <code>MEM[$rB, $rC]</code> and <code>$rD</code> base asset coins.</td></tr>
+<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> from the <code>MEM[$fp, 32]</code> sender with message data <code>MEM[$rB, $rC]</code> and the <code>$rD</code> amount of base asset coins.</td></tr>
 <tr><td>Operation</td><td><code>outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);</code></td></tr>
 <tr><td>Syntax</td><td><code>smo $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
@@ -1410,7 +1410,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.MessageOut</code></td></tr>
-<tr><td><code>messageID</code></td><td><code>byte[32]</code></td><td>The messageID as described <a href="../protocol/id/utxo.html#message-id">here</a>.</td></tr>
 <tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender: <code>MEM[$fp, 32]</code>.</td></tr>
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient: <code>MEM[$rA, 32]</code>.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message: <code>$rD</code>.</td></tr>
@@ -1419,8 +1418,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="#s256-sha-2-256">Hash</a> of <code>MEM[$rB, $rC]</code>.</td></tr>
 </tbody></table>
 </div>
-<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.
-<code>messageID</code> is added to the MessageReceipts Merkle tree as part of block header.</p>
+<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.</p>
 <h3 id="scwq-state-clear-sequential-32-byte-slots"><a class="header" href="#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is cleared from the current contract's state.</td></tr>

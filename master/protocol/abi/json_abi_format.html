@@ -231,7 +231,6 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </li>
 <li><code>&quot;messagesTypes&quot;</code>: an array describing all instances of <a href="../../vm/instruction_set.html#smo-send-message-to-output"><code>smo</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
 <ul>
-<li><code>&quot;messageId&quot;</code>: a unique integer ID. The <a href="../../vm/instruction_set.html#smo-send-message-to-output"><code>smo</code></a> instruction must set the first word of the message data to that ID.</li>
 <li><code>&quot;messageDataType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the message data being sent.</li>

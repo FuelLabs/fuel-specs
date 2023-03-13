@@ -815,7 +815,7 @@ messageBalance = sum_data_messages(tx, 0)
 <h3 id="binary-merkle-tree"><a class="header" href="#binary-merkle-tree">Binary Merkle Tree</a></h3>
 <p>A specification for the Binary Merkle Tree is <a href="https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#binary-merkle-tree">here</a>.</p>
 <h3 id="binary-merkle-sum-tree"><a class="header" href="#binary-merkle-sum-tree">Binary Merkle Sum Tree</a></h3>
-<p>The Binary Merkle Sum Tree is an extension of the tree defined in <a href="https://tools.ietf.org/html/rfc6962">RFC-6962</a>.</p>
+<p>The Binary Merkle Sum Tree is an extension of the tree defined in <a href="https://www.rfc-editor.org/rfc/rfc9162">RFC-6962</a>.</p>
 <p>The root pair <code>(fee, digest)</code> of an empty tree is:</p>
 <pre><code class="language-text">(0x0000000000000000, hash()) = (0x0000000000000000, 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)
 </code></pre>
@@ -832,7 +832,7 @@ messageBalance = sum_data_messages(tx, 0)
 <h2 id="public-key-cryptography"><a class="header" href="#public-key-cryptography">Public-Key Cryptography</a></h2>
 <p>Consensus-critical data is authenticated using <a href="https://www.secg.org/sec1-v2.pdf">ECDSA</a>, with the curve <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a>. A highly-optimized library is available in C (<a href="https://github.com/bitcoin-core/secp256k1">https://github.com/bitcoin-core/secp256k1</a>), with wrappers in Go (<a href="https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1">https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1</a>) and Rust (<a href="https://docs.rs/crate/secp256k1">https://docs.rs/crate/secp256k1</a>).</p>
 <p>Public keys are encoded in uncompressed form, as the concatenation of the <code>x</code> and <code>y</code> values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.</p>
-<p>Deterministic signatures (<a href="https://tools.ietf.org/rfc/rfc6979.txt">RFC-6979</a>) should be used when signing, but this is not enforced at the protocol level as it cannot be.</p>
+<p>Deterministic signatures (<a href="https://www.rfc-editor.org/rfc/rfc6979">RFC-6979</a>) should be used when signing, but this is not enforced at the protocol level as it cannot be.</p>
 <p>Signatures are represented as the <code>r</code> and <code>s</code> (each 32 bytes), and <code>v</code> (1-bit) values of the signature. <code>r</code> and <code>s</code> take on their usual meaning (see: <a href="https://www.secg.org/sec1-v2.pdf">SEC 1, 4.1.3 Signing Operation</a>), while <code>v</code> is used for recovering the public key from a signature more quickly (see: <a href="https://www.secg.org/sec1-v2.pdf">SEC 1, 4.1.6 Public Key Recovery Operation</a>). Only low-<code>s</code> values in signatures are valid (i.e. <code>s &lt;= secp256k1.n//2</code>); <code>s</code> can be replaced with <code>-s mod secp256k1.n</code> during the signing process if it is high. Given this, the first bit of <code>s</code> will always be <code>0</code>, and can be used to store the 1-bit <code>v</code> value.</p>
 <p><code>v</code> represents the parity of the <code>Y</code> component of the point, <code>0</code> for even and <code>1</code> for odd. The <code>X</code> component of the point is assumed to always be low, since <a href="https://bitcoin.stackexchange.com/a/38909">the possibility of it being high is negligible</a>.</p>
 <p>Putting it all together, the encoding for signatures is:</p>
@@ -943,7 +943,6 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </li>
 <li><code>&quot;messagesTypes&quot;</code>: an array describing all instances of <a href="protocol/abi/../../vm/instruction_set.html#smo-send-message-to-output"><code>smo</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
 <ul>
-<li><code>&quot;messageId&quot;</code>: a unique integer ID. The <a href="protocol/abi/../../vm/instruction_set.html#smo-send-message-to-output"><code>smo</code></a> instruction must set the first word of the message data to that ID.</li>
 <li><code>&quot;messageDataType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the message data being sent.</li>
@@ -1907,7 +1906,6 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <h2 id="messageout-receipt"><a class="header" href="#messageout-receipt">MessageOut Receipt</a></h2>
 <ul>
 <li><code>type</code>: <code>MessageOut</code>.</li>
-<li><code>messageID</code>: Hexadecimal string representation of the 256-bit (32-byte) message ID as described <a href="protocol/abi/../id/utxo.html#message-id">here</a>.</li>
 <li><code>sender</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: <code>MEM[$fp, 32]</code>.</li>
 <li><code>recipient</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: <code>MEM[$rA, 32]</code>.</li>
 <li><code>amount</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
@@ -1918,7 +1916,6 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;MessageOut&quot;,
-  &quot;messageID&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
   &quot;sender&quot;: &quot;0x38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff05139150017c9e&quot;,
   &quot;recipient&quot;: &quot;0x4710162c2e3a95a6faff05139150017c9e38e5e280432d546fae345d6ce6d8fe&quot;,
   &quot;amount&quot;: &quot;0xe6d8fe4710162c2e&quot;,
@@ -2227,9 +2224,9 @@ abi MyContract {
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>da_height</code></td><td><code>uint64</code></td><td>Height of the data availability layer up to which (inclusive) input messages are processed.</td></tr>
 <tr><td><code>txCount</code></td><td><code>uint64</code></td><td>Number of <a href="protocol/./tx_format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>message_receipt_count</code></td><td><code>uint64</code></td><td>Number of <a href="protocol/../protocol/abi/receipts.html#messageout_receipt">output message</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_count</code></td><td><code>uint64</code></td><td>Number of <a href="protocol/../protocol/abi/receipts.html#messageout-receipt">output message</a>s in this block.</td></tr>
 <tr><td><code>txRoot</code></td><td><code>byte[32]</code></td><td><a href="protocol/./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="protocol/./tx_format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>message_receipt_root</code></td><td><code>byte[32]</code></td><td><a href="protocol/./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="protocol/../protocol/abi/receipts.html#messageout_receipt">output message</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_root</code></td><td><code>byte[32]</code></td><td><a href="protocol/./cryptographic_primitives.html#binary-merkle-tree">Merkle root</a> of <a href="protocol/../protocol/abi/receipts.html#messageout-receipt">output message</a>s <a href="protocol/./id/utxo.html#message-id"><code>messageId</code></a> in this block.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="fuel-vm-specification"><a class="header" href="#fuel-vm-specification">Fuel VM Specification</a></h1>
 <ul>
@@ -3641,7 +3638,7 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 </ol>
 <h3 id="smo-send-message-out"><a class="header" href="#smo-send-message-out">SMO: Send message out</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> with message data <code>MEM[$rB, $rC]</code> and <code>$rD</code> base asset coins.</td></tr>
+<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> from the <code>MEM[$fp, 32]</code> sender with message data <code>MEM[$rB, $rC]</code> and the <code>$rD</code> amount of base asset coins.</td></tr>
 <tr><td>Operation</td><td><code>outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);</code></td></tr>
 <tr><td>Syntax</td><td><code>smo $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
@@ -3664,7 +3661,6 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.MessageOut</code></td></tr>
-<tr><td><code>messageID</code></td><td><code>byte[32]</code></td><td>The messageID as described <a href="vm/../protocol/id/utxo.html#message-id">here</a>.</td></tr>
 <tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender: <code>MEM[$fp, 32]</code>.</td></tr>
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient: <code>MEM[$rA, 32]</code>.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message: <code>$rD</code>.</td></tr>
@@ -3673,8 +3669,7 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="vm/instruction_set.html#s256-sha-2-256">Hash</a> of <code>MEM[$rB, $rC]</code>.</td></tr>
 </tbody></table>
 </div>
-<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.
-<code>messageID</code> is added to the MessageReceipts Merkle tree as part of block header.</p>
+<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.</p>
 <h3 id="scwq-state-clear-sequential-32-byte-slots"><a class="header" href="#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is cleared from the current contract's state.</td></tr>

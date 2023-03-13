@@ -156,7 +156,7 @@
 <h3 id="binary-merkle-tree"><a class="header" href="#binary-merkle-tree">Binary Merkle Tree</a></h3>
 <p>A specification for the Binary Merkle Tree is <a href="https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#binary-merkle-tree">here</a>.</p>
 <h3 id="binary-merkle-sum-tree"><a class="header" href="#binary-merkle-sum-tree">Binary Merkle Sum Tree</a></h3>
-<p>The Binary Merkle Sum Tree is an extension of the tree defined in <a href="https://tools.ietf.org/html/rfc6962">RFC-6962</a>.</p>
+<p>The Binary Merkle Sum Tree is an extension of the tree defined in <a href="https://www.rfc-editor.org/rfc/rfc9162">RFC-6962</a>.</p>
 <p>The root pair <code>(fee, digest)</code> of an empty tree is:</p>
 <pre><code class="language-text">(0x0000000000000000, hash()) = (0x0000000000000000, 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)
 </code></pre>
@@ -173,7 +173,7 @@
 <h2 id="public-key-cryptography"><a class="header" href="#public-key-cryptography">Public-Key Cryptography</a></h2>
 <p>Consensus-critical data is authenticated using <a href="https://www.secg.org/sec1-v2.pdf">ECDSA</a>, with the curve <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a>. A highly-optimized library is available in C (<a href="https://github.com/bitcoin-core/secp256k1">https://github.com/bitcoin-core/secp256k1</a>), with wrappers in Go (<a href="https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1">https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1</a>) and Rust (<a href="https://docs.rs/crate/secp256k1">https://docs.rs/crate/secp256k1</a>).</p>
 <p>Public keys are encoded in uncompressed form, as the concatenation of the <code>x</code> and <code>y</code> values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.</p>
-<p>Deterministic signatures (<a href="https://tools.ietf.org/rfc/rfc6979.txt">RFC-6979</a>) should be used when signing, but this is not enforced at the protocol level as it cannot be.</p>
+<p>Deterministic signatures (<a href="https://www.rfc-editor.org/rfc/rfc6979">RFC-6979</a>) should be used when signing, but this is not enforced at the protocol level as it cannot be.</p>
 <p>Signatures are represented as the <code>r</code> and <code>s</code> (each 32 bytes), and <code>v</code> (1-bit) values of the signature. <code>r</code> and <code>s</code> take on their usual meaning (see: <a href="https://www.secg.org/sec1-v2.pdf">SEC 1, 4.1.3 Signing Operation</a>), while <code>v</code> is used for recovering the public key from a signature more quickly (see: <a href="https://www.secg.org/sec1-v2.pdf">SEC 1, 4.1.6 Public Key Recovery Operation</a>). Only low-<code>s</code> values in signatures are valid (i.e. <code>s &lt;= secp256k1.n//2</code>); <code>s</code> can be replaced with <code>-s mod secp256k1.n</code> during the signing process if it is high. Given this, the first bit of <code>s</code> will always be <code>0</code>, and can be used to store the 1-bit <code>v</code> value.</p>
 <p><code>v</code> represents the parity of the <code>Y</code> component of the point, <code>0</code> for even and <code>1</code> for odd. The <code>X</code> component of the point is assumed to always be low, since <a href="https://bitcoin.stackexchange.com/a/38909">the possibility of it being high is negligible</a>.</p>
 <p>Putting it all together, the encoding for signatures is:</p>

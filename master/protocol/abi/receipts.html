@@ -371,7 +371,6 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <h2 id="messageout-receipt"><a class="header" href="#messageout-receipt">MessageOut Receipt</a></h2>
 <ul>
 <li><code>type</code>: <code>MessageOut</code>.</li>
-<li><code>messageID</code>: Hexadecimal string representation of the 256-bit (32-byte) message ID as described <a href="../id/utxo.html#message-id">here</a>.</li>
 <li><code>sender</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: <code>MEM[$fp, 32]</code>.</li>
 <li><code>recipient</code>: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: <code>MEM[$rA, 32]</code>.</li>
 <li><code>amount</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
@@ -382,7 +381,6 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;MessageOut&quot;,
-  &quot;messageID&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
   &quot;sender&quot;: &quot;0x38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff05139150017c9e&quot;,
   &quot;recipient&quot;: &quot;0x4710162c2e3a95a6faff05139150017c9e38e5e280432d546fae345d6ce6d8fe&quot;,
   &quot;amount&quot;: &quot;0xe6d8fe4710162c2e&quot;,
