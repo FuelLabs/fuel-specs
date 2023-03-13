@@ -255,7 +255,6 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ## MessageOut Receipt
 
 - `type`: `MessageOut`.
-- `messageID`: Hexadecimal string representation of the 256-bit (32-byte) message ID as described [here](../id/utxo.md#message-id).
 - `sender`: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: `MEM[$fp, 32]`.
 - `recipient`: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: `MEM[$rA, 32]`.
 - `amount`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rD`.
@@ -267,7 +266,6 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ```json
 {
   "type": "MessageOut",
-  "messageID": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
   "sender": "0x38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff05139150017c9e",
   "recipient": "0x4710162c2e3a95a6faff05139150017c9e38e5e280432d546fae345d6ce6d8fe",
   "amount": "0xe6d8fe4710162c2e",
