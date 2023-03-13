@@ -1282,6 +1282,12 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 Logs the memory range `MEM[$rC, $rD]`.
 
+Panics if:
+
+- `$rC + $rD` overflows
+- `$rA + $rD > VM_MAX_RAN`
+- `$rD > MEM_MAX_ACCESS_SIZE`
+
 ### MINT: Mint new coins
 
 |             |                                                      |
