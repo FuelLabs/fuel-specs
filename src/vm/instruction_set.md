@@ -713,7 +713,7 @@ Panic if:
 
 Panic if:
 
-- `$is + $rC * 4 > VM_MAX_RAM - 1`
+- `$is + $rC * 4 > VM_MAX_RAM - 1` and the jump would be performed (i.e. `$rA != $rB`)
 
 ### JNEI: Jump if not equal immediate
 
@@ -727,7 +727,7 @@ Panic if:
 
 Panic if:
 
-- `$is + imm * 4 > VM_MAX_RAM - 1`
+- `$is + imm * 4 > VM_MAX_RAM - 1` and the jump would be performed (i.e. `$rA != $rB`)
 
 ### JNZI: Jump if not zero immediate
 
@@ -741,7 +741,7 @@ Panic if:
 
 Panic if:
 
-- `$is + imm * 4 > VM_MAX_RAM - 1`
+- `$is + imm * 4 > VM_MAX_RAM - 1`and the jump would be performed (i.e. `$rA != $zero`)
 
 ### RET: Return from context
 
