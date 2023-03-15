@@ -3542,6 +3542,12 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 </tbody></table>
 </div>
 <p>Logs the memory range <code>MEM[$rC, $rD]</code>.</p>
+<p>Panics if:</p>
+<ul>
+<li><code>$rC + $rD</code> overflows</li>
+<li><code>$rA + $rD &gt; VM_MAX_RAN</code></li>
+<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
 <h3 id="mint-mint-new-coins"><a class="header" href="#mint-mint-new-coins">MINT: Mint new coins</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Mint <code>$rA</code> coins of the current contract's asset ID.</td></tr>
