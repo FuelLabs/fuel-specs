@@ -754,84 +754,84 @@ Panic if:
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rA + imm` instructions backwards.                                               |
-| Operation   | ```$pc -= ($rA + imm) * 4;```                                                          |
+| Operation   | ```$pc -= ($rA + imm + 1) * 4;```                                                      |
 | Syntax      | `jmpb $rA imm`                                                                         |
 | Encoding    | `0x00 rA i i i`                                                                        |
 | Notes       |                                                                                        |
 
 Panic if:
 
-- `$pc - ($rA + imm) * 4 < 0`
+- `$pc - ($rA + imm + 1) * 4 < 0`
 
 ### JMPF: Jump relative forwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rA + imm` instructions forwards.                                                |
-| Operation   | ```$pc += ($rA + imm) * 4;```                                                          |
+| Description | Jump `$rA + imm` instructions forwards                                                 |
+| Operation   | ```$pc += ($rA + imm + 1) * 4;```                                                      |
 | Syntax      | `jmpf $rA imm`                                                                         |
 | Encoding    | `0x00 rA i i i`                                                                        |
 | Notes       |                                                                                        |
 
 Panic if:
 
-- `$pc + ($rA + imm) * 4 > VM_MAX_RAM - 1`
+- `$pc + ($rA + imm + 1) * 4 > VM_MAX_RAM - 1`
 
 ### JNZB: Jump if not zero relative backwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rB + imm` instructions backwards if `$rA != $zero`.                             |
-| Operation   | `if $rA != $zero:`<br>`$pc -= ($rB + imm) * 4;`<br>`else:`<br>`$pc += 4;`              |
+| Operation   | `if $rA != $zero:`<br>`$pc -= ($rB + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`          |
 | Syntax      | `jnzb $rA $rB imm`                                                                     |
 | Encoding    | `0x00 rA rB i i`                                                                       |
 | Notes       |                                                                                        |
 
 Panic if:
 
-- `$pc - ($rB + imm) * 4 < 0`
+- `$pc - ($rB + imm + 1) * 4 < 0`
 
 ### JNZF: Jump if not zero relative forwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rB + imm` instructions forwards if `$rA != $zero`.                              |
-| Operation   | `if $rA != $zero:`<br>`$pc += ($rB + imm) * 4;`<br>`else:`<br>`$pc += 4;`              |
+| Operation   | `if $rA != $zero:`<br>`$pc += ($rB + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`          |
 | Syntax      | `jnzf $rA $rB imm`                                                                     |
 | Encoding    | `0x00 rA rB i i`                                                                       |
 | Notes       |                                                                                        |
 
 Panic if:
 
-- `$pc + ($rB + imm) * 4 > VM_MAX_RAM - 1`
+- `$pc + ($rB + imm + 1) * 4 > VM_MAX_RAM - 1`
 
 ### JEQB: Jump if not equal relative backwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rC + imm` instructions backwards if `$rA != $rB`.                               |
-| Operation   | ```if $rA != $rB:```<br>```$pc -= ($rC + imm) * 4;```<br>```else:```<br>```$pc += 4;```|
+| Operation   | `if $rA != $rB:`<br>`$pc -= ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
 | Syntax      | `jeqb $rA $rB $rC imm`                                                                 |
 | Encoding    | `0x00 rA rB rC i`                                                                      |
 | Notes       |                                                                                        |
 
 Panic if:
 
-- `$pc - ($rC + imm) * 4 < 0`
+- `$pc - ($rC + imm + 1) * 4 < 0`
 
 ### JEQF: Jump if not equal relative forwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rC + imm` instructions forwards if `$rA != $rB`.                                |
-| Operation   | ```if $rA != $rB:```<br>```$pc += ($rC + imm) * 4;```<br>```else:```<br>```$pc += 4;```|
+| Operation   | `if $rA != $rB:`<br>`$pc += ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
 | Syntax      | `jeqf $rA $rB $rC imm`                                                                 |
 | Encoding    | `0x00 rA rB rC i`                                                                      |
 | Notes       |                                                                                        |
 
 Panic if:
 
-- `$pc + ($rC + imm) * 4 > VM_MAX_RAM - 1`
+- `$pc + ($rC + imm + 1) * 4 > VM_MAX_RAM - 1`
 
 ### RET: Return from context
 
