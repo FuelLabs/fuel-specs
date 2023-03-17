@@ -188,7 +188,9 @@
 <li><a href="#memory-instructions">Memory Instructions</a>
 <ul>
 <li><a href="#aloc-allocate-memory">ALOC: Allocate memory</a></li>
+<li><a href="#cfe-extend-call-frame">CFE: Extend call frame</a></li>
 <li><a href="#cfei-extend-call-frame-immediate">CFEI: Extend call frame immediate</a></li>
+<li><a href="#cfs-shrink-call-frame">CFS: Shrink call frame</a></li>
 <li><a href="#cfsi-shrink-call-frame-immediate">CFSI: Shrink call frame immediate</a></li>
 <li><a href="#lb-load-byte">LB: Load byte</a></li>
 <li><a href="#lw-load-word">LW: Load word</a></li>
@@ -858,6 +860,20 @@
 <li><code>$hp - $rA</code> underflows</li>
 <li><code>$hp - $rA &lt; $sp</code></li>
 </ul>
+<h3 id="cfe-extend-call-frame"><a class="header" href="#cfe-extend-call-frame">CFE: Extend call frame</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Extend the current call frame's stack.</td></tr>
+<tr><td>Operation</td><td><code>$sp = $sp + $rA</code></td></tr>
+<tr><td>Syntax</td><td><code>cfei $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td>Does not initialize memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp + $rA</code> overflows</li>
+<li><code>$sp + $rA &gt; $hp</code></li>
+</ul>
 <h3 id="cfei-extend-call-frame-immediate"><a class="header" href="#cfei-extend-call-frame-immediate">CFEI: Extend call frame immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Extend the current call frame's stack by an immediate value.</td></tr>
@@ -871,6 +887,20 @@
 <ul>
 <li><code>$sp + imm</code> overflows</li>
 <li><code>$sp + imm &gt; $hp</code></li>
+</ul>
+<h3 id="cfs-shrink-call-frame"><a class="header" href="#cfs-shrink-call-frame">CFS: Shrink call frame</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Shrink the current call frame's stack.</td></tr>
+<tr><td>Operation</td><td><code>$sp = $sp - $rA</code></td></tr>
+<tr><td>Syntax</td><td><code>cfs $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 $rA - - -</code></td></tr>
+<tr><td>Notes</td><td>Does not clear memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp - $rA</code> underflows</li>
+<li><code>$sp - $rA &lt; $ssp</code></li>
 </ul>
 <h3 id="cfsi-shrink-call-frame-immediate"><a class="header" href="#cfsi-shrink-call-frame-immediate">CFSI: Shrink call frame immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
