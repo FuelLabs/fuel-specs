@@ -854,7 +854,6 @@ Panic if:
 - `$sp - $rA` underflows
 - `$sp - $rA < $ssp`
 
-
 ### CFSI: Shrink call frame immediate
 
 |             |                                                              |
