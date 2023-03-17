@@ -3027,7 +3027,7 @@ abi MyContract {
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$is + $rC * 4 &gt; VM_MAX_RAM - 1</code></li>
+<li><code>$is + $rC * 4 &gt; VM_MAX_RAM - 1</code> and the jump would be performed (i.e. <code>$rA != $rB</code>)</li>
 </ul>
 <h3 id="jnei-jump-if-not-equal-immediate"><a class="header" href="#jnei-jump-if-not-equal-immediate">JNEI: Jump if not equal immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -3040,7 +3040,7 @@ abi MyContract {
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code></li>
+<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code> and the jump would be performed (i.e. <code>$rA != $rB</code>)</li>
 </ul>
 <h3 id="jnzi-jump-if-not-zero-immediate"><a class="header" href="#jnzi-jump-if-not-zero-immediate">JNZI: Jump if not zero immediate</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -3053,7 +3053,7 @@ abi MyContract {
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code></li>
+<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code>and the jump would be performed (i.e. <code>$rA != $zero</code>)</li>
 </ul>
 <h3 id="ret-return-from-context"><a class="header" href="#ret-return-from-context">RET: Return from context</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
