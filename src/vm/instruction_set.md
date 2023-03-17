@@ -44,7 +44,7 @@
   - [ALOC: Allocate memory](#aloc-allocate-memory)
   - [CFE: Extend call frame](#cfe-extend-call-frame)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
-  - [CFS: Shrink call frame](#cfsi-shrink-call-frame)
+  - [CFS: Shrink call frame](#cfs-shrink-call-frame)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
