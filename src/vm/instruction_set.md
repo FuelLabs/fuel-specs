@@ -42,6 +42,7 @@
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
+  - [CFEI: Extend call frame](#cfe-extend-call-frame)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
@@ -806,6 +807,21 @@ Panic if:
 
 - `$hp - $rA` underflows
 - `$hp - $rA < $sp`
+
+### CFE: Extend call frame
+
+|             |                                        |
+|-------------|----------------------------------------|
+| Description | Extend the current call frame's stack. |
+| Operation   | ```$sp = $sp + $rA```                  |
+| Syntax      | `cfei $rA`                             |
+| Encoding    | `0x00 rA - - -`                        |
+| Notes       | Does not initialize memory.            |
+
+Panic if:
+
+- `$sp + $rA` overflows
+- `$sp + $rA > $hp`
 
 ### CFEI: Extend call frame immediate
 
