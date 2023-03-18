@@ -430,7 +430,7 @@
 <tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender.</td></tr>
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address or predicate root of the message recipient.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
-<tr><td><code>nonce</code></td><td><code>uint64</code></td><td>The message nonce.</td></tr>
+<tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>dataLength</code></td><td><code>uint16</code></td><td>Length of message data, in bytes.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
@@ -4067,7 +4067,7 @@ Use <a href="vm/instruction_set.html#ldc-load-code-from-an-external-contract"><c
 <tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x116</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
-<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x118</code></td><td><code>tx.inputs[$rB].nonce</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x118</code></td><td>Memory address of <code>tx.inputs[$rB].nonce</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
