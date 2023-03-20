@@ -2432,6 +2432,12 @@ abi MyContract {
 <li><a href="vm/instruction_set.html#jne-jump-if-not-equal">JNE: Jump if not equal</a></li>
 <li><a href="vm/instruction_set.html#jnei-jump-if-not-equal-immediate">JNEI: Jump if not equal immediate</a></li>
 <li><a href="vm/instruction_set.html#jnzi-jump-if-not-zero-immediate">JNZI: Jump if not zero immediate</a></li>
+<li><a href="vm/instruction_set.html#jmpb-jump-relative-backwards">JMPB: Jump relative backwards</a></li>
+<li><a href="vm/instruction_set.html#jmpf-jump-relative-forwards">JMPF: Jump relative forwards</a></li>
+<li><a href="vm/instruction_set.html#jnzb-jump-if-not-zero-relative-backwards">JNZB: Jump if not zero relative backwards</a></li>
+<li><a href="vm/instruction_set.html#jnzf-jump-if-not-zero-relative-forwards">JNZF: Jump if not zero relative forwards</a></li>
+<li><a href="vm/instruction_set.html#jeqb-jump-if-not-equal-relative-backwards">JEQB: Jump if not equal relative backwards</a></li>
+<li><a href="vm/instruction_set.html#jeqf-jump-if-not-equal-relative-forwards">JEQF: Jump if not equal relative forwards</a></li>
 <li><a href="vm/instruction_set.html#ret-return-from-context">RET: Return from context</a></li>
 </ul>
 </li>
@@ -3053,6 +3059,84 @@ abi MyContract {
 <p>Panic if:</p>
 <ul>
 <li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code>and the jump would be performed (i.e. <code>$rA != $zero</code>)</li>
+</ul>
+<h3 id="jmpb-jump-relative-backwards"><a class="header" href="#jmpb-jump-relative-backwards">JMPB: Jump relative backwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rA + imm</code> instructions backwards.</td></tr>
+<tr><td>Operation</td><td><code>$pc -= ($rA + imm + 1) * 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jmpb $rA imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc - ($rA + imm + 1) * 4 &lt; 0</code></li>
+</ul>
+<h3 id="jmpf-jump-relative-forwards"><a class="header" href="#jmpf-jump-relative-forwards">JMPF: Jump relative forwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rA + imm</code> instructions forwards</td></tr>
+<tr><td>Operation</td><td><code>$pc += ($rA + imm + 1) * 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jmpf $rA imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc + ($rA + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="jnzb-jump-if-not-zero-relative-backwards"><a class="header" href="#jnzb-jump-if-not-zero-relative-backwards">JNZB: Jump if not zero relative backwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rB + imm</code> instructions backwards if <code>$rA != $zero</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $zero:</code><br><code>$pc -= ($rB + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jnzb $rA $rB imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc - ($rB + imm + 1) * 4 &lt; 0</code></li>
+</ul>
+<h3 id="jnzf-jump-if-not-zero-relative-forwards"><a class="header" href="#jnzf-jump-if-not-zero-relative-forwards">JNZF: Jump if not zero relative forwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rB + imm</code> instructions forwards if <code>$rA != $zero</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $zero:</code><br><code>$pc += ($rB + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jnzf $rA $rB imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc + ($rB + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="jeqb-jump-if-not-equal-relative-backwards"><a class="header" href="#jeqb-jump-if-not-equal-relative-backwards">JEQB: Jump if not equal relative backwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rC + imm</code> instructions backwards if <code>$rA != $rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc -= ($rC + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jeqb $rA $rB $rC imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc - ($rC + imm + 1) * 4 &lt; 0</code></li>
+</ul>
+<h3 id="jeqf-jump-if-not-equal-relative-forwards"><a class="header" href="#jeqf-jump-if-not-equal-relative-forwards">JEQF: Jump if not equal relative forwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rC + imm</code> instructions forwards if <code>$rA != $rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc += ($rC + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jeqf $rA $rB $rC imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc + ($rC + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
 </ul>
 <h3 id="ret-return-from-context"><a class="header" href="#ret-return-from-context">RET: Return from context</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
