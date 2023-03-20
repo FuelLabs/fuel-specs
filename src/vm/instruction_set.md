@@ -48,7 +48,9 @@
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
+  - [CFE: Extend call frame](#cfe-extend-call-frame)
   - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
+  - [CFS: Shrink call frame](#cfs-shrink-call-frame)
   - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [LB: Load byte](#lb-load-byte)
   - [LW: Load word](#lw-load-word)
@@ -719,7 +721,7 @@ Panic if:
 
 Panic if:
 
-- `$is + $rC * 4 > VM_MAX_RAM - 1`
+- `$is + $rC * 4 > VM_MAX_RAM - 1` and the jump would be performed (i.e. `$rA != $rB`)
 
 ### JNEI: Jump if not equal immediate
 
@@ -733,7 +735,7 @@ Panic if:
 
 Panic if:
 
-- `$is + imm * 4 > VM_MAX_RAM - 1`
+- `$is + imm * 4 > VM_MAX_RAM - 1` and the jump would be performed (i.e. `$rA != $rB`)
 
 ### JNZI: Jump if not zero immediate
 
@@ -747,7 +749,7 @@ Panic if:
 
 Panic if:
 
-- `$is + imm * 4 > VM_MAX_RAM - 1`
+- `$is + imm * 4 > VM_MAX_RAM - 1`and the jump would be performed (i.e. `$rA != $zero`)
 
 ### JMPB: Jump relative backwards
 
@@ -897,6 +899,21 @@ Panic if:
 - `$hp - $rA` underflows
 - `$hp - $rA < $sp`
 
+### CFE: Extend call frame
+
+|             |                                        |
+|-------------|----------------------------------------|
+| Description | Extend the current call frame's stack. |
+| Operation   | ```$sp = $sp + $rA```                  |
+| Syntax      | `cfei $rA`                             |
+| Encoding    | `0x00 rA - - -`                        |
+| Notes       | Does not initialize memory.            |
+
+Panic if:
+
+- `$sp + $rA` overflows
+- `$sp + $rA > $hp`
+
 ### CFEI: Extend call frame immediate
 
 |             |                                                              |
@@ -911,6 +928,21 @@ Panic if:
 
 - `$sp + imm` overflows
 - `$sp + imm > $hp`
+
+### CFS: Shrink call frame
+
+|             |                                        |
+|-------------|----------------------------------------|
+| Description | Shrink the current call frame's stack. |
+| Operation   | ```$sp = $sp - $rA```                  |
+| Syntax      | `cfs $rA`                              |
+| Encoding    | `0x00 $rA - - -`                       |
+| Notes       | Does not clear memory.                 |
+
+Panic if:
+
+- `$sp - $rA` underflows
+- `$sp - $rA < $ssp`
 
 ### CFSI: Shrink call frame immediate
 
@@ -1925,7 +1957,7 @@ Get [fields from the transaction](../protocol/tx_format/transaction.md).
 | `GTF_INPUT_MESSAGE_SENDER`                | `0x115` | Memory address of `tx.inputs[$rB].sender`        |
 | `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
 | `GTF_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
-| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | `tx.inputs[$rB].nonce`                           |
+| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | Memory address of `tx.inputs[$rB].nonce`         |
 | `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x119` | `tx.inputs[$rB].witnessIndex`                    |
 | `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11A` | `tx.inputs[$rB].dataLength`                      |
 | `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11B` | `tx.inputs[$rB].predicateLength`                 |
