@@ -109,7 +109,7 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/index.md) or [`In
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to the minimum of `tx.gasLimit` or `MAX_GAS_PER_PREDICATE`.
 
 Predicate estimation will fail if gas is exhausted during execution.
 
