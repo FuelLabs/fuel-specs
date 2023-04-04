@@ -233,7 +233,7 @@
 <p>For each such input in the transaction, the VM is <a href="#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
-<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code>.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to the minimum of <code>tx.gasLimit</code> or <code>MAX_GAS_PER_PREDICATE</code>.</li>
 </ol>
 <p>Predicate estimation will fail if gas is exhausted during execution.</p>
 <p>During predicate mode, hitting any of the following instructions causes predicate estimation to halt, returning Boolean <code>false</code>:</p>
