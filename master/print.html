@@ -2466,7 +2466,7 @@ abi MyContract {
 <li><a href="vm/instruction_set.html#bhsh-block-hash">BHSH: Block hash</a></li>
 <li><a href="vm/instruction_set.html#burn-burn-existing-coins">BURN: Burn existing coins</a></li>
 <li><a href="vm/instruction_set.html#call-call-contract">CALL: Call contract</a></li>
-<li><a href="vm/instruction_set.html#cb-block-proposer-address">CB: Block proposer address</a></li>
+<li><a href="vm/instruction_set.html#cb-coinbase-address">CB: Coinbase address</a></li>
 <li><a href="vm/instruction_set.html#ccp-code-copy">CCP: Code copy</a></li>
 <li><a href="vm/instruction_set.html#croo-code-merkle-root">CROO: Code Merkle root</a></li>
 <li><a href="vm/instruction_set.html#csiz-code-size">CSIZ: Code size</a></li>
@@ -3517,9 +3517,9 @@ abi MyContract {
 <li><code>$cgas = $rD</code> or all available gas (forward gas)</li>
 </ol>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
-<h3 id="cb-block-proposer-address"><a class="header" href="#cb-block-proposer-address">CB: Block proposer address</a></h3>
+<h3 id="cb-coinbase-address"><a class="header" href="#cb-coinbase-address">CB: Coinbase address</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Get block proposer address.</td></tr>
+<tr><td>Description</td><td>Get the <a href="vm/./../protocol/tx_validity.html#coinbase-transaction">coinbase address</a> associated with the block proposer.</td></tr>
 <tr><td>Operation</td><td><code>MEM[$rA, 32] = coinbase();</code></td></tr>
 <tr><td>Syntax</td><td><code>cb $rA</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
