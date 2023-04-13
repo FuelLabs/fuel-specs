@@ -663,7 +663,7 @@ Panic if:
 ### WDCM: 128-bit integer comparison
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Compare two 128-bit integers using selected compare mode                              |
 | Operation   | `b = mem[$rB,16]`<br>;`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);`         |
 | Syntax      | `wdcm $rA, $rB, $rC, imm`                                                             |
@@ -702,7 +702,7 @@ Panic if:
 ### WQCM: 256-bit integer comparison
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Compare two 256-bit integers using selected compare mode                              |
 | Operation   | `b = mem[$rB,32]`<br>;`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);`         |
 | Syntax      | `wqcm $rA, $rB, $rC, imm`                                                             |
@@ -719,11 +719,10 @@ Panic if:
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
 
-
 ### WDOP: Misc 128-bit integer operations
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Perform an ALU operation on two 128-bit integers                                      |
 | Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = op(b,c);`     |
 | Syntax      | `wdop $rA, $rB, $rC, imm`                                                             |
@@ -762,7 +761,7 @@ Panic if:
 ### WQOP: Misc 256-bit integer operations
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Perform an ALU operation on two 256-bit integers                                      |
 | Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = op(b,c);`     |
 | Syntax      | `wqop $rA, $rB, $rC, imm`                                                             |
@@ -782,7 +781,7 @@ Panic if:
 ### WDML: Multiply 128-bit integers
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Perform integer multiplication operation on two 128-bit integers.                     |
 | Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;`|
 | Syntax      | `wdml $rA, $rB, $rC, imm`                                                             |
@@ -810,7 +809,7 @@ Panic if:
 ### WQML: Multiply 128-bit integers
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Perform integer multiplication operation on two 256-bit integers.                     |
 | Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;`|
 | Syntax      | `wqml $rA, $rB, $rC, imm`                                                             |
@@ -832,7 +831,7 @@ Panic if:
 ### WDDV: 128-bit integer division
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Divide a 128-bit integer by another.                                                  |
 | Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = b / c;`       |
 | Syntax      | `wddv $rA, $rB, $rC, imm`                                                             |
@@ -859,7 +858,7 @@ Panic if:
 ### WQDV: 256-bit integer division
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Divide a 256-bit integer by another.                                                  |
 | Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = b / c;`       |
 | Syntax      | `wqdv $rA, $rB, $rC, imm`                                                             |
@@ -881,7 +880,7 @@ Panic if:
 ### WDAM: Modular 128-bit integer addition
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Add two 128-bit integers and compute modulo remainder with arbitrary precision.       |
 | Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b+c)%d;`  |
 | Syntax      | `wdam $rA, $rB, $rC, $rD`                                                             |
@@ -897,11 +896,10 @@ Panic if:
 - `$rC + 16` overflows or `> VM_MAX_RAM`
 - `$rD + 16` overflows or `> VM_MAX_RAM`
 
-
 ### WQAM: Modular 256-bit integer addition
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Add two 256-bit integers and compute modulo remainder with arbitrary precision.       |
 | Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b+c)%d;`  |
 | Syntax      | `wdam $rA, $rB, $rC, $rD`                                                             |
@@ -920,7 +918,7 @@ Panic if:
 ### WDMM: Modular 128-bit integer multiplication
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Multiply two 128-bit integers and compute modulo remainder with arbitrary precision.  |
 | Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b*c)%d;`  |
 | Syntax      | `wdmm $rA, $rB, $rC, $rD`                                                             |
@@ -939,7 +937,7 @@ Panic if:
 ### WQMM: Modular 256-bit integer multiplication
 
 |             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------| 
+|-------------|---------------------------------------------------------------------------------------|
 | Description | Multiply two 256-bit integers and compute modulo remainder with arbitrary precision.  |
 | Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b*c)%d;`  |
 | Syntax      | `wqmm $rA, $rB, $rC, $rD`                                                             |
@@ -954,7 +952,6 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$rD + 32` overflows or `> VM_MAX_RAM`
-
 
 ### XOR: XOR
 
