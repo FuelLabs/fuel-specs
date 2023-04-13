@@ -31,6 +31,19 @@
   - [SRLI: Shift right logical immediate](#srli-shift-right-logical-immediate)
   - [SUB: Subtract](#sub-subtract)
   - [SUBI: Subtract immediate](#subi-subtract-immediate)
+  - [SUBI: Subtract immediate](#subi-subtract-immediate)
+  - [WDCM: 128-bit integer comparison](#wdcm-128-bit-integer-comparison)
+  - [WQCM: 256-bit integer comparison](#wqcm-256-bit-integer-comparison)
+  - [WDOP: Misc 128-bit integer operations](#wdop-misc-128-bit-integer-operations)
+  - [WQOP: Misc 256-bit integer operations](#wqop-misc-256-bit-integer-operations)
+  - [WDML: Multiply 128-bit integers](#wdml-multiply-128-bit-integers)
+  - [WQML: Multiply 128-bit integers](#wqml-multiply-128-bit-integers)
+  - [WDDV: 128-bit integer division](#wddv-128-bit-integer-division)
+  - [WQDV: 256-bit integer division](#wqdv-256-bit-integer-division)
+  - [WDAM: Modular 128-bit integer addition](#wdam-modular-128-bit-integer-addition)
+  - [WQAM: Modular 256-bit integer addition](#wqam-modular-256-bit-integer-addition)
+  - [WDMM: Modular 128-bit integer multiplication](#wdmm-modular-128-bit-integer-multiplication)
+  - [WQMM: Modular 256-bit integer multiplication](#wqmm-modular-256-bit-integer-multiplication)
   - [XOR: XOR](#xor-xor)
   - [XORI: XOR immediate](#xori-xor-immediate)
 - [Control Flow Instructions](#control-flow-instructions)
@@ -646,6 +659,302 @@ Panic if:
 `$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
 
 `$err` is cleared.
+
+### WDCM: 128-bit integer comparison
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Compare two 128-bit integers using selected compare mode                              |
+| Operation   | `b = mem[$rB,16]`<br>;`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);`         |
+| Syntax      | `wdcm $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The six-bit immediate value is used to select operating mode, as follows:
+
+Bits     | Short name | Description
+---------|------------|-------------
+`...XXX` | `mode`     | Compre mode selection
+`.XX...` | `reserved` | Reserved and must be zero
+`X.....` | `indirect` | Is rhs operand ($rC) indirect or not
+
+Then the actual comparison that's performed:
+
+`mode`| Name | Description
+------|------|------------
+0     | eq   | Equality (`==`)
+1     | ne   | Inequality (`!=`)
+2     | lt   | Less than (`<`)
+3     | gt   | Greater than (`>`)
+4     | le   | Less than or equals (`>=`)
+5     | ge   | Greater than or equals (`>=`)
+6     | ao   | Sum of the values would overflow
+7     | mo   | Product of the values would overflow
+
+Clears `$of` and `$err`.
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
+
+### WQCM: 256-bit integer comparison
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Compare two 256-bit integers using selected compare mode                              |
+| Operation   | `b = mem[$rB,32]`<br>;`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);`         |
+| Syntax      | `wqcm $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The immediate value is interpreted identically to `WDCM`.
+
+Clears `$of` and `$err`.
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
+
+
+### WDOP: Misc 128-bit integer operations
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Perform an ALU operation on two 128-bit integers                                      |
+| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = op(b,c);`     |
+| Syntax      | `wdop $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The six-bit immediate value is used to select operating mode, as follows:
+
+Bits     | Short name | Description
+---------|------------|-------------
+`...XXX` | `op`       | Operation selection, see below
+`.XX...` | `reserved` | Reserved and must be zero
+`X.....` | `indirect` | Is rhs operand ($rC) indirect or not
+
+Then the actual operation that's performed:
+
+`op` | Name | Description
+-----|------|------------
+0    | add  | Add
+1    | sub  | Subtract
+2    | not  | Invert bits (discards rhs)
+3    | or   | Bitwise or
+4    | xor  | Bitwise exclusive or
+5    | and  | Bitwise and
+6    | shl  | Shift left
+7    | shr  | Shift right
+
+Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
+
+Panic if:
+
+- The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
+
+### WQOP: Misc 256-bit integer operations
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Perform an ALU operation on two 256-bit integers                                      |
+| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = op(b,c);`     |
+| Syntax      | `wqop $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The immediate value is interpreted identically to `WQOP`.
+
+Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
+
+Panic if:
+
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
+
+### WDML: Multiply 128-bit integers
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Perform integer multiplication operation on two 128-bit integers.                     |
+| Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;`|
+| Syntax      | `wdml $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The six-bit immediate value is used to select operating mode, as follows:
+
+Bits     | Short name | Description
+---------|------------|-------------
+`..XXXX` | `reserved` | Reserved and must be zero
+`.X....` | `indirect0`| Is lhs operand ($rB) indirect or not
+`X.....` | `indirect1`| Is rhs operand ($rC) indirect or not
+
+`$of` is set to `1` in case of overflow, and cleared otherwise.
+
+`$err` is cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
+- `indirect0 == 1` and `$rB + 16` overflows or `> VM_MAX_RAM`
+- `indirect1 == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
+
+### WQML: Multiply 128-bit integers
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Perform integer multiplication operation on two 256-bit integers.                     |
+| Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;`|
+| Syntax      | `wqml $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The immediate value is interpreted identically to `WDML`.
+
+`$of` is set to `1` in case of overflow, and cleared otherwise.
+
+`$err` is cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+- `indirect0 == 1` and `$rB + 32` overflows or `> VM_MAX_RAM`
+- `indirect1 == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
+
+### WDDV: 128-bit integer division
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Divide a 128-bit integer by another.                                                  |
+| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = b / c;`       |
+| Syntax      | `wddv $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The six-bit immediate value is used to select operating mode, as follows:
+
+Bits     | Short name | Description
+---------|------------|-------------
+`.XXXXX` | `reserved` | Reserved and must be zero
+`X.....` | `indirect` | Is rhs operand ($rC) indirect or not
+
+`$of` is cleared.
+
+If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
+
+### WQDV: 256-bit integer division
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Divide a 256-bit integer by another.                                                  |
+| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = b / c;`       |
+| Syntax      | `wqdv $rA, $rB, $rC, imm`                                                             |
+| Encoding    | `0x00 rA rB rC i`                                                                     |
+| Notes       |                                                                                       |
+
+The immediate value is interpreted identically to `WDDV`.
+
+`$of` is cleared.
+
+If the rhs operand is zero, `MEM[$rA, 32]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
+
+### WDAM: Modular 128-bit integer addition
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Add two 128-bit integers and compute modulo remainder with arbitrary precision.       |
+| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b+c)%d;`  |
+| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       |                                                                                       |
+
+`$err` and `$of` are cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `$rC + 16` overflows or `> VM_MAX_RAM`
+- `$rD + 16` overflows or `> VM_MAX_RAM`
+
+
+### WQAM: Modular 256-bit integer addition
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Add two 256-bit integers and compute modulo remainder with arbitrary precision.       |
+| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b+c)%d;`  |
+| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       |                                                                                       |
+
+`$err` and `$of` are cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rD + 32` overflows or `> VM_MAX_RAM`
+
+### WDMM: Modular 128-bit integer multiplication
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Multiply two 128-bit integers and compute modulo remainder with arbitrary precision.  |
+| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b*c)%d;`  |
+| Syntax      | `wdmm $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       |                                                                                       |
+
+`$err` and `$of` are cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `$rC + 16` overflows or `> VM_MAX_RAM`
+- `$rD + 16` overflows or `> VM_MAX_RAM`
+
+### WQMM: Modular 256-bit integer multiplication
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------| 
+| Description | Multiply two 256-bit integers and compute modulo remainder with arbitrary precision.  |
+| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b*c)%d;`  |
+| Syntax      | `wqmm $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       |                                                                                       |
+
+`$err` and `$of` are cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rD + 32` overflows or `> VM_MAX_RAM`
+
 
 ### XOR: XOR
 
