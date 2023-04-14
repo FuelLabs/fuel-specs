@@ -688,13 +688,14 @@ Then the actual comparison that's performed:
 3     | gt   | Greater than (`>`)
 4     | le   | Less than or equals (`>=`)
 5     | ge   | Greater than or equals (`>=`)
-6     | ao   | Sum of the values would overflow
-7     | mo   | Product of the values would overflow
+6     | -    | *Reserved*
+7     | -    | *Reserved*
 
 Clears `$of` and `$err`.
 
 Panic if:
 
+- A reserved compare mode is given
 - `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
@@ -715,6 +716,7 @@ Clears `$of` and `$err`.
 
 Panic if:
 
+- A reserved compare mode is given
 - `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
@@ -754,6 +756,7 @@ Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
 
 Panic if:
 
+- Reserved bits of the immediate are set
 - The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
@@ -774,6 +777,7 @@ Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
 
 Panic if:
 
+- Reserved bits of the immediate are set
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
@@ -802,6 +806,7 @@ Bits     | Short name | Description
 
 Panic if:
 
+- Reserved bits of the immediate are set
 - The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
 - `indirect0 == 1` and `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect1 == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
@@ -824,6 +829,7 @@ The immediate value is interpreted identically to `WDML`.
 
 Panic if:
 
+- Reserved bits of the immediate are set
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - `indirect0 == 1` and `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect1 == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
@@ -851,6 +857,7 @@ If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true
 
 Panic if:
 
+- Reserved bits of the immediate are set
 - The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
@@ -873,6 +880,7 @@ If the rhs operand is zero, `MEM[$rA, 32]` is cleared and `$err` is set to `true
 
 Panic if:
 
+- Reserved bits of the immediate are set
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
