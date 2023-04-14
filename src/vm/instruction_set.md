@@ -716,8 +716,8 @@ Clears `$of` and `$err`.
 Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
-- `$rB + 16` overflows or `> VM_MAX_RAM`
-- `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
 
 ### WDOP: Misc 128-bit integer operations
 
