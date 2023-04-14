@@ -37,7 +37,7 @@
   - [WDOP: Misc 128-bit integer operations](#wdop-misc-128-bit-integer-operations)
   - [WQOP: Misc 256-bit integer operations](#wqop-misc-256-bit-integer-operations)
   - [WDML: Multiply 128-bit integers](#wdml-multiply-128-bit-integers)
-  - [WQML: Multiply 128-bit integers](#wqml-multiply-128-bit-integers)
+  - [WQML: Multiply 256-bit integers](#wqml-multiply-256-bit-integers)
   - [WDDV: 128-bit integer division](#wddv-128-bit-integer-division)
   - [WQDV: 256-bit integer division](#wqdv-256-bit-integer-division)
   - [WDAM: Modular 128-bit integer addition](#wdam-modular-128-bit-integer-addition)
