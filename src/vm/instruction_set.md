@@ -806,12 +806,12 @@ Panic if:
 - `indirect0 == 1` and `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect1 == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
 
-### WQML: Multiply 128-bit integers
+### WQML: Multiply 256-bit integers
 
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
 | Description | Perform integer multiplication operation on two 256-bit integers.                     |
-| Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;`|
+| Operation   | `b=indirect0?mem[$rB,32]:$rB;`<br>`c=indirect1?mem[$rC,32]:$rC;`<br>`mem[$rA,32]=b*c;`|
 | Syntax      | `wqml $rA, $rB, $rC, imm`                                                             |
 | Encoding    | `0x00 rA rB rC i`                                                                     |
 | Notes       |                                                                                       |
