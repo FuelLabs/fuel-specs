@@ -688,8 +688,8 @@ Then the actual comparison that's performed:
 3     | gt   | Greater than (`>`)
 4     | le   | Less than or equals (`>=`)
 5     | ge   | Greater than or equals (`>=`)
-6     | -    | *Reserved*
-7     | -    | *Reserved*
+6     | -    | Reserved and must not be used
+7     | -    | Reserved and must not be used
 
 Clears `$of` and `$err`.
 
