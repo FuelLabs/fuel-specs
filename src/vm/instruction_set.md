@@ -895,7 +895,9 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                                                    |
 | Notes       |                                                                                       |
 
-`$err` and `$of` are cleared.
+`$of` is cleared.
+
+If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
 
 Panic if:
 
@@ -914,7 +916,9 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                                                    |
 | Notes       |                                                                                       |
 
-`$err` and `$of` are cleared.
+`$of` is cleared.
+
+If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
 
 Panic if:
 
@@ -933,7 +937,9 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                                                    |
 | Notes       |                                                                                       |
 
-`$err` and `$of` are cleared.
+`$of` is cleared.
+
+If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
 
 Panic if:
 
@@ -952,7 +958,9 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                                                    |
 | Notes       |                                                                                       |
 
-`$err` and `$of` are cleared.
+`$of` is cleared.
+
+If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
 
 Panic if:
 
