@@ -674,7 +674,7 @@ The six-bit immediate value is used to select operating mode, as follows:
 
 Bits     | Short name | Description
 ---------|------------|-------------
-`...XXX` | `mode`     | Compre mode selection
+`...XXX` | `mode`     | Compare mode selection
 `.XX...` | `reserved` | Reserved and must be zero
 `X.....` | `indirect` | Is rhs operand ($rC) indirect or not
 
