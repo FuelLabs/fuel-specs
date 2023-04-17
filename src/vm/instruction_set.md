@@ -40,6 +40,8 @@
   - [WQML: Multiply 256-bit integers](#wqml-multiply-256-bit-integers)
   - [WDDV: 128-bit integer division](#wddv-128-bit-integer-division)
   - [WQDV: 256-bit integer division](#wqdv-256-bit-integer-division)
+  - [WDMD: 128-bit integer fused multiply-divide](#wdmd-128-bit-integer-fused-multiply-divide)
+  - [WQMD: 256-bit integer fused multiply-divide](#wqmd-256-bit-integer-fused-multiply-divide)
   - [WDAM: Modular 128-bit integer addition](#wdam-modular-128-bit-integer-addition)
   - [WQAM: Modular 256-bit integer addition](#wqam-modular-256-bit-integer-addition)
   - [WDMM: Modular 128-bit integer multiplication](#wdmm-modular-128-bit-integer-multiplication)
@@ -749,8 +751,8 @@ Then the actual operation that's performed:
 3    | or   | Bitwise or
 4    | xor  | Bitwise exclusive or
 5    | and  | Bitwise and
-6    | shl  | Shift left
-7    | shr  | Shift right
+6    | shl  | Shift left (logical)
+7    | shr  | Shift right (logical)
 
 Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
 
@@ -884,6 +886,52 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
+
+### WDMD: 128-bit integer fused multiply-divide
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------|
+| Description | Combined multiply-divide of 128-bit integers with arbitrary precision.                |
+| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16]=(b * c) / d;`|
+| Syntax      | `wddv $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       | Division by zero is treated as division by `1 << 128` instead.                        |
+
+If the divisor `MEM[$rA, 16]` is zero, then instead the value is divided by `1 << 128`. This returns the higher half of the 256-bit multiplication result.
+
+If the result of after the division is larger than operand size, `$of` is set to one. Otherwise, `$of` is cleared.
+
+`$err` is cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 16]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 16` overflows or `> VM_MAX_RAM`
+- `$rC + 16` overflows or `> VM_MAX_RAM`
+- `$rD + 16` overflows or `> VM_MAX_RAM`
+
+### WQMD: 256-bit integer fused multiply-divide
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------|
+| Description | Combined multiply-divide of 256-bit integers with arbitrary precision.                |
+| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32]=(b * c) / d;`|
+| Syntax      | `wqdv $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       | Division by zero is treated as division by `1 << 256` instead.                        |
+
+If the divisor `MEM[$rA, 32]` is zero, then instead the value is divided by `1 << 256`. This returns the higher half of the 512-bit multiplication result.
+
+If the result of after the division is larger than operand size, `$of` is set to one. Otherwise, `$of` is cleared.
+
+`$err` is cleared.
+
+Panic if:
+
+- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rD + 32` overflows or `> VM_MAX_RAM`
 
 ### WDAM: Modular 128-bit integer addition
 
