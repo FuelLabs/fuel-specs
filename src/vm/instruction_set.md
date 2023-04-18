@@ -21,6 +21,7 @@
   - [MROO: Math root](#mroo-math-root)
   - [MUL: Multiply](#mul-multiply)
   - [MULI: Multiply immediate](#muli-multiply-immediate)
+  - [MLDV: Fused multiply-divide](#mldv-fused-multiply-divide)
   - [NOOP: No operation](#noop-no-operation)
   - [NOT: Invert](#not-invert)
   - [OR: OR](#or-or)
@@ -493,6 +494,22 @@ Panic if:
 - `$rA` is a [reserved register](./index.md#semantics)
 
 `$of` is assigned the overflow of the operation.
+
+`$err` is cleared.
+
+### MLDV: Fused multiply-divide
+
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------|
+| Description | Multiplies two registers with arbitrary precision, then divides by a third register.  |
+| Operation   | `a = (b * c) / d;`                                                                    |
+| Syntax      | `wqdv $rA, $rB, $rC, $rD`                                                             |
+| Encoding    | `0x00 rA rB rC rD`                                                                    |
+| Notes       | Division by zero is treated as division by `1 << 64` instead.                         |
+
+If the divisor (`$rD`) is zero, then instead the value is divided by `1 << 64`. This returns the higher half of the 128-bit multiplication result. This operation never overflows.
+
+If the result of after the division doesn't fit into a register, `$of` is assigned the overflow of the operation. Otherwise, `$of` is cleared.
 
 `$err` is cleared.
 
