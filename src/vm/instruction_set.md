@@ -503,7 +503,7 @@ Panic if:
 |-------------|---------------------------------------------------------------------------------------|
 | Description | Multiplies two registers with arbitrary precision, then divides by a third register.  |
 | Operation   | `a = (b * c) / d;`                                                                    |
-| Syntax      | `wqdv $rA, $rB, $rC, $rD`                                                             |
+| Syntax      | `mldv $rA, $rB, $rC, $rD`                                                             |
 | Encoding    | `0x00 rA rB rC rD`                                                                    |
 | Notes       | Division by zero is treated as division by `1 << 64` instead.                         |
 
@@ -683,7 +683,7 @@ Panic if:
 
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
-| Description | Compare two 128-bit integers using selected compare mode                              |
+| Description | Compare or examine two 128-bit integers using selected mode                           |
 | Operation   | `b = mem[$rB,16]`<br>;`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);`         |
 | Syntax      | `wdcm $rA, $rB, $rC, imm`                                                             |
 | Encoding    | `0x00 rA rB rC i`                                                                     |
@@ -697,7 +697,7 @@ Bits     | Short name | Description
 `.XX...` | `reserved` | Reserved and must be zero
 `X.....` | `indirect` | Is rhs operand ($rC) indirect or not
 
-Then the actual comparison that's performed:
+Then the actual operation that's performed:
 
 `mode`| Name | Description
 ------|------|------------
@@ -705,10 +705,12 @@ Then the actual comparison that's performed:
 1     | ne   | Inequality (`!=`)
 2     | lt   | Less than (`<`)
 3     | gt   | Greater than (`>`)
-4     | le   | Less than or equals (`>=`)
-5     | ge   | Greater than or equals (`>=`)
-6     | -    | Reserved and must not be used
+4     | lte  | Less than or equals (`>=`)
+5     | gte  | Greater than or equals (`>=`)
+6     | lzc  | Leading zero count the lhs argument (`lzcnt`). Discards rhs.
 7     | -    | Reserved and must not be used
+
+The leading zero count can be used to compute rounded-down log2 of a number using the following formula `TOTAL_BITS - 1 - lzc(n)`. Note that `log2(0)` is undefined, and will lead to integer overflow with this method.
 
 Clears `$of` and `$err`.
 
@@ -723,7 +725,7 @@ Panic if:
 
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
-| Description | Compare two 256-bit integers using selected compare mode                              |
+| Description | Compare or examine two 256-bit integers using selected mode                           |
 | Operation   | `b = mem[$rB,32]`<br>;`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);`         |
 | Syntax      | `wqcm $rA, $rB, $rC, imm`                                                             |
 | Encoding    | `0x00 rA rB rC i`                                                                     |
