@@ -87,7 +87,9 @@
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
-  - [ECR: Signature recovery](#ecr-signature-recovery)
+  - [ECR: Secp251k1 Signature recovery](#ecr-signature-recovery)
+  - [ECR1: Secp256r1 Signature Recovery](#secp256r1-signature-recovery)
+  - [ED19: ED25519 Signature Recovery](#ed25519-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
@@ -1764,7 +1766,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ECR: Signature recovery
+### ECR: Secp256k1 Signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
@@ -1789,6 +1791,54 @@ Signatures and signature verification are specified [here](../protocol/cryptogra
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
 To get the address from the public key, hash the public key with [SHA-2-256](#s256-sha-2-256).
+
+### ECR1: Secp256r1 Signature recovery
+
+|             |                                                                                                                             |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```MEM[$rA, 64] = recover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
+| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+Panic if:
+
+- `$rA + 64` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 64 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
+
+Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+
+If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
+
+### ED19: Ed25519 Signature recovery
+
+|             |                                                                                                                             |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Description | The 32-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```MEM[$rA, 32] = recover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
+| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 32]` does not pass [ownership check](./index.md#ownership)
+
+Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+
+If the signature cannot be verified, `MEM[$rA, 32]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
 ### K256: keccak-256
 
