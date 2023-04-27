@@ -194,8 +194,8 @@
 <p>Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-byte values. Each contract has its own persistent state that is independent of other contracts. This is committed to in a Sparse Binary Merkle Tree.</p>
 <h2 id="flags"><a class="header" href="#flags">Flags</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>value</th><th>name</th><th>description</th></tr></thead><tbody>
-<tr><td><code>0x01</code></td><td><code>F_UNSAFEMATH</code></td><td>If bit is set, safe arithmetic and logic is disabled.</td></tr>
-<tr><td><code>0x02</code></td><td><code>F_WRAPPING</code></td><td>If bit is set, wrapping does not cause panic.</td></tr>
+<tr><td><code>0x01</code></td><td><code>F_UNSAFEMATH</code></td><td>If set, undefined arithmetic zeroes target and sets <code>$err</code> without panic.</td></tr>
+<tr><td><code>0x02</code></td><td><code>F_WRAPPING</code></td><td>If set, overflowing arithmetic wraps around and sets <code>$of</code> without panic.</td></tr>
 </tbody></table>
 </div>
 <p>All other flags are reserved, any must be set to zero.</p>

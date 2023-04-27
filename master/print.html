@@ -2284,8 +2284,8 @@ abi MyContract {
 <p>Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-byte values. Each contract has its own persistent state that is independent of other contracts. This is committed to in a Sparse Binary Merkle Tree.</p>
 <h2 id="flags"><a class="header" href="#flags">Flags</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>value</th><th>name</th><th>description</th></tr></thead><tbody>
-<tr><td><code>0x01</code></td><td><code>F_UNSAFEMATH</code></td><td>If bit is set, safe arithmetic and logic is disabled.</td></tr>
-<tr><td><code>0x02</code></td><td><code>F_WRAPPING</code></td><td>If bit is set, wrapping does not cause panic.</td></tr>
+<tr><td><code>0x01</code></td><td><code>F_UNSAFEMATH</code></td><td>If set, undefined arithmetic zeroes target and sets <code>$err</code> without panic.</td></tr>
+<tr><td><code>0x02</code></td><td><code>F_WRAPPING</code></td><td>If set, overflowing arithmetic wraps around and sets <code>$of</code> without panic.</td></tr>
 </tbody></table>
 </div>
 <p>All other flags are reserved, any must be set to zero.</p>
@@ -2541,8 +2541,12 @@ abi MyContract {
 <p>If an instruction is not annotated with an effect, it means it does not produce any of the aforementioned affects.</p>
 <h2 id="arithmeticlogic-alu-instructions"><a class="header" href="#arithmeticlogic-alu-instructions">Arithmetic/Logic (ALU) Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
-<p>If the <a href="vm/./index.html#flags"><code>F_UNSAFEMATH</code></a> flag is set, an <code>ALU</code> operation that would have panicked will instead set <code>$err</code> to <code>true</code>.</p>
-<p>If the <a href="vm/./index.html#flags"><code>F_WRAPPING</code></a> flag is set, an <code>ALU</code> operation that would have panicked will instead set <code>$of</code> to the overflow of the operation.</p>
+<p>Normally, if the result of an ALU operation is mathematically undefined (e.g. dividing by zero),
+the VM panics. However, if the <a href="vm/./index.html#flags"><code>F_UNSAFEMATH</code></a> flag is set, <code>$err</code> is set to <code>true</code>
+and execution continues.</p>
+<p>If an operation would overflow, so that the result doesn't fit into the target field, the VM will panic.
+Results below zero are also considered overflows. If the <a href="vm/./index.html#flags"><code>F_WRAPPING</code></a> flag is set,
+instead <code>$of</code> is set to <code>true</code> or the overflowing part of the result, depending on the operation.</p>
 <h3 id="add-add"><a class="header" href="#add-add">ADD: Add</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Adds two registers.</td></tr>
