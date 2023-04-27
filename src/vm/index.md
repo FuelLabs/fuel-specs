@@ -63,10 +63,10 @@ Persistent state (i.e. storage) is a key-value store with 32-byte keys and 32-by
 
 ## Flags
 
-| value  | name           | description                                           |
-|--------|----------------|-------------------------------------------------------|
-| `0x01` | `F_UNSAFEMATH` | If bit is set, safe arithmetic and logic is disabled. |
-| `0x02` | `F_WRAPPING`   | If bit is set, wrapping does not cause panic.         |
+| value  | name           | description                                                               |
+|--------|----------------|---------------------------------------------------------------------------|
+| `0x01` | `F_UNSAFEMATH` | If set, undefined arithmetic zeroes target and sets `$err` without panic. |
+| `0x02` | `F_WRAPPING`   | If set, overflowing arithmetic wraps around and sets `$of` without panic. |
 
 All other flags are reserved, any must be set to zero.
 
@@ -109,7 +109,7 @@ For any input of type [`InputType.Coin`](../protocol/tx_format/index.md) or [`In
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to the minimum of `tx.gasLimit` or `MAX_GAS_PER_PREDICATE`.
 
 Predicate estimation will fail if gas is exhausted during execution.
 

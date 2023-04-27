@@ -67,7 +67,7 @@
   - [BHSH: Block hash](#bhsh-block-hash)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
-  - [CB: Block proposer address](#cb-block-proposer-address)
+  - [CB: Coinbase address](#cb-coinbase-address)
   - [CCP: Code copy](#ccp-code-copy)
   - [CROO: Code Merkle root](#croo-code-merkle-root)
   - [CSIZ: Code size](#csiz-code-size)
@@ -141,9 +141,13 @@ If an instruction is not annotated with an effect, it means it does not produce 
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-If the [`F_UNSAFEMATH`](./index.md#flags) flag is set, an `ALU` operation that would have panicked will instead set `$err` to `true`.
+Normally, if the result of an ALU operation is mathematically undefined (e.g. dividing by zero),
+the VM panics. However, if the [`F_UNSAFEMATH`](./index.md#flags) flag is set, `$err` is set to `true`
+and execution continues.
 
-If the [`F_WRAPPING`](./index.md#flags) flag is set, an `ALU` operation that would have panicked will instead set `$of` to the overflow of the operation.
+If an operation would overflow, so that the result doesn't fit into the target field, the VM will panic.
+Results below zero are also considered overflows. If the [`F_WRAPPING`](./index.md#flags) flag is set,
+instead `$of` is set to `true` or the overflowing part of the result, depending on the operation.
 
 ### ADD: Add
 
@@ -1252,15 +1256,15 @@ A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to fillin
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### CB: Block proposer address
+### CB: Coinbase address
 
-|             |                                  |
-|-------------|----------------------------------|
-| Description | Get block proposer address.      |
-| Operation   | ```MEM[$rA, 32] = coinbase();``` |
-| Syntax      | `cb $rA`                         |
-| Encoding    | `0x00 rA - - -`                  |
-| Notes       |                                  |
+|             |                                                                                                                   |
+|-------------|-------------------------------------------------------------------------------------------------------------------|
+| Description | Get the [coinbase address](./../protocol/tx_validity.md#coinbase-transaction) associated with the block proposer. |
+| Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                  |
+| Syntax      | `cb $rA`                                                                                                          |
+| Encoding    | `0x00 rA - - -`                                                                                                   |
+| Notes       |                                                                                                                   |
 
 Panic if:
 
