@@ -688,7 +688,7 @@ Panic if:
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
 | Description | Compare or examine two 128-bit integers using selected mode                           |
-| Operation   | `b = mem[$rB,16]`<br>;`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);`         |
+| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);`         |
 | Syntax      | `wdcm $rA, $rB, $rC, imm`                                                             |
 | Encoding    | `0x00 rA rB rC i`                                                                     |
 | Notes       |                                                                                       |
@@ -730,7 +730,7 @@ Panic if:
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
 | Description | Compare or examine two 256-bit integers using selected mode                           |
-| Operation   | `b = mem[$rB,32]`<br>;`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);`         |
+| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);`         |
 | Syntax      | `wqcm $rA, $rB, $rC, imm`                                                             |
 | Encoding    | `0x00 rA rB rC i`                                                                     |
 | Notes       |                                                                                       |
