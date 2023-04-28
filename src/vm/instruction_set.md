@@ -773,7 +773,7 @@ Then the actual operation that's performed:
 6    | shl  | Shift left (logical)
 7    | shr  | Shift right (logical)
 
-Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
+Operations behave `$of` and `$err` similarly to their 64-bit counterparts, except that `$of` is set to `1` instead of the overflowing part.
 
 Panic if:
 
