@@ -2411,6 +2411,7 @@ abi MyContract {
 <li><a href="vm/instruction_set.html#mroo-math-root">MROO: Math root</a></li>
 <li><a href="vm/instruction_set.html#mul-multiply">MUL: Multiply</a></li>
 <li><a href="vm/instruction_set.html#muli-multiply-immediate">MULI: Multiply immediate</a></li>
+<li><a href="vm/instruction_set.html#mldv-fused-multiply-divide">MLDV: Fused multiply-divide</a></li>
 <li><a href="vm/instruction_set.html#noop-no-operation">NOOP: No operation</a></li>
 <li><a href="vm/instruction_set.html#not-invert">NOT: Invert</a></li>
 <li><a href="vm/instruction_set.html#or-or">OR: OR</a></li>
@@ -2421,6 +2422,21 @@ abi MyContract {
 <li><a href="vm/instruction_set.html#srli-shift-right-logical-immediate">SRLI: Shift right logical immediate</a></li>
 <li><a href="vm/instruction_set.html#sub-subtract">SUB: Subtract</a></li>
 <li><a href="vm/instruction_set.html#subi-subtract-immediate">SUBI: Subtract immediate</a></li>
+<li><a href="vm/instruction_set.html#subi-subtract-immediate">SUBI: Subtract immediate</a></li>
+<li><a href="vm/instruction_set.html#wdcm-128-bit-integer-comparison">WDCM: 128-bit integer comparison</a></li>
+<li><a href="vm/instruction_set.html#wqcm-256-bit-integer-comparison">WQCM: 256-bit integer comparison</a></li>
+<li><a href="vm/instruction_set.html#wdop-misc-128-bit-integer-operations">WDOP: Misc 128-bit integer operations</a></li>
+<li><a href="vm/instruction_set.html#wqop-misc-256-bit-integer-operations">WQOP: Misc 256-bit integer operations</a></li>
+<li><a href="vm/instruction_set.html#wdml-multiply-128-bit-integers">WDML: Multiply 128-bit integers</a></li>
+<li><a href="vm/instruction_set.html#wqml-multiply-256-bit-integers">WQML: Multiply 256-bit integers</a></li>
+<li><a href="vm/instruction_set.html#wddv-128-bit-integer-division">WDDV: 128-bit integer division</a></li>
+<li><a href="vm/instruction_set.html#wqdv-256-bit-integer-division">WQDV: 256-bit integer division</a></li>
+<li><a href="vm/instruction_set.html#wdmd-128-bit-integer-fused-multiply-divide">WDMD: 128-bit integer fused multiply-divide</a></li>
+<li><a href="vm/instruction_set.html#wqmd-256-bit-integer-fused-multiply-divide">WQMD: 256-bit integer fused multiply-divide</a></li>
+<li><a href="vm/instruction_set.html#wdam-modular-128-bit-integer-addition">WDAM: Modular 128-bit integer addition</a></li>
+<li><a href="vm/instruction_set.html#wqam-modular-256-bit-integer-addition">WQAM: Modular 256-bit integer addition</a></li>
+<li><a href="vm/instruction_set.html#wdmm-modular-128-bit-integer-multiplication">WDMM: Modular 128-bit integer multiplication</a></li>
+<li><a href="vm/instruction_set.html#wqmm-modular-256-bit-integer-multiplication">WQMM: Modular 256-bit integer multiplication</a></li>
 <li><a href="vm/instruction_set.html#xor-xor">XOR: XOR</a></li>
 <li><a href="vm/instruction_set.html#xori-xor-immediate">XORI: XOR immediate</a></li>
 </ul>
@@ -2829,6 +2845,18 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </ul>
 <p><code>$of</code> is assigned the overflow of the operation.</p>
 <p><code>$err</code> is cleared.</p>
+<h3 id="mldv-fused-multiply-divide"><a class="header" href="#mldv-fused-multiply-divide">MLDV: Fused multiply-divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiplies two registers with arbitrary precision, then divides by a third register.</td></tr>
+<tr><td>Operation</td><td><code>a = (b * c) / d;</code></td></tr>
+<tr><td>Syntax</td><td><code>mldv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 64</code> instead.</td></tr>
+</tbody></table>
+</div>
+<p>If the divisor (<code>$rD</code>) is zero, then instead the value is divided by <code>1 &lt;&lt; 64</code>. This returns the higher half of the 128-bit multiplication result. This operation never overflows.</p>
+<p>If the result of after the division doesn't fit into a register, <code>$of</code> is assigned the overflow of the operation. Otherwise, <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
 <h3 id="noop-no-operation"><a class="header" href="#noop-no-operation">NOOP: No operation</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Performs no operation.</td></tr>
@@ -2970,6 +2998,312 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </ul>
 <p><code>$of</code> is assigned the underflow of the operation, as though <code>$of</code> is the high byte of a 128-bit register.</p>
 <p><code>$err</code> is cleared.</p>
+<h3 id="wdcm-128-bit-integer-comparison"><a class="header" href="#wdcm-128-bit-integer-comparison">WDCM: 128-bit integer comparison</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compare or examine two 128-bit integers using selected mode</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,16];</code><br><code>c = indirect?mem[$rC,16]:$rC;</code><br><code>$rA = cmp_op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wdcm $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>...XXX</code></td><td><code>mode</code></td><td>Compare mode selection</td></tr>
+<tr><td><code>.XX...</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p>Then the actual operation that's performed:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>mode</code></th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>eq</td><td>Equality (<code>==</code>)</td></tr>
+<tr><td>1</td><td>ne</td><td>Inequality (<code>!=</code>)</td></tr>
+<tr><td>2</td><td>lt</td><td>Less than (<code>&lt;</code>)</td></tr>
+<tr><td>3</td><td>gt</td><td>Greater than (<code>&gt;</code>)</td></tr>
+<tr><td>4</td><td>lte</td><td>Less than or equals (<code>&lt;=</code>)</td></tr>
+<tr><td>5</td><td>gte</td><td>Greater than or equals (<code>&gt;=</code>)</td></tr>
+<tr><td>6</td><td>lzc</td><td>Leading zero count the lhs argument (<code>lzcnt</code>). Discards rhs.</td></tr>
+<tr><td>7</td><td>-</td><td>Reserved and must not be used</td></tr>
+</tbody></table>
+</div>
+<p>The leading zero count can be used to compute rounded-down log2 of a number using the following formula <code>TOTAL_BITS - 1 - lzc(n)</code>. Note that <code>log2(0)</code> is undefined, and will lead to integer overflow with this method.</p>
+<p>Clears <code>$of</code> and <code>$err</code>.</p>
+<p>Panic if:</p>
+<ul>
+<li>A reserved compare mode is given</li>
+<li><code>$rA</code> is a <a href="vm/./index.html#semantics">reserved register</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqcm-256-bit-integer-comparison"><a class="header" href="#wqcm-256-bit-integer-comparison">WQCM: 256-bit integer comparison</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compare or examine two 256-bit integers using selected mode</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,32];</code><br><code>c = indirect?mem[$rC,32]:$rC;</code><br><code>$rA = cmp_op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wqcm $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WDCM</code>.</p>
+<p>Clears <code>$of</code> and <code>$err</code>.</p>
+<p>Panic if:</p>
+<ul>
+<li>A reserved compare mode is given</li>
+<li><code>$rA</code> is a <a href="vm/./index.html#semantics">reserved register</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdop-misc-128-bit-integer-operations"><a class="header" href="#wdop-misc-128-bit-integer-operations">WDOP: Misc 128-bit integer operations</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform an ALU operation on two 128-bit integers</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,16];</code><br><code>c = indirect?mem[$rC,16]:$rC;</code><br><code>mem[$rA,16] = op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wdop $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>...XXX</code></td><td><code>op</code></td><td>Operation selection, see below</td></tr>
+<tr><td><code>.XX...</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p>Then the actual operation that's performed:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>op</code></th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>add</td><td>Add</td></tr>
+<tr><td>1</td><td>sub</td><td>Subtract</td></tr>
+<tr><td>2</td><td>not</td><td>Invert bits (discards rhs)</td></tr>
+<tr><td>3</td><td>or</td><td>Bitwise or</td></tr>
+<tr><td>4</td><td>xor</td><td>Bitwise exclusive or</td></tr>
+<tr><td>5</td><td>and</td><td>Bitwise and</td></tr>
+<tr><td>6</td><td>shl</td><td>Shift left (logical)</td></tr>
+<tr><td>7</td><td>shr</td><td>Shift right (logical)</td></tr>
+</tbody></table>
+</div>
+<p>Operations behave <code>$of</code> and <code>$err</code> similarly to their 64-bit counterparts, except that <code>$of</code> is set to <code>1</code> instead of the overflowing part.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqop-misc-256-bit-integer-operations"><a class="header" href="#wqop-misc-256-bit-integer-operations">WQOP: Misc 256-bit integer operations</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform an ALU operation on two 256-bit integers</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,32];</code><br><code>c = indirect?mem[$rC,32]:$rC;</code><br><code>mem[$rA,32] = op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wqop $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WQOP</code>.</p>
+<p>Operations behave <code>$of</code> and <code>$err</code> similarly to their 64-bit counterparts.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdml-multiply-128-bit-integers"><a class="header" href="#wdml-multiply-128-bit-integers">WDML: Multiply 128-bit integers</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform integer multiplication operation on two 128-bit integers.</td></tr>
+<tr><td>Operation</td><td><code>b=indirect0?mem[$rB,16]:$rB;</code><br><code>c=indirect1?mem[$rC,16]:$rC;</code><br><code>mem[$rA,16]=b*c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdml $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>..XXXX</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>.X....</code></td><td><code>indirect0</code></td><td>Is lhs operand ($rB) indirect or not</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect1</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is set to <code>1</code> in case of overflow, and cleared otherwise.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>indirect0 == 1</code> and <code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect1 == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqml-multiply-256-bit-integers"><a class="header" href="#wqml-multiply-256-bit-integers">WQML: Multiply 256-bit integers</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform integer multiplication operation on two 256-bit integers.</td></tr>
+<tr><td>Operation</td><td><code>b=indirect0?mem[$rB,32]:$rB;</code><br><code>c=indirect1?mem[$rC,32]:$rC;</code><br><code>mem[$rA,32]=b*c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqml $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WDML</code>.</p>
+<p><code>$of</code> is set to <code>1</code> in case of overflow, and cleared otherwise.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>indirect0 == 1</code> and <code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect1 == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wddv-128-bit-integer-division"><a class="header" href="#wddv-128-bit-integer-division">WDDV: 128-bit integer division</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Divide a 128-bit integer by another.</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,16];</code><br><code>c = indirect?mem[$rC,16]:$rC;</code><br><code>mem[$rA,16] = b / c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wddv $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>.XXXXX</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqdv-256-bit-integer-division"><a class="header" href="#wqdv-256-bit-integer-division">WQDV: 256-bit integer division</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Divide a 256-bit integer by another.</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,32];</code><br><code>c = indirect?mem[$rC,32]:$rC;</code><br><code>mem[$rA,32] = b / c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqdv $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WDDV</code>.</p>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 32]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdmd-128-bit-integer-fused-multiply-divide"><a class="header" href="#wdmd-128-bit-integer-fused-multiply-divide">WDMD: 128-bit integer fused multiply-divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Combined multiply-divide of 128-bit integers with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16]=(b * c) / d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wddv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 128</code> instead.</td></tr>
+</tbody></table>
+</div>
+<p>If the divisor <code>MEM[$rA, 16]</code> is zero, then instead the value is divided by <code>1 &lt;&lt; 128</code>. This returns the higher half of the 256-bit multiplication result.</p>
+<p>If the result of after the division is larger than operand size, <code>$of</code> is set to one. Otherwise, <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqmd-256-bit-integer-fused-multiply-divide"><a class="header" href="#wqmd-256-bit-integer-fused-multiply-divide">WQMD: 256-bit integer fused multiply-divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Combined multiply-divide of 256-bit integers with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32]=(b * c) / d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqdv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 256</code> instead.</td></tr>
+</tbody></table>
+</div>
+<p>If the divisor <code>MEM[$rA, 32]</code> is zero, then instead the value is divided by <code>1 &lt;&lt; 256</code>. This returns the higher half of the 512-bit multiplication result.</p>
+<p>If the result of after the division is larger than operand size, <code>$of</code> is set to one. Otherwise, <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdam-modular-128-bit-integer-addition"><a class="header" href="#wdam-modular-128-bit-integer-addition">WDAM: Modular 128-bit integer addition</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Add two 128-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16] = (b+c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdam $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqam-modular-256-bit-integer-addition"><a class="header" href="#wqam-modular-256-bit-integer-addition">WQAM: Modular 256-bit integer addition</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Add two 256-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32] = (b+c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdam $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdmm-modular-128-bit-integer-multiplication"><a class="header" href="#wdmm-modular-128-bit-integer-multiplication">WDMM: Modular 128-bit integer multiplication</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiply two 128-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16] = (b*c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdmm $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqmm-modular-256-bit-integer-multiplication"><a class="header" href="#wqmm-modular-256-bit-integer-multiplication">WQMM: Modular 256-bit integer multiplication</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiply two 256-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32] = (b*c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqmm $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
 <h3 id="xor-xor"><a class="header" href="#xor-xor">XOR: XOR</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Bitwise XORs two registers.</td></tr>
