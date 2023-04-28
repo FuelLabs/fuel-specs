@@ -705,7 +705,7 @@ Then the actual operation that's performed:
 1     | ne   | Inequality (`!=`)
 2     | lt   | Less than (`<`)
 3     | gt   | Greater than (`>`)
-4     | lte  | Less than or equals (`>=`)
+4     | lte  | Less than or equals (`<=`)
 5     | gte  | Greater than or equals (`>=`)
 6     | lzc  | Leading zero count the lhs argument (`lzcnt`). Discards rhs.
 7     | -    | Reserved and must not be used
