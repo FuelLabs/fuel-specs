@@ -625,9 +625,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
 
-`$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
-
-`$err` is cleared.
+`$of` and `$err` are cleared.
 
 ### SRLI: Shift right logical immediate
 
@@ -643,9 +641,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
 
-`$of` is assigned the underflow of the operation, as though `$of` is the high byte of a 128-bit register.
-
-`$err` is cleared.
+`$of` and `$err` are cleared.
 
 ### SUB: Subtract
 
