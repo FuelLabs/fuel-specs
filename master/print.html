@@ -574,7 +574,13 @@ all non-witness data is hashed.</p>
 <pre><code class="language-python">sha256(CHAIN_ID ++ serialized_tx(tx))
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="contract-id"><a class="header" href="#contract-id">Contract ID</a></h1>
-<p>For a transaction of type <code>TransactionType.Create</code>, <code>tx</code>, the contract ID is <code>sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.witnesses[bytecodeWitnessIndex].data) ++ root_smt(tx.storageSlots))</code>, where <code>root</code> is the Merkle root of <a href="protocol/id/../cryptographic_primitives.html#binary-merkle-tree">the binary Merkle tree</a> with each leaf being an 8-byte word of two instructions, and <code>root_smt</code> is the <a href="protocol/id/../cryptographic_primitives.html#sparse-merkle-tree">Sparse Merkle tree</a> root of the provided key-value pairs. If the bytecode is not a multiple of 8 bytes (i.e. if there are an odd number of instructions), the last instruction is padded with 4-byte zero.</p>
+<p>For a transaction of type <code>TransactionType.Create</code>, <code>tx</code>, the contract ID is
+<code>sha256(0x4655454C ++ tx.data.salt ++ root(tx.data.witnesses[bytecodeWitnessIndex].data) ++ root_smt(tx.storageSlots))</code>,
+where <code>root</code> is the Merkle root of <a href="protocol/id/../cryptographic_primitives.html#binary-merkle-tree">the binary Merkle tree</a> with
+each leaf being 16KiB of instructions, and <code>root_smt</code> is the
+<a href="protocol/id/../cryptographic_primitives.html#sparse-merkle-tree">Sparse Merkle tree</a> root of the provided key-value pairs.
+If the bytecode is not a multiple of 16 KiB, the final leaf should be zero-padded rounding up to the nearest multiple
+of 8 bytes.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="utxo-id"><a class="header" href="#utxo-id">UTXO ID</a></h1>
 <h2 id="coin-id"><a class="header" href="#coin-id">Coin ID</a></h2>
 <p>Is represented as an <em>outpoint</em>: a pair of <a href="protocol/id/./transaction.html">transaction ID</a> as <code>byte[32]</code> and output index as a <code>uint8</code>.</p>
