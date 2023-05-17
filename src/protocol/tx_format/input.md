@@ -29,11 +29,11 @@ Transaction is invalid if:
 | `txPointer`           | [TXPointer](./tx_pointer.md) | Points to the TX whose output is being spent.                          |
 | `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint32`                     | UTXO being spent must have been created at least this many blocks ago. |
+| `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
 | `predicateLength`     | `uint16`                     | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`                     | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`                     | Predicate input data (parameters).                                     |
-| `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -51,11 +51,9 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 > **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` is set to zero.
 >
-> **Note:** when verifying a predicate, `txPointer` is initialized to zero.
+> **Note:** when verifying and estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
 >
-> **Note:** when estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
->
-> **Note:** when executing a script, `txPointer` is initialized to zero.
+> **Note:** when executing a script, `txPointer`  is initialized to the TX whose output is being spent.
 
 The predicate root is computed [here](../id/predicate.md).
 
@@ -78,7 +76,7 @@ Transaction is invalid if:
 >
 > **Note:** when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
 >
-> **Note:** when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to zero.
+> **Note:** when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to the TX whose output is being spent.
 
 ## InputMessage
 
@@ -89,13 +87,13 @@ Transaction is invalid if:
 | `amount`              | `uint64`   | Amount of base asset coins sent with message.           |
 | `nonce`               | `byte[32]` | The message nonce.                                      |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.     |
+| `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                        |
 | `dataLength`          | `uint16`   | Length of message data, in bytes.                       |
 | `predicateLength`     | `uint16`   | Length of predicate, in instructions.                   |
 | `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.               |
 | `data`                | `byte[]`   | The message data.                                       |
 | `predicate`           | `byte[]`   | Predicate bytecode.                                     |
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                      |
-| `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                        |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -117,4 +115,4 @@ The predicate root is computed [here](../id/predicate.md).
 >
 > **Note:** when signing a transaction, `predicateGasUsed` is set to zero.
 >
-> **Note:** when estimating a predicate, `predicateGasUsed` is initialized to zero.
+> **Note:** when verifying and estimating a predicate, `predicateGasUsed` is initialized to zero.
