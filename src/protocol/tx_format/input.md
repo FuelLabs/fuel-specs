@@ -53,7 +53,7 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 >
 > **Note:** when verifying and estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
 >
-> **Note:** when executing a script, `txPointer`  is initialized to the TX whose output is being spent.
+> **Note:** when executing a script, `txPointer` is initialized to the TX whose output is being spent.
 
 The predicate root is computed [here](../id/predicate.md).
 
