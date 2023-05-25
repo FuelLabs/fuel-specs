@@ -379,11 +379,11 @@
 <tr><td><code>txPointer</code></td><td><a href="protocol/tx_format/./tx_pointer.html">TXPointer</a></td><td>Points to the TX whose output is being spent.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>maturity</code></td><td><code>uint32</code></td><td>UTXO being spent must have been created at least this many blocks ago.</td></tr>
+<tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
 <tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
-<tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 </tbody></table>
 </div>
 <p>Given helper <code>len()</code> that returns the number of bytes of a field.</p>
@@ -400,9 +400,8 @@
 <p>If <code>h</code> is the block height the UTXO being spent was created, transaction is invalid if <code>blockheight() &lt; h + maturity</code>.</p>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> and <code>predicateGasUsed</code> is set to zero.</p>
-<p><strong>Note:</strong> when verifying a predicate, <code>txPointer</code> is initialized to zero.</p>
-<p><strong>Note:</strong> when estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
-<p><strong>Note:</strong> when executing a script, <code>txPointer</code> is initialized to zero.</p>
+<p><strong>Note:</strong> when verifying and estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
+<p><strong>Note:</strong> when executing a script, <code>txPointer</code> is initialized to the TX whose output is being spent.</p>
 </blockquote>
 <p>The predicate root is computed <a href="protocol/tx_format/../id/predicate.html">here</a>.</p>
 <h2 id="inputcontract"><a class="header" href="#inputcontract">InputContract</a></h2>
@@ -422,7 +421,7 @@
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, <code>stateRoot</code>, and <code>txPointer</code> are set to zero.</p>
 <p><strong>Note:</strong> when verifying a predicate, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, <code>stateRoot</code>, and <code>txPointer</code> are initialized to zero.</p>
-<p><strong>Note:</strong> when executing a script, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, and <code>stateRoot</code> are initialized to the transaction ID, output index, amount, and state root of the contract with ID <code>contractID</code>, and <code>txPointer</code> is initialized to zero.</p>
+<p><strong>Note:</strong> when executing a script, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, and <code>stateRoot</code> are initialized to the transaction ID, output index, amount, and state root of the contract with ID <code>contractID</code>, and <code>txPointer</code> is initialized to the TX whose output is being spent.</p>
 </blockquote>
 <h2 id="inputmessage"><a class="header" href="#inputmessage">InputMessage</a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
@@ -431,13 +430,13 @@
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
+<tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
 <tr><td><code>dataLength</code></td><td><code>uint16</code></td><td>Length of message data, in bytes.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
 <tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>data</code></td><td><code>byte[]</code></td><td>The message data.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
-<tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
 </tbody></table>
 </div>
 <p>Given helper <code>len()</code> that returns the number of bytes of a field.</p>
@@ -457,7 +456,7 @@
 <blockquote>
 <p><strong>Note:</strong> <code>InputMessages</code> with data length greater than zero are not considered spent until they are included in a transaction of type <code>TransactionType.Script</code> with a <code>ScriptResult</code> receipt where <code>result</code> is equal to <code>0</code> indicating a successful script exit</p>
 <p><strong>Note:</strong> when signing a transaction, <code>predicateGasUsed</code> is set to zero.</p>
-<p><strong>Note:</strong> when estimating a predicate, <code>predicateGasUsed</code> is initialized to zero.</p>
+<p><strong>Note:</strong> when verifying and estimating a predicate, <code>predicateGasUsed</code> is initialized to zero.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="output"><a class="header" href="#output">Output</a></h1>
 <pre><code class="language-c++">enum OutputType : uint8 {
