@@ -1275,13 +1275,13 @@ All these instructions advance the program counter `$pc` by `4` after performing
 
 ### ALOC: Allocate memory
 
-|             |                                           |
-|-------------|-------------------------------------------|
-| Description | Allocate a number of bytes from the heap. |
-| Operation   | ```$hp = $hp - $rA;```                    |
-| Syntax      | `aloc $rA`                                |
-| Encoding    | `0x00 rA - - -`                           |
-| Notes       | Does not initialize memory.               |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Allocate a number of bytes from the heap.                                            |
+| Operation   | ```$hp = $hp - $rA;```                                                               |
+| Syntax      | `aloc $rA`                                                                           |
+| Encoding    | `0x00 rA - - -`                                                                      |
+| Notes       | Does not clear memory. After this, `$hp` points to the first byte of the allocation. |
 
 Panic if:
 
@@ -1296,7 +1296,7 @@ Panic if:
 | Operation   | ```$sp = $sp + $rA```                  |
 | Syntax      | `cfei $rA`                             |
 | Encoding    | `0x00 rA - - -`                        |
-| Notes       | Does not initialize memory.            |
+| Notes       | Does not clear memory.                 |
 
 Panic if:
 
@@ -1311,7 +1311,7 @@ Panic if:
 | Operation   | ```$sp = $sp + imm```                                        |
 | Syntax      | `cfei imm`                                                   |
 | Encoding    | `0x00 i i i i`                                               |
-| Notes       | Does not initialize memory.                                  |
+| Notes       | Does not clear memory.                                       |
 
 Panic if:
 
@@ -1487,7 +1487,7 @@ Panic if:
 
 - `$rA + imm + 1` overflows
 - `$rA + imm + 1 > VM_MAX_RAM`
-- The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./index.md#ownership)
+- The memory range `MEM[$rA + imm, 1]` does not pass [ownership check](./index.md#ownership)
 
 ### SW: Store word
 
@@ -1503,7 +1503,7 @@ Panic if:
 
 - `$rA + (imm * 8) + 8` overflows
 - `$rA + (imm * 8) + 8 > VM_MAX_RAM`
-- The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./index.md#ownership)
+- The memory range `MEM[$rA + (imm * 8), 8]` does not pass [ownership check](./index.md#ownership)
 
 ## Contract Instructions
 

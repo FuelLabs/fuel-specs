@@ -76,7 +76,9 @@ A complete instruction set of the Fuel VM is documented in [the following page](
 
 ## VM Initialization
 
-Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM - 1` and grows downward.
+The VM has `VM_MAX_RAM` bytes of ram, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at `0` and grows upward. The heap begins at `VM_MAX_RAM - 1` and grows downward. Unused memory is initialized to zero.
+
+Memory is gas-metered by usage. It's allocated in 16 KiB pages, which are transparently creted when either stack or heap grows beyond the current page. Both stack and heap are contiguous, and pages for those are allocated separately. The stack and heap are not allowed to overlap, but it's possible for them to share the last available page of memory.
 
 To initialize the VM, the following is pushed on the stack sequentially:
 
@@ -192,3 +194,5 @@ If the context is internal, the owned memory range for a call frame is:
 
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
 1. `[$hp, $fp->$hp)`: the heap area allocated by this call frame.
+
+A single write must fall within a single owned memory range. Even if `$hp == $sp`, a write instruction like `SW` cannot cross the boundary between the stack and the heap.
