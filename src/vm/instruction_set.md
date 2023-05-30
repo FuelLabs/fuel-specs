@@ -1567,11 +1567,13 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 |             |                                                      |
 |-------------|------------------------------------------------------|
-| Description | Burn `$rA` coins of the current contract's asset ID. |
-| Operation   | ```burn($rA);```                                     |
-| Syntax      | `burn $rA`                                           |
-| Encoding    | `0x00 rA - - -`                                      |
-| Notes       |                                                      |
+| Description | Burn `$rA` coins of the `$rB` ID from the current contract. |
+| Operation   | ```burn($rA, $rB);```                                |
+| Syntax      | `burn $rA $rB`                                       |
+| Encoding    | `0x00 rA rB - -`                                     |
+| Notes       | `$rB` is a pointer to a 256-bit ID in memory.        |
+
+The asset ID is constructed using the coin ID construction method.
 
 Panic if:
 
@@ -1808,9 +1810,9 @@ Panics if:
 | Encoding    | `0x00 rA rB - -`                                     |
 | Notes       | `$rB` is a pointer to a 256 bit ID in memory         |
 
-Panic if:
+The asset ID will be constructed using the coin ID construction method.
 
-- The asset ID will be constructed using the coin ID construction method.
+Panic if:
 
 - Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
