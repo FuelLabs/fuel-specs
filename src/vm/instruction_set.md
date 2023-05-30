@@ -1808,7 +1808,7 @@ Panics if:
 | Operation   | ```mint($rA, $rB);```                                |
 | Syntax      | `mint $rA $rB`                                       |
 | Encoding    | `0x00 rA rB - -`                                     |
-| Notes       | `$rB` is a pointer to a 256 bit ID in memory         |
+| Notes       | `$rB` is a pointer to a 256-bit ID in memory         |
 
 The asset ID will be constructed using the coin ID construction method.
 
