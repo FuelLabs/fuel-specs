@@ -1802,13 +1802,15 @@ Panics if:
 
 |             |                                                      |
 |-------------|------------------------------------------------------|
-| Description | Mint `$rA` coins of the current contract's asset ID. |
-| Operation   | ```mint($rA);```                                     |
-| Syntax      | `mint $rA`                                           |
-| Encoding    | `0x00 rA - - -`                                      |
-| Notes       |                                                      |
+| Description | Mint `$rA` coins of the `$rB` ID from the current contract. |
+| Operation   | ```mint($rA, $rB);```                                |
+| Syntax      | `mint $rA $rB`                                       |
+| Encoding    | `0x00 rA rB - -`                                     |
+| Notes       | `$rB` is a pointer to a 256 bit ID in memory         |
 
 Panic if:
+
+- The asset ID will be constructed using the coin ID construction method.
 
 - Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
