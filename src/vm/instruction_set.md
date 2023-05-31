@@ -1797,7 +1797,7 @@ Logs the memory range `MEM[$rC, $rD]`.
 Panics if:
 
 - `$rC + $rD` overflows
-- `$rA + $rD > VM_MAX_RAN`
+- `$rA + $rD > VM_MAX_RAM`
 - `$rD > MEM_MAX_ACCESS_SIZE`
 
 ### MINT: Mint new coins
@@ -1814,6 +1814,8 @@ The asset ID will be constructed using the coin ID construction method.
 
 Panic if:
 
+- If asset ID has already been instantiated by another contract.
+- `$rD > VM_MAX_RAM`
 - Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
 
