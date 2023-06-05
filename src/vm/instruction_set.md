@@ -1584,6 +1584,17 @@ For output with contract ID `MEM[$fp, 32]`, decrease balance of asset ID `MEM[$f
 
 This modifies the `balanceRoot` field of the appropriate output.
 
+Append a receipt to the list of receipts, modifying tx.receiptsRoot:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Burn`                                                  |
+| `id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `contract_id`     | `byte[32]`    | Contract ID of the current context. |
+| `val`    | `uint64`      | Value of register `$rA`.   |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
+
 ### CALL: Call contract
 
 |             |                        |
@@ -1822,6 +1833,17 @@ Panic if:
 For output with contract ID `MEM[$fp, 32]`, increase balance of asset ID `MEM[$fp, 32]` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
+
+Append a receipt to the list of receipts, modifying tx.receiptsRoot:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Mint`                                                  |
+| `id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `contract_id`     | `byte[32]`    | Contract ID of the current context. |
+| `val`    | `uint64`      | Value of register `$rA`.   |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 ### RETD: Return from context with data
 
