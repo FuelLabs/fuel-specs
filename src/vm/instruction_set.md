@@ -1590,7 +1590,7 @@ Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 | name     | type          | description                                                               |
 |----------|---------------|---------------------------------------------------------------------------|
 | `type`   | `ReceiptType` | `ReceiptType.Burn`                                                  |
-| `id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `sub_id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
 | `contract_id`     | `byte[32]`    | Contract ID of the current context. |
 | `val`    | `uint64`      | Value of register `$rA`.   |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
@@ -1839,7 +1839,7 @@ Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 | name     | type          | description                                                               |
 |----------|---------------|---------------------------------------------------------------------------|
 | `type`   | `ReceiptType` | `ReceiptType.Mint`                                                  |
-| `id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `sub_id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
 | `contract_id`     | `byte[32]`    | Contract ID of the current context. |
 | `val`    | `uint64`      | Value of register `$rA`.   |
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
