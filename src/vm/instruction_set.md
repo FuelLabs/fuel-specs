@@ -1571,9 +1571,9 @@ Block header hashes for blocks with height greater than or equal to current bloc
 | Operation   | ```burn($rA, $rB);```                                |
 | Syntax      | `burn $rA $rB`                                       |
 | Encoding    | `0x00 rA rB - -`                                     |
-| Notes       | `$rB` is a pointer to a 256-bit ID in memory.        |
+| Notes       | `$rB` is a pointer to a 32 byte ID in memory.        |
 
-The asset ID is constructed using the coin ID construction method.
+The asset ID is constructed using the asset ID construction method.
 
 Panic if:
 
@@ -1819,14 +1819,13 @@ Panics if:
 | Operation   | ```mint($rA, $rB);```                                |
 | Syntax      | `mint $rA $rB`                                       |
 | Encoding    | `0x00 rA rB - -`                                     |
-| Notes       | `$rB` is a pointer to a 256-bit ID in memory         |
+| Notes       | `$rB` is a pointer to a 32 byte ID in memory         |
 
-The asset ID will be constructed using the coin ID construction method.
+The asset ID will be constructed using the asset ID construction method.
 
 Panic if:
 
-- If asset ID has already been instantiated by another contract.
-- `$rD > VM_MAX_RAM`
+- `$rB + 32 > VM_MAX_RAM`
 - Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
 
