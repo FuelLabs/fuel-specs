@@ -1577,6 +1577,7 @@ The asset ID is constructed using the asset ID construction method.
 
 Panic if:
 
+- `$rB + 32 > VM_MAX_RAM`
 - Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
 - `$fp == 0` (in the script context)
 
