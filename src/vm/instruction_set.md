@@ -87,8 +87,8 @@
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
-  - [ECK1: Secp251k1 signature recovery](#ecr-secp256k1-signature-recovery)
-  - [ECR1: Secp256r1 signature recovery](#ecr1-Secp256r1-signature-recovery)
+  - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
+  - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
   - [ED19: ED25519 signature recovery](#ed19-ed25519-signature-recovery)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
@@ -1766,7 +1766,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ECR: Secp256k1 signature recovery
+### ECK1: Secp256k1 signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
