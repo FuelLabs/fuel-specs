@@ -1829,10 +1829,10 @@ If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is 
 Panic if:
 
 - `$rA + 32` overflows
-- `$rB + 96` overflows
+- `$rB + 64` overflows
 - `$rC + 32` overflows
 - `$rA + 32 > VM_MAX_RAM`
-- `$rB + 96 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
 
 Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
