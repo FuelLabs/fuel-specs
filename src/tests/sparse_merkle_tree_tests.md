@@ -2,9 +2,9 @@
 
 ## Version
 
-0.1.1
+0.2.0
 
-Last updated 2022/07/11
+Last updated 2023/06/09
 
 ## Abstract
 
@@ -38,13 +38,12 @@ All test specifications assume that the Merkle Tree implementation under test us
 10. [Test Update Union](#test-update-union)
 11. [Test Update Sparse Union](#test-update-sparse-union)
 12. [Test Update With Empty Data](#test-update-with-empty-data)
-13. [Test Update With Empty Data Performs Delete](#test-update-with-empty-data-performs-delete)
-14. [Test Update 1 Delete 1](#test-update-1-delete-1)
-15. [Test Update 2 Delete 1](#test-update-2-delete-1)
-16. [Test Update 10 Delete 5](#test-update-10-delete-5)
-17. [Test Delete Non-existent Key](#test-delete-non-existent-key)
-18. [Test Interleaved Update Delete](#test-interleaved-update-delete)
-19. [Test Delete Sparse Union](#test-delete-sparse-union)
+13. [Test Update 1 Delete 1](#test-update-1-delete-1)
+14. [Test Update 2 Delete 1](#test-update-2-delete-1)
+15. [Test Update 10 Delete 5](#test-update-10-delete-5)
+16. [Test Delete Non-existent Key](#test-delete-non-existent-key)
+17. [Test Interleaved Update Delete](#test-interleaved-update-delete)
+18. [Test Delete Sparse Union](#test-delete-sparse-union)
 
 ---
 
@@ -405,34 +404,6 @@ expect(hex_encode(root), expected_root).to_be_equal
 
 ---
 
-### Test Update With Empty Data Performs Delete
-
-**Description**:
-
-Tests the root after performing one update call with arbitrary data followed by a second update call on the same key with empty data. Updating a key with empty data is equivalent to calling delete. By deleting the only key, we have an empty tree and expect to arrive at the default root. The resulting input set is described by `S = {0} - {0} = {Ø}`. This test expects a root signature identical to that produced by [Test Empty Root](#test-empty-root).
-
-**Inputs**:
-
-1. Update the empty tree with `(K, D)`, where leaf key `K = Sum(0u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-2. Update the tree with `(K, D)`, where leaf key `K = Sum(0u32)` and empty leaf data `D = b""` (0 bytes)
-
-**Outputs**:
-
-- The expected root signature: `0x0000000000000000000000000000000000000000000000000000000000000000`
-
-**Example Pseudocode**:
-
-```text
-smt = SparseMerkleTree.new(Storage.new(), sha256.new())
-smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
-smt.update(&sum(b"\x00\x00\x00\x00"), b"")
-root = smt.root()
-expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
-expect(hex_encode(root), expected_root).to_be_equal
-```
-
----
-
 ### Test Update 1 Delete 1
 
 **Description**:
@@ -442,7 +413,7 @@ Tests the root after performing one update call followed by a subsequent delete 
 **Inputs**:
 
 1. Update the empty tree with `(K, D)`, where leaf key `K = Sum(0u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-2. Delete `(K)` from the tree, where leaf key `K = Sum(0u32)`  
+2. Delete `(K, D)` from the tree, where leaf key `K = Sum(0u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 
 **Outputs**:
 
@@ -453,7 +424,7 @@ Tests the root after performing one update call followed by a subsequent delete 
 ```text
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
-smt.delete(&sum(b"\x00\x00\x00\x00"))
+smt.delete(&sum(b"\x00\x00\x00\x00"), b"DATA")
 root = smt.root()
 expected_root = '0000000000000000000000000000000000000000000000000000000000000000'
 expect(hex_encode(root), expected_root).to_be_equal
@@ -471,7 +442,7 @@ Tests the root after performing two update calls followed by a subsequent delete
 
 1. Update the empty tree with `(K, D)`, where leaf key `K = Sum(0u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 2. Update the tree with `(K, D)`, where leaf key `K = Sum(1u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-3. Delete `(K)` from the tree, where leaf key `K = Sum(1u32)`
+3. Delete `(K, D)` from the tree, where leaf key `K = Sum(1u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 
 **Outputs**:
 
@@ -483,7 +454,7 @@ Tests the root after performing two update calls followed by a subsequent delete
 smt = SparseMerkleTree.new(Storage.new(), sha256.new())
 smt.update(&sum(b"\x00\x00\x00\x00"), b"DATA")
 smt.update(&sum(b"\x00\x00\x00\x01"), b"DATA")
-smt.delete(&sum(b"\x00\x00\x00\x01"))
+smt.delete(&sum(b"\x00\x00\x00\x01"), b"DATA")
 root = smt.root()
 expected_root = '39f36a7cb4dfb1b46f03d044265df6a491dffc1034121bc1071a34ddce9bb14b'
 expect(hex_encode(root), expected_root).to_be_equal
@@ -500,7 +471,7 @@ Tests the root after performing 10 update calls followed by 5 subsequent delete 
 **Inputs**:
 
 1. For each `i` in `0..10`, update the tree with `(K, D)`, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-2. For each `i` in `5..10`, delete `(K)` from the tree, where leaf key `K = Sum(i)`
+2. For each `i` in `5..10`, delete `(K, D)` from the tree, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 
 **Outputs**:
 
@@ -517,7 +488,8 @@ for i in 0..10 {
 }
 for i in 5..10 {
     key = &(i as u32).to_big_endian_bytes()
-    smt.delete(&sum(key))
+    data = b"DATA"
+    smt.delete(&sum(key), data)
 }
 root = smt.root()
 expected_root = '108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b'
@@ -535,7 +507,7 @@ Tests the root after performing five update calls followed by a subsequent delet
 **Inputs**:
 
 1. For each `i` in `0..5`, update the tree with `(K, D)`, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-2. Delete `(K)` from the tree, where leaf key `K = Sum(1024u32)`
+2. Delete `(K, D)` from the tree, where leaf key `K = Sum(1024u32)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 
 **Outputs**:
 
@@ -550,7 +522,7 @@ for i in 0..5 {
     data = b"DATA"
     smt.update(&sum(key), data)
 }
-smt.delete(&sum(b"\x00\x00\x04\x00"))
+smt.delete(&sum(b"\x00\x00\x04\x00"), b"DATA")
 
 root = smt.root()
 expected_root = '108f731f2414e33ae57e584dc26bd276db07874436b2264ca6e520c658185c6b'
@@ -568,11 +540,11 @@ Tests the root after performing a series of interleaved update and delete calls.
 **Inputs**:
 
 1. For each `i` in `0..10`, update the tree with `(K, D)`, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-2. For each `i` in `5..15`, delete `(K)` from the tree, where leaf key `K = Sum(i)` from the tree
+2. For each `i` in `5..15`, delete `(K, D)` from the tree, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 3. For each `i` in `10..20`, update the tree with `(K, D)`, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-4. For each `i` in `15..25`, delete `(K)` from the tree, where leaf key `K = Sum(i)` from the tree
+4. For each `i` in `15..25`, delete `(K, D)` from the tree, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 5. For each `i` in `20..30`, update the tree with `(K, D)`, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-6. For each `i` in `25..35`, delete `(K)` from the tree, where leaf key `K = Sum(i)` from the tree
+6. For each `i` in `25..35`, delete `(K, D)` from the tree, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 
 **Outputs**:
 
@@ -589,7 +561,8 @@ for i in 0..10 {
 }
 for i in 5..15 {
     key = &(i as u32).to_big_endian_bytes()
-    smt.delete(&sum(key))
+    data = b"DATA"
+    smt.delete(&sum(key), data)
 }
 for i in 10..20 {
     key = &(i as u32).to_big_endian_bytes()
@@ -598,7 +571,8 @@ for i in 10..20 {
 }
 for i in 15..25 {
     key = &(i as u32).to_big_endian_bytes()
-    smt.delete(&sum(key))
+    data = b"DATA"
+    smt.delete(&sum(key), data)
 }
 for i in 20..30 {
     key = &(i as u32).to_big_endian_bytes()
@@ -607,7 +581,8 @@ for i in 20..30 {
 }
 for i in 25..35 {
     key = &(i as u32).to_big_endian_bytes()
-    smt.delete(&sum(key))
+    data = b"DATA"
+    smt.delete(&sum(key), data)
 }
 root = smt.root()
 expected_root = '7e6643325042cfe0fc76626c043b97062af51c7e9fc56665f12b479034bce326'
@@ -625,7 +600,7 @@ Tests the root after performing delete calls with discontinuous sets of inputs. 
 **Inputs**:
 
 1. For each `i` in `0..10`, update the tree with `(K, D)`, where leaf key `K = Sum(i)` and leaf data `D = b"DATA"` (bytes, UTF-8)
-2. For each `i` in `0..5`, delete `(K)` from the tree, where leaf key `K = Sum(i * 2 + 1)`
+2. For each `i` in `0..5`, delete `(K, D)` from the tree, where leaf key `K = Sum(i * 2 + 1)` and leaf data `D = b"DATA"` (bytes, UTF-8)
 
 **Outputs**:
 
@@ -642,7 +617,8 @@ for i in 0..10 {
 }
 for i in 0..5 {
     key = &(i as u32 * 2 + 1).to_big_endian_bytes()
-    smt.delete(&sum(key))
+    data = b"DATA"
+    smt.delete(&sum(key), data)
 }
 root = smt.root()
 expected_root = 'e912e97abc67707b2e6027338292943b53d01a7fbd7b244674128c7e468dd696'
