@@ -89,7 +89,7 @@
 - [Cryptographic Instructions](#cryptographic-instructions)
   - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
-  - [ED19: ED25519 signature recovery](#ed19-ed25519-signature-recovery)
+  - [ED19: ED25519 verification](#ed19-ed25519-verification)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
@@ -1816,7 +1816,7 @@ Signatures and signature verification are specified [here](../protocol/cryptogra
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
-### ED19: Ed25519 signature recovery
+### ED19: Ed25519 verification
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
@@ -1835,9 +1835,9 @@ Panic if:
 - `$rB + 64 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
 
-Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+Verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
 
-If the signature cannot be verified, `$err` is set to `1`, otherwise `$err` is cleared.
+If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
 ### K256: keccak-256
 
