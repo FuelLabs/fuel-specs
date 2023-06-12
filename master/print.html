@@ -838,6 +838,8 @@ messageBalance = sum_data_messages(tx, 0)
 <h3 id="sparse-merkle-tree"><a class="header" href="#sparse-merkle-tree">Sparse Merkle Tree</a></h3>
 <p>A specification for the Sparse Merkle Tree is <a href="https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#sparse-merkle-tree">here</a>.</p>
 <p>A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is <a href="protocol/../tests/sparse_merkle_tree_tests.html">here</a>.</p>
+<p>Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with <code>sha256</code> to prevent tree structure manipulations.
+During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.</p>
 <h2 id="public-key-cryptography"><a class="header" href="#public-key-cryptography">Public-Key Cryptography</a></h2>
 <p>Consensus-critical data is authenticated using <a href="https://www.secg.org/sec1-v2.pdf">ECDSA</a>, with the curve <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a>. A highly-optimized library is available in C (<a href="https://github.com/bitcoin-core/secp256k1">https://github.com/bitcoin-core/secp256k1</a>), with wrappers in Go (<a href="https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1">https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1</a>) and Rust (<a href="https://docs.rs/crate/secp256k1">https://docs.rs/crate/secp256k1</a>).</p>
 <p>Public keys are encoded in uncompressed form, as the concatenation of the <code>x</code> and <code>y</code> values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.</p>
