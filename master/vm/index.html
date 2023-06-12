@@ -202,7 +202,7 @@
 <h2 id="instruction-set"><a class="header" href="#instruction-set">Instruction Set</a></h2>
 <p>A complete instruction set of the Fuel VM is documented in <a href="./instruction_set.html">the following page</a>.</p>
 <h2 id="vm-initialization"><a class="header" href="#vm-initialization">VM Initialization</a></h2>
-<p>Every time the VM runs, a single monolithic memory of size <code>VM_MAX_RAM</code> bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at <code>0</code> and grows upward. The heap begins at <code>VM_MAX_RAM - 1</code> and grows downward.</p>
+<p>Every time the VM runs, a single monolithic memory of size <code>VM_MAX_RAM</code> bytes is allocated, indexed by individual byte. A stack and heap memory model is used, allowing for dynamic memory allocation in higher-level languages. The stack begins at <code>0</code> and grows upward. The heap begins at <code>VM_MAX_RAM</code> and grows downward.</p>
 <p>To initialize the VM, the following is pushed on the stack sequentially:</p>
 <ol>
 <li>Transaction hash (<code>byte[32]</code>, word-aligned), computed as defined <a href="../protocol/id/transaction.html">here</a>.</li>
