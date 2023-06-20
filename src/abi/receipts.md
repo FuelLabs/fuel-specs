@@ -29,7 +29,7 @@ All receipts will have a `type` property:
   - [ScriptResult](#scriptresult-receipt)
   - [MessageOut](#messageout-receipt)
 
-Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../../vm/instruction_set.md).
+Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../fuel-vm/instruction-set.md).
 
 _Important note:_ For the JSON representation of receipts, we represent 64-bit unsigned integers as a JSON `String` due to limitations around the type `Number` in the JSON specification, which only supports numbers up to `2^{53-1}`, while the FuelVM's registers hold values up to `2^64`.
 
@@ -258,7 +258,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 - `sender`: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: `MEM[$fp, 32]`.
 - `recipient`: Hexadecimal string representation of the 256-bit (32-byte) address of the message recipient: `MEM[$rA, 32]`.
 - `amount`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rD`.
-- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described [here](../id/utxo.md#message-nonce).
+- `nonce`: Hexadecimal string representation of the 256-bit (32-byte) message nonce as described [here](../identifiers/utxo-id.md#message-nonce).
 - `len`: Decimal string representation of a 16-bit unsigned integer; value of register `$rC`.
 - `digest`: Hexadecimal string representation of 256-bit (32-byte), hash of `MEM[$rB, $rC]`.
 - `data`: Hexadecimal string representation of the value of the memory range `MEM[$rB, $rC]`.

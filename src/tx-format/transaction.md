@@ -24,9 +24,9 @@ Transaction is invalid if:
 - No inputs are of type `InputType.Coin` or `InputType.Message` with `input.dataLength` == 0
 - More than one output is of type `OutputType.Change` for any asset ID in the input set
 - Any output is of type `OutputType.Change` for any asset ID not in the input set
-- More than one input of type `InputType.Coin` for any [Coin ID](../id/utxo.md#coin-id) in the input set
-- More than one input of type `InputType.Contract` for any [Contract ID](../id/utxo.md#contract-id) in the input set
-- More than one input of type `InputType.Message` for any [Message ID](../id/utxo.md#message-id) in the input set
+- More than one input of type `InputType.Coin` for any [Coin ID](../identifiers/utxo-id.md#coin-id) in the input set
+- More than one input of type `InputType.Contract` for any [Contract ID](../identifiers/utxo-id.md#contract-id) in the input set
+- More than one input of type `InputType.Message` for any [Message ID](../identifiers/utxo-id.md#message-id) in the input set
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
@@ -88,7 +88,7 @@ Transaction is invalid if:
 >
 > **Note:** when executing a script, `receiptsRoot` is initialized to zero.
 
-The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../cryptographic_primitives.md#binary-merkle-tree) of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. `0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. `0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
 
 ## TransactionCreate
 
@@ -122,9 +122,9 @@ Transaction is invalid if:
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
-- The [Sparse Merkle tree](../cryptographic_primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
+- The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 
-Creates a contract with contract ID as computed [here](../id/contract.md).
+Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
 ## TransactionMint
 
@@ -132,7 +132,7 @@ The transaction is created by the block producer and is not signed. Since it is 
 
 | name           | type                         | description                                          |
 |----------------|------------------------------|------------------------------------------------------|
-| `txPointer`    | [TXPointer](./tx_pointer.md) | The location of the `Mint` transaction in the block. |
+| `txPointer`    | [TXPointer](./tx-pointer.md) | The location of the `Mint` transaction in the block. |
 | `outputsCount` | `uint8`                      | Number of outputs.                                   |
 | `outputs`      | [Output](./output.md)`[]`    | List of outputs.                                     |
 

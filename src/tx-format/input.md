@@ -26,7 +26,7 @@ Transaction is invalid if:
 | `owner`               | `byte[32]`                   | Owning address or predicate root.                                      |
 | `amount`              | `uint64`                     | Amount of coins.                                                       |
 | `asset_id`            | `byte[32]`                   | Asset ID of the coins.                                                 |
-| `txPointer`           | [TXPointer](./tx_pointer.md) | Points to the TX whose output is being spent.                          |
+| `txPointer`           | [TXPointer](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
 | `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint32`                     | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
@@ -55,7 +55,7 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 >
 > **Note:** when executing a script, `txPointer` is initialized to the TX whose output is being spent.
 
-The predicate root is computed [here](../id/predicate.md).
+The predicate root is computed [here](../identifiers/predicate-id.md).
 
 ## InputContract
 
@@ -65,7 +65,7 @@ The predicate root is computed [here](../id/predicate.md).
 | `outputIndex` | `uint8`                      | Index of transaction output.                                            |
 | `balanceRoot` | `byte[32]`                   | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]`                   | State root of contract before transaction execution.                    |
-| `txPointer`   | [TXPointer](./tx_pointer.md) | Points to the TX whose output is being spent.                           |
+| `txPointer`   | [TXPointer](./tx-pointer.md) | Points to the TX whose output is being spent.                           |
 | `contractID`  | `byte[32]`                   | Contract ID.                                                            |
 
 Transaction is invalid if:
@@ -109,7 +109,7 @@ Transaction is invalid if:
 - `predicateDataLength != len(predicateData)`
 - `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
-The predicate root is computed [here](../id/predicate.md).
+The predicate root is computed [here](../identifiers/predicate-id.md).
 
 > **Note:** `InputMessages` with data length greater than zero are not considered spent until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit
 >
