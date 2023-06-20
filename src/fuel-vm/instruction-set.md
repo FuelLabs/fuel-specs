@@ -1900,8 +1900,8 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 
 Cease VM execution and revert script effects. After a revert:
 
-1. All [OutputContract](../protocol/tx-format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx-format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+1. All [OutputContract](../tx-format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
+1. All [OutputVariable](../tx-format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SMO: Send message out
 
@@ -2289,7 +2289,7 @@ Set `$rA` to the index of the currently-verifying predicate.
 | Encoding    | `0x00 rA rB i i`        |
 | Notes       |                         |
 
-Get [fields from the transaction](../protocol/tx-format/transaction.md).
+Get [fields from the transaction](../tx-format/transaction.md).
 
 | name                                      | `imm`   | set `$rA` to                                     |
 |-------------------------------------------|---------|--------------------------------------------------|
