@@ -7,6 +7,7 @@ enum OutputType : uint8 {
     Change = 2,
     Variable = 3,
     ContractCreated = 4,
+    Data = 5,
 }
 ```
 
@@ -88,3 +89,12 @@ This output type indicates that the output's amount and owner may vary based on 
 |--------------|------------|---------------------------------|
 | `contractID` | `byte[32]` | Contract ID.                    |
 | `stateRoot`  | `byte[32]` | Initial state root of contract. |
+
+## OutputData
+
+| name       | type       | description                          |
+|------------|------------|--------------------------------------|
+| `dataLength`   | `uint32` | The length of the data field. |
+| `data` | `byte[]` | The bytes data.                   |
+
+> **Note:** this output cannot be spent.
