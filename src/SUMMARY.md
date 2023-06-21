@@ -14,6 +14,7 @@
     - [Transaction ID](./protocol/id/transaction.md)
     - [Contract ID](./protocol/id/contract.md)
     - [UTXO ID](./protocol/id/utxo.md)
+    - [Predicate ID](./protocol/id/predicate.md)
   - [Transaction Validity Rules](./protocol/tx_validity.md)
   - [Cryptographic Primitives](./protocol/cryptographic_primitives.md)
   - [Application Binary Interface (ABI)](./protocol/abi/index.md)
