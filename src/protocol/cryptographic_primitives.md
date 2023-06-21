@@ -49,6 +49,9 @@ A specification for the Sparse Merkle Tree is [here](https://github.com/celestia
 
 A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse_merkle_tree_tests.md).
 
+Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with `sha256` to prevent tree structure manipulations.
+During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.
+
 ## ECDSA Public-Key Cryptography
 
 Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1-v2.pdf), with the curve [secp256k1](https://en.bitcoin.it/wiki/Secp256k1). A highly-optimized library is available in C (<https://github.com/bitcoin-core/secp256k1>), with wrappers in Go (<https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1>) and Rust (<https://docs.rs/crate/secp256k1>).
