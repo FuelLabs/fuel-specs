@@ -61,6 +61,7 @@
   - [JNZF: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
   - [JEQB: Jump if not equal relative backwards](#jeqb-jump-if-not-equal-relative-backwards)
   - [JEQF: Jump if not equal relative forwards](#jeqf-jump-if-not-equal-relative-forwards)
+  - [LOOP: Decrement register and if nonzero jump relative backwards](#loop-decrement-register-and-if-nonzero-jump-relative-backwards)
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
@@ -1223,6 +1224,20 @@ Panic if:
 Panic if:
 
 - `$pc + ($rC + imm + 1) * 4 > VM_MAX_RAM - 1`
+
+### LOOP: Decrement register and if nonzero jump relative backwards
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Saturatingly decrement `$rA`, and if it's nonzero, jump `$imm` instructions backwards. |
+| Operation   | `$rA -= 1;`<br>`if $rA != 0:`<br>`$pc -= (imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`     |
+| Syntax      | `loop $rA imm`                                                                         |
+| Encoding    | `0x00 rA i i i`                                                                        |
+| Notes       |                                                                                        |
+
+Panic if:
+
+- `$pc - (imm + 1) * 4 < 0`
 
 ### RET: Return from context
 
