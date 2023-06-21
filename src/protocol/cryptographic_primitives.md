@@ -5,7 +5,8 @@
   - [Binary Merkle Tree](#binary-merkle-tree)
   - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
   - [Sparse Merkle Tree](#sparse-merkle-tree)
-- [Public-Key Cryptography](#public-key-cryptography)
+- [EcDSA Public-Key Cryptography](#ecdsa-public-key-cryptography)
+- [EdDSA Public-Key Cryptography](#eddsa-public-key-cryptography)
 
 ## Hashing
 
@@ -100,6 +101,8 @@ The two areas of malleability concern verified by the dalek library are:
 2. Point Malleability
   The authors of the RFC added in a malleability check to step #3 in §5.1.7, for small torsion components in the R value of the signature, which is not strictly required, as they state:
 
-  > Check the group equation [8][S]B = [8]R + [8][k]A'. It's sufficient, but not required, to instead check [S]B = R + [k]A'.
+  ```pseudo
+   Check the group equation [8][S]B = [8]R + [8][k]A'. It's sufficient, but not required, to instead check [S]B = R + [k]A'.
+  ```
 
 The risks of EdDSA malleability are explained in further detail by Harry's [blogpost](https://hdevalence.ca/blog/2020-10-04-its-25519am).
