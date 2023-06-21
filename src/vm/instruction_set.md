@@ -1771,7 +1771,7 @@ All these instructions advance the program counter `$pc` by `4` after performing
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
+| Operation   | ```MEM[$rA, 64] = eckrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                |
 | Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
 | Notes       |                                                                                                                             |
@@ -1786,21 +1786,21 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
-Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#ecdsa-public-key-cryptography).
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
-To get the address from the public key, hash the public key with [SHA-2-256](#s256-sha-2-256).
+To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic_primitives.md#hashing).
 
 ### ECR1: Secp256r1 signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```MEM[$rA, 64] = recover(MEM[$rB, 64], MEM[$rC, 32]);```   |
-| Syntax      | `ecr $rA, $rB, $rC`         |
-| Encoding    | `0x00 rA rB rC -`   |
-| Notes       |                    |
+| Operation   | ```MEM[$rA, 64] = ecrrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
+| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Notes       |                                                                                                                             |
 
 Panic if:
 
@@ -1812,19 +1812,21 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
-Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#ecdsa-public-key-cryptography).
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
+To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic_primitives.md#hashing).
+
 ### ED19: edDSA curve25519 verification
 
-|             |                                                                                                                             |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+|             |                                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Verification recovered from 32-byte public key starting at `$rA` and 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```recover(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
-| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
-| Encoding    | `0x00 rA rB rC -`                                                                                                           |
-| Notes       |        |
+| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);```                                                                                         |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                                                 |
+| Encoding    | `0x00 rA rB rC -`                                                                                                                                   |
+| Notes       |                                                                                                                                                     |
 
 Panic if:
 
@@ -1835,7 +1837,7 @@ Panic if:
 - `$rB + 64 > VM_MAX_RAM`
 - `$rC + 32 > VM_MAX_RAM`
 
-Verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+Verification are specified [here](../protocol/cryptographic_primitives.md#eddsa-public-key-cryptography).
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 

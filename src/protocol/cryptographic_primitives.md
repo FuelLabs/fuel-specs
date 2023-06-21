@@ -49,7 +49,7 @@ A specification for the Sparse Merkle Tree is [here](https://github.com/celestia
 
 A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse_merkle_tree_tests.md).
 
-## Public-Key Cryptography
+## ECDSA Public-Key Cryptography
 
 Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1-v2.pdf), with the curve [secp256k1](https://en.bitcoin.it/wiki/Secp256k1). A highly-optimized library is available in C (<https://github.com/bitcoin-core/secp256k1>), with wrappers in Go (<https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1>) and Rust (<https://docs.rs/crate/secp256k1>).
 
@@ -70,3 +70,33 @@ Putting it all together, the encoding for signatures is:
 ```
 
 This encoding scheme is derived from [EIP 2098: Compact Signature Representation](https://eips.ethereum.org/EIPS/eip-2098).
+
+## EdDSA Public-Key Cryptography
+
+[Ed25519](https://datatracker.ietf.org/doc/html/rfc8032) is supported for use by applications built on Fuel. Edwards curve operations are performed by the [ed25519-dalek](https://github.com/dalek-cryptography/ed25519-dalek) Rust library.
+
+Public keys are encoded in compressed form as specified by the Ed25519 format [RFC-8032 5.1.5](https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.5). Point compression is performed by replacing the most significant bit in the final octet of the `y` coordinate with the sign bit from the `x` coordinate:
+
+```rust
+let mut pk = y;
+pk ^= x.is_negative().unwrap_u8() << 7;
+```
+
+Public keys are required to be strong enough to prevent malleability, and are checked for weakness during signature verification.
+
+Signatures are 64 bytes, represented as the concatenation of `R` (32 bytes) and `S` (32 bytes) Where `R` and `S` are defined in [RFC-8032 5.1.6](https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.6).
+
+Signatures must conform to strict verification requirements to avoid malleability concerns. While this is not part of the original Ed25519 specification, it has become a growing concern especially when used in cryptocurrency applications.
+
+The two areas of malleability concern verified by the dalek library are:
+
+1. Scalar Malleability
+  The authors of the RFC explicitly stated that verification of an ed25519 signature must fail if the scalar s is not properly reduced mod $\ell$:
+  To verify a signature on a message M using public key A, with F being 0 for Ed25519ctx, 1 for Ed25519ph, and if Ed25519ctx or Ed25519ph is being used, C being the context, first split the signature into two 32-octet halves. Decode the first half as a point R, and the second half as an integer S, in the range 0 <= s < L. Decode the public key A as point A'. If any of the decodings fail (including S being out of range), the signature is invalid.)
+
+2. Point Malleability
+  The authors of the RFC added in a malleability check to step #3 in §5.1.7, for small torsion components in the R value of the signature, which is not strictly required, as they state:
+
+  > Check the group equation [8][S]B = [8]R + [8][k]A'. It's sufficient, but not required, to instead check [S]B = R + [k]A'.
+
+The risks of EdDSA malleability are explained in further detail by Harry's [blogpost](https://hdevalence.ca/blog/2020-10-04-its-25519am).
