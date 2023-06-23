@@ -72,7 +72,7 @@ All other flags are reserved, any must be set to zero.
 
 ## Instruction Set
 
-A complete instruction set of the Fuel VM is documented in [the following page](./instruction_set.md).
+A complete instruction set of the Fuel VM is documented in [the following page](./instruction-set.md).
 
 ## VM Initialization
 
@@ -80,12 +80,12 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 
 To initialize the VM, the following is pushed on the stack sequentially:
 
-1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../protocol/id/transaction.md).
-1. [`MAX_INPUTS`](../protocol/tx_format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
+1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../identifiers/transaction-id.md).
+1. [`MAX_INPUTS`](../tx-format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
-1. The [transaction, serialized](../protocol/tx_format/index.md).
+1. The [transaction, serialized](../tx-format/index.md).
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
 
@@ -95,16 +95,16 @@ Then the following registers are initialized (without explicit initialization, a
 
 ## Contexts
 
-There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimation), [predicate verification](#predicate-verification), [scripts](#script-execution), and [calls](./instruction_set.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
+There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimation), [predicate verification](#predicate-verification), [scripts](#script-execution), and [calls](./instruction-set.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
 
 - External: predicate and script. `$fp` will be zero.
 - Internal: call. `$fp` will be non-zero.
 
-[Returning](./instruction_set.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
+[Returning](./instruction-set.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
 
 ## Predicate Estimation
 
-For any input of type [`InputType.Coin`](../protocol/tx_format/index.md) or [`InputType.Message`](../protocol/tx_format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -115,7 +115,7 @@ Predicate estimation will fail if gas is exhausted during execution.
 
 During predicate mode, hitting any of the following instructions causes predicate estimation to halt, returning Boolean `false`:
 
-1. Any [contract instruction](./instruction_set.md#contract-instructions).
+1. Any [contract instruction](./instruction-set.md#contract-instructions).
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate estimation halts returning Boolean `false`.
 
@@ -125,7 +125,7 @@ After successful execution, `predicateGasUsed` is set to `tx.gasLimit - $ggas`.
 
 ## Predicate Verification
 
-For any input of type [`InputType.Coin`](../protocol/tx_format/input.md#inputcoin) or [`InputType.Message`](../protocol/tx_format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -134,7 +134,7 @@ For each such input in the transaction, the VM is [initialized](#vm-initializati
 
 Predicate verification will fail if gas is exhausted during execution.
 
-During predicate mode, hitting any [contract instruction](./instruction_set.md#contract-instructions) causes predicate verification to halt, returning Boolean `false`.
+During predicate mode, hitting any [contract instruction](./instruction-set.md#contract-instructions) causes predicate verification to halt, returning Boolean `false`.
 
 In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
 
@@ -153,7 +153,7 @@ The VM is [initialized](#vm-initialization), then:
 
 Following initialization, execution begins.
 
-For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction_set.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
+For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction-set.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
 ## Call Frames
 
@@ -181,7 +181,7 @@ A call frame consists of the following, word-aligned:
 
 ## Ownership
 
-Whenever memory is written to (i.e. with [`SB`](./instruction_set.md#sb-store-byte) or [`SW`](./instruction_set.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./instruction_set.md#call-call-contract)), ownership must be checked.
+Whenever memory is written to (i.e. with [`SB`](./instruction-set.md#sb-store-byte) or [`SW`](./instruction-set.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./instruction-set.md#call-call-contract)), ownership must be checked.
 
 If the context is external, the owned memory range is:
 

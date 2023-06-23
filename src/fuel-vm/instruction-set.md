@@ -1645,7 +1645,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 |             |                                                                                                                   |
 |-------------|-------------------------------------------------------------------------------------------------------------------|
-| Description | Get the [coinbase address](./../protocol/tx_validity.md#coinbase-transaction) associated with the block proposer. |
+| Description | Get the [coinbase address](../protocol/tx-validity.md#coinbase-transaction) associated with the block proposer. |
 | Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                  |
 | Syntax      | `cb $rA`                                                                                                          |
 | Encoding    | `0x00 rA - - -`                                                                                                   |
@@ -1699,7 +1699,7 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-Code root computation is defined [here](../protocol/id/contract.md).
+Code root computation is defined [here](../identifiers/contract-id.md).
 
 ### CSIZ: Code size
 
@@ -1900,8 +1900,8 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 
 Cease VM execution and revert script effects. After a revert:
 
-1. All [OutputContract](../protocol/tx_format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+1. All [OutputContract](../tx-format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
+1. All [OutputVariable](../tx-format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SMO: Send message out
 
@@ -1935,7 +1935,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                           |
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                        |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                         |
-| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/id/utxo.md#message-nonce). |
+| `nonce`     | `byte[32]`    | The message nonce as described [here](../identifiers/utxo-id.md#message-nonce). |
 | `len`       | `uint16`      | Length of message data, in bytes: `$rC`.                                     |
 | `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                  |
 
@@ -2173,7 +2173,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
-Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#public-key-cryptography).
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
@@ -2289,7 +2289,7 @@ Set `$rA` to the index of the currently-verifying predicate.
 | Encoding    | `0x00 rA rB i i`        |
 | Notes       |                         |
 
-Get [fields from the transaction](../protocol/tx_format/transaction.md).
+Get [fields from the transaction](../tx-format/transaction.md).
 
 | name                                      | `imm`   | set `$rA` to                                     |
 |-------------------------------------------|---------|--------------------------------------------------|
