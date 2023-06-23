@@ -1,0 +1,1002 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>JSON ABI Format - Fuel Specifications</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Fuel Specifications</a></li><li class="chapter-item expanded "><a href="../tx-format/index.html"><strong aria-hidden="true">1.</strong> Transaction Format</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tx-format/constants.html"><strong aria-hidden="true">1.1.</strong> Constants</a></li><li class="chapter-item expanded "><a href="../tx-format/transaction.html"><strong aria-hidden="true">1.2.</strong> Transaction</a></li><li class="chapter-item expanded "><a href="../tx-format/input.html"><strong aria-hidden="true">1.3.</strong> Input</a></li><li class="chapter-item expanded "><a href="../tx-format/output.html"><strong aria-hidden="true">1.4.</strong> Output</a></li><li class="chapter-item expanded "><a href="../tx-format/witness.html"><strong aria-hidden="true">1.5.</strong> Witness</a></li><li class="chapter-item expanded "><a href="../tx-format/tx-pointer.html"><strong aria-hidden="true">1.6.</strong> TXPointer</a></li></ol></li><li class="chapter-item expanded "><a href="../identifiers/index.html"><strong aria-hidden="true">2.</strong> Computing Identifiers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../identifiers/transaction-id.html"><strong aria-hidden="true">2.1.</strong> Transaction ID</a></li><li class="chapter-item expanded "><a href="../identifiers/contract-id.html"><strong aria-hidden="true">2.2.</strong> Contract ID</a></li><li class="chapter-item expanded "><a href="../identifiers/utxo-id.html"><strong aria-hidden="true">2.3.</strong> UTXO ID</a></li><li class="chapter-item expanded "><a href="../identifiers/predicate-id.html"><strong aria-hidden="true">2.4.</strong> Predicate ID</a></li></ol></li><li class="chapter-item expanded "><a href="../protocol/index.html"><strong aria-hidden="true">3.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol/tx-validity.html"><strong aria-hidden="true">3.1.</strong> Transaction Validity Rules</a></li><li class="chapter-item expanded "><a href="../protocol/cryptographic-primitives.html"><strong aria-hidden="true">3.2.</strong> Cryptographic Primitives</a></li><li class="chapter-item expanded "><a href="../protocol/storage-initialization.html"><strong aria-hidden="true">3.3.</strong> Storage Slot Initialization</a></li><li class="chapter-item expanded "><a href="../protocol/block-header.html"><strong aria-hidden="true">3.4.</strong> Block Header Format</a></li></ol></li><li class="chapter-item expanded "><a href="../abi/index.html"><strong aria-hidden="true">4.</strong> Application Binary Interface (ABI)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abi/json-abi-format.html" class="active"><strong aria-hidden="true">4.1.</strong> JSON ABI Format</a></li><li class="chapter-item expanded "><a href="../abi/receipts.html"><strong aria-hidden="true">4.2.</strong> Receipts</a></li><li class="chapter-item expanded "><a href="../abi/fn-selector-encoding.html"><strong aria-hidden="true">4.3.</strong> Function Selector Encoding</a></li><li class="chapter-item expanded "><a href="../abi/argument-encoding.html"><strong aria-hidden="true">4.4.</strong> Argument Encoding</a></li></ol></li><li class="chapter-item expanded "><a href="../fuel-vm/index.html"><strong aria-hidden="true">5.</strong> FuelVM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../fuel-vm/instruction-set.html"><strong aria-hidden="true">5.1.</strong> Instruction Set</a></li></ol></li><li class="chapter-item expanded "><a href="../networks/index.html"><strong aria-hidden="true">6.</strong> Networks</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../networks/poa.html"><strong aria-hidden="true">6.1.</strong> Proof of Authority (PoA)</a></li></ol></li><li class="chapter-item expanded "><a href="../tests/index.html"><strong aria-hidden="true">7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tests/sparse-merkle-tree-tests.html"><strong aria-hidden="true">7.1.</strong> Sparse Merkle Tree</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Fuel Specifications</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/FuelLabs/fuel-specs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="json-abi-format"><a class="header" href="#json-abi-format">JSON ABI Format</a></h1>
+<p>The JSON of an ABI is the human-readable representation of the interface of a Sway contract.</p>
+<h2 id="notation"><a class="header" href="#notation">Notation</a></h2>
+<p>Before describing the format of the JSON ABI, we provide some definitions that will make the JSON ABI spec easier to read.</p>
+<p>Given the example below:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Foo { x: bool }
+struct Bar&lt;T&gt; { y: T }
+
+fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
+<span class="boring">}
+</span></code></pre></pre>
+<p>we define the following expressions:</p>
+<ul>
+<li><em>type declaration</em>: the declaration or definition of a type which can be generic. <code>struct Foo { .. }</code> and <code>struct Bar&lt;T&gt; { .. }</code> in the example above are both type declarations.</li>
+<li><em>type application</em>: the application or use of a type. <code>Foo</code> and <code>Bar&lt;u64&gt;</code> in <code>fn baz(input1: Foo, input2: Bar&lt;u64&gt;);</code> in the example above are both applications of the type declarations <code>struct Foo { .. }</code> and <code>struct Bar&lt;T&gt; { .. }</code> respectively.</li>
+<li><em>type parameter</em>: a generic parameter used in a type declaration. <code>T</code> in <code>struct Bar&lt;T&gt;</code> in the example above is a type parameter.</li>
+<li><em>type argument</em>: an application of a type parameter used in a type application. <code>u64</code> in <code>input2: Bar&lt;u64&gt;</code> in the example above is a type argument.</li>
+</ul>
+<h2 id="json-abi-spec"><a class="header" href="#json-abi-spec">JSON ABI Spec</a></h2>
+<p>The ABI of a contract is represented as a JSON object containing the following properties:</p>
+<ul>
+<li><code>&quot;types</code>&quot;: an array describing all the <em>type declarations</em> used (or transitively used) in the ABI. Each <em>type declaration</em> is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;typeId&quot;</code>: a unique integer ID.</li>
+<li><code>&quot;type&quot;</code>: a string representation of the <em>type declaration</em>. The section <a href="#json-abi-format-for-each-possible-type-declaration">JSON ABI Format for Each Possible Type Declaration</a> specifies the format for each possible type.</li>
+<li><code>&quot;components&quot;</code>: an array of the components of a given type, if any, and <code>null</code> otherwise. Each component is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the component.</li>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the component.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the component, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;typeParameters&quot;</code>: an array of type IDs of the <em>type parameters</em> of the type, if the type is generic, and <code>null</code> otherwise. Each <em>type parameter</em> is a type declaration and is represented as described in <a href="#generic-type-parameter">Generic Type Parameter</a>.</li>
+</ul>
+</li>
+<li><code>&quot;functions</code>&quot;: an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the function</li>
+<li><code>&quot;inputs&quot;</code>: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the input.</li>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the input.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the input, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;output&quot;</code>: an object representing the output of the function (i.e. its return value). The output is a <em>type application</em>, which is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the output.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the output, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;attributes&quot;</code>: an optional array of <em>attributes</em>. Each <em>attribute</em> is explained in the <a href="#attributes-semantics">dedicated section</a> and is represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the attribute.</li>
+<li><code>&quot;arguments&quot;</code>: an array of attribute arguments.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;loggedTypes&quot;</code>: an array describing all instances of <a href="../fuel-vm/instruction-set.html#log-log-event"><code>log</code></a> or <a href="../fuel-vm/instruction-set.html#logd-log-data-event"><code>logd</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;logId&quot;</code>: a unique integer ID. The <a href="../fuel-vm/instruction-set.html#log-log-event"><code>log</code></a> and <a href="../fuel-vm/instruction-set.html#logd-log-data-event"><code>logd</code></a> instructions must set their <code>$rB</code> register to that ID.</li>
+<li><code>&quot;loggedType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the value being logged.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the value being logged, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;messagesTypes&quot;</code>: an array describing all instances of <a href="../fuel-vm/instruction-set.html#smo-send-message-to-output"><code>smo</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;messageDataType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the message data being sent.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the message data being sent, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;configurables&quot;</code>: an array describing all <code>configurable</code> variables used in the contract. Each <code>configurable</code> variable is represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;name&quot;</code>: the name of the <code>configurable</code> variable.</li>
+<li><code>&quot;configurableType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <code>configurable</code> variable.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <code>configurable</code> variable, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: the <em>type declaration</em> ID of the type of the <em>type argument</em>.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&quot;offset&quot;</code>: the specific offset within the contract's bytecode, in bytes, to the data section entry for the <code>configurable</code> variable.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The <a href="./fn-selector-encoding.html">Function Selector Encoding</a> section specifies the encoding for the function being selected to be executed and each of the argument types.</p>
+</blockquote>
+<h3 id="attributes-semantics"><a class="header" href="#attributes-semantics">Attributes Semantics</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Attribute name</th><th>Attribute arguments</th><th>Semantics</th></tr></thead><tbody>
+<tr><td><code>storage</code></td><td><code>read</code> and/or <code>write</code></td><td>Specifies if a function reads or writes to/from storage</td></tr>
+<tr><td><code>payable</code></td><td>None</td><td>Specifies if a function can accept coins: a function without <code>payable</code> attribute must not accept coins</td></tr>
+<tr><td><code>test</code></td><td>None</td><td>Specifies if a function is a unit test</td></tr>
+<tr><td><code>inline</code></td><td><code>never</code> or <code>always</code>, but not both</td><td>Specifies if a function should be inlined during code generation</td></tr>
+<tr><td><code>doc-comment</code></td><td>String</td><td>Documentation comment</td></tr>
+<tr><td><code>doc</code></td><td>Not defined yet</td><td>Not defined yet</td></tr>
+</tbody></table>
+</div>
+<h2 id="a-simple-example"><a class="header" href="#a-simple-example">A Simple Example</a></h2>
+<p>Below is a simple example showing how the JSON ABI for an example that does not use generic or complex types. We will later go over more complex examples.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>abi MyContract {
+    fn first_function(arg: u64) -&gt; bool;
+    fn second_function(arg: b256);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>the JSON representation of this ABI looks like:</p>
+<pre><code class="language-json">{
+  &quot;types&quot;: [
+    {
+      &quot;typeId&quot;: 0,
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;components&quot;: [],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 1,
+      &quot;type&quot;: &quot;b256&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 2,
+      &quot;type&quot;: &quot;bool&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 3,
+      &quot;type&quot;: &quot;u64&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    }
+  ],
+  &quot;functions&quot;: [
+    {
+      &quot;inputs&quot;: [
+        {
+          &quot;name&quot;: &quot;arg&quot;,
+          &quot;type&quot;: 3,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;name&quot;: &quot;first_function&quot;,
+      &quot;output&quot;: {
+        &quot;type&quot;: 2,
+        &quot;typeArguments&quot;: null
+      }
+    },
+    {
+      &quot;inputs&quot;: [
+        {
+          &quot;name&quot;: &quot;arg&quot;,
+          &quot;type&quot;: 1,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;name&quot;: &quot;second_function&quot;,
+      &quot;output&quot;: {
+        &quot;type&quot;: 0,
+        &quot;typeArguments&quot;: null
+      }
+    }
+  ],
+  &quot;loggedTypes&quot;: []
+}
+</code></pre>
+<h2 id="json-abi-format-for-each-possible-type-declaration"><a class="header" href="#json-abi-format-for-each-possible-type-declaration">JSON ABI Format for Each Possible Type Declaration</a></h2>
+<p>Below is a list of the JSON ABI formats for each possible type declaration:</p>
+<h3 id=""><a class="header" href="#"><code>()</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;()&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="bool"><a class="header" href="#bool"><code>bool</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;bool&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="u8"><a class="header" href="#u8"><code>u8</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;u8&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="u16"><a class="header" href="#u16"><code>u16</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;u16&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="u32"><a class="header" href="#u32"><code>u32</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;u32&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="u64"><a class="header" href="#u64"><code>u64</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;u64&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="b256"><a class="header" href="#b256"><code>b256</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;b256&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="struct"><a class="header" href="#struct"><code>struct</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;struct &lt;struct_name&gt;&quot;,
+  &quot;components&quot;: [
+    {
+      &quot;name&quot;: &quot;&lt;field1_name&gt;&quot;,
+      &quot;type&quot;: &lt;field1_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;&lt;field2_name&gt;&quot;,
+      &quot;type&quot;: &lt;field2_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  &quot;typeParameters&quot;: [
+    &lt;type_param1_type_id&gt;,
+    &lt;type_param2_type_id&gt;,
+    ...
+  ]
+}
+</code></pre>
+<h3 id="enum"><a class="header" href="#enum"><code>enum</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;enum &lt;enum_name&gt;&quot;,
+  &quot;components&quot;: [
+    {
+      &quot;name&quot;: &quot;&lt;variant1_name&gt;&quot;,
+      &quot;type&quot;: &lt;variant1_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;&lt;variant2_name&gt;&quot;,
+      &quot;type&quot;: &lt;variant2_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  &quot;typeParameters&quot;: [
+    &lt;type_param1_type_id&gt;,
+    &lt;type_param2_type_id&gt;,
+    ...
+  ]
+}
+</code></pre>
+<h3 id="strn"><a class="header" href="#strn"><code>str[&lt;n&gt;]</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;str[&lt;n&gt;]&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<p><code>&lt;n&gt;</code> is the length of the string.</p>
+<h3 id="array"><a class="header" href="#array"><code>array</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;[_; &lt;n&gt;]&quot;,
+  &quot;components&quot;: [
+    {
+      &quot;name&quot;: &quot;__array_element&quot;,
+      &quot;type&quot;: &quot;&lt;element_type&gt;&quot;,
+      &quot;typeArguments&quot;: ...
+    }
+    {
+      &quot;name&quot;: &quot;__array_element&quot;,
+      &quot;type&quot;: &lt;element_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+
+  ],
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<ul>
+<li><code>&lt;n&gt;</code> is the size of the array.</li>
+</ul>
+<h3 id="tuple"><a class="header" href="#tuple"><code>tuple</code></a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;(_, _, ...)&quot;,
+  &quot;components&quot;: [
+    {
+      &quot;name&quot;: &quot;__tuple_element&quot;,
+      &quot;type&quot;: &lt;field1_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;__tuple_element&quot;,
+      &quot;type&quot;: &lt;field2_type_id&gt;,
+      &quot;typeArguments&quot;: [
+        {
+          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        {
+          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeArguments&quot;: ...
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<h3 id="generic-type-parameter"><a class="header" href="#generic-type-parameter">Generic Type Parameter</a></h3>
+<pre><code class="language-json">{
+  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;generic &lt;name&gt;&quot;,
+  &quot;components&quot;: null,
+  &quot;typeParameters&quot;: null
+}
+</code></pre>
+<p><code>&lt;name&gt;</code> is the name of the generic parameter as specified in the struct or enum declaration that uses it.</p>
+<h2 id="some-complex-examples"><a class="header" href="#some-complex-examples">Some Complex Examples</a></h2>
+<h3 id="an-example-with-non-generic-custom-types"><a class="header" href="#an-example-with-non-generic-custom-types">An Example with Non-Generic Custom Types</a></h3>
+<p>Given the following ABI declaration:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum MyEnum {
+    Foo: u64,
+    Bar: bool,
+}
+
+struct MyStruct {
+    bim: u64,
+    bam: MyEnum,
+}
+
+abi MyContract {
+    /// this is a doc comment
+    #[payable, storage(read, write)]
+    fn complex_function(
+        arg1: ([str[5]; 3], bool, b256),
+        arg2: MyStruct,
+    );
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>its JSON representation would look like:</p>
+<pre><code class="language-json">{
+  &quot;types&quot;: [
+    {
+      &quot;typeId&quot;: 0,
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;components&quot;: [],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 1,
+      &quot;type&quot;: &quot;(_, _, _)&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;__tuple_element&quot;,
+          &quot;type&quot;: 2,
+          &quot;typeArguments&quot;: null
+        },
+        {
+          &quot;name&quot;: &quot;__tuple_element&quot;,
+          &quot;type&quot;: 4,
+          &quot;typeArguments&quot;: null
+        },
+        {
+          &quot;name&quot;: &quot;__tuple_element&quot;,
+          &quot;type&quot;: 3,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 2,
+      &quot;type&quot;: &quot;[_; 3]&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;__array_element&quot;,
+          &quot;type&quot;: 6,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 3,
+      &quot;type&quot;: &quot;b256&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 4,
+      &quot;type&quot;: &quot;bool&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 5,
+      &quot;type&quot;: &quot;enum MyEnum&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;Foo&quot;,
+          &quot;type&quot;: 8,
+          &quot;typeArguments&quot;: null
+        },
+        {
+          &quot;name&quot;: &quot;Bar&quot;,
+          &quot;type&quot;: 4,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 6,
+      &quot;type&quot;: &quot;str[5]&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 7,
+      &quot;type&quot;: &quot;struct MyStruct&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;bim&quot;,
+          &quot;type&quot;: 8,
+          &quot;typeArguments&quot;: null
+        },
+        {
+          &quot;name&quot;: &quot;bam&quot;,
+          &quot;type&quot;: 5,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 8,
+      &quot;type&quot;: &quot;u64&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    }
+  ],
+  &quot;functions&quot;: [
+    {
+      &quot;inputs&quot;: [
+        {
+          &quot;name&quot;: &quot;arg1&quot;,
+          &quot;type&quot;: 1,
+          &quot;typeArguments&quot;: null
+        },
+        {
+          &quot;name&quot;: &quot;arg2&quot;,
+          &quot;type&quot;: 7,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;name&quot;: &quot;complex_function&quot;,
+      &quot;output&quot;: {
+        &quot;type&quot;: 0,
+        &quot;typeArguments&quot;: null
+      },
+      &quot;attributes&quot;: [
+        {
+          &quot;name&quot;: &quot;doc-comment&quot;,
+          &quot;arguments&quot;: [&quot; this is a doc comment&quot;]
+        },
+        {
+          &quot;name&quot;: &quot;payable&quot;,
+        },
+        {
+          &quot;name&quot;: &quot;storage&quot;,
+          &quot;arguments&quot;: [&quot;read&quot;, &quot;write&quot;]
+        }
+      ]
+    }
+  ],
+  &quot;loggedTypes&quot;: []
+}
+</code></pre>
+<h3 id="an-example-with-generic-types"><a class="header" href="#an-example-with-generic-types">An Example with Generic Types</a></h3>
+<p>Given the following ABI declaration:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum MyEnum&lt;T, U&gt; {
+    Foo: T,
+    Bar: U,
+}
+struct MyStruct&lt;W&gt; {
+    bam: MyEnum&lt;W, W&gt;,
+}
+
+abi MyContract {
+    fn complex_function(
+        arg1: MyStruct&lt;b256&gt;,
+    );
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>its JSON representation would look like:</p>
+<pre><code class="language-json">{
+  &quot;types&quot;: [
+    {
+      &quot;typeId&quot;: 0,
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;components&quot;: [],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 1,
+      &quot;type&quot;: &quot;b256&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 2,
+      &quot;type&quot;: &quot;enum MyEnum&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;Foo&quot;,
+          &quot;type&quot;: 3,
+          &quot;typeArguments&quot;: null
+        },
+        {
+          &quot;name&quot;: &quot;Bar&quot;,
+          &quot;type&quot;: 4,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;typeParameters&quot;: [3, 4]
+    },
+    {
+      &quot;typeId&quot;: 3,
+      &quot;type&quot;: &quot;generic T&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 4,
+      &quot;type&quot;: &quot;generic U&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 5,
+      &quot;type&quot;: &quot;generic W&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 6,
+      &quot;type&quot;: &quot;struct MyStruct&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;bam&quot;,
+          &quot;type&quot;: 2,
+          &quot;typeArguments&quot;: [
+            {
+              &quot;type&quot;: 5,
+              &quot;typeArguments&quot;: null
+            },
+            {
+              &quot;type&quot;: 5,
+              &quot;typeArguments&quot;: null
+            }
+          ]
+        }
+      ],
+      &quot;typeParameters&quot;: [5]
+    }
+  ],
+  &quot;functions&quot;: [
+    {
+      &quot;inputs&quot;: [
+        {
+          &quot;name&quot;: &quot;arg1&quot;,
+          &quot;type&quot;: 6,
+          &quot;typeArguments&quot;: [
+            {
+              &quot;type&quot;: 1,
+              &quot;typeArguments&quot;: null
+            }
+          ]
+        }
+      ],
+      &quot;name&quot;: &quot;complex_function&quot;,
+      &quot;output&quot;: {
+        &quot;type&quot;: 0,
+        &quot;typeArguments&quot;: null
+      }
+    }
+  ],
+  &quot;loggedTypes&quot;: []
+}
+</code></pre>
+<h3 id="an-example-with-logs"><a class="header" href="#an-example-with-logs">An Example with Logs</a></h3>
+<p>Given the following contract:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct MyStruct&lt;W&gt; {
+    x: W,
+}
+
+abi MyContract {
+    fn logging();
+}
+
+...
+
+fn logging() {
+    log(MyStruct { x: 42 });
+    log(MyStruct { x: true });
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>its JSON representation would look like:</p>
+<pre><code class="language-json">{
+  &quot;types&quot;: [
+    {
+      &quot;typeId&quot;: 0,
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;components&quot;: [],
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 1,
+      &quot;type&quot;: &quot;bool&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 2,
+      &quot;type&quot;: &quot;generic W&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    },
+    {
+      &quot;typeId&quot;: 3,
+      &quot;type&quot;: &quot;struct MyStruct&quot;,
+      &quot;components&quot;: [
+        {
+          &quot;name&quot;: &quot;x&quot;,
+          &quot;type&quot;: 2,
+          &quot;typeArguments&quot;: null
+        }
+      ],
+      &quot;typeParameters&quot;: [2]
+    },
+    {
+      &quot;typeId&quot;: 4,
+      &quot;type&quot;: &quot;u64&quot;,
+      &quot;components&quot;: null,
+      &quot;typeParameters&quot;: null
+    }
+  ],
+  &quot;functions&quot;: [
+    {
+      &quot;inputs&quot;: [],
+      &quot;name&quot;: &quot;logging&quot;,
+      &quot;output&quot;: {
+        &quot;type&quot;: 0,
+        &quot;typeArguments&quot;: null
+      }
+    }
+  ],
+  &quot;loggedTypes&quot;: [
+    {
+      &quot;logId&quot;: 0,
+      &quot;loggedType&quot;: {
+        &quot;type&quot;: 3,
+        &quot;typeArguments&quot;: [
+          {
+            &quot;type&quot;: 4,
+            &quot;typeArguments&quot;: null
+          }
+        ]
+      }
+    },
+    {
+      &quot;logId&quot;: 1,
+      &quot;loggedType&quot;: {
+        &quot;type&quot;: 3,
+        &quot;typeArguments&quot;: [
+          {
+            &quot;type&quot;: 1,
+            &quot;typeArguments&quot;: null
+          }
+        ]
+      }
+    }
+  ]
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../abi/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../abi/receipts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../abi/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../abi/receipts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

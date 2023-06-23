@@ -1,0 +1,2307 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Instruction Set - Fuel Specifications</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Fuel Specifications</a></li><li class="chapter-item expanded "><a href="../tx-format/index.html"><strong aria-hidden="true">1.</strong> Transaction Format</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tx-format/constants.html"><strong aria-hidden="true">1.1.</strong> Constants</a></li><li class="chapter-item expanded "><a href="../tx-format/transaction.html"><strong aria-hidden="true">1.2.</strong> Transaction</a></li><li class="chapter-item expanded "><a href="../tx-format/input.html"><strong aria-hidden="true">1.3.</strong> Input</a></li><li class="chapter-item expanded "><a href="../tx-format/output.html"><strong aria-hidden="true">1.4.</strong> Output</a></li><li class="chapter-item expanded "><a href="../tx-format/witness.html"><strong aria-hidden="true">1.5.</strong> Witness</a></li><li class="chapter-item expanded "><a href="../tx-format/tx-pointer.html"><strong aria-hidden="true">1.6.</strong> TXPointer</a></li></ol></li><li class="chapter-item expanded "><a href="../identifiers/index.html"><strong aria-hidden="true">2.</strong> Computing Identifiers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../identifiers/transaction-id.html"><strong aria-hidden="true">2.1.</strong> Transaction ID</a></li><li class="chapter-item expanded "><a href="../identifiers/contract-id.html"><strong aria-hidden="true">2.2.</strong> Contract ID</a></li><li class="chapter-item expanded "><a href="../identifiers/utxo-id.html"><strong aria-hidden="true">2.3.</strong> UTXO ID</a></li><li class="chapter-item expanded "><a href="../identifiers/predicate-id.html"><strong aria-hidden="true">2.4.</strong> Predicate ID</a></li></ol></li><li class="chapter-item expanded "><a href="../protocol/index.html"><strong aria-hidden="true">3.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../protocol/tx-validity.html"><strong aria-hidden="true">3.1.</strong> Transaction Validity Rules</a></li><li class="chapter-item expanded "><a href="../protocol/cryptographic-primitives.html"><strong aria-hidden="true">3.2.</strong> Cryptographic Primitives</a></li><li class="chapter-item expanded "><a href="../protocol/storage-initialization.html"><strong aria-hidden="true">3.3.</strong> Storage Slot Initialization</a></li><li class="chapter-item expanded "><a href="../protocol/block-header.html"><strong aria-hidden="true">3.4.</strong> Block Header Format</a></li></ol></li><li class="chapter-item expanded "><a href="../abi/index.html"><strong aria-hidden="true">4.</strong> Application Binary Interface (ABI)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abi/json-abi-format.html"><strong aria-hidden="true">4.1.</strong> JSON ABI Format</a></li><li class="chapter-item expanded "><a href="../abi/receipts.html"><strong aria-hidden="true">4.2.</strong> Receipts</a></li><li class="chapter-item expanded "><a href="../abi/fn-selector-encoding.html"><strong aria-hidden="true">4.3.</strong> Function Selector Encoding</a></li><li class="chapter-item expanded "><a href="../abi/argument-encoding.html"><strong aria-hidden="true">4.4.</strong> Argument Encoding</a></li></ol></li><li class="chapter-item expanded "><a href="../fuel-vm/index.html"><strong aria-hidden="true">5.</strong> FuelVM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../fuel-vm/instruction-set.html" class="active"><strong aria-hidden="true">5.1.</strong> Instruction Set</a></li></ol></li><li class="chapter-item expanded "><a href="../networks/index.html"><strong aria-hidden="true">6.</strong> Networks</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../networks/poa.html"><strong aria-hidden="true">6.1.</strong> Proof of Authority (PoA)</a></li></ol></li><li class="chapter-item expanded "><a href="../tests/index.html"><strong aria-hidden="true">7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tests/sparse-merkle-tree-tests.html"><strong aria-hidden="true">7.1.</strong> Sparse Merkle Tree</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Fuel Specifications</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/FuelLabs/fuel-specs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="fuelvm-instruction-set"><a class="header" href="#fuelvm-instruction-set">FuelVM Instruction Set</a></h1>
+<ul>
+<li><a href="#reading-guide">Reading Guide</a></li>
+<li><a href="#arithmeticlogic-alu-instructions">Arithmetic/Logic (ALU) Instructions</a>
+<ul>
+<li><a href="#add-add">ADD: Add</a></li>
+<li><a href="#addi-add-immediate">ADDI: Add immediate</a></li>
+<li><a href="#and-and">AND: AND</a></li>
+<li><a href="#andi-and-immediate">ANDI: AND immediate</a></li>
+<li><a href="#div-divide">DIV: Divide</a></li>
+<li><a href="#divi-divide-immediate">DIVI: Divide immediate</a></li>
+<li><a href="#eq-equals">EQ: Equals</a></li>
+<li><a href="#exp-exponentiate">EXP: Exponentiate</a></li>
+<li><a href="#expi-exponentiate-immediate">EXPI: Exponentiate immediate</a></li>
+<li><a href="#gt-greater-than">GT: Greater than</a></li>
+<li><a href="#lt-less-than">LT: Less than</a></li>
+<li><a href="#mlog-math-logarithm">MLOG: Math logarithm</a></li>
+<li><a href="#mod-modulus">MOD: Modulus</a></li>
+<li><a href="#modi-modulus-immediate">MODI: Modulus immediate</a></li>
+<li><a href="#move-move">MOVE: Move</a></li>
+<li><a href="#movi-move-immediate">MOVI: Move immediate</a></li>
+<li><a href="#mroo-math-root">MROO: Math root</a></li>
+<li><a href="#mul-multiply">MUL: Multiply</a></li>
+<li><a href="#muli-multiply-immediate">MULI: Multiply immediate</a></li>
+<li><a href="#mldv-fused-multiply-divide">MLDV: Fused multiply-divide</a></li>
+<li><a href="#noop-no-operation">NOOP: No operation</a></li>
+<li><a href="#not-invert">NOT: Invert</a></li>
+<li><a href="#or-or">OR: OR</a></li>
+<li><a href="#ori-or-immediate">ORI: OR immediate</a></li>
+<li><a href="#sll-shift-left-logical">SLL: Shift left logical</a></li>
+<li><a href="#slli-shift-left-logical-immediate">SLLI: Shift left logical immediate</a></li>
+<li><a href="#srl-shift-right-logical">SRL: Shift right logical</a></li>
+<li><a href="#srli-shift-right-logical-immediate">SRLI: Shift right logical immediate</a></li>
+<li><a href="#sub-subtract">SUB: Subtract</a></li>
+<li><a href="#subi-subtract-immediate">SUBI: Subtract immediate</a></li>
+<li><a href="#subi-subtract-immediate">SUBI: Subtract immediate</a></li>
+<li><a href="#wdcm-128-bit-integer-comparison">WDCM: 128-bit integer comparison</a></li>
+<li><a href="#wqcm-256-bit-integer-comparison">WQCM: 256-bit integer comparison</a></li>
+<li><a href="#wdop-misc-128-bit-integer-operations">WDOP: Misc 128-bit integer operations</a></li>
+<li><a href="#wqop-misc-256-bit-integer-operations">WQOP: Misc 256-bit integer operations</a></li>
+<li><a href="#wdml-multiply-128-bit-integers">WDML: Multiply 128-bit integers</a></li>
+<li><a href="#wqml-multiply-256-bit-integers">WQML: Multiply 256-bit integers</a></li>
+<li><a href="#wddv-128-bit-integer-division">WDDV: 128-bit integer division</a></li>
+<li><a href="#wqdv-256-bit-integer-division">WQDV: 256-bit integer division</a></li>
+<li><a href="#wdmd-128-bit-integer-fused-multiply-divide">WDMD: 128-bit integer fused multiply-divide</a></li>
+<li><a href="#wqmd-256-bit-integer-fused-multiply-divide">WQMD: 256-bit integer fused multiply-divide</a></li>
+<li><a href="#wdam-modular-128-bit-integer-addition">WDAM: Modular 128-bit integer addition</a></li>
+<li><a href="#wqam-modular-256-bit-integer-addition">WQAM: Modular 256-bit integer addition</a></li>
+<li><a href="#wdmm-modular-128-bit-integer-multiplication">WDMM: Modular 128-bit integer multiplication</a></li>
+<li><a href="#wqmm-modular-256-bit-integer-multiplication">WQMM: Modular 256-bit integer multiplication</a></li>
+<li><a href="#xor-xor">XOR: XOR</a></li>
+<li><a href="#xori-xor-immediate">XORI: XOR immediate</a></li>
+</ul>
+</li>
+<li><a href="#control-flow-instructions">Control Flow Instructions</a>
+<ul>
+<li><a href="#jmp-jump">JMP: Jump</a></li>
+<li><a href="#ji-jump-immediate">JI: Jump immediate</a></li>
+<li><a href="#jne-jump-if-not-equal">JNE: Jump if not equal</a></li>
+<li><a href="#jnei-jump-if-not-equal-immediate">JNEI: Jump if not equal immediate</a></li>
+<li><a href="#jnzi-jump-if-not-zero-immediate">JNZI: Jump if not zero immediate</a></li>
+<li><a href="#jmpb-jump-relative-backwards">JMPB: Jump relative backwards</a></li>
+<li><a href="#jmpf-jump-relative-forwards">JMPF: Jump relative forwards</a></li>
+<li><a href="#jnzb-jump-if-not-zero-relative-backwards">JNZB: Jump if not zero relative backwards</a></li>
+<li><a href="#jnzf-jump-if-not-zero-relative-forwards">JNZF: Jump if not zero relative forwards</a></li>
+<li><a href="#jeqb-jump-if-not-equal-relative-backwards">JEQB: Jump if not equal relative backwards</a></li>
+<li><a href="#jeqf-jump-if-not-equal-relative-forwards">JEQF: Jump if not equal relative forwards</a></li>
+<li><a href="#ret-return-from-context">RET: Return from context</a></li>
+</ul>
+</li>
+<li><a href="#memory-instructions">Memory Instructions</a>
+<ul>
+<li><a href="#aloc-allocate-memory">ALOC: Allocate memory</a></li>
+<li><a href="#cfe-extend-call-frame">CFE: Extend call frame</a></li>
+<li><a href="#cfei-extend-call-frame-immediate">CFEI: Extend call frame immediate</a></li>
+<li><a href="#cfs-shrink-call-frame">CFS: Shrink call frame</a></li>
+<li><a href="#cfsi-shrink-call-frame-immediate">CFSI: Shrink call frame immediate</a></li>
+<li><a href="#lb-load-byte">LB: Load byte</a></li>
+<li><a href="#lw-load-word">LW: Load word</a></li>
+<li><a href="#mcl-memory-clear">MCL: Memory clear</a></li>
+<li><a href="#mcli-memory-clear-immediate">MCLI: Memory clear immediate</a></li>
+<li><a href="#mcp-memory-copy">MCP: Memory copy</a></li>
+<li><a href="#mcpi-memory-copy-immediate">MCPI: Memory copy immediate</a></li>
+<li><a href="#meq-memory-equality">MEQ: Memory equality</a></li>
+<li><a href="#sb-store-byte">SB: Store byte</a></li>
+<li><a href="#sw-store-word">SW: Store word</a></li>
+</ul>
+</li>
+<li><a href="#contract-instructions">Contract Instructions</a>
+<ul>
+<li><a href="#bal-balance-of-contract-id">BAL: Balance of contract ID</a></li>
+<li><a href="#bhei-block-height">BHEI: Block height</a></li>
+<li><a href="#bhsh-block-hash">BHSH: Block hash</a></li>
+<li><a href="#burn-burn-existing-coins">BURN: Burn existing coins</a></li>
+<li><a href="#call-call-contract">CALL: Call contract</a></li>
+<li><a href="#cb-coinbase-address">CB: Coinbase address</a></li>
+<li><a href="#ccp-code-copy">CCP: Code copy</a></li>
+<li><a href="#croo-code-merkle-root">CROO: Code Merkle root</a></li>
+<li><a href="#csiz-code-size">CSIZ: Code size</a></li>
+<li><a href="#ldc-load-code-from-an-external-contract">LDC: Load code from an external contract</a></li>
+<li><a href="#log-log-event">LOG: Log event</a></li>
+<li><a href="#logd-log-data-event">LOGD: Log data event</a></li>
+<li><a href="#mint-mint-new-coins">MINT: Mint new coins</a></li>
+<li><a href="#retd-return-from-context-with-data">RETD: Return from context with data</a></li>
+<li><a href="#rvrt-revert">RVRT: Revert</a></li>
+<li><a href="#smo-send-message-out">SMO: Send message to output</a></li>
+<li><a href="#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></li>
+<li><a href="#srw-state-read-word">SRW: State read word</a></li>
+<li><a href="#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></li>
+<li><a href="#sww-state-write-word">SWW: State write word</a></li>
+<li><a href="#swwq-state-write-sequential-32-byte-slots">SWWQ: State write sequential 32 byte slots</a></li>
+<li><a href="#time-timestamp-at-height">TIME: Timestamp at height</a></li>
+<li><a href="#tr-transfer-coins-to-contract">TR: Transfer coins to contract</a></li>
+<li><a href="#tro-transfer-coins-to-output">TRO: Transfer coins to output</a></li>
+</ul>
+</li>
+<li><a href="#cryptographic-instructions">Cryptographic Instructions</a>
+<ul>
+<li><a href="#ecr-signature-recovery">ECR: Signature recovery</a></li>
+<li><a href="#k256-keccak-256">K256: keccak-256</a></li>
+<li><a href="#s256-sha-2-256">S256: SHA-2-256</a></li>
+</ul>
+</li>
+<li><a href="#other-instructions">Other Instructions</a>
+<ul>
+<li><a href="#flag-set-flags">FLAG: Set flags</a></li>
+<li><a href="#gm-get-metadata">GM: Get metadata</a></li>
+<li><a href="#gtf-get-transaction-fields">GTF: Get transaction fields</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="reading-guide"><a class="header" href="#reading-guide">Reading Guide</a></h2>
+<p>This page provides a description of all instructions for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single <code>i</code> indicates a 6-bit immediate value, <code>i i</code> indicates a 12-bit immediate value, <code>i i i</code> indicates an 18-bit immediate value, and <code>i i i i</code> indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.</p>
+<ul>
+<li>The syntax <code>MEM[x, y]</code> used in this page means the memory range starting at byte <code>x</code>, of length <code>y</code> bytes.</li>
+<li>The syntax <code>STATE[x, y]</code> used in this page means the sequence of storage slots starting at key <code>x</code> and spanning <code>y</code> bytes.</li>
+</ul>
+<p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on <a href="./index.html#contexts">context</a>:</p>
+<ul>
+<li>In a predicate context, cease VM execution and return <code>false</code>.</li>
+<li>In other contexts, revert (described below).</li>
+</ul>
+<p>On a non-predicate panic, append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Panic</code></td></tr>
+<tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>then append an additional receipt to the list of receipts, again modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
+<tr><td><code>result</code></td><td><code>uint64</code></td><td><code>1</code></td></tr>
+<tr><td><code>gas_used</code></td><td><code>uint64</code></td><td>Gas consumed by the script.</td></tr>
+</tbody></table>
+</div>
+<p>A few instructions are annotated with the <em>effects</em> they produce, the table below explains each effect:</p>
+<div class="table-wrapper"><table><thead><tr><th>effect name</th><th>description</th></tr></thead><tbody>
+<tr><td>Storage read</td><td>Instruction reads from storage slots</td></tr>
+<tr><td>Storage write</td><td>Instruction writes to storage slots</td></tr>
+<tr><td>External call</td><td>External contract call instruction</td></tr>
+<tr><td>Balance tree read</td><td>Instruction reads from the balance tree</td></tr>
+<tr><td>Balance tree write</td><td>Instruction writes to the balance tree</td></tr>
+<tr><td>Output message</td><td>Instruction sends a message to a recipient address</td></tr>
+</tbody></table>
+</div>
+<p>If an instruction is not annotated with an effect, it means it does not produce any of the aforementioned affects.</p>
+<h2 id="arithmeticlogic-alu-instructions"><a class="header" href="#arithmeticlogic-alu-instructions">Arithmetic/Logic (ALU) Instructions</a></h2>
+<p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
+<p>Normally, if the result of an ALU operation is mathematically undefined (e.g. dividing by zero),
+the VM panics. However, if the <a href="./index.html#flags"><code>F_UNSAFEMATH</code></a> flag is set, <code>$err</code> is set to <code>true</code>
+and execution continues.</p>
+<p>If an operation would overflow, so that the result doesn't fit into the target field, the VM will panic.
+Results below zero are also considered overflows. If the <a href="./index.html#flags"><code>F_WRAPPING</code></a> flag is set,
+instead <code>$of</code> is set to <code>true</code> or the overflowing part of the result, depending on the operation.</p>
+<h3 id="add-add"><a class="header" href="#add-add">ADD: Add</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Adds two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB + $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>add $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> is assigned the overflow of the operation.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="addi-add-immediate"><a class="header" href="#addi-add-immediate">ADDI: Add immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Adds a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB + imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>addi $rA, $rB, immediate</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> is assigned the overflow of the operation.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="and-and"><a class="header" href="#and-and">AND: AND</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise ANDs two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &amp; $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>and $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="andi-and-immediate"><a class="header" href="#andi-and-immediate">ANDI: AND immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise ANDs a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &amp; imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>andi $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>imm</code> is extended to 64 bits, with the high 52 bits set to <code>0</code>.</p>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="div-divide"><a class="header" href="#div-divide">DIV: Divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Divides two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB // $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>div $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If <code>$rC == 0</code>, <code>$rA</code> is cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>Otherwise, <code>$err</code> is cleared.</p>
+<p><code>$of</code> is cleared.</p>
+<h3 id="divi-divide-immediate"><a class="header" href="#divi-divide-immediate">DIVI: Divide immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Divides a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB // imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>divi $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If <code>imm == 0</code>, <code>$rA</code> is cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>Otherwise, <code>$err</code> is cleared.</p>
+<p><code>$of</code> is cleared.</p>
+<h3 id="eq-equals"><a class="header" href="#eq-equals">EQ: Equals</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compares two registers for equality.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB == $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>eq $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="exp-exponentiate"><a class="header" href="#exp-exponentiate">EXP: Exponentiate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Raises one register to the power of another.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB ** $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>exp $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If the result cannot fit in 8 bytes, <code>$of</code> is set to <code>1</code> and <code>$rA</code> is instead set to <code>0</code>, otherwise <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="expi-exponentiate-immediate"><a class="header" href="#expi-exponentiate-immediate">EXPI: Exponentiate immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Raises one register to the power of an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB ** imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>expi $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If the result cannot fit in 8 bytes, <code>$of</code> is set to <code>1</code> and <code>$rA</code> is instead set to <code>0</code>, otherwise <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="gt-greater-than"><a class="header" href="#gt-greater-than">GT: Greater than</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compares two registers for greater-than.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &gt; $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>gt $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="lt-less-than"><a class="header" href="#lt-less-than">LT: Less than</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compares two registers for less-than.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &lt; $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>lt $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="mlog-math-logarithm"><a class="header" href="#mlog-math-logarithm">MLOG: Math logarithm</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The (integer) logarithm base <code>$rC</code> of <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = math.floor(math.log($rB, $rC));</code></td></tr>
+<tr><td>Syntax</td><td><code>mlog $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If <code>$rB == 0</code>, both <code>$rA</code> and <code>$of</code> are cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>If <code>$rC &lt;= 1</code>, both <code>$rA</code> and <code>$of</code> are cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>Otherwise, <code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="mod-modulus"><a class="header" href="#mod-modulus">MOD: Modulus</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Modulo remainder of two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB % $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>mod $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If <code>$rC == 0</code>, both <code>$rA</code> and <code>$of</code> are cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>Otherwise, <code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="modi-modulus-immediate"><a class="header" href="#modi-modulus-immediate">MODI: Modulus immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Modulo remainder of a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB % imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>modi $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If <code>imm == 0</code>, both <code>$rA</code> and <code>$of</code> are cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>Otherwise, <code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="move-move"><a class="header" href="#move-move">MOVE: Move</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Copy from one register to another.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB;</code></td></tr>
+<tr><td>Syntax</td><td><code>move $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="movi-move-immediate"><a class="header" href="#movi-move-immediate">MOVI: Move immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Copy an immediate value into a register.</td></tr>
+<tr><td>Operation</td><td><code>$rA = imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>movi $rA, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="mroo-math-root"><a class="header" href="#mroo-math-root">MROO: Math root</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The (integer) <code>$rC</code>th root of <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = math.floor(math.root($rB, $rC));</code></td></tr>
+<tr><td>Syntax</td><td><code>mroo $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p>If <code>$rC == 0</code>, both <code>$rA</code> and <code>$of</code> are cleared and <code>$err</code> is set to <code>true</code>.</p>
+<p>Otherwise, <code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="mul-multiply"><a class="header" href="#mul-multiply">MUL: Multiply</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiplies two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB * $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>mul $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> is assigned the overflow of the operation.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="muli-multiply-immediate"><a class="header" href="#muli-multiply-immediate">MULI: Multiply immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiplies a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB * imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>mul $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> is assigned the overflow of the operation.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="mldv-fused-multiply-divide"><a class="header" href="#mldv-fused-multiply-divide">MLDV: Fused multiply-divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiplies two registers with arbitrary precision, then divides by a third register.</td></tr>
+<tr><td>Operation</td><td><code>a = (b * c) / d;</code></td></tr>
+<tr><td>Syntax</td><td><code>mldv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 64</code> instead.</td></tr>
+</tbody></table>
+</div>
+<p>If the divisor (<code>$rD</code>) is zero, then instead the value is divided by <code>1 &lt;&lt; 64</code>. This returns the higher half of the 128-bit multiplication result. This operation never overflows.</p>
+<p>If the result of after the division doesn't fit into a register, <code>$of</code> is assigned the overflow of the operation. Otherwise, <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="noop-no-operation"><a class="header" href="#noop-no-operation">NOOP: No operation</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Performs no operation.</td></tr>
+<tr><td>Operation</td><td></td></tr>
+<tr><td>Syntax</td><td><code>noop</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 - - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="not-invert"><a class="header" href="#not-invert">NOT: Invert</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise NOT a register.</td></tr>
+<tr><td>Operation</td><td><code>$rA = ~$rB;</code></td></tr>
+<tr><td>Syntax</td><td><code>not $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="or-or"><a class="header" href="#or-or">OR: OR</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise ORs two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB \| $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>or $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="ori-or-immediate"><a class="header" href="#ori-or-immediate">ORI: OR immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise ORs a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB \| imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>ori $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>imm</code> is extended to 64 bits, with the high 52 bits set to <code>0</code>.</p>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="sll-shift-left-logical"><a class="header" href="#sll-shift-left-logical">SLL: Shift left logical</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Left shifts a register by a register.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &lt;&lt; $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>sll $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td>Zeroes are shifted in.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="slli-shift-left-logical-immediate"><a class="header" href="#slli-shift-left-logical-immediate">SLLI: Shift left logical immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Left shifts a register by an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &lt;&lt; imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>slli $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td>Zeroes are shifted in.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="srl-shift-right-logical"><a class="header" href="#srl-shift-right-logical">SRL: Shift right logical</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Right shifts a register by a register.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &gt;&gt; $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>srl $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td>Zeroes are shifted in.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="srli-shift-right-logical-immediate"><a class="header" href="#srli-shift-right-logical-immediate">SRLI: Shift right logical immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Right shifts a register by an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB &gt;&gt; imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>srli $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td>Zeroes are shifted in.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="sub-subtract"><a class="header" href="#sub-subtract">SUB: Subtract</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Subtracts two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB - $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>sub $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td><code>$of</code> is assigned the overflow of the operation.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> is assigned the underflow of the operation, as though <code>$of</code> is the high byte of a 128-bit register.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="subi-subtract-immediate"><a class="header" href="#subi-subtract-immediate">SUBI: Subtract immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Subtracts a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB - imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>subi $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td><code>$of</code> is assigned the overflow of the operation.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> is assigned the underflow of the operation, as though <code>$of</code> is the high byte of a 128-bit register.</p>
+<p><code>$err</code> is cleared.</p>
+<h3 id="wdcm-128-bit-integer-comparison"><a class="header" href="#wdcm-128-bit-integer-comparison">WDCM: 128-bit integer comparison</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compare or examine two 128-bit integers using selected mode</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,16];</code><br><code>c = indirect?mem[$rC,16]:$rC;</code><br><code>$rA = cmp_op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wdcm $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>...XXX</code></td><td><code>mode</code></td><td>Compare mode selection</td></tr>
+<tr><td><code>.XX...</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p>Then the actual operation that's performed:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>mode</code></th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>eq</td><td>Equality (<code>==</code>)</td></tr>
+<tr><td>1</td><td>ne</td><td>Inequality (<code>!=</code>)</td></tr>
+<tr><td>2</td><td>lt</td><td>Less than (<code>&lt;</code>)</td></tr>
+<tr><td>3</td><td>gt</td><td>Greater than (<code>&gt;</code>)</td></tr>
+<tr><td>4</td><td>lte</td><td>Less than or equals (<code>&lt;=</code>)</td></tr>
+<tr><td>5</td><td>gte</td><td>Greater than or equals (<code>&gt;=</code>)</td></tr>
+<tr><td>6</td><td>lzc</td><td>Leading zero count the lhs argument (<code>lzcnt</code>). Discards rhs.</td></tr>
+<tr><td>7</td><td>-</td><td>Reserved and must not be used</td></tr>
+</tbody></table>
+</div>
+<p>The leading zero count can be used to compute rounded-down log2 of a number using the following formula <code>TOTAL_BITS - 1 - lzc(n)</code>. Note that <code>log2(0)</code> is undefined, and will lead to integer overflow with this method.</p>
+<p>Clears <code>$of</code> and <code>$err</code>.</p>
+<p>Panic if:</p>
+<ul>
+<li>A reserved compare mode is given</li>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqcm-256-bit-integer-comparison"><a class="header" href="#wqcm-256-bit-integer-comparison">WQCM: 256-bit integer comparison</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compare or examine two 256-bit integers using selected mode</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,32];</code><br><code>c = indirect?mem[$rC,32]:$rC;</code><br><code>$rA = cmp_op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wqcm $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WDCM</code>.</p>
+<p>Clears <code>$of</code> and <code>$err</code>.</p>
+<p>Panic if:</p>
+<ul>
+<li>A reserved compare mode is given</li>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdop-misc-128-bit-integer-operations"><a class="header" href="#wdop-misc-128-bit-integer-operations">WDOP: Misc 128-bit integer operations</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform an ALU operation on two 128-bit integers</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,16];</code><br><code>c = indirect?mem[$rC,16]:$rC;</code><br><code>mem[$rA,16] = op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wdop $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>...XXX</code></td><td><code>op</code></td><td>Operation selection, see below</td></tr>
+<tr><td><code>.XX...</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p>Then the actual operation that's performed:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>op</code></th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td>add</td><td>Add</td></tr>
+<tr><td>1</td><td>sub</td><td>Subtract</td></tr>
+<tr><td>2</td><td>not</td><td>Invert bits (discards rhs)</td></tr>
+<tr><td>3</td><td>or</td><td>Bitwise or</td></tr>
+<tr><td>4</td><td>xor</td><td>Bitwise exclusive or</td></tr>
+<tr><td>5</td><td>and</td><td>Bitwise and</td></tr>
+<tr><td>6</td><td>shl</td><td>Shift left (logical)</td></tr>
+<tr><td>7</td><td>shr</td><td>Shift right (logical)</td></tr>
+</tbody></table>
+</div>
+<p>Operations behave <code>$of</code> and <code>$err</code> similarly to their 64-bit counterparts, except that <code>$of</code> is set to <code>1</code> instead of the overflowing part.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqop-misc-256-bit-integer-operations"><a class="header" href="#wqop-misc-256-bit-integer-operations">WQOP: Misc 256-bit integer operations</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform an ALU operation on two 256-bit integers</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,32];</code><br><code>c = indirect?mem[$rC,32]:$rC;</code><br><code>mem[$rA,32] = op(b,c);</code></td></tr>
+<tr><td>Syntax</td><td><code>wqop $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WQOP</code>.</p>
+<p>Operations behave <code>$of</code> and <code>$err</code> similarly to their 64-bit counterparts.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdml-multiply-128-bit-integers"><a class="header" href="#wdml-multiply-128-bit-integers">WDML: Multiply 128-bit integers</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform integer multiplication operation on two 128-bit integers.</td></tr>
+<tr><td>Operation</td><td><code>b=indirect0?mem[$rB,16]:$rB;</code><br><code>c=indirect1?mem[$rC,16]:$rC;</code><br><code>mem[$rA,16]=b*c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdml $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>..XXXX</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>.X....</code></td><td><code>indirect0</code></td><td>Is lhs operand ($rB) indirect or not</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect1</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is set to <code>1</code> in case of overflow, and cleared otherwise.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>indirect0 == 1</code> and <code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect1 == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqml-multiply-256-bit-integers"><a class="header" href="#wqml-multiply-256-bit-integers">WQML: Multiply 256-bit integers</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform integer multiplication operation on two 256-bit integers.</td></tr>
+<tr><td>Operation</td><td><code>b=indirect0?mem[$rB,32]:$rB;</code><br><code>c=indirect1?mem[$rC,32]:$rC;</code><br><code>mem[$rA,32]=b*c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqml $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WDML</code>.</p>
+<p><code>$of</code> is set to <code>1</code> in case of overflow, and cleared otherwise.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>indirect0 == 1</code> and <code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect1 == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wddv-128-bit-integer-division"><a class="header" href="#wddv-128-bit-integer-division">WDDV: 128-bit integer division</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Divide a 128-bit integer by another.</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,16];</code><br><code>c = indirect?mem[$rC,16]:$rC;</code><br><code>mem[$rA,16] = b / c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wddv $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>.XXXXX</code></td><td><code>reserved</code></td><td>Reserved and must be zero</td></tr>
+<tr><td><code>X.....</code></td><td><code>indirect</code></td><td>Is rhs operand ($rC) indirect or not</td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqdv-256-bit-integer-division"><a class="header" href="#wqdv-256-bit-integer-division">WQDV: 256-bit integer division</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Divide a 256-bit integer by another.</td></tr>
+<tr><td>Operation</td><td><code>b = mem[$rB,32];</code><br><code>c = indirect?mem[$rC,32]:$rC;</code><br><code>mem[$rA,32] = b / c;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqdv $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>The immediate value is interpreted identically to <code>WDDV</code>.</p>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 32]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>indirect == 1</code> and <code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdmd-128-bit-integer-fused-multiply-divide"><a class="header" href="#wdmd-128-bit-integer-fused-multiply-divide">WDMD: 128-bit integer fused multiply-divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Combined multiply-divide of 128-bit integers with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16]=(b * c) / d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wddv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 128</code> instead.</td></tr>
+</tbody></table>
+</div>
+<p>If the divisor <code>MEM[$rA, 16]</code> is zero, then instead the value is divided by <code>1 &lt;&lt; 128</code>. This returns the higher half of the 256-bit multiplication result.</p>
+<p>If the result of after the division is larger than operand size, <code>$of</code> is set to one. Otherwise, <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqmd-256-bit-integer-fused-multiply-divide"><a class="header" href="#wqmd-256-bit-integer-fused-multiply-divide">WQMD: 256-bit integer fused multiply-divide</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Combined multiply-divide of 256-bit integers with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32]=(b * c) / d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqdv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 256</code> instead.</td></tr>
+</tbody></table>
+</div>
+<p>If the divisor <code>MEM[$rA, 32]</code> is zero, then instead the value is divided by <code>1 &lt;&lt; 256</code>. This returns the higher half of the 512-bit multiplication result.</p>
+<p>If the result of after the division is larger than operand size, <code>$of</code> is set to one. Otherwise, <code>$of</code> is cleared.</p>
+<p><code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdam-modular-128-bit-integer-addition"><a class="header" href="#wdam-modular-128-bit-integer-addition">WDAM: Modular 128-bit integer addition</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Add two 128-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16] = (b+c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdam $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqam-modular-256-bit-integer-addition"><a class="header" href="#wqam-modular-256-bit-integer-addition">WQAM: Modular 256-bit integer addition</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Add two 256-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32] = (b+c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdam $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wdmm-modular-128-bit-integer-multiplication"><a class="header" href="#wdmm-modular-128-bit-integer-multiplication">WDMM: Modular 128-bit integer multiplication</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiply two 128-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16] = (b*c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wdmm $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 16]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 16</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="wqmm-modular-256-bit-integer-multiplication"><a class="header" href="#wqmm-modular-256-bit-integer-multiplication">WQMM: Modular 256-bit integer multiplication</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Multiply two 256-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
+<tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32] = (b*c)%d;</code></td></tr>
+<tr><td>Syntax</td><td><code>wqmm $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p><code>$of</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>Panic if:</p>
+<ul>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="xor-xor"><a class="header" href="#xor-xor">XOR: XOR</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise XORs two registers.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB ^ $rC;</code></td></tr>
+<tr><td>Syntax</td><td><code>xor $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h3 id="xori-xor-immediate"><a class="header" href="#xori-xor-immediate">XORI: XOR immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Bitwise XORs a register and an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$rA = $rB ^ imm;</code></td></tr>
+<tr><td>Syntax</td><td><code>xori $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<p><code>$of</code> and <code>$err</code> are cleared.</p>
+<h2 id="control-flow-instructions"><a class="header" href="#control-flow-instructions">Control Flow Instructions</a></h2>
+<h3 id="jmp-jump"><a class="header" href="#jmp-jump">JMP: Jump</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jumps to the code instruction offset by a register.</td></tr>
+<tr><td>Operation</td><td><code>$pc = $is + $rA * 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jmp $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$is + $rA * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="ji-jump-immediate"><a class="header" href="#ji-jump-immediate">JI: Jump immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jumps to the code instruction offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>$pc = $is + imm * 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>ji imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="jne-jump-if-not-equal"><a class="header" href="#jne-jump-if-not-equal">JNE: Jump if not equal</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump to the code instruction offset by a register if <code>$rA</code> is not equal to <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc = $is + $rC * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jne $rA $rB $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$is + $rC * 4 &gt; VM_MAX_RAM - 1</code> and the jump would be performed (i.e. <code>$rA != $rB</code>)</li>
+</ul>
+<h3 id="jnei-jump-if-not-equal-immediate"><a class="header" href="#jnei-jump-if-not-equal-immediate">JNEI: Jump if not equal immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump to the code instruction offset by <code>imm</code> if <code>$rA</code> is not equal to <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc = $is + imm * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jnei $rA $rB imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code> and the jump would be performed (i.e. <code>$rA != $rB</code>)</li>
+</ul>
+<h3 id="jnzi-jump-if-not-zero-immediate"><a class="header" href="#jnzi-jump-if-not-zero-immediate">JNZI: Jump if not zero immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump to the code instruction offset by <code>imm</code> if <code>$rA</code> is not equal to <code>$zero</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $zero:</code><br><code>$pc = $is + imm * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jnzi $rA imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$is + imm * 4 &gt; VM_MAX_RAM - 1</code>and the jump would be performed (i.e. <code>$rA != $zero</code>)</li>
+</ul>
+<h3 id="jmpb-jump-relative-backwards"><a class="header" href="#jmpb-jump-relative-backwards">JMPB: Jump relative backwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rA + imm</code> instructions backwards.</td></tr>
+<tr><td>Operation</td><td><code>$pc -= ($rA + imm + 1) * 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jmpb $rA imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc - ($rA + imm + 1) * 4 &lt; 0</code></li>
+</ul>
+<h3 id="jmpf-jump-relative-forwards"><a class="header" href="#jmpf-jump-relative-forwards">JMPF: Jump relative forwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rA + imm</code> instructions forwards</td></tr>
+<tr><td>Operation</td><td><code>$pc += ($rA + imm + 1) * 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jmpf $rA imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc + ($rA + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="jnzb-jump-if-not-zero-relative-backwards"><a class="header" href="#jnzb-jump-if-not-zero-relative-backwards">JNZB: Jump if not zero relative backwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rB + imm</code> instructions backwards if <code>$rA != $zero</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $zero:</code><br><code>$pc -= ($rB + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jnzb $rA $rB imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc - ($rB + imm + 1) * 4 &lt; 0</code></li>
+</ul>
+<h3 id="jnzf-jump-if-not-zero-relative-forwards"><a class="header" href="#jnzf-jump-if-not-zero-relative-forwards">JNZF: Jump if not zero relative forwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rB + imm</code> instructions forwards if <code>$rA != $zero</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $zero:</code><br><code>$pc += ($rB + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jnzf $rA $rB imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc + ($rB + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="jeqb-jump-if-not-equal-relative-backwards"><a class="header" href="#jeqb-jump-if-not-equal-relative-backwards">JEQB: Jump if not equal relative backwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rC + imm</code> instructions backwards if <code>$rA != $rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc -= ($rC + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jeqb $rA $rB $rC imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc - ($rC + imm + 1) * 4 &lt; 0</code></li>
+</ul>
+<h3 id="jeqf-jump-if-not-equal-relative-forwards"><a class="header" href="#jeqf-jump-if-not-equal-relative-forwards">JEQF: Jump if not equal relative forwards</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Jump <code>$rC + imm</code> instructions forwards if <code>$rA != $rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc += ($rC + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
+<tr><td>Syntax</td><td><code>jeqf $rA $rB $rC imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$pc + ($rC + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="ret-return-from-context"><a class="header" href="#ret-return-from-context">RET: Return from context</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Returns from <a href="./index.html#contexts">context</a> with value <code>$rA</code>.</td></tr>
+<tr><td>Operation</td><td><code>return($rA);</code></td></tr>
+<tr><td>Syntax</td><td><code>ret $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Return</code></td></tr>
+<tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>val</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>If current context is external, append an additional receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
+<tr><td><code>result</code></td><td><code>uint64</code></td><td><code>0</code></td></tr>
+<tr><td><code>gas_used</code></td><td><code>uint64</code></td><td>Gas consumed by the script.</td></tr>
+</tbody></table>
+</div>
+<p>If current context is external, cease VM execution and return <code>$rA</code>.</p>
+<p>Returns from contract call, popping the call frame. Before popping perform the following operations.</p>
+<p>Return the unused forwarded gas to the caller:</p>
+<ol>
+<li><code>$cgas = $cgas + $fp-&gt;$cgas</code> (add remaining context gas from previous context to current remaining context gas)</li>
+</ol>
+<p>Set the return value:</p>
+<ol>
+<li><code>$ret = $rA</code></li>
+<li><code>$retl = 0</code></li>
+</ol>
+<p>Then pop the call frame and restoring registers <em>except</em> <code>$ggas</code>, <code>$cgas</code>, <code>$ret</code>, and <code>$retl</code>. Afterwards, set the following registers:</p>
+<ol>
+<li><code>$pc = $pc + 4</code> (advance program counter from where we called)</li>
+</ol>
+<h2 id="memory-instructions"><a class="header" href="#memory-instructions">Memory Instructions</a></h2>
+<p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
+<h3 id="aloc-allocate-memory"><a class="header" href="#aloc-allocate-memory">ALOC: Allocate memory</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Allocate a number of bytes from the heap.</td></tr>
+<tr><td>Operation</td><td><code>$hp = $hp - $rA;</code></td></tr>
+<tr><td>Syntax</td><td><code>aloc $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td>Does not initialize memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$hp - $rA</code> underflows</li>
+<li><code>$hp - $rA &lt; $sp</code></li>
+</ul>
+<h3 id="cfe-extend-call-frame"><a class="header" href="#cfe-extend-call-frame">CFE: Extend call frame</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Extend the current call frame's stack.</td></tr>
+<tr><td>Operation</td><td><code>$sp = $sp + $rA</code></td></tr>
+<tr><td>Syntax</td><td><code>cfei $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td>Does not initialize memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp + $rA</code> overflows</li>
+<li><code>$sp + $rA &gt; $hp</code></li>
+</ul>
+<h3 id="cfei-extend-call-frame-immediate"><a class="header" href="#cfei-extend-call-frame-immediate">CFEI: Extend call frame immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Extend the current call frame's stack by an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$sp = $sp + imm</code></td></tr>
+<tr><td>Syntax</td><td><code>cfei imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td>Does not initialize memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp + imm</code> overflows</li>
+<li><code>$sp + imm &gt; $hp</code></li>
+</ul>
+<h3 id="cfs-shrink-call-frame"><a class="header" href="#cfs-shrink-call-frame">CFS: Shrink call frame</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Shrink the current call frame's stack.</td></tr>
+<tr><td>Operation</td><td><code>$sp = $sp - $rA</code></td></tr>
+<tr><td>Syntax</td><td><code>cfs $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 $rA - - -</code></td></tr>
+<tr><td>Notes</td><td>Does not clear memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp - $rA</code> underflows</li>
+<li><code>$sp - $rA &lt; $ssp</code></li>
+</ul>
+<h3 id="cfsi-shrink-call-frame-immediate"><a class="header" href="#cfsi-shrink-call-frame-immediate">CFSI: Shrink call frame immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Shrink the current call frame's stack by an immediate value.</td></tr>
+<tr><td>Operation</td><td><code>$sp = $sp - imm</code></td></tr>
+<tr><td>Syntax</td><td><code>cfsi imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td>Does not clear memory.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp - imm</code> underflows</li>
+<li><code>$sp - imm &lt; $ssp</code></li>
+</ul>
+<h3 id="lb-load-byte"><a class="header" href="#lb-load-byte">LB: Load byte</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A byte is loaded from the specified address offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = MEM[$rB + imm, 1];</code></td></tr>
+<tr><td>Syntax</td><td><code>lb $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + imm + 1</code> overflows</li>
+<li><code>$rB + imm + 1 &gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="lw-load-word"><a class="header" href="#lw-load-word">LW: Load word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A word is loaded from the specified address offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = MEM[$rB + (imm * 8), 8];</code></td></tr>
+<tr><td>Syntax</td><td><code>lw $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + (imm * 8) + 8</code> overflows</li>
+<li><code>$rB + (imm * 8) + 8 &gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="mcl-memory-clear"><a class="header" href="#mcl-memory-clear">MCL: Memory clear</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Clear bytes in memory.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, $rB] = 0;</code></td></tr>
+<tr><td>Syntax</td><td><code>mcl $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + $rB</code> overflows</li>
+<li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
+<li><code>$rB &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li>The memory range <code>MEM[$rA, $rB]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="mcli-memory-clear-immediate"><a class="header" href="#mcli-memory-clear-immediate">MCLI: Memory clear immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Clear bytes in memory.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, imm] = 0;</code></td></tr>
+<tr><td>Syntax</td><td><code>mcli $rA, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA i i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + imm</code> overflows</li>
+<li><code>$rA + imm &gt; VM_MAX_RAM</code></li>
+<li><code>imm &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li>The memory range <code>MEM[$rA, imm]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="mcp-memory-copy"><a class="header" href="#mcp-memory-copy">MCP: Memory copy</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Copy bytes in memory.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, $rC] = MEM[$rB, $rC];</code></td></tr>
+<tr><td>Syntax</td><td><code>mcp $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + $rC</code> overflows</li>
+<li><code>$rB + $rC</code> overflows</li>
+<li><code>$rA + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li>The memory ranges <code>MEM[$rA, $rC]</code> and <code>MEM[$rB, $rC]</code> overlap</li>
+<li>The memory range <code>MEM[$rA, $rC]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="mcpi-memory-copy-immediate"><a class="header" href="#mcpi-memory-copy-immediate">MCPI: Memory copy immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Copy bytes in memory.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, imm] = MEM[$rB, imm];</code></td></tr>
+<tr><td>Syntax</td><td><code>mcpi $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB imm imm</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + imm</code> overflows</li>
+<li><code>$rB + imm</code> overflows</li>
+<li><code>$rA + imm &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + imm &gt; VM_MAX_RAM</code></li>
+<li><code>imm &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li>The memory ranges <code>MEM[$rA, imm]</code> and <code>MEM[$rB, imm]</code> overlap</li>
+<li>The memory range <code>MEM[$rA, imm]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="meq-memory-equality"><a class="header" href="#meq-memory-equality">MEQ: Memory equality</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Compare bytes in memory.</td></tr>
+<tr><td>Operation</td><td><code>$rA = MEM[$rB, $rD] == MEM[$rC, $rD];</code></td></tr>
+<tr><td>Syntax</td><td><code>meq $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + $rD</code> overflows</li>
+<li><code>$rC + $rD</code> overflows</li>
+<li><code>$rB + $rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + $rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
+<h3 id="sb-store-byte"><a class="header" href="#sb-store-byte">SB: Store byte</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The least significant byte of <code>$rB</code> is stored at the address <code>$rA</code> offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA + imm, 1] = $rB[7, 1];</code></td></tr>
+<tr><td>Syntax</td><td><code>sb $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + imm + 1</code> overflows</li>
+<li><code>$rA + imm + 1 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA + imm, 1]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="sw-store-word"><a class="header" href="#sw-store-word">SW: Store word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The value of <code>$rB</code> is stored at the address <code>$rA</code> offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA + (imm * 8), 8] = $rB;</code></td></tr>
+<tr><td>Syntax</td><td><code>sw $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + (imm * 8) + 8</code> overflows</li>
+<li><code>$rA + (imm * 8) + 8 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA + (imm * 8), 8]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h2 id="contract-instructions"><a class="header" href="#contract-instructions">Contract Instructions</a></h2>
+<p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation, except for <a href="#call-call-contract">CALL</a>, <a href="#retd-return-from-context-with-data">RETD</a> and <a href="#rvrt-revert">RVRT</a>.</p>
+<h3 id="bal-balance-of-contract-id"><a class="header" href="#bal-balance-of-contract-id">BAL: Balance of contract ID</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Set <code>$rA</code> to the balance of asset ID at <code>$rB</code> for contract with ID at <code>$rC</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = balance(MEM[$rB, 32], MEM[$rC, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>bal $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Balance tree read</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Where helper <code>balance(asset_id: byte[32], contract_id: byte[32]) -&gt; uint64</code> returns the current balance of <code>asset_id</code> of contract with ID <code>contract_id</code>.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + 32</code> overflows</li>
+<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows</li>
+<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li>Contract with ID <code>MEM[$rC, 32]</code> is not in <code>tx.inputs</code></li>
+</ul>
+<h3 id="bhei-block-height"><a class="header" href="#bhei-block-height">BHEI: Block height</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Get Fuel block height.</td></tr>
+<tr><td>Operation</td><td><code>$rA = blockheight();</code></td></tr>
+<tr><td>Syntax</td><td><code>bhei $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+</ul>
+<h3 id="bhsh-block-hash"><a class="header" href="#bhsh-block-hash">BHSH: Block hash</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Get block header hash.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32] = blockhash($rB);</code></td></tr>
+<tr><td>Syntax</td><td><code>bhsh $rA $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<p>Block header hashes for blocks with height greater than or equal to current block height are zero (<code>0x00**32</code>).</p>
+<h3 id="burn-burn-existing-coins"><a class="header" href="#burn-burn-existing-coins">BURN: Burn existing coins</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Burn <code>$rA</code> coins of the current contract's asset ID.</td></tr>
+<tr><td>Operation</td><td><code>burn($rA);</code></td></tr>
+<tr><td>Syntax</td><td><code>burn $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li>Balance of asset ID <code>MEM[$fp, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code> minus <code>$rA</code> underflows</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>For output with contract ID <code>MEM[$fp, 32]</code>, decrease balance of asset ID <code>MEM[$fp, 32]</code> by <code>$rA</code>.</p>
+<p>This modifies the <code>balanceRoot</code> field of the appropriate output.</p>
+<h3 id="call-call-contract"><a class="header" href="#call-call-contract">CALL: Call contract</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Call contract.</td></tr>
+<tr><td>Operation</td><td></td></tr>
+<tr><td>Syntax</td><td><code>call $rA $rB $rC $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>External call</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Given helper <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> which returns the memory address of the remaining free balance of <code>asset_id</code>, or panics if <code>asset_id</code> has no free balance remaining.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rC + 32</code> overflows</li>
+<li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
+<li>Reading past <code>MEM[VM_MAX_RAM - 1]</code></li>
+<li>In an external context, if <code>$rB &gt; MEM[balanceOfStart(MEM[$rC, 32]), 8]</code></li>
+<li>In an internal context, if <code>$rB</code> is greater than the balance of asset ID <code>MEM[$rC, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
+</ul>
+<p>Register <code>$rA</code> is a memory address from which the following fields are set (word-aligned):</p>
+<div class="table-wrapper"><table><thead><tr><th>bytes</th><th>type</th><th>value</th><th>description</th></tr></thead><tbody>
+<tr><td>32</td><td><code>byte[32]</code></td><td><code>to</code></td><td>Contract ID to call.</td></tr>
+<tr><td>8</td><td><code>byte[8]</code></td><td><code>param1</code></td><td>First parameter.</td></tr>
+<tr><td>8</td><td><code>byte[8]</code></td><td><code>param2</code></td><td>Second parameter.</td></tr>
+</tbody></table>
+</div>
+<p><code>$rB</code> is the amount of coins to forward. <code>$rC</code> points to the 32-byte asset ID of the coins to forward. <code>$rD</code> is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.</p>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Call</code></td></tr>
+<tr><td><code>from</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>to</code></td><td><code>byte[32]</code></td><td>Contract ID of called contract.</td></tr>
+<tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of coins to forward, i.e. <code>$rB</code>.</td></tr>
+<tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>Asset ID of coins to forward, i.e. <code>MEM[$rC, 32]</code>.</td></tr>
+<tr><td><code>gas</code></td><td><code>uint64</code></td><td>Gas to forward, i.e. <code>$rD</code>.</td></tr>
+<tr><td><code>param1</code></td><td><code>uint64</code></td><td>First parameter.</td></tr>
+<tr><td><code>param2</code></td><td><code>uint64</code></td><td>Second parameter.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>For output with contract ID <code>MEM[$rA, 32]</code>, increase balance of asset ID <code>MEM[$rC, 32]</code> by <code>$rB</code>. In an external context, decrease <code>MEM[balanceOfStart(MEM[$rC, 32]), 8]</code> by <code>$rB</code>. In an internal context, decrease asset ID <code>MEM[$rC, 32]</code> balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rB</code>.</p>
+<p>A <a href="./index.html#call-frames">call frame</a> is pushed at <code>$sp</code>. In addition to filling in the values of the call frame, the following registers are set:</p>
+<ol>
+<li><code>$fp = $sp</code> (on top of the previous call frame is the beginning of this call frame)</li>
+<li>Set <code>$ssp</code> and <code>$sp</code> to the start of the writable stack area of the call frame.</li>
+<li>Set <code>$pc</code> and <code>$is</code> to the starting address of the code.</li>
+<li><code>$bal = $rB</code> (forward coins)</li>
+<li><code>$cgas = $rD</code> or all available gas (forward gas)</li>
+</ol>
+<p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
+<h3 id="cb-coinbase-address"><a class="header" href="#cb-coinbase-address">CB: Coinbase address</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Get the <a href="../protocol/tx-validity.html#coinbase-transaction">coinbase address</a> associated with the block proposer.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32] = coinbase();</code></td></tr>
+<tr><td>Syntax</td><td><code>cb $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="ccp-code-copy"><a class="header" href="#ccp-code-copy">CCP: Code copy</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Copy <code>$rD</code> bytes of code starting at <code>$rC</code> for contract with ID equal to the 32 bytes in memory starting at <code>$rB</code> into memory starting at <code>$rA</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, $rD] = code($rB, $rC, $rD);</code></td></tr>
+<tr><td>Syntax</td><td><code>ccp $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>If <code>$rD</code> is greater than the code size, zero bytes are filled in.</td></tr>
+</tbody></table>
+</div>
+<p>This is used only for reading and inspecting code of other contracts.
+Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to load code for executing.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + $rD</code> overflows</li>
+<li><code>$rB + 32</code> overflows</li>
+<li><code>$rA + $rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, $rD]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
+</ul>
+<h3 id="croo-code-merkle-root"><a class="header" href="#croo-code-merkle-root">CROO: Code Merkle root</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Set the 32 bytes in memory starting at <code>$rA</code> to the code root for contract with ID equal to the 32 bytes in memory starting at <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32] = coderoot(MEM[$rB, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>croo $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
+</ul>
+<p>Code root computation is defined <a href="../identifiers/contract-id.html">here</a>.</p>
+<h3 id="csiz-code-size"><a class="header" href="#csiz-code-size">CSIZ: Code size</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Set <code>$rA</code> to the size of the code for contract with ID equal to the 32 bytes in memory starting at <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = codesize(MEM[$rB, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>csiz $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB + 32</code> overflows</li>
+<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
+</ul>
+<h3 id="ldc-load-code-from-an-external-contract"><a class="header" href="#ldc-load-code-from-an-external-contract">LDC: Load code from an external contract</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Copy <code>$rC</code> bytes of code starting at <code>$rB</code> for contract with ID equal to the 32 bytes in memory starting at <code>$rA</code> into memory starting at <code>$ssp</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$ssp, $rC] = code($rA, $rB, $rC);</code></td></tr>
+<tr><td>Syntax</td><td><code>ldc $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td>If <code>$rC</code> is greater than the code size, zero bytes are filled in.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$ssp + $rC</code> overflows</li>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$ssp + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$ssp + $rC &gt;= $hp</code></li>
+<li><code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
+<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
+</ul>
+<p>Increment <code>$fp-&gt;codesize</code>, <code>$ssp</code> by <code>$rC</code> padded to word alignment. Then set <code>$sp</code> to <code>$ssp</code>.</p>
+<p>This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).</p>
+<h3 id="log-log-event"><a class="header" href="#log-log-event">LOG: Log event</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Log an event. This is a no-op.</td></tr>
+<tr><td>Operation</td><td><code>log($rA, $rB, $rC, $rD);</code></td></tr>
+<tr><td>Syntax</td><td><code>log $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Log</code></td></tr>
+<tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>val0</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>val1</code></td><td><code>uint64</code></td><td>Value of register <code>$rB</code>.</td></tr>
+<tr><td><code>val2</code></td><td><code>uint64</code></td><td>Value of register <code>$rC</code>.</td></tr>
+<tr><td><code>val3</code></td><td><code>uint64</code></td><td>Value of register <code>$rD</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<h3 id="logd-log-data-event"><a class="header" href="#logd-log-data-event">LOGD: Log data event</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Log an event. This is a no-op.</td></tr>
+<tr><td>Operation</td><td><code>logd($rA, $rB, $rC, $rD);</code></td></tr>
+<tr><td>Syntax</td><td><code>logd $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.LogData</code></td></tr>
+<tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>val0</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>val1</code></td><td><code>uint64</code></td><td>Value of register <code>$rB</code>.</td></tr>
+<tr><td><code>ptr</code></td><td><code>uint64</code></td><td>Value of register <code>$rC</code>.</td></tr>
+<tr><td><code>len</code></td><td><code>uint64</code></td><td>Value of register <code>$rD</code>.</td></tr>
+<tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="#s256-sha-2-256">Hash</a> of <code>MEM[$rC, $rD]</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>Logs the memory range <code>MEM[$rC, $rD]</code>.</p>
+<p>Panics if:</p>
+<ul>
+<li><code>$rC + $rD</code> overflows</li>
+<li><code>$rA + $rD &gt; VM_MAX_RAN</code></li>
+<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
+<h3 id="mint-mint-new-coins"><a class="header" href="#mint-mint-new-coins">MINT: Mint new coins</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Mint <code>$rA</code> coins of the current contract's asset ID.</td></tr>
+<tr><td>Operation</td><td><code>mint($rA);</code></td></tr>
+<tr><td>Syntax</td><td><code>mint $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li>Balance of asset ID <code>MEM[$fp, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code> plus <code>$rA</code> overflows</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>For output with contract ID <code>MEM[$fp, 32]</code>, increase balance of asset ID <code>MEM[$fp, 32]</code> by <code>$rA</code>.</p>
+<p>This modifies the <code>balanceRoot</code> field of the appropriate output.</p>
+<h3 id="retd-return-from-context-with-data"><a class="header" href="#retd-return-from-context-with-data">RETD: Return from context with data</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Returns from <a href="./index.html#contexts">context</a> with value <code>MEM[$rA, $rB]</code>.</td></tr>
+<tr><td>Operation</td><td><code>returndata($rA, $rB);</code></td></tr>
+<tr><td>Syntax</td><td><code>retd $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + $rB</code> overflows</li>
+<li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
+<li><code>$rB &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ReturnData</code></td></tr>
+<tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>ptr</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>len</code></td><td><code>uint64</code></td><td>Value of register <code>$rB</code>.</td></tr>
+<tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="#s256-sha-2-256">Hash</a> of <code>MEM[$rA, $rB]</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>If current context is a script, append an additional receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
+<tr><td><code>result</code></td><td><code>uint64</code></td><td><code>0</code></td></tr>
+<tr><td><code>gas_used</code></td><td><code>uint64</code></td><td>Gas consumed by the script.</td></tr>
+</tbody></table>
+</div>
+<p>If current context is external, cease VM execution and return <code>MEM[$rA, $rB]</code>.</p>
+<p>Returns from contract call, popping the call frame. Before popping, perform the following operations.</p>
+<p>Return the unused forwarded gas to the caller:</p>
+<ol>
+<li><code>$cgas = $cgas + $fp-&gt;$cgas</code> (add remaining context gas from previous context to current remaining context gas)</li>
+</ol>
+<p>Set the return value:</p>
+<ol>
+<li><code>$ret = $rA</code></li>
+<li><code>$retl = $rB</code></li>
+</ol>
+<p>Then pop the call frame and restoring registers <em>except</em> <code>$ggas</code>, <code>$cgas</code>, <code>$ret</code>, and <code>$retl</code>. Afterwards, set the following registers:</p>
+<ol>
+<li><code>$pc = $pc + 4</code> (advance program counter from where we called)</li>
+</ol>
+<h3 id="rvrt-revert"><a class="header" href="#rvrt-revert">RVRT: Revert</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Halt execution, reverting state changes and returning value in <code>$rA</code>.</td></tr>
+<tr><td>Operation</td><td><code>revert($rA);</code></td></tr>
+<tr><td>Syntax</td><td><code>rvrt $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Revert</code></td></tr>
+<tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>val</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>Then append an additional receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
+<tr><td><code>result</code></td><td><code>uint64</code></td><td><code>1</code></td></tr>
+<tr><td><code>gas_used</code></td><td><code>uint64</code></td><td>Gas consumed by the script.</td></tr>
+</tbody></table>
+</div>
+<p>Cease VM execution and revert script effects. After a revert:</p>
+<ol>
+<li>All <a href="../tx-format/output.html#outputcontract">OutputContract</a> outputs will have the same <code>balanceRoot</code> and <code>stateRoot</code> as on initialization.</li>
+<li>All <a href="../tx-format/output.html#outputvariable">OutputVariable</a> outputs will have <code>to</code>, <code>amount</code>, and <code>asset_id</code> of zero.</li>
+</ol>
+<h3 id="smo-send-message-out"><a class="header" href="#smo-send-message-out">SMO: Send message out</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Send a message to recipient address <code>MEM[$rA, 32]</code> from the <code>MEM[$fp, 32]</code> sender with message data <code>MEM[$rB, $rC]</code> and the <code>$rD</code> amount of base asset coins.</td></tr>
+<tr><td>Operation</td><td><code>outputmessage(MEM[$fp, 32], MEM[$rA, 32], MEM[$rB, $rC], $rD);</code></td></tr>
+<tr><td>Syntax</td><td><code>smo $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Output message</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Given helper <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> which returns the memory address of the remaining free balance of <code>asset_id</code>, or panics if <code>asset_id</code> has no free balance remaining.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB + $rC</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
+<li><code>$rC &gt; MESSAGE_MAX_DATA_SIZE</code></li>
+<li>In an external context, if <code>$rD &gt; MEM[balanceOfStart(0), 8]</code></li>
+<li>In an internal context, if <code>$rD</code> is greater than the balance of asset ID 0 of output with contract ID <code>MEM[$fp, 32]</code></li>
+</ul>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.MessageOut</code></td></tr>
+<tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender: <code>MEM[$fp, 32]</code>.</td></tr>
+<tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient: <code>MEM[$rA, 32]</code>.</td></tr>
+<tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message: <code>$rD</code>.</td></tr>
+<tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce as described <a href="../identifiers/utxo-id.html#message-nonce">here</a>.</td></tr>
+<tr><td><code>len</code></td><td><code>uint16</code></td><td>Length of message data, in bytes: <code>$rC</code>.</td></tr>
+<tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="#s256-sha-2-256">Hash</a> of <code>MEM[$rB, $rC]</code>.</td></tr>
+</tbody></table>
+</div>
+<p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.</p>
+<h3 id="scwq-state-clear-sequential-32-byte-slots"><a class="header" href="#scwq-state-clear-sequential-32-byte-slots">SCWQ: State clear sequential 32 byte slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of 32 bytes is cleared from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], 32 * $rC] = None;</code></td></tr>
+<tr><td>Syntax</td><td><code>scwq $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range was already unset (default) and <code>true</code> if all the slots were set.</p>
+<h3 id="srw-state-read-word"><a class="header" href="#srw-state-read-word">SRW: State read word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A word is read from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>$rA = STATE[MEM[$rC, 32]][0, 8];</code></td></tr>
+<tr><td>Syntax</td><td><code>srw $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rC + 32</code> overflows</li>
+<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
+<h3 id="srwq-state-read-sequential-32-byte-slots"><a class="header" href="#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of 32 bytes is read from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];</code></td></tr>
+<tr><td>Syntax</td><td><code>srwq $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32 * rD</code> overflows</li>
+<li><code>$rA + 32 * rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rC + 32 * rD</code> overflows</li>
+<li><code>$rC + 32 * rD &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 32 * rD]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
+<h3 id="sww-state-write-word"><a class="header" href="#sww-state-write-word">SWW: State write word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A word is written to the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32]][0, 8] = $rC;</code><br><code>STATE[MEM[$rA, 32]][8, 24] = 0;</code></td></tr>
+<tr><td>Syntax</td><td><code>sww $rA $rB $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>$rB</code> will be set to <code>false</code> if the storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
+<h3 id="swwq-state-write-sequential-32-byte-slots"><a class="header" href="#swwq-state-write-sequential-32-byte-slots">SWWQ: State write sequential 32 byte slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of 32 bytes is written to the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];</code></td></tr>
+<tr><td>Syntax</td><td><code>swwq $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rC + 32 * $rD</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 * $rD &gt; VM_MAX_RAM</code></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if the first storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
+<h3 id="time-timestamp-at-height"><a class="header" href="#time-timestamp-at-height">TIME: Timestamp at height</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Get timestamp of block at given height.</td></tr>
+<tr><td>Operation</td><td><code>$rA = time($rB);</code></td></tr>
+<tr><td>Syntax</td><td><code>time $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>$rB</code> is greater than the current block height.</li>
+</ul>
+<p>Gets the timestamp of the block at height <code>$rB</code>. Time is in <a href="https://cr.yp.to/libtai/tai64.html">TAI64</a> format.</p>
+<h3 id="tr-transfer-coins-to-contract"><a class="header" href="#tr-transfer-coins-to-contract">TR: Transfer coins to contract</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Transfer <code>$rB</code> coins with asset ID at <code>$rC</code> to contract with ID at <code>$rA</code>.</td></tr>
+<tr><td>Operation</td><td><code>transfer(MEM[$rA, 32], $rB, MEM[$rC, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>tr $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Balance tree read, balance tree write</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Given helper <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> which returns the memory address of the remaining free balance of <code>asset_id</code>, or panics if <code>asset_id</code> has no free balance remaining.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rC + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
+<li>In an external context, if <code>$rB &gt; MEM[balanceOfStart(MEM[$rC, 32]), 8]</code></li>
+<li>In an internal context, if <code>$rB</code> is greater than the balance of asset ID <code>MEM[$rC, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
+<li><code>$rB == 0</code></li>
+</ul>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Transfer</code></td></tr>
+<tr><td><code>from</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>to</code></td><td><code>byte[32]</code></td><td>Contract ID of contract to transfer coins to.</td></tr>
+<tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of coins transferred.</td></tr>
+<tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>asset ID of coins transferred.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>For output with contract ID <code>MEM[$rA, 32]</code>, increase balance of asset ID <code>MEM[$rC, 32]</code> by <code>$rB</code>. In an external context, decrease <code>MEM[balanceOfStart(MEM[$rC, 32]), 8]</code> by <code>$rB</code>. In an internal context, decrease asset ID <code>MEM[$rC, 32]</code> balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rB</code>.</p>
+<p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
+<h3 id="tro-transfer-coins-to-output"><a class="header" href="#tro-transfer-coins-to-output">TRO: Transfer coins to output</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Transfer <code>$rC</code> coins with asset ID at <code>$rD</code> to address at <code>$rA</code>, with output <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>transferout(MEM[$rA, 32], $rB, $rC, MEM[$rD, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>tro $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Balance tree read, balance tree write</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Given helper <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> which returns the memory address of the remaining free balance of <code>asset_id</code>, or panics if <code>asset_id</code> has no free balance remaining.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rD + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB &gt; tx.outputsCount</code></li>
+<li>In an external context, if <code>$rC &gt; MEM[balanceOfStart(MEM[$rD, 32]), 8]</code></li>
+<li>In an internal context, if <code>$rC</code> is greater than the balance of asset ID <code>MEM[$rD, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
+<li><code>$rC == 0</code></li>
+<li><code>tx.outputs[$rB].type != OutputType.Variable</code></li>
+<li><code>tx.outputs[$rB].amount != 0</code></li>
+</ul>
+<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.TransferOut</code></td></tr>
+<tr><td><code>from</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
+<tr><td><code>to</code></td><td><code>byte[32]</code></td><td>Address to transfer coins to.</td></tr>
+<tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of coins transferred.</td></tr>
+<tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>asset ID of coins transferred.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
+<p>In an external context, decrease <code>MEM[balanceOfStart(MEM[$rD, 32]), 8]</code> by <code>$rC</code>. In an internal context, decrease asset ID <code>MEM[$rD, 32]</code> balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rC</code>. Then set:</p>
+<ul>
+<li><code>tx.outputs[$rB].to = MEM[$rA, 32]</code></li>
+<li><code>tx.outputs[$rB].amount = $rC</code></li>
+<li><code>tx.outputs[$rB].asset_id = MEM[$rD, 32]</code></li>
+</ul>
+<p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
+<h2 id="cryptographic-instructions"><a class="header" href="#cryptographic-instructions">Cryptographic Instructions</a></h2>
+<p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
+<h3 id="ecr-signature-recovery"><a class="header" href="#ecr-signature-recovery">ECR: Signature recovery</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The 64-byte public key (x, y) recovered from 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 64</code> overflows</li>
+<li><code>$rB + 64</code> overflows</li>
+<li><code>$rC + 32</code> overflows</li>
+<li><code>$rA + 64 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 64 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 64]</code> does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<p>Signatures and signature verification are specified <a href="../protocol/cryptographic-primitives.html#public-key-cryptography">here</a>.</p>
+<p>If the signature cannot be verified, <code>MEM[$rA, 64]</code> is set to <code>0</code> and <code>$err</code> is set to <code>1</code>, otherwise <code>$err</code> is cleared.</p>
+<p>To get the address from the public key, hash the public key with <a href="#s256-sha-2-256">SHA-2-256</a>.</p>
+<h3 id="k256-keccak-256"><a class="header" href="#k256-keccak-256">K256: keccak-256</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The keccak-256 hash of <code>$rC</code> bytes starting at <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);</code></td></tr>
+<tr><td>Syntax</td><td><code>k256 $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB + $rC</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
+<h3 id="s256-sha-2-256"><a class="header" href="#s256-sha-2-256">S256: SHA-2-256</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The SHA-2-256 hash of <code>$rC</code> bytes starting at <code>$rB</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32] = sha256(MEM[$rB, $rC]);</code></td></tr>
+<tr><td>Syntax</td><td><code>s256 $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB + $rC</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
+<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
+<h2 id="other-instructions"><a class="header" href="#other-instructions">Other Instructions</a></h2>
+<p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
+<h3 id="flag-set-flags"><a class="header" href="#flag-set-flags">FLAG: Set flags</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Set <code>$flag</code> to <code>$rA</code>.</td></tr>
+<tr><td>Operation</td><td><code>$flag = $rA;</code></td></tr>
+<tr><td>Syntax</td><td><code>flag $rA</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li>Any reserved flags are set</li>
+</ul>
+<h3 id="gm-get-metadata"><a class="header" href="#gm-get-metadata">GM: Get metadata</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Get metadata from memory.</td></tr>
+<tr><td>Operation</td><td>Varies (see below).</td></tr>
+<tr><td>Syntax</td><td><code>gm $rA, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA imm imm imm</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Read metadata from memory. A convenience instruction to avoid manually extracting metadata.</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>value</th><th>description</th></tr></thead><tbody>
+<tr><td><code>GM_IS_CALLER_EXTERNAL</code></td><td><code>0x00001</code></td><td>Get if caller is external.</td></tr>
+<tr><td><code>GM_GET_CALLER</code></td><td><code>0x00002</code></td><td>Get caller's contract ID.</td></tr>
+<tr><td><code>GM_GET_VERIFYING_PREDICATE</code></td><td><code>0x00003</code></td><td>Get index of current predicate.</td></tr>
+<tr><td><code>GM_GET_CHAIN_ID</code></td><td><code>0x00004</code></td><td>Get the value of <code>CHAIN_ID</code></td></tr>
+</tbody></table>
+</div>
+<p>If <code>imm == GM_IS_CALLER_EXTERNAL</code>:</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$fp == 0</code> (in an external context)</li>
+</ul>
+<p>Set <code>$rA</code> to <code>true</code> if parent is an external context, <code>false</code> otherwise.</p>
+<p>If <code>imm == GM_GET_CALLER</code>:</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$fp == 0</code> (in an external context)</li>
+<li><code>$fp-&gt;$fp == 0</code> (if parent context is external)</li>
+</ul>
+<p>Set <code>$rA</code> to <code>$fp-&gt;$fp</code> (i.e. <code>$rA</code> will point to the previous call frame's contract ID).</p>
+<p>If <code>imm == GM_GET_VERIFYING_PREDICATE</code>:</p>
+<p>Panic if:</p>
+<ul>
+<li>not in a predicate context</li>
+</ul>
+<p>Set <code>$rA</code> to the index of the currently-verifying predicate.</p>
+<h3 id="gtf-get-transaction-fields"><a class="header" href="#gtf-get-transaction-fields">GTF: Get transaction fields</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Get transaction fields.</td></tr>
+<tr><td>Operation</td><td>Varies (see below).</td></tr>
+<tr><td>Syntax</td><td><code>gtf $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Get <a href="../tx-format/transaction.html">fields from the transaction</a>.</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th><code>imm</code></th><th>set <code>$rA</code> to</th></tr></thead><tbody>
+<tr><td><code>GTF_TYPE</code></td><td><code>0x001</code></td><td><code>tx.type</code></td></tr>
+<tr><td><code>GTF_SCRIPT_GAS_PRICE</code></td><td><code>0x002</code></td><td><code>tx.gasPrice</code></td></tr>
+<tr><td><code>GTF_SCRIPT_GAS_LIMIT</code></td><td><code>0x003</code></td><td><code>tx.gasLimit</code></td></tr>
+<tr><td><code>GTF_SCRIPT_MATURITY</code></td><td><code>0x004</code></td><td><code>tx.maturity</code></td></tr>
+<tr><td><code>GTF_SCRIPT_SCRIPT_LENGTH</code></td><td><code>0x005</code></td><td><code>tx.scriptLength</code></td></tr>
+<tr><td><code>GTF_SCRIPT_SCRIPT_DATA_LENGTH</code></td><td><code>0x006</code></td><td><code>tx.scriptDataLength</code></td></tr>
+<tr><td><code>GTF_SCRIPT_INPUTS_COUNT</code></td><td><code>0x007</code></td><td><code>tx.inputsCount</code></td></tr>
+<tr><td><code>GTF_SCRIPT_OUTPUTS_COUNT</code></td><td><code>0x008</code></td><td><code>tx.outputsCount</code></td></tr>
+<tr><td><code>GTF_SCRIPT_WITNESSES_COUNT</code></td><td><code>0x009</code></td><td><code>tx.witnessesCount</code></td></tr>
+<tr><td><code>GTF_SCRIPT_RECEIPTS_ROOT</code></td><td><code>0x00A</code></td><td>Memory address of <code>tx.receiptsRoot</code></td></tr>
+<tr><td><code>GTF_SCRIPT_SCRIPT</code></td><td><code>0x00B</code></td><td>Memory address of <code>tx.script</code></td></tr>
+<tr><td><code>GTF_SCRIPT_SCRIPT_DATA</code></td><td><code>0x00C</code></td><td>Memory address of <code>tx.scriptData</code></td></tr>
+<tr><td><code>GTF_SCRIPT_INPUT_AT_INDEX</code></td><td><code>0x00D</code></td><td>Memory address of <code>tx.inputs[$rB]</code></td></tr>
+<tr><td><code>GTF_SCRIPT_OUTPUT_AT_INDEX</code></td><td><code>0x00E</code></td><td>Memory address of <code>t.outputs[$rB]</code></td></tr>
+<tr><td><code>GTF_SCRIPT_WITNESS_AT_INDEX</code></td><td><code>0x00F</code></td><td>Memory address of <code>tx.witnesses[$rB]</code></td></tr>
+<tr><td><code>GTF_CREATE_GAS_PRICE</code></td><td><code>0x010</code></td><td><code>tx.gasPrice</code></td></tr>
+<tr><td><code>GTF_CREATE_GAS_LIMIT</code></td><td><code>0x011</code></td><td><code>tx.gasLimit</code></td></tr>
+<tr><td><code>GTF_CREATE_MATURITY</code></td><td><code>0x012</code></td><td><code>tx.maturity</code></td></tr>
+<tr><td><code>GTF_CREATE_BYTECODE_LENGTH</code></td><td><code>0x013</code></td><td><code>tx.bytecodeLength</code></td></tr>
+<tr><td><code>GTF_CREATE_BYTECODE_WITNESS_INDEX</code></td><td><code>0x014</code></td><td><code>tx.bytecodeWitnessIndex</code></td></tr>
+<tr><td><code>GTF_CREATE_STORAGE_SLOTS_COUNT</code></td><td><code>0x015</code></td><td><code>tx.storageSlotsCount</code></td></tr>
+<tr><td><code>GTF_CREATE_INPUTS_COUNT</code></td><td><code>0x016</code></td><td><code>tx.inputsCount</code></td></tr>
+<tr><td><code>GTF_CREATE_OUTPUTS_COUNT</code></td><td><code>0x017</code></td><td><code>tx.outputsCount</code></td></tr>
+<tr><td><code>GTF_CREATE_WITNESSES_COUNT</code></td><td><code>0x018</code></td><td><code>tx.witnessesCount</code></td></tr>
+<tr><td><code>GTF_CREATE_SALT</code></td><td><code>0x019</code></td><td>Memory address of <code>tx.salt</code></td></tr>
+<tr><td><code>GTF_CREATE_STORAGE_SLOT_AT_INDEX</code></td><td><code>0x01A</code></td><td>Memory address of <code>tx.storageSlots[$rB]</code></td></tr>
+<tr><td><code>GTF_CREATE_INPUT_AT_INDEX</code></td><td><code>0x01B</code></td><td>Memory address of <code>tx.inputs[$rB]</code></td></tr>
+<tr><td><code>GTF_CREATE_OUTPUT_AT_INDEX</code></td><td><code>0x01C</code></td><td>Memory address of <code>t.outputs[$rB]</code></td></tr>
+<tr><td><code>GTF_CREATE_WITNESS_AT_INDEX</code></td><td><code>0x01D</code></td><td>Memory address of <code>tx.witnesses[$rB]</code></td></tr>
+<tr><td><code>GTF_INPUT_TYPE</code></td><td><code>0x101</code></td><td><code>tx.inputs[$rB].type</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_TX_ID</code></td><td><code>0x102</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_OUTPUT_INDEX</code></td><td><code>0x103</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_OWNER</code></td><td><code>0x104</code></td><td>Memory address of <code>tx.inputs[$rB].owner</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_AMOUNT</code></td><td><code>0x105</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_ASSET_ID</code></td><td><code>0x106</code></td><td>Memory address of <code>tx.inputs[$rB].asset_id</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_TX_POINTER</code></td><td><code>0x107</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_WITNESS_INDEX</code></td><td><code>0x108</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_MATURITY</code></td><td><code>0x109</code></td><td><code>tx.inputs[$rB].maturity</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE_LENGTH</code></td><td><code>0x10A</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA_LENGTH</code></td><td><code>0x10B</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE</code></td><td><code>0x10C</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA</code></td><td><code>0x10D</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_COIN_PREDICATE_GAS_USED</code></td><td><code>0x10E</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_TX_ID</code></td><td><code>0x10F</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_OUTPUT_INDEX</code></td><td><code>0x110</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x111</code></td><td>Memory address of <code>tx.inputs[$rB].balanceRoot</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x112</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x113</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
+<tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x114</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x115</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x116</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_AMOUNT</code></td><td><code>0x117</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_NONCE</code></td><td><code>0x118</code></td><td>Memory address of <code>tx.inputs[$rB].nonce</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_WITNESS_INDEX</code></td><td><code>0x119</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA_LENGTH</code></td><td><code>0x11A</code></td><td><code>tx.inputs[$rB].dataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_LENGTH</code></td><td><code>0x11B</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH</code></td><td><code>0x11C</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_DATA</code></td><td><code>0x11D</code></td><td>Memory address of <code>tx.inputs[$rB].data</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE</code></td><td><code>0x11E</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_DATA</code></td><td><code>0x11F</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
+<tr><td><code>GTF_INPUT_MESSAGE_PREDICATE_GAS_USED</code></td><td><code>0x120</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
+<tr><td><code>GTF_OUTPUT_TYPE</code></td><td><code>0x201</code></td><td><code>tx.outputs[$rB].type</code></td></tr>
+<tr><td><code>GTF_OUTPUT_COIN_TO</code></td><td><code>0x202</code></td><td>Memory address of <code>tx.outputs[$rB].to</code></td></tr>
+<tr><td><code>GTF_OUTPUT_COIN_AMOUNT</code></td><td><code>0x203</code></td><td><code>tx.outputs[$rB].amount</code></td></tr>
+<tr><td><code>GTF_OUTPUT_COIN_ASSET_ID</code></td><td><code>0x204</code></td><td>Memory address of <code>tx.outputs[$rB].asset_id</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_INPUT_INDEX</code></td><td><code>0x205</code></td><td><code>tx.outputs[$rB].inputIndex</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x206</code></td><td>Memory address of <code>tx.outputs[$rB].balanceRoot</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x207</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID</code></td><td><code>0x208</code></td><td>Memory address of <code>tx.outputs[$rB].contractID</code></td></tr>
+<tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT</code></td><td><code>0x209</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
+<tr><td><code>GTF_WITNESS_DATA_LENGTH</code></td><td><code>0x301</code></td><td><code>tx.witnesses[$rB].dataLength</code></td></tr>
+<tr><td><code>GTF_WITNESS_DATA</code></td><td><code>0x302</code></td><td>Memory address of <code>tx.witnesses[$rB].data</code></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="./index.html#semantics">reserved register</a></li>
+<li><code>imm</code> is not one of the values listed above</li>
+<li>The value of <code>$rB</code> results in an out of bounds access for variable-length fields</li>
+<li>The input or output type does not match (<code>OutputChange</code> and <code>OutputVariable</code> count as <code>OutputCoin</code>)</li>
+</ul>
+<p>For fixed-length fields, the value of <code>$rB</code> is ignored.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../fuel-vm/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../networks/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../fuel-vm/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../networks/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
