@@ -104,7 +104,7 @@ There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimati
 
 ## Predicate Estimation
 
-For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoin.it/wiki/P2SH) rather than a [P2PKH](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -125,7 +125,7 @@ After successful execution, `predicateGasUsed` is set to `tx.gasLimit - $ggas`.
 
 ## Predicate Verification
 
-For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoinwiki.org/wiki/P2SH) rather than a [P2PKH](https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash) output.
+For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoin.it/P2SH) rather than a [P2PKH](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -153,7 +153,7 @@ The VM is [initialized](#vm-initialization), then:
 
 Following initialization, execution begins.
 
-For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction-set.md#revert-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
+For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction-set.md#rvrt-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
 ## Call Frames
 
