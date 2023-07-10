@@ -3845,7 +3845,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td><code>to</code></td><td><code>byte[32]</code></td><td>Contract ID of called contract.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of coins to forward, i.e. <code>$rB</code>.</td></tr>
 <tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>Asset ID of coins to forward, i.e. <code>MEM[$rC, 32]</code>.</td></tr>
-<tr><td><code>gas</code></td><td><code>uint64</code></td><td>Gas to forward, i.e. <code>$rD</code>.</td></tr>
+<tr><td><code>gas</code></td><td><code>uint64</code></td><td>Gas to forward, i.e. <code>min($rD, $cgas)</code>.</td></tr>
 <tr><td><code>param1</code></td><td><code>uint64</code></td><td>First parameter.</td></tr>
 <tr><td><code>param2</code></td><td><code>uint64</code></td><td>Second parameter.</td></tr>
 <tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
