@@ -2328,7 +2328,7 @@ abi MyContract {
 </ul>
 <p><a href="fuel-vm/./instruction-set.html#return-return-from-call">Returning</a> from a context behaves differently depending on whether the context is external or internal.</p>
 <h2 id="predicate-estimation"><a class="header" href="#predicate-estimation">Predicate Estimation</a></h2>
-<p>For any input of type <a href="fuel-vm/../tx-format/index.html"><code>InputType.Coin</code></a> or <a href="fuel-vm/../tx-format/index.html"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
+<p>For any input of type <a href="fuel-vm/../tx-format/index.html"><code>InputType.Coin</code></a> or <a href="fuel-vm/../tx-format/index.html"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoin.it/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoin.it/P2PKH">P2PKH</a> output.</p>
 <p>For each such input in the transaction, the VM is <a href="fuel-vm/index.html#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
@@ -2343,7 +2343,7 @@ abi MyContract {
 <p>A predicate that halts without returning Boolean <code>true</code> would not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>
 <p>After successful execution, <code>predicateGasUsed</code> is set to <code>tx.gasLimit - $ggas</code>.</p>
 <h2 id="predicate-verification-1"><a class="header" href="#predicate-verification-1">Predicate Verification</a></h2>
-<p>For any input of type <a href="fuel-vm/../tx-format/input.html#inputcoin"><code>InputType.Coin</code></a> or <a href="fuel-vm/../tx-format/input.html#inputmessage"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoinwiki.org/wiki/P2SH">P2SH</a> rather than a <a href="https://en.bitcoinwiki.org/wiki/Pay-to-Pubkey_Hash">P2PKH</a> output.</p>
+<p>For any input of type <a href="fuel-vm/../tx-format/input.html#inputcoin"><code>InputType.Coin</code></a> or <a href="fuel-vm/../tx-format/input.html#inputmessage"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoin.it/P2SH">P2SH</a> rather than a <a href="https://en.bitcoin.it/P2PKH">P2PKH</a> output.</p>
 <p>For each such input in the transaction, the VM is <a href="fuel-vm/index.html#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
@@ -2362,7 +2362,7 @@ abi MyContract {
 <li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code> minus the sum of <code>predicateGasUsed</code> for all predicates.</li>
 </ol>
 <p>Following initialization, execution begins.</p>
-<p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="fuel-vm/./instruction-set.html#revert-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
+<p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="fuel-vm/./instruction-set.html#rvrt-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
 <h2 id="call-frames"><a class="header" href="#call-frames">Call Frames</a></h2>
 <p>Cross-contract calls push a <em>call frame</em> onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that targets the FuelVM). The distinction is as follows:</p>
 <ol>
