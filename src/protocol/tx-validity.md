@@ -147,7 +147,7 @@ for input in tx.inputs:
         if tx.witnesses[input.witnessIndex].dataLength != 64:
             return False
         # Signature must be from owner
-        if address_from(eckrecover(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
+        if address_from(ecrecover_k1(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
             return False
 return True
 ```
