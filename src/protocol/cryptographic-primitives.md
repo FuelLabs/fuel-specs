@@ -48,7 +48,7 @@ In other words, the root pair is 40 bytes (8 for fee sum, 32 for hash digest).
 
 A specification for the Sparse Merkle Tree is [here](https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#sparse-merkle-tree).
 
-A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse_merkle_tree_tests.md).
+A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse-merkle-tree-tests.md).
 
 Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with `sha256` to prevent tree structure manipulations.
 During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.
