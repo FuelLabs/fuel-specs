@@ -1623,7 +1623,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `to`       | `byte[32]`    | Contract ID of called contract.                                           |
 | `amount`   | `uint64`      | Amount of coins to forward, i.e. `$rB`.                                   |
 | `asset_id` | `byte[32]`    | Asset ID of coins to forward, i.e. `MEM[$rC, 32]`.                        |
-| `gas`      | `uint64`      | Gas to forward, i.e. `$rD`.                                               |
+| `gas`      | `uint64`      | Gas to forward, i.e. `min($rD, $cgas)`.                                               |
 | `param1`   | `uint64`      | First parameter.                                                          |
 | `param2`   | `uint64`      | Second parameter.                                                         |
 | `pc`       | `uint64`      | Value of register `$pc`.                                                  |
