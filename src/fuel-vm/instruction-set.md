@@ -792,7 +792,7 @@ Panic if:
 | Encoding    | `0x00 rA rB rC i`                                                                     |
 | Notes       |                                                                                       |
 
-The immediate value is interpreted identically to `WQOP`.
+The immediate value is interpreted identically to `WDOP`.
 
 Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
 
