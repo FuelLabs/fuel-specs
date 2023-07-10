@@ -52,14 +52,14 @@ The ABI of a contract is represented as a JSON object containing the following p
   - `"attributes"`: an optional array of _attributes_. Each _attribute_ is explained in the [dedicated section](#attributes-semantics) and is represented as a JSON object that contains the following properties:
     - `"name"`: the name of the attribute.
     - `"arguments"`: an array of attribute arguments.
-- `"loggedTypes"`: an array describing all instances of [`log`](../../vm/instruction_set.md#log-log-event) or [`logd`](../../vm/instruction_set.md#logd-log-data-event) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
-  - `"logId"`: a unique integer ID. The [`log`](../../vm/instruction_set.md#log-log-event) and [`logd`](../../vm/instruction_set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
+- `"loggedTypes"`: an array describing all instances of [`log`](../fuel-vm/instruction-set.md#log-log-event) or [`logd`](../fuel-vm/instruction-set.md#logd-log-data-event) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+  - `"logId"`: a unique integer ID. The [`log`](../fuel-vm/instruction-set.md#log-log-event) and [`logd`](../fuel-vm/instruction-set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
   - `"loggedType"`: a _type application_ represented as a JSON object that contains the following properties:
     - `"type"`: the _type declaration_ ID of the type of the value being logged.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the value being logged, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"type"`: the _type declaration_ ID of the type of the _type argument_.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
-- `"messagesTypes"`: an array describing all instances of [`smo`](../../vm/instruction_set.md#smo-send-message-to-output) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
+- `"messagesTypes"`: an array describing all instances of [`smo`](../fuel-vm/instruction-set.md#smo-send-message-to-output) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"messageDataType"`: a _type application_ represented as a JSON object that contains the following properties:
     - `"type"`: the _type declaration_ ID of the type of the message data being sent.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the message data being sent, if the type is generic, and `null` otherwise. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
@@ -74,7 +74,7 @@ The ABI of a contract is represented as a JSON object containing the following p
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, and `null` otherwise. The format of the elements of this array recursively follows the rules described in this section.
   - `"offset"`: the specific offset within the contract's bytecode, in bytes, to the data section entry for the `configurable` variable.
 
-> **Note**: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](./fn_selector_encoding.md) section specifies the encoding for the function being selected to be executed and each of the argument types.
+> **Note**: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](./fn-selector-encoding.md) section specifies the encoding for the function being selected to be executed and each of the argument types.
 
 ### Attributes Semantics
 
