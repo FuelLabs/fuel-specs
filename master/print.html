@@ -2461,8 +2461,8 @@ abi MyContract {
 <li><a href="fuel-vm/instruction-set.html#jmpf-jump-relative-forwards">JMPF: Jump relative forwards</a></li>
 <li><a href="fuel-vm/instruction-set.html#jnzb-jump-if-not-zero-relative-backwards">JNZB: Jump if not zero relative backwards</a></li>
 <li><a href="fuel-vm/instruction-set.html#jnzf-jump-if-not-zero-relative-forwards">JNZF: Jump if not zero relative forwards</a></li>
-<li><a href="fuel-vm/instruction-set.html#jeqb-jump-if-not-equal-relative-backwards">JEQB: Jump if not equal relative backwards</a></li>
-<li><a href="fuel-vm/instruction-set.html#jeqf-jump-if-not-equal-relative-forwards">JEQF: Jump if not equal relative forwards</a></li>
+<li><a href="fuel-vm/instruction-set.html#jneb-jump-if-not-equal-relative-backwards">JNEB: Jump if not equal relative backwards</a></li>
+<li><a href="fuel-vm/instruction-set.html#jnef-jump-if-not-equal-relative-forwards">JNEF: Jump if not equal relative forwards</a></li>
 <li><a href="fuel-vm/instruction-set.html#ret-return-from-context">RET: Return from context</a></li>
 </ul>
 </li>
@@ -3457,11 +3457,11 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <ul>
 <li><code>$pc + ($rB + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
 </ul>
-<h3 id="jeqb-jump-if-not-equal-relative-backwards"><a class="header" href="#jeqb-jump-if-not-equal-relative-backwards">JEQB: Jump if not equal relative backwards</a></h3>
+<h3 id="jneb-jump-if-not-equal-relative-backwards"><a class="header" href="#jneb-jump-if-not-equal-relative-backwards">JNEB: Jump if not equal relative backwards</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Jump <code>$rC + imm</code> instructions backwards if <code>$rA != $rB</code>.</td></tr>
 <tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc -= ($rC + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
-<tr><td>Syntax</td><td><code>jeqb $rA $rB $rC imm</code></td></tr>
+<tr><td>Syntax</td><td><code>jneb $rA $rB $rC imm</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
@@ -3470,11 +3470,11 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <ul>
 <li><code>$pc - ($rC + imm + 1) * 4 &lt; 0</code></li>
 </ul>
-<h3 id="jeqf-jump-if-not-equal-relative-forwards"><a class="header" href="#jeqf-jump-if-not-equal-relative-forwards">JEQF: Jump if not equal relative forwards</a></h3>
+<h3 id="jnef-jump-if-not-equal-relative-forwards"><a class="header" href="#jnef-jump-if-not-equal-relative-forwards">JNEF: Jump if not equal relative forwards</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Jump <code>$rC + imm</code> instructions forwards if <code>$rA != $rB</code>.</td></tr>
 <tr><td>Operation</td><td><code>if $rA != $rB:</code><br><code>$pc += ($rC + imm + 1) * 4;</code><br><code>else:</code><br><code>$pc += 4;</code></td></tr>
-<tr><td>Syntax</td><td><code>jeqf $rA $rB $rC imm</code></td></tr>
+<tr><td>Syntax</td><td><code>jnef $rA $rB $rC imm</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
