@@ -59,8 +59,8 @@
   - [JMPF: Jump relative forwards](#jmpf-jump-relative-forwards)
   - [JNZB: Jump if not zero relative backwards](#jnzb-jump-if-not-zero-relative-backwards)
   - [JNZF: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
-  - [JEQB: Jump if not equal relative backwards](#jeqb-jump-if-not-equal-relative-backwards)
-  - [JEQF: Jump if not equal relative forwards](#jeqf-jump-if-not-equal-relative-forwards)
+  - [JNEB: Jump if not equal relative backwards](#jneb-jump-if-not-equal-relative-backwards)
+  - [JNEF: Jump if not equal relative forwards](#jnef-jump-if-not-equal-relative-forwards)
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
@@ -1196,13 +1196,13 @@ Panic if:
 
 - `$pc + ($rB + imm + 1) * 4 > VM_MAX_RAM - 1`
 
-### JEQB: Jump if not equal relative backwards
+### JNEB: Jump if not equal relative backwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rC + imm` instructions backwards if `$rA != $rB`.                               |
 | Operation   | `if $rA != $rB:`<br>`$pc -= ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
-| Syntax      | `jeqb $rA $rB $rC imm`                                                                 |
+| Syntax      | `jneb $rA $rB $rC imm`                                                                 |
 | Encoding    | `0x00 rA rB rC i`                                                                      |
 | Notes       |                                                                                        |
 
@@ -1210,13 +1210,13 @@ Panic if:
 
 - `$pc - ($rC + imm + 1) * 4 < 0`
 
-### JEQF: Jump if not equal relative forwards
+### JNEF: Jump if not equal relative forwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rC + imm` instructions forwards if `$rA != $rB`.                                |
 | Operation   | `if $rA != $rB:`<br>`$pc += ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
-| Syntax      | `jeqf $rA $rB $rC imm`                                                                 |
+| Syntax      | `jnef $rA $rB $rC imm`                                                                 |
 | Encoding    | `0x00 rA rB rC i`                                                                      |
 | Notes       |                                                                                        |
 
