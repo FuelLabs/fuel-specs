@@ -2493,6 +2493,10 @@ abi MyContract {
 <li><a href="fuel-vm/instruction-set.html#mcp-memory-copy">MCP: Memory copy</a></li>
 <li><a href="fuel-vm/instruction-set.html#mcpi-memory-copy-immediate">MCPI: Memory copy immediate</a></li>
 <li><a href="fuel-vm/instruction-set.html#meq-memory-equality">MEQ: Memory equality</a></li>
+<li><a href="fuel-vm/instruction-set.html#poph-pop-a-set-of-high-registers-from-stack">POPH: Pop a set of high registers from stack</a></li>
+<li><a href="fuel-vm/instruction-set.html#popl-pop-a-set-of-low-registers-from-stack">POPL: Pop a set of low registers from stack</a></li>
+<li><a href="fuel-vm/instruction-set.html#pshh-push-a-set-of-high-registers-to-stack">PSHH: Push a set of high registers to stack</a></li>
+<li><a href="fuel-vm/instruction-set.html#pshl-push-a-set-of-low-registers-to-stack">PSHL: Push a set of low registers to stack</a></li>
 <li><a href="fuel-vm/instruction-set.html#sb-store-byte">SB: Store byte</a></li>
 <li><a href="fuel-vm/instruction-set.html#sw-store-word">SW: Store word</a></li>
 </ul>
@@ -3727,6 +3731,62 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$rB + $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$rC + $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
+</ul>
+<h3 id="pshh-push-a-set-of-high-registers-to-stack"><a class="header" href="#pshh-push-a-set-of-high-registers-to-stack">PSHH: Push a set of high registers to stack</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Push a set of registers from range 40..64 to the stack in order.</td></tr>
+<tr><td>Operation</td><td><code>tmp=$sp;</code><br><code>$sp+=popcnt(imm)*8;</code><br><code>MEM[tmp,$sp]=registers[40..64].mask(imm)</code></td></tr>
+<tr><td>Syntax</td><td><code>pshh imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp + popcnt(imm)*8</code> overflows</li>
+<li><code>$sp + popcnt(imm)*8 &gt; $hp</code></li>
+</ul>
+<h3 id="pshl-push-a-set-of-low-registers-to-stack"><a class="header" href="#pshl-push-a-set-of-low-registers-to-stack">PSHL: Push a set of low registers to stack</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Push a set of registers from range 16..40 to the stack in order.</td></tr>
+<tr><td>Operation</td><td><code>tmp=$sp;</code><br><code>$sp+=popcnt(imm)*8;</code><br><code>MEM[tmp,$sp]=registers[16..40].mask(imm)</code></td></tr>
+<tr><td>Syntax</td><td><code>pshl imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp + popcnt(imm)*8</code> overflows</li>
+<li><code>$sp + popcnt(imm)*8 &gt; $hp</code></li>
+</ul>
+<h3 id="poph-pop-a-set-of-high-registers-from-stack"><a class="header" href="#poph-pop-a-set-of-high-registers-from-stack">POPH: Pop a set of high registers from stack</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Pop to a set of registers from range 40..64 from the stack.</td></tr>
+<tr><td>Operation</td><td><code>tmp=$sp-popcnt(imm)*8;</code><br><code>registers[40..64].mask(imm)=MEM[tmp,$sp]</code><br><code>$sp-=tmp;</code></td></tr>
+<tr><td>Syntax</td><td><code>poph imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp - popcnt(imm)*8</code> overflows</li>
+<li><code>$sp - popcnt(imm)*8 &lt; $ssp</code></li>
+</ul>
+<h3 id="popl-pop-a-set-of-low-registers-from-stack"><a class="header" href="#popl-pop-a-set-of-low-registers-from-stack">POPL: Pop a set of low registers from stack</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Pop to a set of registers from range 16..40 from the stack.</td></tr>
+<tr><td>Operation</td><td><code>tmp=$sp-popcnt(imm)*8;</code><br><code>registers[16..40].mask(imm)=MEM[tmp,$sp]</code><br><code>$sp-=tmp;</code></td></tr>
+<tr><td>Syntax</td><td><code>poph imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 i i i i</code></td></tr>
+<tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$sp - popcnt(imm)*8</code> overflows</li>
+<li><code>$sp - popcnt(imm)*8 &lt; $ssp</code></li>
 </ul>
 <h3 id="sb-store-byte"><a class="header" href="#sb-store-byte">SB: Store byte</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
