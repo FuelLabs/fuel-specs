@@ -61,7 +61,7 @@ Leaves and internal nodes are hashed differently: the one-byte `0x00` is prepend
 
 A proof for a leaf in a [binary Merkle tree](#binary-merkle-tree), as per Section 2.1.1 of [Certificate Transparency (RFC-6962)](https://tools.ietf.org/html/rfc6962#section-2.1.1).
 
-In some contexts, the array of sibling hashes is also known as the proof set. Note that proof format prescribes that leaf data be in its original, unhashed state, while the proof set (array of sibling data) uses hashed data. This format precludes the proof set from including the leaf data undergoing the proof itself; rather, proof verification explicitly requires hashing the leaf data during the calculation of the proof set root. 
+In some contexts, the array of sibling hashes is also known as the proof set. Note that proof format prescribes that leaf data be in its original, unhashed state, while the proof set (array of sibling data) uses hashed data. This format precludes the proof set from itself including the leaf data from the leaf undergoing the proof; rather, proof verification explicitly requires hashing the leaf data during the calculation of the proof set root.
 
 ### Sparse Merkle Tree
 
