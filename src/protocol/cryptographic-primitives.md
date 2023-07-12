@@ -51,13 +51,17 @@ Note that rather than duplicating the last node if there are an odd number of no
 
 Leaves and internal nodes are hashed differently: the one-byte `0x00` is prepended for leaf nodes while `0x01` is prepended for internal nodes. This avoids a second-preimage attack [where internal nodes are presented as leaves](https://en.wikipedia.org/wiki/Merkle_tree#Second_preimage_attack) trees with leaves at different heights.
 
-#### BinaryMerkleTreeInclusionProof
+#### Binary Merkle Tree Inclusion Proofs
 
 | name       | type                          | description                                                     |
 |------------|-------------------------------|-----------------------------------------------------------------|
+| `root`     | [HashDigest](#hashdigest)`[]` | The expected root of the Merkle tree.                           |
+| `data`     | Bytes                         | The data of the leaf (unhashed).                                |
 | `siblings` | [HashDigest](#hashdigest)`[]` | Sibling hash values, ordered starting from the leaf's neighbor. |
 
 A proof for a leaf in a [binary Merkle tree](#binary-merkle-tree), as per Section 2.1.1 of [Certificate Transparency (RFC-6962)](https://tools.ietf.org/html/rfc6962#section-2.1.1).
+
+In some contexts, the array of sibling hashes is also known as the proof set. Note that proof format prescribes that leaf data be in its original, unhashed state, while the proof set (array of sibling data) uses hashed data. This format precludes the proof set from including the leaf data undergoing the proof itself; rather, proof verification explicitly requires hashing the leaf data during the calculation of the proof set root. 
 
 ### Sparse Merkle Tree
 
@@ -110,7 +114,7 @@ node.v = h(0x01, l.v, r.v)
 Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with `sha256` to prevent tree structure manipulations.
 During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.
 
-#### SparseMerkleTreeInclusionProof
+#### Sparse Merkle Tree Inclusion Proofs
 
 SMTs can further be extended with _compact_ proofs. Merkle proofs are composed, among other things, of a list of sibling node values. We note that, since nodes that are roots of empty subtrees have known values (the default value), these values do not need to be provided explicitly; it is sufficient to simply identify which siblings in the Merkle branch are roots of empty subtrees, which can be done with one bit per sibling.
 
