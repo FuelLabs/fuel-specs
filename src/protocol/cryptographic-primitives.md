@@ -11,6 +11,10 @@
 
 All hashing is done with SHA-2-256 (also known as SHA-256), defined in [FIPS 180-4](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf).
 
+## HashDigest
+
+Output of the [hashing](#hashing) function. Exactly 256 bits (32 bytes) long.
+
 ## Merkle Trees
 
 Two Merkle tree structures are used: a Binary Merkle Tree (to commit to bytecode) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).
@@ -108,7 +112,7 @@ During the proof verification, the original leaf key should be hashed similarly.
 
 #### SparseMerkleTreeInclusionProof
 
-SMTs can further be extended with _compact_ proofs. [Merkle proofs](#verifying-annotated-merkle-proofs) are composed, among other things, of a list of sibling node values. We note that, since nodes that are roots of empty subtrees have known values (the default value), these values do not need to be provided explicitly; it is sufficient to simply identify which siblings in the Merkle branch are roots of empty subtrees, which can be done with one bit per sibling.
+SMTs can further be extended with _compact_ proofs. Merkle proofs are composed, among other things, of a list of sibling node values. We note that, since nodes that are roots of empty subtrees have known values (the default value), these values do not need to be provided explicitly; it is sufficient to simply identify which siblings in the Merkle branch are roots of empty subtrees, which can be done with one bit per sibling.
 
 For a Merkle branch of height `h`, an `h`-bit value is appended to the proof. The lowest bit corresponds to the sibling of the leaf node, and each higher bit corresponds to the next parent. A value of `1` indicates that the next value in the list of values provided explicitly in the proof should be used, and a value of `0` indicates that the default value should be used.
 
