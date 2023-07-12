@@ -255,7 +255,9 @@
 </li>
 <li><a href="#cryptographic-instructions">Cryptographic Instructions</a>
 <ul>
-<li><a href="#ecr-signature-recovery">ECR: Signature recovery</a></li>
+<li><a href="#eck1-secp256k1-signature-recovery">ECK1: Secp251k1 signature recovery</a></li>
+<li><a href="#ecr1-secp256r1-signature-recovery">ECR1: Secp256r1 signature recovery</a></li>
+<li><a href="#ed19-eddsa-curve25519-verification">ED19: edDSA curve25519 verification</a></li>
 <li><a href="#k256-keccak-256">K256: keccak-256</a></li>
 <li><a href="#s256-sha-2-256">S256: SHA-2-256</a></li>
 </ul>
@@ -2063,10 +2065,10 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
 <h2 id="cryptographic-instructions"><a class="header" href="#cryptographic-instructions">Cryptographic Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
-<h3 id="ecr-signature-recovery"><a class="header" href="#ecr-signature-recovery">ECR: Signature recovery</a></h3>
+<h3 id="eck1-secp256k1-signature-recovery"><a class="header" href="#eck1-secp256k1-signature-recovery">ECK1: Secp256k1 signature recovery</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>The 64-byte public key (x, y) recovered from 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
-<tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover_k1(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
 <tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
@@ -2082,9 +2084,51 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 64]</code> does not pass <a href="./index.html#ownership">ownership check</a></li>
 </ul>
-<p>Signatures and signature verification are specified <a href="../protocol/cryptographic-primitives.html#public-key-cryptography">here</a>.</p>
+<p>Signatures and signature verification are specified <a href="../protocol/cryptographic-primitives.html#ecdsa-public-key-cryptography">here</a>.</p>
 <p>If the signature cannot be verified, <code>MEM[$rA, 64]</code> is set to <code>0</code> and <code>$err</code> is set to <code>1</code>, otherwise <code>$err</code> is cleared.</p>
-<p>To get the address from the public key, hash the public key with <a href="#s256-sha-2-256">SHA-2-256</a>.</p>
+<p>To get the address from the public key, hash the public key with <a href="../protocol/cryptographic-primitives.html#hashing">SHA-2-256</a>.</p>
+<h3 id="ecr1-secp256r1-signature-recovery"><a class="header" href="#ecr1-secp256r1-signature-recovery">ECR1: Secp256r1 signature recovery</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The 64-byte public key (x, y) recovered from 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 64</code> overflows</li>
+<li><code>$rB + 64</code> overflows</li>
+<li><code>$rC + 32</code> overflows</li>
+<li><code>$rA + 64 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 64 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, 64]</code> does not pass <a href="./index.html#ownership">ownership check</a></li>
+</ul>
+<p>Signatures and signature verification are specified <a href="../protocol/cryptographic-primitives.html#ecdsa-public-key-cryptography">here</a>.</p>
+<p>If the signature cannot be verified, <code>MEM[$rA, 64]</code> is set to <code>0</code> and <code>$err</code> is set to <code>1</code>, otherwise <code>$err</code> is cleared.</p>
+<p>To get the address from the public key, hash the public key with <a href="../protocol/cryptographic-primitives.html#hashing">SHA-2-256</a>.</p>
+<h3 id="ed19-eddsa-curve25519-verification"><a class="header" href="#ed19-eddsa-curve25519-verification">ED19: edDSA curve25519 verification</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Verification recovered from 32-byte public key starting at <code>$rA</code> and 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
+<tr><td>Operation</td><td><code>ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
+<tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows</li>
+<li><code>$rB + 64</code> overflows</li>
+<li><code>$rC + 32</code> overflows</li>
+<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 64 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+</ul>
+<p>Verification are specified <a href="../protocol/cryptographic-primitives.html#eddsa-public-key-cryptography">here</a>.</p>
+<p>If there is an error in verification, <code>$err</code> is set to <code>1</code>, otherwise <code>$err</code> is cleared.</p>
 <h3 id="k256-keccak-256"><a class="header" href="#k256-keccak-256">K256: keccak-256</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>The keccak-256 hash of <code>$rC</code> bytes starting at <code>$rB</code>.</td></tr>

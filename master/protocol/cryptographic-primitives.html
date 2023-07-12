@@ -147,7 +147,8 @@
 <li><a href="#sparse-merkle-tree">Sparse Merkle Tree</a></li>
 </ul>
 </li>
-<li><a href="#public-key-cryptography">Public-Key Cryptography</a></li>
+<li><a href="#ecdsa-public-key-cryptography">EcDSA Public-Key Cryptography</a></li>
+<li><a href="#eddsa-public-key-cryptography">EdDSA Public-Key Cryptography</a></li>
 </ul>
 <h2 id="hashing"><a class="header" href="#hashing">Hashing</a></h2>
 <p>All hashing is done with SHA-2-256 (also known as SHA-256), defined in <a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">FIPS 180-4</a>.</p>
@@ -172,7 +173,7 @@
 <p>A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is <a href="../tests/sparse-merkle-tree-tests.html">here</a>.</p>
 <p>Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with <code>sha256</code> to prevent tree structure manipulations.
 During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.</p>
-<h2 id="public-key-cryptography"><a class="header" href="#public-key-cryptography">Public-Key Cryptography</a></h2>
+<h2 id="ecdsa-public-key-cryptography"><a class="header" href="#ecdsa-public-key-cryptography">ECDSA Public-Key Cryptography</a></h2>
 <p>Consensus-critical data is authenticated using <a href="https://www.secg.org/sec1-v2.pdf">ECDSA</a>, with the curve <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a>. A highly-optimized library is available in C (<a href="https://github.com/bitcoin-core/secp256k1">https://github.com/bitcoin-core/secp256k1</a>), with wrappers in Go (<a href="https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1">https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1</a>) and Rust (<a href="https://docs.rs/crate/secp256k1">https://docs.rs/crate/secp256k1</a>).</p>
 <p>Public keys are encoded in uncompressed form, as the concatenation of the <code>x</code> and <code>y</code> values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.</p>
 <p>Deterministic signatures (<a href="https://www.rfc-editor.org/rfc/rfc6979">RFC-6979</a>) should be used when signing, but this is not enforced at the protocol level as it cannot be.</p>
@@ -184,6 +185,18 @@ During the proof verification, the original leaf key should be hashed similarly.
 [256-bit r value][1-bit v value][255-bit s value]
 </code></pre>
 <p>This encoding scheme is derived from <a href="https://eips.ethereum.org/EIPS/eip-2098">EIP 2098: Compact Signature Representation</a>.</p>
+<h2 id="eddsa-public-key-cryptography"><a class="header" href="#eddsa-public-key-cryptography">EdDSA Public-Key Cryptography</a></h2>
+<p><a href="https://datatracker.ietf.org/doc/html/rfc8032">Ed25519</a> is supported for use by applications built on Fuel. Edwards curve operations are performed by the <a href="https://github.com/dalek-cryptography/ed25519-dalek">ed25519-dalek</a> Rust library.</p>
+<p>Public keys are encoded in compressed form as specified by the Ed25519 format <a href="https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.5">RFC-8032 5.1.5</a>. Point compression is performed by replacing the most significant bit in the final octet of the <code>y</code> coordinate with the sign bit from the <code>x</code> coordinate:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut pk = y;
+pk ^= x.is_negative().unwrap_u8() &lt;&lt; 7;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Public keys are required to be strong enough to prevent malleability, and are checked for weakness during signature verification.</p>
+<p>Signatures are 64 bytes, represented as the concatenation of <code>R</code> (32 bytes) and <code>S</code> (32 bytes) Where <code>R</code> and <code>S</code> are defined in <a href="https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.6">RFC-8032 5.1.6</a>.</p>
+<p>Signatures must conform to strict <a href="https://github.com/dalek-cryptography/ed25519-dalek#validation-criteria">verification requirements</a> to avoid malleability concerns. While this is not part of the original Ed25519 specification, it has become a growing concern especially in cryptocurrency applications.</p>
 
                     </main>
 
