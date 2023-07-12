@@ -32,21 +32,21 @@ Read-only access list:
 
 Write-destroy access list:
 
-- For each [input `InputType.Coin`](./tx_format/input.md#inputcoin)
-  - The [UTXO ID](./id/utxo.md) `(txID, outputIndex)`
-- For each [input `InputType.Contract`](./tx_format/input.md#inputcontract)
-  - The [UTXO ID](./id/utxo.md) `(txID, outputIndex)`
-- For each [input `InputType.Message`](./tx_format/input.md#inputmessage)
-  - The [message ID](./id/utxo.md#message-id) `messageID`
+- For each [input `InputType.Coin`](../tx-format/input.md#inputcoin)
+  - The [UTXO ID](../identifiers/utxo-id.md) `(txID, outputIndex)`
+- For each [input `InputType.Contract`](../tx-format/input.md#inputcontract)
+  - The [UTXO ID](../identifiers/utxo-id.md) `(txID, outputIndex)`
+- For each [input `InputType.Message`](../tx-format/input.md#inputmessage)
+  - The [message ID](../identifiers/utxo-id.md#message-id) `messageID`
 
 Write-create access list:
 
-- For each [output `OutputType.ContractCreated`](./tx_format/output.md#outputcontractcreated)
+- For each [output `OutputType.ContractCreated`](../tx-format/output.md#outputcontractcreated)
   - The contract ID `contractID`
 - For each output
-  - The [created UTXO ID](./id/utxo.md)
+  - The [created UTXO ID](../identifiers/utxo-id.md)
 
-Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](./tx_format/input.md#inputcontract) and [`OutputType.Contract`](./tx_format/output.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
+Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](../tx-format/input.md#inputcontract) and [`OutputType.Contract`](../tx-format/output.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
 
 ## VM Precondition Validity Rules
 
@@ -54,11 +54,11 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
-> **Note:** [InputMessages](./tx_format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
+> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
 
 ### Base Sanity Checks
 
-Base sanity checks are defined in the [transaction format](./tx_format/index.md).
+Base sanity checks are defined in the [transaction format](../tx-format/index.md).
 
 ### Spending UTXOs and Created Contracts
 
@@ -147,18 +147,18 @@ for input in tx.inputs:
         if tx.witnesses[input.witnessIndex].dataLength != 64:
             return False
         # Signature must be from owner
-        if address_from(ecrecover(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
+        if address_from(ecrecover_k1(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
             return False
 return True
 ```
 
-Signatures and signature verification are specified [here](./cryptographic_primitives.md#public-key-cryptography).
+Signatures and signature verification are specified [here](./cryptographic-primitives.md#public-key-cryptography).
 
-The transaction hash is computed as defined [here](./id/transaction.md).
+The transaction hash is computed as defined [here](../identifiers/transaction-id.md).
 
 ## Predicate Verification
 
-For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../vm/index.md#predicate-verification).
+For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../fuel-vm/index.md#predicate-verification).
 
 ## Script Execution
 
@@ -173,7 +173,7 @@ freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx
 messageBalance = sum_data_messages(tx, 0)
 ```
 
-Once the free balances are computed, the [script is executed](../vm/index.md#script-execution). After execution, the following is extracted:
+Once the free balances are computed, the [script is executed](../fuel-vm/index.md#script-execution). After execution, the following is extracted:
 
 1. The transaction in-memory on VM termination is used as the final transaction which is included in the block.
 1. The unspent free balance `unspentBalance` for each asset ID.
@@ -210,7 +210,7 @@ The coinbase transaction is a mechanism for block creators to convert fees into 
 
 In order for a coinbase transaction to be valid:
 
-1. It must be a [Mint](../protocol/tx_format/transaction.md#TransactionMint) transaction.
+1. It must be a [Mint](../tx-format/transaction.md#TransactionMint) transaction.
 2. The coinbase transaction must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.
 3. The total output value of the coinbase transaction cannot exceed the total amount of fees processed from all other transactions within the same block.
 4. The `asset_id` for coinbase transaction outputs must match the `asset_id` that fees are paid in (`asset_id == 0`).

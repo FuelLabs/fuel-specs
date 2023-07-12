@@ -59,8 +59,8 @@
   - [JMPF: Jump relative forwards](#jmpf-jump-relative-forwards)
   - [JNZB: Jump if not zero relative backwards](#jnzb-jump-if-not-zero-relative-backwards)
   - [JNZF: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
-  - [JEQB: Jump if not equal relative backwards](#jeqb-jump-if-not-equal-relative-backwards)
-  - [JEQF: Jump if not equal relative forwards](#jeqf-jump-if-not-equal-relative-forwards)
+  - [JNEB: Jump if not equal relative backwards](#jneb-jump-if-not-equal-relative-backwards)
+  - [JNEF: Jump if not equal relative forwards](#jnef-jump-if-not-equal-relative-forwards)
   - [RET: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [ALOC: Allocate memory](#aloc-allocate-memory)
@@ -107,7 +107,9 @@
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
-  - [ECR: Signature recovery](#ecr-signature-recovery)
+  - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
+  - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
+  - [ED19: edDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
@@ -796,7 +798,7 @@ Panic if:
 | Encoding    | `0x00 rA rB rC i`                                                                     |
 | Notes       |                                                                                       |
 
-The immediate value is interpreted identically to `WQOP`.
+The immediate value is interpreted identically to `WDOP`.
 
 Operations behave `$of` and `$err` similarly to their 64-bit counterparts.
 
@@ -1200,13 +1202,13 @@ Panic if:
 
 - `$pc + ($rB + imm + 1) * 4 > VM_MAX_RAM - 1`
 
-### JEQB: Jump if not equal relative backwards
+### JNEB: Jump if not equal relative backwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rC + imm` instructions backwards if `$rA != $rB`.                               |
 | Operation   | `if $rA != $rB:`<br>`$pc -= ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
-| Syntax      | `jeqb $rA $rB $rC imm`                                                                 |
+| Syntax      | `jneb $rA $rB $rC imm`                                                                 |
 | Encoding    | `0x00 rA rB rC i`                                                                      |
 | Notes       |                                                                                        |
 
@@ -1214,13 +1216,13 @@ Panic if:
 
 - `$pc - ($rC + imm + 1) * 4 < 0`
 
-### JEQF: Jump if not equal relative forwards
+### JNEF: Jump if not equal relative forwards
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Jump `$rC + imm` instructions forwards if `$rA != $rB`.                                |
 | Operation   | `if $rA != $rB:`<br>`$pc += ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
-| Syntax      | `jeqf $rA $rB $rC imm`                                                                 |
+| Syntax      | `jnef $rA $rB $rC imm`                                                                 |
 | Encoding    | `0x00 rA rB rC i`                                                                      |
 | Notes       |                                                                                        |
 
@@ -1687,7 +1689,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `to`       | `byte[32]`    | Contract ID of called contract.                                           |
 | `amount`   | `uint64`      | Amount of coins to forward, i.e. `$rB`.                                   |
 | `asset_id` | `byte[32]`    | Asset ID of coins to forward, i.e. `MEM[$rC, 32]`.                        |
-| `gas`      | `uint64`      | Gas to forward, i.e. `$rD`.                                               |
+| `gas`      | `uint64`      | Gas to forward, i.e. `min($rD, $cgas)`.                                               |
 | `param1`   | `uint64`      | First parameter.                                                          |
 | `param2`   | `uint64`      | Second parameter.                                                         |
 | `pc`       | `uint64`      | Value of register `$pc`.                                                  |
@@ -1709,7 +1711,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 |             |                                                                                                                   |
 |-------------|-------------------------------------------------------------------------------------------------------------------|
-| Description | Get the [coinbase address](./../protocol/tx_validity.md#coinbase-transaction) associated with the block proposer. |
+| Description | Get the [coinbase address](../protocol/tx-validity.md#coinbase-transaction) associated with the block proposer. |
 | Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                  |
 | Syntax      | `cb $rA`                                                                                                          |
 | Encoding    | `0x00 rA - - -`                                                                                                   |
@@ -1763,7 +1765,7 @@ Panic if:
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-Code root computation is defined [here](../protocol/id/contract.md).
+Code root computation is defined [here](../identifiers/contract-id.md).
 
 ### CSIZ: Code size
 
@@ -1964,8 +1966,8 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 
 Cease VM execution and revert script effects. After a revert:
 
-1. All [OutputContract](../protocol/tx_format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../protocol/tx_format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+1. All [OutputContract](../tx-format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
+1. All [OutputVariable](../tx-format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
 ### SMO: Send message out
 
@@ -1999,7 +2001,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                           |
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                        |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                         |
-| `nonce`     | `byte[32]`    | The message nonce as described [here](../protocol/id/utxo.md#message-nonce). |
+| `nonce`     | `byte[32]`    | The message nonce as described [here](../identifiers/utxo-id.md#message-nonce). |
 | `len`       | `uint16`      | Length of message data, in bytes: `$rC`.                                     |
 | `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                  |
 
@@ -2217,12 +2219,12 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ECR: Signature recovery
+### ECK1: Secp256k1 signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
+| Operation   | ```MEM[$rA, 64] = ecrecover_k1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
 | Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
 | Notes       |                                                                                                                             |
@@ -2237,11 +2239,60 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
-Signatures and signature verification are specified [here](../protocol/cryptographic_primitives.md#public-key-cryptography).
+Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
-To get the address from the public key, hash the public key with [SHA-2-256](#s256-sha-2-256).
+To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
+
+### ECR1: Secp256r1 signature recovery
+
+|             |                                                                                                                             |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
+| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+Panic if:
+
+- `$rA + 64` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 64 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
+
+Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
+
+If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
+
+To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
+
+### ED19: edDSA curve25519 verification
+
+|             |                                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Description | Verification recovered from 32-byte public key starting at `$rA` and 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);```                                                                                         |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                                                 |
+| Encoding    | `0x00 rA rB rC -`                                                                                                                                   |
+| Notes       |                                                                                                                                                     |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+
+Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
+
+If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
 ### K256: keccak-256
 
@@ -2353,7 +2404,7 @@ Set `$rA` to the index of the currently-verifying predicate.
 | Encoding    | `0x00 rA rB i i`        |
 | Notes       |                         |
 
-Get [fields from the transaction](../protocol/tx_format/transaction.md).
+Get [fields from the transaction](../tx-format/transaction.md).
 
 | name                                      | `imm`   | set `$rA` to                                     |
 |-------------------------------------------|---------|--------------------------------------------------|

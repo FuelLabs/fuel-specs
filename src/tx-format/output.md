@@ -46,9 +46,9 @@ Transaction is invalid if:
 >
 > **Note:** when executing a script, `balanceRoot` and `stateRoot` are initialized to the balance root and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
 
-The balance root `balanceRoot` is the root of the [SMT](../cryptographic_primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by asset ID (a `byte[32]`).
+The balance root `balanceRoot` is the root of the [SMT](../protocol/cryptographic-primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by asset ID (a `byte[32]`).
 
-The state root `stateRoot` is the root of the [SMT](../cryptographic_primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
+The state root `stateRoot` is the root of the [SMT](../protocol/cryptographic-primitives.md#sparse-merkle-tree) of storage slots. Each storage slot is a `byte[32]`, keyed by a `byte[32]`.
 
 ## OutputChange
 

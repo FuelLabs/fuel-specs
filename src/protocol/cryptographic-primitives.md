@@ -5,7 +5,8 @@
   - [Binary Merkle Tree](#binary-merkle-tree)
   - [Binary Merkle Sum Tree](#binary-merkle-sum-tree)
   - [Sparse Merkle Tree](#sparse-merkle-tree)
-- [Public-Key Cryptography](#public-key-cryptography)
+- [EcDSA Public-Key Cryptography](#ecdsa-public-key-cryptography)
+- [EdDSA Public-Key Cryptography](#eddsa-public-key-cryptography)
 
 ## Hashing
 
@@ -47,12 +48,12 @@ In other words, the root pair is 40 bytes (8 for fee sum, 32 for hash digest).
 
 A specification for the Sparse Merkle Tree is [here](https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#sparse-merkle-tree).
 
-A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse_merkle_tree_tests.md).
+A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse-merkle-tree-tests.md).
 
 Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with `sha256` to prevent tree structure manipulations.
 During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.
 
-## Public-Key Cryptography
+## ECDSA Public-Key Cryptography
 
 Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1-v2.pdf), with the curve [secp256k1](https://en.bitcoin.it/wiki/Secp256k1). A highly-optimized library is available in C (<https://github.com/bitcoin-core/secp256k1>), with wrappers in Go (<https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1>) and Rust (<https://docs.rs/crate/secp256k1>).
 
@@ -73,3 +74,20 @@ Putting it all together, the encoding for signatures is:
 ```
 
 This encoding scheme is derived from [EIP 2098: Compact Signature Representation](https://eips.ethereum.org/EIPS/eip-2098).
+
+## EdDSA Public-Key Cryptography
+
+[Ed25519](https://datatracker.ietf.org/doc/html/rfc8032) is supported for use by applications built on Fuel. Edwards curve operations are performed by the [ed25519-dalek](https://github.com/dalek-cryptography/ed25519-dalek) Rust library.
+
+Public keys are encoded in compressed form as specified by the Ed25519 format [RFC-8032 5.1.5](https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.5). Point compression is performed by replacing the most significant bit in the final octet of the `y` coordinate with the sign bit from the `x` coordinate:
+
+```rust
+let mut pk = y;
+pk ^= x.is_negative().unwrap_u8() << 7;
+```
+
+Public keys are required to be strong enough to prevent malleability, and are checked for weakness during signature verification.
+
+Signatures are 64 bytes, represented as the concatenation of `R` (32 bytes) and `S` (32 bytes) Where `R` and `S` are defined in [RFC-8032 5.1.6](https://datatracker.ietf.org/doc/html/rfc8032#section-5.1.6).
+
+Signatures must conform to strict [verification requirements](https://github.com/dalek-cryptography/ed25519-dalek#validation-criteria) to avoid malleability concerns. While this is not part of the original Ed25519 specification, it has become a growing concern especially in cryptocurrency applications.
