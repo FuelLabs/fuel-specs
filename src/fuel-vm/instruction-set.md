@@ -75,6 +75,10 @@
   - [MCP: Memory copy](#mcp-memory-copy)
   - [MCPI: Memory copy immediate](#mcpi-memory-copy-immediate)
   - [MEQ: Memory equality](#meq-memory-equality)
+  - [POPH: Pop a set of high registers from stack](#poph-pop-a-set-of-high-registers-from-stack)
+  - [POPL: Pop a set of low registers from stack](#popl-pop-a-set-of-low-registers-from-stack)
+  - [PSHH: Push a set of high registers to stack](#pshh-push-a-set-of-high-registers-to-stack)
+  - [PSHL: Push a set of low registers to stack](#pshl-push-a-set-of-low-registers-to-stack)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Instructions](#contract-instructions)
@@ -1474,6 +1478,66 @@ Panic if:
 - `$rB + $rD > VM_MAX_RAM`
 - `$rC + $rD > VM_MAX_RAM`
 - `$rD > MEM_MAX_ACCESS_SIZE`
+
+### PSHH: Push a set of high registers to stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Push a set of registers from range 40..64 to the stack in order.                       |
+| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[40..64].mask(imm)`      |
+| Syntax      | `pshh imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp + popcnt(imm)*8` overflows
+- `$sp + popcnt(imm)*8 > $hp`
+
+### PSHL: Push a set of low registers to stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Push a set of registers from range 16..40 to the stack in order.                       |
+| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[16..40].mask(imm)`      |
+| Syntax      | `pshl imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp + popcnt(imm)*8` overflows
+- `$sp + popcnt(imm)*8 > $hp`
+
+### POPH: Pop a set of high registers from stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Pop to a set of registers from range 40..64 from the stack.                            |
+| Operation   |`tmp=$sp-popcnt(imm)*8;`<br>`registers[40..64].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;`   |
+| Syntax      | `poph imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp - popcnt(imm)*8` overflows
+- `$sp - popcnt(imm)*8 < $ssp`
+
+### POPL: Pop a set of low registers from stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Pop to a set of registers from range 16..40 from the stack.                            |
+| Operation   |`tmp=$sp-popcnt(imm)*8;`<br>`registers[16..40].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;`   |
+| Syntax      | `poph imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp - popcnt(imm)*8` overflows
+- `$sp - popcnt(imm)*8 < $ssp`
 
 ### SB: Store byte
 
