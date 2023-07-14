@@ -143,7 +143,6 @@
 <li><a href="#merkle-trees">Merkle Trees</a>
 <ul>
 <li><a href="#binary-merkle-tree">Binary Merkle Tree</a></li>
-<li><a href="#binary-merkle-sum-tree">Binary Merkle Sum Tree</a></li>
 <li><a href="#sparse-merkle-tree">Sparse Merkle Tree</a></li>
 </ul>
 </li>
@@ -152,27 +151,80 @@
 </ul>
 <h2 id="hashing"><a class="header" href="#hashing">Hashing</a></h2>
 <p>All hashing is done with SHA-2-256 (also known as SHA-256), defined in <a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">FIPS 180-4</a>.</p>
+<h2 id="hashdigest"><a class="header" href="#hashdigest">HashDigest</a></h2>
+<p>Output of the <a href="#hashing">hashing</a> function. Exactly 256 bits (32 bytes) long.</p>
 <h2 id="merkle-trees"><a class="header" href="#merkle-trees">Merkle Trees</a></h2>
-<p>Three Merkle tree structures are used: a Binary Merkle Tree (to commit to bytecode), a Binary Merkle Sum Tree (to commit to transactions and collected fees) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).</p>
+<p>Two Merkle tree structures are used: a Binary Merkle Tree (to commit to bytecode) and a Sparse Merkle Tree (to commit to contract storage, i.e. state).</p>
 <h3 id="binary-merkle-tree"><a class="header" href="#binary-merkle-tree">Binary Merkle Tree</a></h3>
-<p>A specification for the Binary Merkle Tree is <a href="https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#binary-merkle-tree">here</a>.</p>
-<h3 id="binary-merkle-sum-tree"><a class="header" href="#binary-merkle-sum-tree">Binary Merkle Sum Tree</a></h3>
-<p>The Binary Merkle Sum Tree is an extension of the tree defined in <a href="https://www.rfc-editor.org/rfc/rfc9162">RFC-6962</a>.</p>
-<p>The root pair <code>(fee, digest)</code> of an empty tree is:</p>
-<pre><code class="language-text">(0x0000000000000000, hash()) = (0x0000000000000000, 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)
+<p>Binary Merkle trees are constructed in the same fashion as described in <a href="https://tools.ietf.org/html/rfc6962">Certificate Transparency (RFC-6962)</a>, except for using <a href="#hashing">a different hashing function</a>. Leaves are hashed once to get leaf node values and internal node values are the hash of the concatenation of their children (either leaf nodes or other internal nodes).</p>
+<p>Nodes contain a single field:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>v</code></td><td><a href="#hashdigest">HashDigest</a></td><td>Node value.</td></tr>
+</tbody></table>
+</div>
+<p>The base case (an empty tree) is defined as the <a href="#hashing">hash</a> of the empty string:</p>
+<pre><code class="language-C++">node.v = 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 </code></pre>
-<p>The root pair of a tree with one leaf:</p>
-<pre><code class="language-text">(leaf.fee, hash(0x00 ++ leaf.fee ++ serialize(leaf)))
+<p>For leaf node <code>node</code> of leaf data <code>d</code>:</p>
+<pre><code class="language-C++">node.v = h(0x00, serialize(d))
 </code></pre>
-<p>The root pair of a tree with two or more leaves is defined recursively:</p>
-<pre><code class="language-text">(left.fee + right.fee, hash(0x01 ++ left.fee ++ left.digest ++ right.fee ++ right.digest))
+<p>For internal node <code>node</code> with children <code>l</code> and <code>r</code>:</p>
+<pre><code class="language-C++">node.v = h(0x01, l.v, r.v)
 </code></pre>
-<p>In other words, the root pair is 40 bytes (8 for fee sum, 32 for hash digest).</p>
+<p>Note that rather than duplicating the last node if there are an odd number of nodes (the <a href="https://github.com/bitcoin/bitcoin/blob/5961b23898ee7c0af2626c46d5d70e80136578d3/src/consensus/merkle.cpp#L9-L43">Bitcoin design</a>), trees are allowed to be imbalanced. In other words, the height of each leaf may be different. For an example, see Section 2.1.3 of <a href="https://tools.ietf.org/html/rfc6962#section-2.1.3">Certificate Transparency (RFC-6962)</a>.</p>
+<p>Leaves and internal nodes are hashed differently: the one-byte <code>0x00</code> is prepended for leaf nodes while <code>0x01</code> is prepended for internal nodes. This avoids a second-preimage attack <a href="https://en.wikipedia.org/wiki/Merkle_tree#Second_preimage_attack">where internal nodes are presented as leaves</a> trees with leaves at different heights.</p>
+<h4 id="binary-merkle-tree-inclusion-proofs"><a class="header" href="#binary-merkle-tree-inclusion-proofs">Binary Merkle Tree Inclusion Proofs</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>root</code></td><td><a href="#hashdigest">HashDigest</a><code>[]</code></td><td>The expected root of the Merkle tree.</td></tr>
+<tr><td><code>data</code></td><td>Bytes</td><td>The data of the leaf (unhashed).</td></tr>
+<tr><td><code>siblings</code></td><td><a href="#hashdigest">HashDigest</a><code>[]</code></td><td>Sibling hash values, ordered starting from the leaf's neighbor.</td></tr>
+</tbody></table>
+</div>
+<p>A proof for a leaf in a <a href="#binary-merkle-tree">binary Merkle tree</a>, as per Section 2.1.1 of <a href="https://tools.ietf.org/html/rfc6962#section-2.1.1">Certificate Transparency (RFC-6962)</a>.</p>
+<p>In some contexts, the array of sibling hashes is also known as the proof set. Note that proof format prescribes that leaf data be in its original, unhashed state, while the proof set (array of sibling data) uses hashed data. This format precludes the proof set from itself including the leaf data from the leaf undergoing the proof; rather, proof verification explicitly requires hashing the leaf data during the calculation of the proof set root.</p>
 <h3 id="sparse-merkle-tree"><a class="header" href="#sparse-merkle-tree">Sparse Merkle Tree</a></h3>
-<p>A specification for the Sparse Merkle Tree is <a href="https://github.com/celestiaorg/celestia-specs/blob/master/src/specs/data_structures.md#sparse-merkle-tree">here</a>.</p>
-<p>A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is <a href="../tests/sparse-merkle-tree-tests.html">here</a>.</p>
+<p>Sparse Merkle Trees (SMTs) are <em>sparse</em>, i.e. they contain mostly empty leaves. They can be used as key-value stores for arbitrary data, as each leaf is keyed by its index in the tree. Storage efficiency is achieved through clever use of implicit defaults, avoiding the need to store empty leaves.</p>
+<p>Additional rules are added on top of plain <a href="#binary-merkle-tree">binary Merkle trees</a>:</p>
+<ol>
+<li>Default values are given to leaf nodes with empty leaves.</li>
+<li>While the above rule is sufficient to pre-compute the values of intermediate nodes that are roots of empty subtrees, a further simplification is to extend this default value to all nodes that are roots of empty subtrees. The 32-byte zero, i.e. <code>0x0000000000000000000000000000000000000000000000000000000000000000</code>, is used as the default value. This rule takes precedence over the above one.</li>
+<li>The number of hashing operations can be reduced to be logarithmic in the number of non-empty leaves on average, assuming a uniform distribution of non-empty leaf keys. An internal node that is the root of a subtree that contains exactly one non-empty leaf is replaced by that leaf's leaf node.</li>
+</ol>
+<p>Nodes contain a single field:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>v</code></td><td><a href="#hashdigest">HashDigest</a></td><td>Node value.</td></tr>
+</tbody></table>
+</div>
+<p>In the base case, where a sparse Merkle tree has <code>height = 0</code>, the root of a tree is defined as the <a href="#hashing">hash</a> of the empty string:</p>
+<pre><code class="language-C++">node.v = 0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+</code></pre>
+<p>When a sparse Merkle tree has a height of 0, it can have no leaves, and, therefore, no default value children. The root is then calculated as the hash of the empty string, similar to that of an empty binary Merkle tree.</p>
+<p>For a tree with <code>height &gt; 0</code>, the root of an empty tree is defined as the default value:</p>
+<pre><code class="language-C++">node.v = 0x0000000000000000000000000000000000000000000000000000000000000000
+</code></pre>
+<p>Note that this is in contrast to the base case of the sparse and binary Merkle trees, where the root is the hash of the empty string. When a sparse Merkle tree has a height greater than 0, a new tree instance is composed of default value leaves. Nodes containing only default value children have the default value as well. Applying these rules recursively percolates the default value up to the tree's root.</p>
+<p>For leaf node <code>node</code> of leaf data <code>d</code> with key <code>k</code>:</p>
+<pre><code class="language-C++">node.v = h(0x00, k, h(serialize(d)))
+</code></pre>
+<p>The key of leaf nodes must be prepended, since the index of a leaf node that is not at maximum depth cannot be determined without this information. Leaf values are hashed so that they do not need to be included in full in non-membership proofs.</p>
+<p>For internal node <code>node</code> with children <code>l</code> and <code>r</code>:</p>
+<pre><code class="language-C++">node.v = h(0x01, l.v, r.v)
+</code></pre>
+<h4 id="insertion"><a class="header" href="#insertion">Insertion</a></h4>
 <p>Before insertion of the key-value pair, each key of the Sparse Merkle Tree should be hashed with <code>sha256</code> to prevent tree structure manipulations.
 During the proof verification, the original leaf key should be hashed similarly. Otherwise, the root will not match.</p>
+<h4 id="sparse-merkle-tree-inclusion-proofs"><a class="header" href="#sparse-merkle-tree-inclusion-proofs">Sparse Merkle Tree Inclusion Proofs</a></h4>
+<p>SMTs can further be extended with <em>compact</em> proofs. Merkle proofs are composed, among other things, of a list of sibling node values. We note that, since nodes that are roots of empty subtrees have known values (the default value), these values do not need to be provided explicitly; it is sufficient to simply identify which siblings in the Merkle branch are roots of empty subtrees, which can be done with one bit per sibling.</p>
+<p>For a Merkle branch of height <code>h</code>, an <code>h</code>-bit value is appended to the proof. The lowest bit corresponds to the sibling of the leaf node, and each higher bit corresponds to the next parent. A value of <code>1</code> indicates that the next value in the list of values provided explicitly in the proof should be used, and a value of <code>0</code> indicates that the default value should be used.</p>
+<p>A proof into an SMT is structured as:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>depth</code></td><td><code>uint16</code></td><td>Depth of the leaf node. The root node is at depth <code>0</code>. Must be <code>&lt;= 256</code>.</td></tr>
+<tr><td><code>siblings</code></td><td><a href="#hashdigest">HashDigest</a><code>[]</code></td><td>Sibling hash values, ordered starting from the leaf's neighbor.</td></tr>
+<tr><td><code>includedSiblings</code></td><td><code>byte[32]</code></td><td>Bitfield of explicitly included sibling hashes.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>includedSiblings</code> is ordered by most-significant-byte first, with each byte ordered by most-significant-bit first. The lowest bit corresponds to the leaf node level.</p>
+<p>A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is <a href="../tests/sparse-merkle-tree-tests.html">here</a>.</p>
 <h2 id="ecdsa-public-key-cryptography"><a class="header" href="#ecdsa-public-key-cryptography">ECDSA Public-Key Cryptography</a></h2>
 <p>Consensus-critical data is authenticated using <a href="https://www.secg.org/sec1-v2.pdf">ECDSA</a>, with the curve <a href="https://en.bitcoin.it/wiki/Secp256k1">secp256k1</a>. A highly-optimized library is available in C (<a href="https://github.com/bitcoin-core/secp256k1">https://github.com/bitcoin-core/secp256k1</a>), with wrappers in Go (<a href="https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1">https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1</a>) and Rust (<a href="https://docs.rs/crate/secp256k1">https://docs.rs/crate/secp256k1</a>).</p>
 <p>Public keys are encoded in uncompressed form, as the concatenation of the <code>x</code> and <code>y</code> values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.</p>
