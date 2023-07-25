@@ -1271,7 +1271,7 @@ Set the return value:
 1. `$ret = $rA`
 1. `$retl = 0`
 
-Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
+Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$ret`, `$retl` and `$hp`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
@@ -1932,7 +1932,7 @@ Set the return value:
 1. `$ret = $rA`
 1. `$retl = $rB`
 
-Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
+Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$ret`, `$retl` and `$hp`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
