@@ -3590,7 +3590,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$ret = $rA</code></li>
 <li><code>$retl = 0</code></li>
 </ol>
-<p>Then pop the call frame and restoring registers <em>except</em> <code>$ggas</code>, <code>$cgas</code>, <code>$ret</code>, and <code>$retl</code>. Afterwards, set the following registers:</p>
+<p>Then pop the call frame and restore all registers <em>except</em> <code>$ggas</code>, <code>$cgas</code>, <code>$ret</code>, <code>$retl</code> and <code>$hp</code>. Afterwards, set the following registers:</p>
 <ol>
 <li><code>$pc = $pc + 4</code> (advance program counter from where we called)</li>
 </ol>
@@ -4192,7 +4192,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <li><code>$ret = $rA</code></li>
 <li><code>$retl = $rB</code></li>
 </ol>
-<p>Then pop the call frame and restoring registers <em>except</em> <code>$ggas</code>, <code>$cgas</code>, <code>$ret</code>, and <code>$retl</code>. Afterwards, set the following registers:</p>
+<p>Then pop the call frame and restore all registers <em>except</em> <code>$ggas</code>, <code>$cgas</code>, <code>$ret</code>, <code>$retl</code> and <code>$hp</code>. Afterwards, set the following registers:</p>
 <ol>
 <li><code>$pc = $pc + 4</code> (advance program counter from where we called)</li>
 </ol>
