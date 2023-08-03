@@ -1400,7 +1400,6 @@ Panic if:
 
 - `$rA + $rB` overflows
 - `$rA + $rB > VM_MAX_RAM`
-- `$rB > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCLI: Memory clear immediate
@@ -1417,7 +1416,6 @@ Panic if:
 
 - `$rA + imm` overflows
 - `$rA + imm > VM_MAX_RAM`
-- `imm > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCP: Memory copy
@@ -1436,7 +1434,6 @@ Panic if:
 - `$rB + $rC` overflows
 - `$rA + $rC > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
-- `$rC > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./index.md#ownership)
 
@@ -1456,7 +1453,6 @@ Panic if:
 - `$rB + imm` overflows
 - `$rA + imm > VM_MAX_RAM`
 - `$rB + imm > VM_MAX_RAM`
-- `imm > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
@@ -1477,7 +1473,6 @@ Panic if:
 - `$rC + $rD` overflows
 - `$rB + $rD > VM_MAX_RAM`
 - `$rC + $rD > VM_MAX_RAM`
-- `$rD > MEM_MAX_ACCESS_SIZE`
 
 ### PSHH: Push a set of high registers to stack
 
@@ -1743,7 +1738,6 @@ Panic if:
 - `$rA + $rD > VM_MAX_RAM`
 - `$rB + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./index.md#ownership)
-- `$rD > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
 ### CROO: Code Merkle root
@@ -1802,7 +1796,6 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$ssp + $rC >= $hp`
 - `$rC > CONTRACT_MAX_SIZE`
-- `$rC > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 
 Increment `$fp->codesize`, `$ssp` by `$rC` padded to word alignment. Then set `$sp` to `$ssp`.
@@ -1862,7 +1855,6 @@ Panics if:
 
 - `$rC + $rD` overflows
 - `$rA + $rD > VM_MAX_RAN`
-- `$rD > MEM_MAX_ACCESS_SIZE`
 
 ### MINT: Mint new coins
 
@@ -1897,7 +1889,6 @@ Panic if:
 
 - `$rA + $rB` overflows
 - `$rA + $rB > VM_MAX_RAM`
-- `$rB > MEM_MAX_ACCESS_SIZE`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
@@ -1988,7 +1979,6 @@ Panic if:
 - `$rB + $rC` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
-- `$rC > MEM_MAX_ACCESS_SIZE`
 - `$rC > MESSAGE_MAX_DATA_SIZE`
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
@@ -2311,7 +2301,6 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
-- `$rC > MEM_MAX_ACCESS_SIZE`
 
 ### S256: SHA-2-256
 
@@ -2330,7 +2319,6 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
-- `$rC > MEM_MAX_ACCESS_SIZE`
 
 ## Other Instructions
 
