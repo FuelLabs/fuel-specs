@@ -1385,7 +1385,6 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <ul>
 <li><code>$rA + $rB</code> overflows</li>
 <li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
-<li><code>$rB &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>The memory range <code>MEM[$rA, $rB]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="mcli-memory-clear-immediate"><a class="header" href="#mcli-memory-clear-immediate">MCLI: Memory clear immediate</a></h3>
@@ -1401,7 +1400,6 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <ul>
 <li><code>$rA + imm</code> overflows</li>
 <li><code>$rA + imm &gt; VM_MAX_RAM</code></li>
-<li><code>imm &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>The memory range <code>MEM[$rA, imm]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="mcp-memory-copy"><a class="header" href="#mcp-memory-copy">MCP: Memory copy</a></h3>
@@ -1419,7 +1417,6 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$rB + $rC</code> overflows</li>
 <li><code>$rA + $rC &gt; VM_MAX_RAM</code></li>
 <li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
-<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>The memory ranges <code>MEM[$rA, $rC]</code> and <code>MEM[$rB, $rC]</code> overlap</li>
 <li>The memory range <code>MEM[$rA, $rC]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
 </ul>
@@ -1438,7 +1435,6 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$rB + imm</code> overflows</li>
 <li><code>$rA + imm &gt; VM_MAX_RAM</code></li>
 <li><code>$rB + imm &gt; VM_MAX_RAM</code></li>
-<li><code>imm &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>The memory ranges <code>MEM[$rA, imm]</code> and <code>MEM[$rB, imm]</code> overlap</li>
 <li>The memory range <code>MEM[$rA, imm]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
 </ul>
@@ -1458,7 +1454,6 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$rC + $rD</code> overflows</li>
 <li><code>$rB + $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$rC + $rD &gt; VM_MAX_RAM</code></li>
-<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
 </ul>
 <h3 id="pshh-push-a-set-of-high-registers-to-stack"><a class="header" href="#pshh-push-a-set-of-high-registers-to-stack">PSHH: Push a set of high registers to stack</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -1698,7 +1693,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, $rD]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
-<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
 <h3 id="croo-code-merkle-root"><a class="header" href="#croo-code-merkle-root">CROO: Code Merkle root</a></h3>
@@ -1753,7 +1747,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
 <li><code>$ssp + $rC &gt;= $hp</code></li>
 <li><code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
-<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
 <p>Increment <code>$fp-&gt;codesize</code>, <code>$ssp</code> by <code>$rC</code> padded to word alignment. Then set <code>$sp</code> to <code>$ssp</code>.</p>
@@ -1806,7 +1799,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <ul>
 <li><code>$rC + $rD</code> overflows</li>
 <li><code>$rA + $rD &gt; VM_MAX_RAN</code></li>
-<li><code>$rD &gt; MEM_MAX_ACCESS_SIZE</code></li>
 </ul>
 <h3 id="mint-mint-new-coins"><a class="header" href="#mint-mint-new-coins">MINT: Mint new coins</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -1837,7 +1829,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <ul>
 <li><code>$rA + $rB</code> overflows</li>
 <li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
-<li><code>$rB &gt; MEM_MAX_ACCESS_SIZE</code></li>
 </ul>
 <p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
@@ -1919,7 +1910,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rB + $rC</code> overflows</li>
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
 <li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
-<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 <li><code>$rC &gt; MESSAGE_MAX_DATA_SIZE</code></li>
 <li>In an external context, if <code>$rD &gt; MEM[balanceOfStart(0), 8]</code></li>
 <li>In an internal context, if <code>$rD</code> is greater than the balance of asset ID 0 of output with contract ID <code>MEM[$fp, 32]</code></li>
@@ -2205,7 +2195,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
 <li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
-<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 </ul>
 <h3 id="s256-sha-2-256"><a class="header" href="#s256-sha-2-256">S256: SHA-2-256</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -2223,7 +2212,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
 <li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
-<li><code>$rC &gt; MEM_MAX_ACCESS_SIZE</code></li>
 </ul>
 <h2 id="other-instructions"><a class="header" href="#other-instructions">Other Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
