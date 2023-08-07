@@ -75,6 +75,10 @@
   - [MCP: Memory copy](#mcp-memory-copy)
   - [MCPI: Memory copy immediate](#mcpi-memory-copy-immediate)
   - [MEQ: Memory equality](#meq-memory-equality)
+  - [POPH: Pop a set of high registers from stack](#poph-pop-a-set-of-high-registers-from-stack)
+  - [POPL: Pop a set of low registers from stack](#popl-pop-a-set-of-low-registers-from-stack)
+  - [PSHH: Push a set of high registers to stack](#pshh-push-a-set-of-high-registers-to-stack)
+  - [PSHL: Push a set of low registers to stack](#pshl-push-a-set-of-low-registers-to-stack)
   - [SB: Store byte](#sb-store-byte)
   - [SW: Store word](#sw-store-word)
 - [Contract Instructions](#contract-instructions)
@@ -103,7 +107,9 @@
   - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
-  - [ECR: Signature recovery](#ecr-signature-recovery)
+  - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
+  - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
+  - [ED19: edDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
@@ -1265,7 +1271,7 @@ Set the return value:
 1. `$ret = $rA`
 1. `$retl = 0`
 
-Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
+Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$ret`, `$retl` and `$hp`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
@@ -1394,7 +1400,6 @@ Panic if:
 
 - `$rA + $rB` overflows
 - `$rA + $rB > VM_MAX_RAM`
-- `$rB > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCLI: Memory clear immediate
@@ -1411,7 +1416,6 @@ Panic if:
 
 - `$rA + imm` overflows
 - `$rA + imm > VM_MAX_RAM`
-- `imm > MEM_MAX_ACCESS_SIZE`
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
 ### MCP: Memory copy
@@ -1430,7 +1434,6 @@ Panic if:
 - `$rB + $rC` overflows
 - `$rA + $rC > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
-- `$rC > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./index.md#ownership)
 
@@ -1450,7 +1453,6 @@ Panic if:
 - `$rB + imm` overflows
 - `$rA + imm > VM_MAX_RAM`
 - `$rB + imm > VM_MAX_RAM`
-- `imm > MEM_MAX_ACCESS_SIZE`
 - The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
@@ -1471,7 +1473,66 @@ Panic if:
 - `$rC + $rD` overflows
 - `$rB + $rD > VM_MAX_RAM`
 - `$rC + $rD > VM_MAX_RAM`
-- `$rD > MEM_MAX_ACCESS_SIZE`
+
+### PSHH: Push a set of high registers to stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Push a set of registers from range 40..64 to the stack in order.                       |
+| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[40..64].mask(imm)`      |
+| Syntax      | `pshh imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp + popcnt(imm)*8` overflows
+- `$sp + popcnt(imm)*8 > $hp`
+
+### PSHL: Push a set of low registers to stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Push a set of registers from range 16..40 to the stack in order.                       |
+| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[16..40].mask(imm)`      |
+| Syntax      | `pshl imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp + popcnt(imm)*8` overflows
+- `$sp + popcnt(imm)*8 > $hp`
+
+### POPH: Pop a set of high registers from stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Pop to a set of registers from range 40..64 from the stack.                            |
+| Operation   |`tmp=$sp-popcnt(imm)*8;`<br>`registers[40..64].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;`   |
+| Syntax      | `poph imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp - popcnt(imm)*8` overflows
+- `$sp - popcnt(imm)*8 < $ssp`
+
+### POPL: Pop a set of low registers from stack
+
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Pop to a set of registers from range 16..40 from the stack.                            |
+| Operation   |`tmp=$sp-popcnt(imm)*8;`<br>`registers[16..40].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;`   |
+| Syntax      | `poph imm`                                                                             |
+| Encoding    | `0x00 i i i i`                                                                         |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+
+Panic if:
+
+- `$sp - popcnt(imm)*8` overflows
+- `$sp - popcnt(imm)*8 < $ssp`
 
 ### SB: Store byte
 
@@ -1691,7 +1752,6 @@ Panic if:
 - `$rA + $rD > VM_MAX_RAM`
 - `$rB + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./index.md#ownership)
-- `$rD > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
 ### CROO: Code Merkle root
@@ -1750,7 +1810,6 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$ssp + $rC >= $hp`
 - `$rC > CONTRACT_MAX_SIZE`
-- `$rC > MEM_MAX_ACCESS_SIZE`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 
 Increment `$fp->codesize`, `$ssp` by `$rC` padded to word alignment. Then set `$sp` to `$ssp`.
@@ -1810,7 +1869,6 @@ Panics if:
 
 - `$rC + $rD` overflows
 - `$rA + $rD > VM_MAX_RAM`
-- `$rD > MEM_MAX_ACCESS_SIZE`
 
 ### MINT: Mint new coins
 
@@ -1859,7 +1917,6 @@ Panic if:
 
 - `$rA + $rB` overflows
 - `$rA + $rB > VM_MAX_RAM`
-- `$rB > MEM_MAX_ACCESS_SIZE`
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
@@ -1894,7 +1951,7 @@ Set the return value:
 1. `$ret = $rA`
 1. `$retl = $rB`
 
-Then pop the call frame and restoring registers _except_ `$ggas`, `$cgas`, `$ret`, and `$retl`. Afterwards, set the following registers:
+Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$ret`, `$retl` and `$hp`. Afterwards, set the following registers:
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
@@ -1950,7 +2007,6 @@ Panic if:
 - `$rB + $rC` overflows
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
-- `$rC > MEM_MAX_ACCESS_SIZE`
 - `$rC > MESSAGE_MAX_DATA_SIZE`
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
@@ -2181,12 +2237,12 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ECR: Signature recovery
+### ECK1: Secp256k1 signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```MEM[$rA, 64] = ecrecover(MEM[$rB, 64], MEM[$rC, 32]);```                                                                 |
+| Operation   | ```MEM[$rA, 64] = ecrecover_k1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
 | Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
 | Notes       |                                                                                                                             |
@@ -2201,11 +2257,60 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
-Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#public-key-cryptography).
+Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
 
-To get the address from the public key, hash the public key with [SHA-2-256](#s256-sha-2-256).
+To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
+
+### ECR1: Secp256r1 signature recovery
+
+|             |                                                                                                                             |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                         |
+| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Notes       |                                                                                                                             |
+
+Panic if:
+
+- `$rA + 64` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 64 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+- The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
+
+Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
+
+If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
+
+To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
+
+### ED19: edDSA curve25519 verification
+
+|             |                                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Description | Verification recovered from 32-byte public key starting at `$rA` and 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
+| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);```                                                                                         |
+| Syntax      | `ecr $rA, $rB, $rC`                                                                                                                                 |
+| Encoding    | `0x00 rA rB rC -`                                                                                                                                   |
+| Notes       |                                                                                                                                                     |
+
+Panic if:
+
+- `$rA + 32` overflows
+- `$rB + 64` overflows
+- `$rC + 32` overflows
+- `$rA + 32 > VM_MAX_RAM`
+- `$rB + 64 > VM_MAX_RAM`
+- `$rC + 32 > VM_MAX_RAM`
+
+Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
+
+If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
 ### K256: keccak-256
 
@@ -2224,7 +2329,6 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
-- `$rC > MEM_MAX_ACCESS_SIZE`
 
 ### S256: SHA-2-256
 
@@ -2243,7 +2347,6 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - `$rB + $rC > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
-- `$rC > MEM_MAX_ACCESS_SIZE`
 
 ## Other Instructions
 
