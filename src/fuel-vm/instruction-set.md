@@ -1626,22 +1626,36 @@ Block header hashes for blocks with height greater than or equal to current bloc
 
 ### BURN: Burn existing coins
 
-|             |                                                      |
-|-------------|------------------------------------------------------|
-| Description | Burn `$rA` coins of the current contract's asset ID. |
-| Operation   | ```burn($rA);```                                     |
-| Syntax      | `burn $rA`                                           |
-| Encoding    | `0x00 rA - - -`                                      |
-| Notes       |                                                      |
+|             |                                                             |
+|-------------|-------------------------------------------------------------|
+| Description | Burn `$rA` coins of the `$rB` ID from the current contract. |
+| Operation   | ```burn($rA, $rB);```                                       |
+| Syntax      | `burn $rA $rB`                                              |
+| Encoding    | `0x00 rA rB - -`                                            |
+| Notes       | `$rB` is a pointer to a 32 byte ID in memory.               |
+
+The asset ID is constructed using the asset ID construction method.
 
 Panic if:
 
-- Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
+- `$rB + 32 > VM_MAX_RAM`
+- Balance of asset ID from `constructAssetID(MEM[$fp, 32], MEM[$rB, 32])` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
 - `$fp == 0` (in the script context)
 
-For output with contract ID `MEM[$fp, 32]`, decrease balance of asset ID `MEM[$fp, 32]` by `$rA`.
+For output with contract ID `MEM[$fp, 32]`, decrease balance of asset ID `constructAssetID(MEM[$fp, 32], MEM[$rB, 32])` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
+
+Append a receipt to the list of receipts, modifying tx.receiptsRoot:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Burn`                                                  |
+| `sub_id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `contract_id`     | `byte[32]`    | Contract ID of the current context. |
+| `val`    | `uint64`      | Value of register `$rA`.   |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 ### CALL: Call contract
 
@@ -1854,26 +1868,40 @@ Logs the memory range `MEM[$rC, $rD]`.
 Panics if:
 
 - `$rC + $rD` overflows
-- `$rA + $rD > VM_MAX_RAN`
+- `$rA + $rD > VM_MAX_RAM`
 
 ### MINT: Mint new coins
 
-|             |                                                      |
-|-------------|------------------------------------------------------|
-| Description | Mint `$rA` coins of the current contract's asset ID. |
-| Operation   | ```mint($rA);```                                     |
-| Syntax      | `mint $rA`                                           |
-| Encoding    | `0x00 rA - - -`                                      |
-| Notes       |                                                      |
+|             |                                                             |
+|-------------|-------------------------------------------------------------|
+| Description | Mint `$rA` coins of the `$rB` ID from the current contract. |
+| Operation   | ```mint($rA, $rB);```                                       |
+| Syntax      | `mint $rA $rB`                                              |
+| Encoding    | `0x00 rA rB - -`                                            |
+| Notes       | `$rB` is a pointer to a 32 byte ID in memory                |
+
+The asset ID will be constructed using the asset ID construction method.
 
 Panic if:
 
-- Balance of asset ID `MEM[$fp, 32]` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
+- `$rB + 32 > VM_MAX_RAM`
+- Balance of asset ID `constructAssetID(MEM[$fp, 32], MEM[$rB])` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
 
-For output with contract ID `MEM[$fp, 32]`, increase balance of asset ID `MEM[$fp, 32]` by `$rA`.
+For output with contract ID `MEM[$fp, 32]`, increase balance of asset ID `constructAssetID(MEM[$fp, 32], MEM[$rB])` by `$rA`.
 
 This modifies the `balanceRoot` field of the appropriate output.
+
+Append a receipt to the list of receipts, modifying tx.receiptsRoot:
+
+| name     | type          | description                                                               |
+|----------|---------------|---------------------------------------------------------------------------|
+| `type`   | `ReceiptType` | `ReceiptType.Mint`                                                  |
+| `sub_id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `contract_id`     | `byte[32]`    | Contract ID of the current context. |
+| `val`    | `uint64`      | Value of register `$rA`.   |
+| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
+| `is`     | `uint64`      | Value of register `$is`.                                                  |
 
 ### RETD: Return from context with data
 
