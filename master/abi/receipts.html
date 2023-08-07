@@ -159,6 +159,8 @@
 <li><a href="#panic-receipt">Panic</a></li>
 <li><a href="#revert-receipt">Revert</a></li>
 <li><a href="#log-receipt">Log</a></li>
+<li><a href="#mint-receipt">Mint</a></li>
+<li><a href="#burn-receipt">Burn</a></li>
 <li><a href="#logdata-receipt">LogData</a></li>
 <li><a href="#transfer-receipt">Transfer</a></li>
 <li><a href="#transferout-receipt">TransferOut</a></li>
@@ -248,6 +250,42 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
   &quot;val1&quot;: &quot;1844674407371&quot;,
   &quot;val2&quot;: &quot;1844674407372&quot;,
   &quot;val3&quot;: &quot;1844674407373&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="mint-receipt"><a class="header" href="#mint-receipt">Mint Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Mint</code>.</li>
+<li><code>sub_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register <code>$rB</code>.</li>
+<li><code>contract_id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.</li>
+<li><code>val</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Mint&quot;,
+  &quot;sub_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;contract_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val&quot;: &quot;18446744073709551613&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="burn-receipt"><a class="header" href="#burn-receipt">Burn Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Burn</code>.</li>
+<li><code>sub_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register <code>$rB</code>.</li>
+<li><code>contract_id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.</li>
+<li><code>val</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Burn&quot;,
+  &quot;sub_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;contract_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val&quot;: &quot;18446744073709551613&quot;,
   &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
   &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
 }

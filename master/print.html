@@ -260,6 +260,8 @@
     TransferOut = 8,
     ScriptResult = 9,
     MessageOut = 10,
+    Mint = 11
+    Burn = 12
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
@@ -539,9 +541,10 @@
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="identifiers"><a class="header" href="#identifiers">Identifiers</a></h1>
 <p>This chapter defines how to compute unique identifiers.</p>
 <ul>
-<li><a href="identifiers/./transaction-id.html">Transaction ID</a></li>
+<li><a href="identifiers/./asset.html">Asset ID</a></li>
 <li><a href="identifiers/./contract-id.html">Contract ID</a></li>
 <li><a href="identifiers/./predicate-id.html">Predicate ID</a></li>
+<li><a href="identifiers/./transaction-id.html">Transaction ID</a></li>
 <li><a href="identifiers/./utxo-id.html">UTXO ID</a>
 <ul>
 <li><a href="identifiers/./utxo-id.html#coin-id">Coin ID</a></li>
@@ -1799,6 +1802,8 @@ fn logging() {
 <li><a href="abi/receipts.html#panic-receipt">Panic</a></li>
 <li><a href="abi/receipts.html#revert-receipt">Revert</a></li>
 <li><a href="abi/receipts.html#log-receipt">Log</a></li>
+<li><a href="abi/receipts.html#mint-receipt">Mint</a></li>
+<li><a href="abi/receipts.html#burn-receipt">Burn</a></li>
 <li><a href="abi/receipts.html#logdata-receipt">LogData</a></li>
 <li><a href="abi/receipts.html#transfer-receipt">Transfer</a></li>
 <li><a href="abi/receipts.html#transferout-receipt">TransferOut</a></li>
@@ -1888,6 +1893,42 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
   &quot;val1&quot;: &quot;1844674407371&quot;,
   &quot;val2&quot;: &quot;1844674407372&quot;,
   &quot;val3&quot;: &quot;1844674407373&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="mint-receipt"><a class="header" href="#mint-receipt">Mint Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Mint</code>.</li>
+<li><code>sub_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register <code>$rB</code>.</li>
+<li><code>contract_id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.</li>
+<li><code>val</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Mint&quot;,
+  &quot;sub_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;contract_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val&quot;: &quot;18446744073709551613&quot;,
+  &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
+  &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
+}
+</code></pre>
+<h2 id="burn-receipt"><a class="header" href="#burn-receipt">Burn Receipt</a></h2>
+<ul>
+<li><code>type</code>: <code>Burn</code>.</li>
+<li><code>sub_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register <code>$rB</code>.</li>
+<li><code>contract_id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.</li>
+<li><code>val</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
+<li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;Burn&quot;,
+  &quot;sub_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;contract_id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;val&quot;: &quot;18446744073709551613&quot;,
   &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
   &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
 }
@@ -3918,20 +3959,32 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>Block header hashes for blocks with height greater than or equal to current block height are zero (<code>0x00**32</code>).</p>
 <h3 id="burn-burn-existing-coins"><a class="header" href="#burn-burn-existing-coins">BURN: Burn existing coins</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Burn <code>$rA</code> coins of the current contract's asset ID.</td></tr>
-<tr><td>Operation</td><td><code>burn($rA);</code></td></tr>
-<tr><td>Syntax</td><td><code>burn $rA</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Description</td><td>Burn <code>$rA</code> coins of the <code>$rB</code> ID from the current contract.</td></tr>
+<tr><td>Operation</td><td><code>burn($rA, $rB);</code></td></tr>
+<tr><td>Syntax</td><td><code>burn $rA $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td><code>$rB</code> is a pointer to a 32 byte ID in memory.</td></tr>
 </tbody></table>
 </div>
+<p>The asset ID is constructed using the asset ID construction method.</p>
 <p>Panic if:</p>
 <ul>
-<li>Balance of asset ID <code>MEM[$fp, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code> minus <code>$rA</code> underflows</li>
+<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li>Balance of asset ID from <code>constructAssetID(MEM[$fp, 32], MEM[$rB, 32])</code> of output with contract ID <code>MEM[$fp, 32]</code> minus <code>$rA</code> underflows</li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>For output with contract ID <code>MEM[$fp, 32]</code>, decrease balance of asset ID <code>MEM[$fp, 32]</code> by <code>$rA</code>.</p>
+<p>For output with contract ID <code>MEM[$fp, 32]</code>, decrease balance of asset ID <code>constructAssetID(MEM[$fp, 32], MEM[$rB, 32])</code> by <code>$rA</code>.</p>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output.</p>
+<p>Append a receipt to the list of receipts, modifying tx.receiptsRoot:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Burn</code></td></tr>
+<tr><td><code>sub_id</code></td><td><code>byte[32]</code></td><td>Asset sub identifier <code>MEM[$rB, $rB + 32]</code>.</td></tr>
+<tr><td><code>contract_id</code></td><td><code>byte[32]</code></td><td>Contract ID of the current context.</td></tr>
+<tr><td><code>val</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
 <h3 id="call-call-contract"><a class="header" href="#call-call-contract">CALL: Call contract</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Call contract.</td></tr>
@@ -4122,24 +4175,36 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>Panics if:</p>
 <ul>
 <li><code>$rC + $rD</code> overflows</li>
-<li><code>$rA + $rD &gt; VM_MAX_RAN</code></li>
+<li><code>$rA + $rD &gt; VM_MAX_RAM</code></li>
 </ul>
 <h3 id="mint-mint-new-coins"><a class="header" href="#mint-mint-new-coins">MINT: Mint new coins</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Mint <code>$rA</code> coins of the current contract's asset ID.</td></tr>
-<tr><td>Operation</td><td><code>mint($rA);</code></td></tr>
-<tr><td>Syntax</td><td><code>mint $rA</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Description</td><td>Mint <code>$rA</code> coins of the <code>$rB</code> ID from the current contract.</td></tr>
+<tr><td>Operation</td><td><code>mint($rA, $rB);</code></td></tr>
+<tr><td>Syntax</td><td><code>mint $rA $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td><code>$rB</code> is a pointer to a 32 byte ID in memory</td></tr>
 </tbody></table>
 </div>
+<p>The asset ID will be constructed using the asset ID construction method.</p>
 <p>Panic if:</p>
 <ul>
-<li>Balance of asset ID <code>MEM[$fp, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code> plus <code>$rA</code> overflows</li>
+<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li>Balance of asset ID <code>constructAssetID(MEM[$fp, 32], MEM[$rB])</code> of output with contract ID <code>MEM[$fp, 32]</code> plus <code>$rA</code> overflows</li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>For output with contract ID <code>MEM[$fp, 32]</code>, increase balance of asset ID <code>MEM[$fp, 32]</code> by <code>$rA</code>.</p>
+<p>For output with contract ID <code>MEM[$fp, 32]</code>, increase balance of asset ID <code>constructAssetID(MEM[$fp, 32], MEM[$rB])</code> by <code>$rA</code>.</p>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output.</p>
+<p>Append a receipt to the list of receipts, modifying tx.receiptsRoot:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Mint</code></td></tr>
+<tr><td><code>sub_id</code></td><td><code>byte[32]</code></td><td>Asset sub identifier <code>MEM[$rB, $rB + 32]</code>.</td></tr>
+<tr><td><code>contract_id</code></td><td><code>byte[32]</code></td><td>Contract ID of the current context.</td></tr>
+<tr><td><code>val</code></td><td><code>uint64</code></td><td>Value of register <code>$rA</code>.</td></tr>
+<tr><td><code>pc</code></td><td><code>uint64</code></td><td>Value of register <code>$pc</code>.</td></tr>
+<tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
+</tbody></table>
+</div>
 <h3 id="retd-return-from-context-with-data"><a class="header" href="#retd-return-from-context-with-data">RETD: Return from context with data</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Returns from <a href="fuel-vm/./index.html#contexts">context</a> with value <code>MEM[$rA, $rB]</code>.</td></tr>
