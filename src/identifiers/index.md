@@ -2,9 +2,10 @@
 
 This chapter defines how to compute unique identifiers.
 
-- [Transaction ID](./transaction-id.md)
+- [Asset ID](./asset.md)
 - [Contract ID](./contract-id.md)
 - [Predicate ID](./predicate-id.md)
+- [Transaction ID](./transaction-id.md)
 - [UTXO ID](./utxo-id.md)
   - [Coin ID](./utxo-id.md#coin-id)
   - [Message ID](./utxo-id.md#message-id)

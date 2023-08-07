@@ -23,6 +23,8 @@ All receipts will have a `type` property:
   - [Panic](#panic-receipt)
   - [Revert](#revert-receipt)
   - [Log](#log-receipt)
+  - [Mint](#mint-receipt)
+  - [Burn](#burn-receipt)
   - [LogData](#logdata-receipt)
   - [Transfer](#transfer-receipt)
   - [TransferOut](#transferout-receipt)
@@ -119,6 +121,46 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
   "val1": "1844674407371",
   "val2": "1844674407372",
   "val3": "1844674407373",
+  "pc": "0xffffffffffffffff",
+  "is": "0xfffffffffffffffe"
+}
+```
+
+## Mint Receipt
+
+- `type`: `Mint`.
+- `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register `$rB`.
+- `contract_id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.
+- `val`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
+- `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
+
+```json
+{
+  "type": "Mint",
+  "sub_id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "contract_id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val": "18446744073709551613",
+  "pc": "0xffffffffffffffff",
+  "is": "0xfffffffffffffffe"
+}
+```
+
+## Burn Receipt
+
+- `type`: `Burn`.
+- `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register `$rB`.
+- `contract_id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.
+- `val`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
+- `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
+- `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
+
+```json
+{
+  "type": "Burn",
+  "sub_id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "contract_id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "val": "18446744073709551613",
   "pc": "0xffffffffffffffff",
   "is": "0xfffffffffffffffe"
 }

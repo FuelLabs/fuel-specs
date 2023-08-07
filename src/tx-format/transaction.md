@@ -51,6 +51,8 @@ enum ReceiptType : uint8 {
     TransferOut = 8,
     ScriptResult = 9,
     MessageOut = 10,
+    Mint = 11
+    Burn = 12
 }
 ```
 
