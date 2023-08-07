@@ -129,7 +129,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ## Mint Receipt
 
 - `type`: `Mint`.
-- `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID.
+- `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register `$rB`.
 - `contract_id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.
 - `val`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
@@ -149,7 +149,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ## Burn Receipt
 
 - `type`: `Burn`.
-- `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID.
+- `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register `$rB`.
 - `contract_id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context.
 - `val`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
