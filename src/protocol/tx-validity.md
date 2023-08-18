@@ -107,10 +107,10 @@ def sum_inputs(tx, asset_id) -> int:
 Returns any minted amounts by the transaction
 """
 def minted(tx, asset_id) -> int:
-  mint_amount: int = 0
-  if tx.type == TransactionType.Mint and asset_id == tx.mint_asset_id:
-    mint_amount = tx.mint_amount
-  return mint_amount
+    mint_amount: int = 0
+    if tx.type == TransactionType.Mint and asset_id == tx.mint_asset_id:
+        mint_amount = tx.mint_amount
+    return mint_amount
 
 def sum_outputs(tx, asset_id) -> int:
     total: int = 0
@@ -220,20 +220,11 @@ The coinbase transaction is a mechanism for block creators to collect transactio
 In order for a coinbase transaction to be valid:
 
 1. It must be a [Mint](../tx-format/transaction.md#TransactionMint) transaction.
-1. The coinbase transaction must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.
+1. The coinbase transaction must be the last transaction within a block, even if there are no other transactions in the block and the fee is zero.
 1. The `mintAmount` doesn't exceed the total amount of fees processed from all other transactions within the same block.
 1. The `mintAssetId` matches the `asset_id` that fees are paid in (`asset_id == 0`).
-1. the `gasPrice`, where relevant is assumed to be zero.
 
-A [Mint](../tx-format/transaction.md#TransactionMint) transaction is only valid within the context of these coinbase validity rules.
-
-Fee burning mechanisms are supported. The block creator may use a lower `mintAmount` than the total
-amount of fees paid within the block, leaving the excess fees forever unclaimed.
-
-The [Mint](../tx-format/transaction.md#TransactionMint) transaction type flexibly allows the block
-creator to decide how fees should be collected.
-For example, consider that a threshold amount exists for a UTXO to be considered non-spendable dust.
-If the coinbase amount is below this threshold, the block creator could use a script to transfer the amount 
-into a contract balance. After the contract balance is high enough, the block creator would sweep the balance out as 
-spendable coin UTXOs. If the coinbase amount is above this threshold, the block creator may use
-[OutputType.Coin](../tx-format/output.md#outputcoin) to avoid extra steps.
+The minted amount of the coinbase transaction intrinsically increases the balance corresponding to the `inputContract`.
+This means the balance of `mintAssetId` is directly increased by `mintAmount` on the input contract,
+without requiring any VM execution. Compared to coin outputs, intrinsically increasing a contract balance to collect 
+coinbase amounts prevents the accumulation of dust during low-usage periods.

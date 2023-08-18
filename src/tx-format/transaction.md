@@ -133,23 +133,15 @@ Creates a contract with contract ID as computed [here](../identifiers/contract-i
 The transaction is created by the block producer and is not signed. Since it is not usable outside of block creation or execution, all fields must be fully set upon creation without any zeroing.
 This means that the transaction ID must also include the correct `txPointer` value, not zeroed out.
 
-| name           | type                         | description                                               |
-|----------------|------------------------------|-----------------------------------------------------------|
-| `mintAmount`   | `uint64`                     | The amount of funds being minted within this transaction. |
-| `mintAssetId`  | `byte[32]`                   | The asset ID of funds minted within this transaction.     |
-| `gasLimit`     | `uint64`                     | Gas limit for transaction                                 |
-| `scriptLength` | `uint16`                     | Script length, in instructions.                           |
-| `inputsCount`  | `uint8`                      | Number of inputs.                                         |
-| `outputsCount` | `uint8`                      | Number of outputs.                                        |
-| `txPointer`    | [TXPointer](./tx-pointer.md) | The location of the `Mint` transaction in the block.      |
-| `receiptsRoot` | `byte[32]`                   | Merkle root of receipts.                                  |
-| `script`       | `byte[]`                     | Script to execute.                                        |
-| `inputs`       | [Input](./input.md)`[]`      | List of inputs.                                           |
-| `outputs`      | [Output](./output.md)`[]`    | List of outputs.                                          |
+| name             | type                         | description                                          |
+|------------------|------------------------------|------------------------------------------------------|
+| `txPointer`      | [TXPointer](./tx-pointer.md) | The location of the `Mint` transaction in the block. |
+| `inputContract`  | [Input](./input.md)          | The contract utxo that assets are minted to.         |
+| `outputContract` | [Output](./output.md)        | The contract utxo that assets are being minted to.   |
+| `mintAmount`     | `uint64`                     | The amount of funds minted.                          |
+| `mintAssetId`    | `byte[32]`                   | The asset IDs corresponding to the minted amount.    |
 
 Transaction is invalid if:
 - `txPointer` is zero or doesn't match the block.
-- Any output is of type `OutputType.ContractCreated`
-- `scriptLength > MAX_SCRIPT_LENGTH`
-- `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
-- `scriptLength * 4 != len(script)`
+- `inputContract` is not of the type `InputType.Contract`
+- `outputContract` is not of the type `OutputType.Contract`
