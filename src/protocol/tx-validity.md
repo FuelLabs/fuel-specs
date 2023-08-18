@@ -226,5 +226,5 @@ In order for a coinbase transaction to be valid:
 
 The minted amount of the coinbase transaction intrinsically increases the balance corresponding to the `inputContract`.
 This means the balance of `mintAssetId` is directly increased by `mintAmount` on the input contract,
-without requiring any VM execution. Compared to coin outputs, intrinsically increasing a contract balance to collect 
+without requiring any VM execution. Compared to coin outputs, intrinsically increasing a contract balance to collect
 coinbase amounts prevents the accumulation of dust during low-usage periods.

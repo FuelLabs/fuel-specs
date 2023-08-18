@@ -142,6 +142,7 @@ This means that the transaction ID must also include the correct `txPointer` val
 | `mintAssetId`    | `byte[32]`                   | The asset IDs corresponding to the minted amount.    |
 
 Transaction is invalid if:
+
 - `txPointer` is zero or doesn't match the block.
 - `inputContract` is not of the type `InputType.Contract`
 - `outputContract` is not of the type `OutputType.Contract`
