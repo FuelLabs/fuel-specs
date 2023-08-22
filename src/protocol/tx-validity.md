@@ -107,10 +107,9 @@ def sum_inputs(tx, asset_id) -> int:
 Returns any minted amounts by the transaction
 """
 def minted(tx, asset_id) -> int:
-    mint_amount: int = 0
-    if tx.type == TransactionType.Mint and asset_id == tx.mint_asset_id:
-        mint_amount = tx.mint_amount
-    return mint_amount
+    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
+        return 0
+    return tx.mint_amount
 
 def sum_outputs(tx, asset_id) -> int:
     total: int = 0
