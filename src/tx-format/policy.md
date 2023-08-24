@@ -13,7 +13,6 @@ enum PolicyType : uint8 {
 | `type` | [PolicyType](#policy)                                                                 | Type of input. |
 | `data` | One of [GasLimit](#gaslimit), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Input data.    |
 
-
 Transaction is invalid if:
 
 - `type > PolicyType.Maturity`
