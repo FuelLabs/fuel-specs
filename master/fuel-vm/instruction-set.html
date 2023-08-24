@@ -2143,7 +2143,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>The 64-byte public key (x, y) recovered from 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
 <tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover_k1(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
-<tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
+<tr><td>Syntax</td><td><code>eck1 $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
@@ -2165,7 +2165,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>The 64-byte public key (x, y) recovered from 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
 <tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
-<tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
+<tr><td>Syntax</td><td><code>ecr1 $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
@@ -2187,7 +2187,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Verification recovered from 32-byte public key starting at <code>$rA</code> and 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
 <tr><td>Operation</td><td><code>ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
-<tr><td>Syntax</td><td><code>ecr $rA, $rB, $rC</code></td></tr>
+<tr><td>Syntax</td><td><code>ed19 $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
