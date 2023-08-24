@@ -5,6 +5,7 @@
 - [Transaction Format](./tx-format/index.md)
   - [Constants](./tx-format/constants.md)
   - [Transaction](./tx-format/transaction.md)
+  - [Policy](./tx-format/policy.md)
   - [Input](./tx-format/input.md)
   - [Output](./tx-format/output.md)
   - [Witness](./tx-format/witness.md)
