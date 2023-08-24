@@ -2269,7 +2269,7 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
 | Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
-| Syntax      | `eck1 $rA, $rB, $rC`                                                                                                        |
+| Syntax      | `ecr1 $rA, $rB, $rC`                                                                                                        |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
 | Notes       |                                                                                                                             |
 
@@ -2295,7 +2295,7 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Verification recovered from 32-byte public key starting at `$rA` and 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
 | Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);```                                                                                         |
-| Syntax      | `eck1 $rA, $rB, $rC`                                                                                                                                |
+| Syntax      | `ed19 $rA, $rB, $rC`                                                                                                                                |
 | Encoding    | `0x00 rA rB rC -`                                                                                                                                   |
 | Notes       |                                                                                                                                                     |
 
