@@ -16,8 +16,6 @@ enum TransactionType : uint8 {
 Transaction is invalid if:
 
 - `type > TransactionType.Create`
-- `gasLimit > MAX_GAS_PER_TX`
-- `blockheight() < maturity`
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
@@ -51,27 +49,27 @@ enum ReceiptType : uint8 {
     TransferOut = 8,
     ScriptResult = 9,
     MessageOut = 10,
-    Mint = 11
-    Burn = 12
+    Mint = 11,
+    Burn = 12,
 }
 ```
 
-| name               | type                        | description                                          |
-|--------------------|-----------------------------|------------------------------------------------------|
-| `gasPrice`         | `uint64`                    | Gas price for transaction.                           |
-| `gasLimit`         | `uint64`                    | Gas limit for transaction (including predicate gas). |
-| `maturity`         | `uint32`                    | Block until which tx cannot be included.             |
-| `scriptLength`     | `uint16`                    | Script length, in instructions.                      |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.               |
-| `inputsCount`      | `uint8`                     | Number of inputs.                                    |
-| `outputsCount`     | `uint8`                     | Number of outputs.                                   |
-| `witnessesCount`   | `uint8`                     | Number of witnesses.                                 |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                             |
-| `script`           | `byte[]`                    | Script to execute.                                   |
-| `scriptData`       | `byte[]`                    | Script input data (parameters).                      |
-| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                                      |
-| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
-| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
+| name               | type                        | description                            |
+|--------------------|-----------------------------|----------------------------------------|
+| `gasPrice`         | `uint64`                    | Gas price for transaction.             |
+| `scriptLength`     | `uint16`                    | Script length, in instructions.        |
+| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes. |
+| `policyCount`      | `uint8`                     | Number of policies.                    |
+| `inputsCount`      | `uint8`                     | Number of inputs.                      |
+| `outputsCount`     | `uint8`                     | Number of outputs.                     |
+| `witnessesCount`   | `uint8`                     | Number of witnesses.                   |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.               |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies.                      |
+| `script`           | `byte[]`                    | Script to execute.                     |
+| `scriptData`       | `byte[]`                    | Script input data (parameters).        |
+| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                        |
+| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                       |
+| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                     |
 
 Given helper `len()` that returns the number of bytes of a field.
 
@@ -82,7 +80,6 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `gasLimit` is less than the sum of all `predicateGasUsed` for `InputType.Coin` or `InputType.Message` where predicate length is greater than zero.
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
@@ -94,22 +91,22 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 
 ## TransactionCreate
 
-| name                   | type                        | description                                          |
-|------------------------|-----------------------------|------------------------------------------------------|
-| `gasPrice`             | `uint64`                    | Gas price for transaction.                           |
-| `gasLimit`             | `uint64`                    | Gas limit for transaction (including predicate gas). |
-| `maturity`             | `uint32`                    | Block until which tx cannot be included.             |
-| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.           |
-| `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.        |
-| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.               |
-| `inputsCount`          | `uint8`                     | Number of inputs.                                    |
-| `outputsCount`         | `uint8`                     | Number of outputs.                                   |
-| `witnessesCount`       | `uint8`                     | Number of witnesses.                                 |
-| `salt`                 | `byte[32]`                  | Salt.                                                |
-| `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value).    |
-| `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                      |
-| `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                     |
-| `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                   |
+| name                   | type                        | description                                       |
+|------------------------|-----------------------------|---------------------------------------------------|
+| `gasPrice`             | `uint64`                    | Gas price for transaction.                        |
+| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.        |
+| `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.     |
+| `policyCount`          | `uint8`                     | Number of policies.                               |
+| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.            |
+| `inputsCount`          | `uint8`                     | Number of inputs.                                 |
+| `outputsCount`         | `uint8`                     | Number of outputs.                                |
+| `witnessesCount`       | `uint8`                     | Number of witnesses.                              |
+| `salt`                 | `byte[32]`                  | Salt.                                             |
+| `policies`             | [Policy](./policy.md)`[]`   | List of policies.                                 |
+| `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value). |
+| `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                   |
+| `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
+| `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
 
 Transaction is invalid if:
 
