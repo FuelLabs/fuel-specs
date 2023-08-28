@@ -246,6 +246,14 @@ def sum_inputs(tx, asset_id) -&gt; int:
             total += input.amount
     return total
 
+&quot;&quot;&quot;
+Returns any minted amounts by the transaction
+&quot;&quot;&quot;
+def minted(tx, asset_id) -&gt; int:
+    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
+        return 0
+    return tx.mint_amount
+
 def sum_outputs(tx, asset_id) -&gt; int:
     total: int = 0
     for output in tx.outputs:
@@ -257,7 +265,7 @@ def available_balance(tx, asset_id) -&gt; int:
     &quot;&quot;&quot;
     Make the data message balance available to the script
     &quot;&quot;&quot;
-    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id)
+    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id) + minted(tx, asset_id)
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -&gt; int:
@@ -332,14 +340,18 @@ messageBalance = sum_data_messages(tx, 0)
 <h3 id="state-changes"><a class="header" href="#state-changes">State Changes</a></h3>
 <p>Transaction processing is completed by removing spent UTXOs from the state and adding created UTXOs to the state.</p>
 <h3 id="coinbase-transaction"><a class="header" href="#coinbase-transaction">Coinbase Transaction</a></h3>
-<p>The coinbase transaction is a mechanism for block creators to convert fees into spendable UTXOs.</p>
+<p>The coinbase transaction is a mechanism for block creators to collect transaction fees.</p>
 <p>In order for a coinbase transaction to be valid:</p>
 <ol>
 <li>It must be a <a href="../tx-format/transaction.html#TransactionMint">Mint</a> transaction.</li>
-<li>The coinbase transaction must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.</li>
-<li>The total output value of the coinbase transaction cannot exceed the total amount of fees processed from all other transactions within the same block.</li>
-<li>The <code>asset_id</code> for coinbase transaction outputs must match the <code>asset_id</code> that fees are paid in (<code>asset_id == 0</code>).</li>
+<li>The coinbase transaction must be the last transaction within a block, even if there are no other transactions in the block and the fee is zero.</li>
+<li>The <code>mintAmount</code> doesn't exceed the total amount of fees processed from all other transactions within the same block.</li>
+<li>The <code>mintAssetId</code> matches the <code>asset_id</code> that fees are paid in (<code>asset_id == 0</code>).</li>
 </ol>
+<p>The minted amount of the coinbase transaction intrinsically increases the balance corresponding to the <code>inputContract</code>.
+This means the balance of <code>mintAssetId</code> is directly increased by <code>mintAmount</code> on the input contract,
+without requiring any VM execution. Compared to coin outputs, intrinsically increasing a contract balance to collect
+coinbase amounts prevents the accumulation of dust during low-usage periods.</p>
 
                     </main>
 
