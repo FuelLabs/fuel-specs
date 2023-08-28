@@ -103,6 +103,14 @@ def sum_inputs(tx, asset_id) -> int:
             total += input.amount
     return total
 
+"""
+Returns any minted amounts by the transaction
+"""
+def minted(tx, asset_id) -> int:
+    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
+        return 0
+    return tx.mint_amount
+
 def sum_outputs(tx, asset_id) -> int:
     total: int = 0
     for output in tx.outputs:
@@ -114,7 +122,7 @@ def available_balance(tx, asset_id) -> int:
     """
     Make the data message balance available to the script
     """
-    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id)
+    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id) + minted(tx, asset_id)
     return availableBalance
 
 def unavailable_balance(tx, asset_id) -> int:
@@ -206,11 +214,16 @@ Transaction processing is completed by removing spent UTXOs from the state and a
 
 ### Coinbase Transaction
 
-The coinbase transaction is a mechanism for block creators to convert fees into spendable UTXOs.
+The coinbase transaction is a mechanism for block creators to collect transaction fees.
 
 In order for a coinbase transaction to be valid:
 
 1. It must be a [Mint](../tx-format/transaction.md#TransactionMint) transaction.
-2. The coinbase transaction must be the first transaction within a block, even if there are no other transactions in the block and the fee is zero.
-3. The total output value of the coinbase transaction cannot exceed the total amount of fees processed from all other transactions within the same block.
-4. The `asset_id` for coinbase transaction outputs must match the `asset_id` that fees are paid in (`asset_id == 0`).
+1. The coinbase transaction must be the last transaction within a block, even if there are no other transactions in the block and the fee is zero.
+1. The `mintAmount` doesn't exceed the total amount of fees processed from all other transactions within the same block.
+1. The `mintAssetId` matches the `asset_id` that fees are paid in (`asset_id == 0`).
+
+The minted amount of the coinbase transaction intrinsically increases the balance corresponding to the `inputContract`.
+This means the balance of `mintAssetId` is directly increased by `mintAmount` on the input contract,
+without requiring any VM execution. Compared to coin outputs, intrinsically increasing a contract balance to collect
+coinbase amounts prevents the accumulation of dust during low-usage periods.
