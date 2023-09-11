@@ -1668,7 +1668,7 @@ Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 | Effects     | External call          |
 | Notes       |                        |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
@@ -1999,7 +1999,7 @@ Cease VM execution and revert script effects. After a revert:
 | Effects     | Output message                                                                                                                                                |
 | Notes       |                                                                                                                                                               |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
@@ -2158,7 +2158,7 @@ Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.y
 | Effects     | Balance tree read, balance tree write                                     |
 | Notes       |                                                                           |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
@@ -2198,7 +2198,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 | Effects     | Balance tree read, balance tree write                                               |
 | Notes       |                                                                                     |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
