@@ -64,9 +64,9 @@ enum ReceiptType : uint8 {
 | `outputsCount`     | `uint8`                     | Number of outputs.                     |
 | `witnessesCount`   | `uint8`                     | Number of witnesses.                   |
 | `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.               |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies.                      |
 | `script`           | `byte[]`                    | Script to execute.                     |
 | `scriptData`       | `byte[]`                    | Script input data (parameters).        |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies.                      |
 | `inputs`           | [Input](./input.md)`[]`     | List of inputs.                        |
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                       |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                     |

@@ -19,14 +19,13 @@ Transaction is invalid if:
 
 ## GasLimit
 
-| name       | type     | description                                         |
-|------------|----------|-----------------------------------------------------|
-| `gasLimit` | `uint64` | Gas limit for transaction (including predicate gas) |
+| name       | type     | description                                                |
+|------------|----------|------------------------------------------------------------|
+| `gasLimit` | `uint64` | Gas limit for transaction (applicable to script execution) |
 
 Transaction is invalid if:
 
 - `gasLimit > MAX_GAS_PER_TX`
-- `gasLimit` is less than the sum of all `predicateGasUsed` for `InputType.Coin` or `InputType.Message` where predicate length is greater than zero.
 
 ## WitnessLimit
 
