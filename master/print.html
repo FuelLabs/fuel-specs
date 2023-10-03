@@ -336,8 +336,8 @@
 This means that the transaction ID must also include the correct <code>txPointer</code> value, not zeroed out.</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txPointer</code></td><td><a href="tx-format/./tx-pointer.html">TXPointer</a></td><td>The location of the <code>Mint</code> transaction in the block.</td></tr>
-<tr><td><code>inputContract</code></td><td><a href="tx-format/./input.html">Input</a></td><td>The contract utxo that assets are minted to.</td></tr>
-<tr><td><code>outputContract</code></td><td><a href="tx-format/./output.html">Output</a></td><td>The contract utxo that assets are being minted to.</td></tr>
+<tr><td><code>inputContract</code></td><td><a href="tx-format/./input.html">InputContract</a></td><td>The contract utxo that assets are minted to.</td></tr>
+<tr><td><code>outputContract</code></td><td><a href="tx-format/./output.html">OutputContract</a></td><td>The contract utxo that assets are being minted to.</td></tr>
 <tr><td><code>mintAmount</code></td><td><code>uint64</code></td><td>The amount of funds minted.</td></tr>
 <tr><td><code>mintAssetId</code></td><td><code>byte[32]</code></td><td>The asset IDs corresponding to the minted amount.</td></tr>
 </tbody></table>
@@ -345,8 +345,7 @@ This means that the transaction ID must also include the correct <code>txPointer
 <p>Transaction is invalid if:</p>
 <ul>
 <li><code>txPointer</code> is zero or doesn't match the block.</li>
-<li><code>inputContract</code> is not of the type <code>InputType.Contract</code></li>
-<li><code>outputContract</code> is not of the type <code>OutputType.Contract</code></li>
+<li><code>outputContract.inputIndex</code> is not zero</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="input"><a class="header" href="#input">Input</a></h1>
 <pre><code class="language-c++">enum InputType : uint8 {
@@ -2502,7 +2501,7 @@ abi MyContract {
 <tr><td>32</td><td><code>byte[32]</code></td><td><code>to</code></td><td>Contract ID for this call.</td></tr>
 <tr><td>32</td><td><code>byte[32]</code></td><td><code>asset_id</code></td><td>asset ID of forwarded coins.</td></tr>
 <tr><td>8*64</td><td><code>byte[8][64]</code></td><td><code>regs</code></td><td>Saved registers from previous context.</td></tr>
-<tr><td>8</td><td><code>uint16</code></td><td><code>codesize</code></td><td>Code size in bytes, padded to word alignment.</td></tr>
+<tr><td>8</td><td><code>uint64</code></td><td><code>codesize</code></td><td>Code size in bytes.</td></tr>
 <tr><td>8</td><td><code>byte[8]</code></td><td><code>param1</code></td><td>First parameter.</td></tr>
 <tr><td>8</td><td><code>byte[8]</code></td><td><code>param2</code></td><td>Second parameter.</td></tr>
 <tr><td>1*</td><td><code>byte[]</code></td><td><code>code</code></td><td>Zero-padded to 8-byte alignment, but individual instructions are not aligned.</td></tr>
@@ -2621,7 +2620,7 @@ abi MyContract {
 <li><a href="fuel-vm/instruction-set.html#bhsh-block-hash">BHSH: Block hash</a></li>
 <li><a href="fuel-vm/instruction-set.html#burn-burn-existing-coins">BURN: Burn existing coins</a></li>
 <li><a href="fuel-vm/instruction-set.html#call-call-contract">CALL: Call contract</a></li>
-<li><a href="fuel-vm/instruction-set.html#cb-coinbase-address">CB: Coinbase address</a></li>
+<li><a href="fuel-vm/instruction-set.html#cb-coinbase-contract-id">CB: Coinbase contract id</a></li>
 <li><a href="fuel-vm/instruction-set.html#ccp-code-copy">CCP: Code copy</a></li>
 <li><a href="fuel-vm/instruction-set.html#croo-code-merkle-root">CROO: Code Merkle root</a></li>
 <li><a href="fuel-vm/instruction-set.html#csiz-code-size">CSIZ: Code size</a></li>
@@ -4057,9 +4056,9 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$cgas = $rD</code> or all available gas (forward gas)</li>
 </ol>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
-<h3 id="cb-coinbase-address"><a class="header" href="#cb-coinbase-address">CB: Coinbase address</a></h3>
+<h3 id="cb-coinbase-contract-id"><a class="header" href="#cb-coinbase-contract-id">CB: Coinbase contract id</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Get the <a href="fuel-vm/../protocol/tx-validity.html#coinbase-transaction">coinbase address</a> associated with the block proposer.</td></tr>
+<tr><td>Description</td><td>Get the <a href="fuel-vm/../protocol/tx-validity.html#coinbase-transaction">coinbase contract id</a> associated with the block proposer.</td></tr>
 <tr><td>Operation</td><td><code>MEM[$rA, 32] = coinbase();</code></td></tr>
 <tr><td>Syntax</td><td><code>cb $rA</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
