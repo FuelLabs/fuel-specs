@@ -172,7 +172,7 @@ A call frame consists of the following, word-aligned:
 | 32    | `byte[32]`    | `to`       | Contract ID for this call.                                                    |
 | 32    | `byte[32]`    | `asset_id` | asset ID of forwarded coins.                                                  |
 | 8*64  | `byte[8][64]` | `regs`     | Saved registers from previous context.                                        |
-| 8     | `uint64`      | `codesize` | Code size in bytes, padded to word alignment.                                 |
+| 8     | `uint64`      | `codesize` | Code size in bytes.                                 |
 | 8     | `byte[8]`     | `param1`   | First parameter.                                                              |
 | 8     | `byte[8]`     | `param2`   | Second parameter.                                                             |
 | 1*    | `byte[]`      | `code`     | Zero-padded to 8-byte alignment, but individual instructions are not aligned. |
