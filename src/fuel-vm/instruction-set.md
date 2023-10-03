@@ -87,7 +87,7 @@
   - [BHSH: Block hash](#bhsh-block-hash)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
-  - [CB: Coinbase address](#cb-coinbase-address)
+  - [CB: Coinbase contract id](#cb-coinbase-contract-id)
   - [CCP: Code copy](#ccp-code-copy)
   - [CROO: Code Merkle root](#croo-code-merkle-root)
   - [CSIZ: Code size](#csiz-code-size)
@@ -1716,15 +1716,15 @@ A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to fillin
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### CB: Coinbase address
+### CB: Coinbase contract id
 
-|             |                                                                                                                   |
-|-------------|-------------------------------------------------------------------------------------------------------------------|
-| Description | Get the [coinbase address](../protocol/tx-validity.md#coinbase-transaction) associated with the block proposer. |
-| Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                  |
-| Syntax      | `cb $rA`                                                                                                          |
-| Encoding    | `0x00 rA - - -`                                                                                                   |
-| Notes       |                                                                                                                   |
+|             |                                                                                                                     |
+|-------------|---------------------------------------------------------------------------------------------------------------------|
+| Description | Get the [coinbase contract id](../protocol/tx-validity.md#coinbase-transaction) associated with the block proposer. |
+| Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                    |
+| Syntax      | `cb $rA`                                                                                                            |
+| Encoding    | `0x00 rA - - -`                                                                                                     |
+| Notes       |                                                                                                                     |
 
 Panic if:
 
