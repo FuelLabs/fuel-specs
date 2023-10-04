@@ -11,6 +11,8 @@ These are the available types that can be encoded in the ABI:
   - `u16`, 16 bits.
   - `u32`, 32 bits.
   - `u64`, 64 bits.
+  - `u128`, 128 bits.
+  - `u256`, 256 bits.
 - Boolean: `bool`, either `0` or `1` encoded identically to `u8`.
 - B256: `b256`, arbitrary 256-bits value.
 - Address : `address`, a 256-bit (32-byte) address.
@@ -18,20 +20,26 @@ These are the available types that can be encoded in the ABI:
 - Array
 - Enums (sum types)
 - Structs
+- Vectors
+- Tuples
 
 These types are encoded in-place. Here's how to encode them. We define `enc(X)` the encoding of the type `X`.
 
 ## Unsigned Integers
 
-`u<M>` where `M` is either 8, 16, 32, or 64 bits.
+`u<M>` where `M` is either 8, 16, 32, 64, 128 or 256 bits.
 
-`enc(X)` is the big-endian (i.e. right-aligned) representation of `X` left-padded with zero-bytes. Total length must be 8 bytes.
+`enc(X)` is the big-endian (i.e. right-aligned) representation of `X` left-padded with zero-bytes.
+- In the case of `M` being 8, 16, 32 or 64, total length must be 8 bytes.
+- If `M` is 128, total length must be 16 bytes.
+- If `M` is 256, total length must be 32 bytes.
 
 > **Note:** since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._
 
 **Example:**
 
 Encoding `42` yields: `0x000000000000002a`, which is the hexadecimal representation of the decimal number `42`, right-aligned to 8 bytes.
+Encoding `u128::MAX - 1` yields: `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE`, it's right-alined to 16 bytes
 
 ## Boolean
 
@@ -242,4 +250,68 @@ Calling `bar` with `MySumType::Z` yields:
 ```plaintext
 0x
 0000000000000002 // The discriminant of the chosen enum, in this case `2`.
+```
+
+## Vectors
+
+ABI calls containing vectors are encoded in the following way:
+
+- First, figure out the the length `l` of the vector. Its length will also be its capacity.
+- Encode the content of the vector according to the spec of its type, e.g. for a `Vec<bool>`,
+  encode each `bool` element according to the `bool` specs. This gives out data that is stored
+  on the heap, and we encode only the pointer to this data
+
+```rust
+abi MyContract {
+  fn foo(a: Vec<u32>);
+} {
+  fn foo(a: Vec < u32 > ) {};
+}
+```
+
+Calling `foo` with `vec![1u32, 2u32, 3u32, 4u32]`:
+
+- `length` is 4, `capacity` is 4
+- `data`: [0x0000000000000001, 0x0000000000000002, 0x0000000000000003, 0x0000000000000004], stored at pointer address `0x000000000000beef`
+
+> Note: to understand how the `u32` are encoded, see the section about encoding integers.
+
+```plaintext
+0x
+000000000000beef // pointer address
+0000000000000004 // length = 4
+0000000000000004 // capacity = 4
+```
+
+At the pointer address, then the vector's content are encoded as such:
+
+```plaintext
+0x
+0000000000000001 // 1u32
+0000000000000002 // 2u32
+0000000000000003 // 3u32
+0000000000000004 // 4u32
+```
+
+# Tuples
+
+ABI calls containing tuples are encoded as such:
+If `X` is a tuple with the type signature `(T_1, T_2, ..., T_n)`, with `T_1,...,T_n` being any type except for vector, then `enc(X)` is encoded as the concatenation of `enc(T_1)`, `enc(T_2)`,`enc (T_3)`, ..., `enc(T_n)`.
+
+
+```rust
+abi MyContract {
+  fn foo(a: (u64, str[3], bool));
+} {
+  fn foo(a: (u64, str[3], bool)) {};
+}
+```
+
+Calling `foo` with `(1u64, "hel", true)` :
+
+```plaintext
+0x
+0000000000000001 // 1u64
+68656c0000000000 // "hel" encoded as per the specs
+0000000000000001 // true
 ```
