@@ -139,7 +139,7 @@
                     <main>
                         <h1 id="predicate-id"><a class="header" href="#predicate-id">Predicate ID</a></h1>
 <p>For an input of type <code>InputType.Coin</code> or <code>InputType.Message</code>, <code>input</code>, the predicate owner is calculated as:
-<code>sha256(0x4655454C ++ CHAIN_ID ++ root(input.predicate))</code>, where <code>root</code> is the Merkle root of
+<code>sha256(0x4655454C ++ root(input.predicate))</code>, where <code>root</code> is the Merkle root of
 <a href="../protocol/cryptographic-primitives.html#binary-merkle-tree">the binary Merkle tree</a> each leaf being 16KiB of instructions.
 If the bytecode is not a multiple of 16 KiB, the final leaf should be zero-padded rounding up to the nearest multiple of 8 bytes.</p>
 
