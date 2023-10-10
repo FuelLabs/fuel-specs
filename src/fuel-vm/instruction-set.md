@@ -113,6 +113,7 @@
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
+  - [ECAL: Call external function](#ecal-call-external-function)
   - [FLAG: Set flags](#flag-set-flags)
   - [GM: Get metadata](#gm-get-metadata)
   - [GTF: Get transaction fields](#gtf-get-transaction-fields)
@@ -2351,6 +2352,22 @@ Panic if:
 ## Other Instructions
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
+
+### ECAL: Call external function
+
+|             |                                                                          |
+|-------------|--------------------------------------------------------------------------|
+| Description | Call an external function that has full access to the VM state.          |
+| Operation   | `external(&mut vm, $rA, $rB, $rC, $rD)`                                  |
+| Syntax      | `ecal $rA $rB $rC $rD`                                                   |
+| Encoding    | `0x00 rA rB rC rD`                                                       |
+| Notes       | Does nothing by default, but the VM user can define this to do anything. |
+
+This function provides an escape hatch from the VM, similar to `ecall` instruction of RISC-V. The suggested convention is to use `$rA` for "system call number", i.e. identifying the procedure to call, but all arguments can be used freely. The operation can modify the VM state freely, including writing to registers and memory. Again, the suggested convention is to use `$rA` for the return value and `$err` for any possible errors. However, these conventions can be ignored when necessary.
+
+Panic if:
+
+- The external function panics.
 
 ### FLAG: Set flags
 
