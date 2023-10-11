@@ -2425,77 +2425,77 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | name                                      | `imm`   | set `$rA` to                                     |
 |-------------------------------------------|---------|--------------------------------------------------|
 | `GTF_TYPE`                                | `0x001` | `tx.type`                                        |
-| `GTF_SCRIPT_GAS_PRICE`                    | `0x002` | `tx.gasPrice`                                    |
-| `GTF_SCRIPT_GAS_LIMIT`                    | `0x003` | `tx.gasLimit`                                    |
-| `GTF_SCRIPT_MATURITY`                     | `0x004` | `tx.maturity`                                    |
-| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x005` | `tx.scriptLength`                                |
-| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x006` | `tx.scriptDataLength`                            |
-| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x007` | `tx.inputsCount`                                 |
-| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x008` | `tx.outputsCount`                                |
-| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x009` | `tx.witnessesCount`                              |
-| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x00A` | Memory address of `tx.receiptsRoot`              |
-| `GTF_SCRIPT_SCRIPT`                       | `0x00B` | Memory address of `tx.script`                    |
-| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x00C` | Memory address of `tx.scriptData`                |
-| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00D` | Memory address of `tx.inputs[$rB]`               |
-| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00E` | Memory address of `t.outputs[$rB]`               |
-| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00F` | Memory address of `tx.witnesses[$rB]`            |
-| `GTF_CREATE_GAS_PRICE`                    | `0x010` | `tx.gasPrice`                                    |
-| `GTF_CREATE_GAS_LIMIT`                    | `0x011` | `tx.gasLimit`                                    |
-| `GTF_CREATE_MATURITY`                     | `0x012` | `tx.maturity`                                    |
-| `GTF_CREATE_BYTECODE_LENGTH`              | `0x013` | `tx.bytecodeLength`                              |
-| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x014` | `tx.bytecodeWitnessIndex`                        |
-| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x015` | `tx.storageSlotsCount`                           |
-| `GTF_CREATE_INPUTS_COUNT`                 | `0x016` | `tx.inputsCount`                                 |
-| `GTF_CREATE_OUTPUTS_COUNT`                | `0x017` | `tx.outputsCount`                                |
-| `GTF_CREATE_WITNESSES_COUNT`              | `0x018` | `tx.witnessesCount`                              |
-| `GTF_CREATE_SALT`                         | `0x019` | Memory address of `tx.salt`                      |
-| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x01A` | Memory address of `tx.storageSlots[$rB]`         |
-| `GTF_CREATE_INPUT_AT_INDEX`               | `0x01B` | Memory address of `tx.inputs[$rB]`               |
-| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x01C` | Memory address of `t.outputs[$rB]`               |
-| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x01D` | Memory address of `tx.witnesses[$rB]`            |
-| `GTF_INPUT_TYPE`                          | `0x101` | `tx.inputs[$rB].type`                            |
-| `GTF_INPUT_COIN_TX_ID`                    | `0x102` | Memory address of `tx.inputs[$rB].txID`          |
-| `GTF_INPUT_COIN_OUTPUT_INDEX`             | `0x103` | `tx.inputs[$rB].outputIndex`                     |
-| `GTF_INPUT_COIN_OWNER`                    | `0x104` | Memory address of `tx.inputs[$rB].owner`         |
-| `GTF_INPUT_COIN_AMOUNT`                   | `0x105` | `tx.inputs[$rB].amount`                          |
-| `GTF_INPUT_COIN_ASSET_ID`                 | `0x106` | Memory address of `tx.inputs[$rB].asset_id`      |
-| `GTF_INPUT_COIN_TX_POINTER`               | `0x107` | Memory address of `tx.inputs[$rB].txPointer`     |
-| `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x108` | `tx.inputs[$rB].witnessIndex`                    |
-| `GTF_INPUT_COIN_MATURITY`                 | `0x109` | `tx.inputs[$rB].maturity`                        |
-| `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x10A` | `tx.inputs[$rB].predicateLength`                 |
-| `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x10B` | `tx.inputs[$rB].predicateDataLength`             |
-| `GTF_INPUT_COIN_PREDICATE`                | `0x10C` | Memory address of `tx.inputs[$rB].predicate`     |
-| `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x10D` | Memory address of `tx.inputs[$rB].predicateData` |
-| `GTF_INPUT_COIN_PREDICATE_GAS_USED`       | `0x10E` | `tx.inputs[$rB].predicateGasUsed`                |
-| `GTF_INPUT_CONTRACT_TX_ID`                | `0x10F` | Memory address of `tx.inputs[$rB].txID`          |
-| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x110` | `tx.inputs[$rB].outputIndex`                     |
-| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x111` | Memory address of `tx.inputs[$rB].balanceRoot`   |
-| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x112` | Memory address of `tx.inputs[$rB].stateRoot`     |
-| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x113` | Memory address of `tx.inputs[$rB].txPointer`     |
-| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x114` | Memory address of `tx.inputs[$rB].contractID`    |
-| `GTF_INPUT_MESSAGE_SENDER`                | `0x115` | Memory address of `tx.inputs[$rB].sender`        |
-| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x116` | Memory address of `tx.inputs[$rB].recipient`     |
-| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x117` | `tx.inputs[$rB].amount`                          |
-| `GTF_INPUT_MESSAGE_NONCE`                 | `0x118` | Memory address of `tx.inputs[$rB].nonce`         |
-| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x119` | `tx.inputs[$rB].witnessIndex`                    |
-| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x11A` | `tx.inputs[$rB].dataLength`                      |
-| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x11B` | `tx.inputs[$rB].predicateLength`                 |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x11C` | `tx.inputs[$rB].predicateDataLength`             |
-| `GTF_INPUT_MESSAGE_DATA`                  | `0x11D` | Memory address of `tx.inputs[$rB].data`          |
-| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x11E` | Memory address of `tx.inputs[$rB].predicate`     |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x11F` | Memory address of `tx.inputs[$rB].predicateData` |
-| `GTF_INPUT_MESSAGE_PREDICATE_GAS_USED`    | `0x120` | `tx.inputs[$rB].predicateGasUsed`                |
-| `GTF_OUTPUT_TYPE`                         | `0x201` | `tx.outputs[$rB].type`                           |
-| `GTF_OUTPUT_COIN_TO`                      | `0x202` | Memory address of `tx.outputs[$rB].to`           |
-| `GTF_OUTPUT_COIN_AMOUNT`                  | `0x203` | `tx.outputs[$rB].amount`                         |
-| `GTF_OUTPUT_COIN_ASSET_ID`                | `0x204` | Memory address of `tx.outputs[$rB].asset_id`     |
-| `GTF_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x205` | `tx.outputs[$rB].inputIndex`                     |
-| `GTF_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x206` | Memory address of `tx.outputs[$rB].balanceRoot`  |
-| `GTF_OUTPUT_CONTRACT_STATE_ROOT`          | `0x207` | Memory address of `tx.outputs[$rB].stateRoot`    |
-| `GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x208` | Memory address of `tx.outputs[$rB].contractID`   |
-| `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x209` | Memory address of `tx.outputs[$rB].stateRoot`    |
-| `GTF_WITNESS_DATA_LENGTH`                 | `0x301` | `tx.witnesses[$rB].dataLength`                   |
-| `GTF_WITNESS_DATA`                        | `0x302` | Memory address of `tx.witnesses[$rB].data`       |
+| `GTF_SCRIPT_MATURITY`                     | `0x002` | `tx.maturity`                                    |
+| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x003` | `tx.scriptLength`                                |
+| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x004` | `tx.scriptDataLength`                            |
+| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x005` | `tx.inputsCount`                                 |
+| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x006` | `tx.outputsCount`                                |
+| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x007` | `tx.witnessesCount`                              |
+| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x008` | Memory address of `tx.receiptsRoot`              |
+| `GTF_SCRIPT_SCRIPT`                       | `0x009` | Memory address of `tx.script`                    |
+| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x00A` | Memory address of `tx.scriptData`                |
+| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00B` | Memory address of `tx.inputs[$rB]`               |
+| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00C` | Memory address of `t.outputs[$rB]`               |
+| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00D` | Memory address of `tx.witnesses[$rB]`            |
+| `GTF_CREATE_MATURITY`                     | `0x100` | `tx.maturity`                                    |
+| `GTF_CREATE_BYTECODE_LENGTH`              | `0x101` | `tx.bytecodeLength`                              |
+| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x102` | `tx.bytecodeWitnessIndex`                        |
+| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x103` | `tx.storageSlotsCount`                           |
+| `GTF_CREATE_INPUTS_COUNT`                 | `0x104` | `tx.inputsCount`                                 |
+| `GTF_CREATE_OUTPUTS_COUNT`                | `0x105` | `tx.outputsCount`                                |
+| `GTF_CREATE_WITNESSES_COUNT`              | `0x106` | `tx.witnessesCount`                              |
+| `GTF_CREATE_SALT`                         | `0x107` | Memory address of `tx.salt`                      |
+| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x108` | Memory address of `tx.storageSlots[$rB]`         |
+| `GTF_CREATE_INPUT_AT_INDEX`               | `0x109` | Memory address of `tx.inputs[$rB]`               |
+| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x10A` | Memory address of `t.outputs[$rB]`               |
+| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x10D` | Memory address of `tx.witnesses[$rB]`            |
+| `GTF_INPUT_TYPE`                          | `0x200` | `tx.inputs[$rB].type`                            |
+| `GTF_INPUT_COIN_TX_ID`                    | `0x201` | Memory address of `tx.inputs[$rB].txID`          |
+| `GTF_INPUT_COIN_OUTPUT_INDEX`             | `0x202` | `tx.inputs[$rB].outputIndex`                     |
+| `GTF_INPUT_COIN_OWNER`                    | `0x203` | Memory address of `tx.inputs[$rB].owner`         |
+| `GTF_INPUT_COIN_AMOUNT`                   | `0x204` | `tx.inputs[$rB].amount`                          |
+| `GTF_INPUT_COIN_ASSET_ID`                 | `0x205` | Memory address of `tx.inputs[$rB].asset_id`      |
+| `GTF_INPUT_COIN_TX_POINTER`               | `0x206` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x207` | `tx.inputs[$rB].witnessIndex`                    |
+| `GTF_INPUT_COIN_MATURITY`                 | `0x208` | `tx.inputs[$rB].maturity`                        |
+| `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x209` | `tx.inputs[$rB].predicateLength`                 |
+| `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x20A` | `tx.inputs[$rB].predicateDataLength`             |
+| `GTF_INPUT_COIN_PREDICATE`                | `0x20B` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x20C` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_INPUT_COIN_PREDICATE_GAS_USED`       | `0x20D` | `tx.inputs[$rB].predicateGasUsed`                |
+| `GTF_INPUT_CONTRACT_TX_ID`                | `0x220` | Memory address of `tx.inputs[$rB].txID`          |
+| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x221` | `tx.inputs[$rB].outputIndex`                     |
+| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x222` | Memory address of `tx.inputs[$rB].balanceRoot`   |
+| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x223` | Memory address of `tx.inputs[$rB].stateRoot`     |
+| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x224` | Memory address of `tx.inputs[$rB].txPointer`     |
+| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x225` | Memory address of `tx.inputs[$rB].contractID`    |
+| `GTF_INPUT_MESSAGE_SENDER`                | `0x240` | Memory address of `tx.inputs[$rB].sender`        |
+| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x241` | Memory address of `tx.inputs[$rB].recipient`     |
+| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x242` | `tx.inputs[$rB].amount`                          |
+| `GTF_INPUT_MESSAGE_NONCE`                 | `0x243` | Memory address of `tx.inputs[$rB].nonce`         |
+| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x244` | `tx.inputs[$rB].witnessIndex`                    |
+| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x245` | `tx.inputs[$rB].dataLength`                      |
+| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x246` | `tx.inputs[$rB].predicateLength`                 |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x247` | `tx.inputs[$rB].predicateDataLength`             |
+| `GTF_INPUT_MESSAGE_DATA`                  | `0x248` | Memory address of `tx.inputs[$rB].data`          |
+| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x249` | Memory address of `tx.inputs[$rB].predicate`     |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x24A` | Memory address of `tx.inputs[$rB].predicateData` |
+| `GTF_INPUT_MESSAGE_PREDICATE_GAS_USED`    | `0x24B` | `tx.inputs[$rB].predicateGasUsed`                |
+| `GTF_OUTPUT_TYPE`                         | `0x300` | `tx.outputs[$rB].type`                           |
+| `GTF_OUTPUT_COIN_TO`                      | `0x301` | Memory address of `tx.outputs[$rB].to`           |
+| `GTF_OUTPUT_COIN_AMOUNT`                  | `0x302` | `tx.outputs[$rB].amount`                         |
+| `GTF_OUTPUT_COIN_ASSET_ID`                | `0x303` | Memory address of `tx.outputs[$rB].asset_id`     |
+| `GTF_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x304` | `tx.outputs[$rB].inputIndex`                     |
+| `GTF_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x305` | Memory address of `tx.outputs[$rB].balanceRoot`  |
+| `GTF_OUTPUT_CONTRACT_STATE_ROOT`          | `0x306` | Memory address of `tx.outputs[$rB].stateRoot`    |
+| `GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x307` | Memory address of `tx.outputs[$rB].contractID`   |
+| `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x308` | Memory address of `tx.outputs[$rB].stateRoot`    |
+| `GTF_WITNESS_DATA_LENGTH`                 | `0x400` | `tx.witnesses[$rB].dataLength`                   |
+| `GTF_WITNESS_DATA`                        | `0x401` | Memory address of `tx.witnesses[$rB].data`       |
+| `GTF_POLICY_GAS_PRICE`                    | `0x500` | `tx.policies[0x00].gasPrice`                     |
+| `GTF_POLICY_GAS_LIMIT`                    | `0x501` | `tx.policies[0x01].witnessLimit`                 |
+| `GTF_POLICY_WITNESS_LIMIT`                | `0x502` | `tx.policies[0x02].witnessLimit`                 |
+| `GTF_POLICY_MATURITY`                     | `0x503` | `tx.policies[0x03].maturity`                     |
 
 Panic if:
 

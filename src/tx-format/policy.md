@@ -2,9 +2,10 @@
 
 ```c++
 enum PolicyType : uint8 {
-    GasLimit = 0,
-    WitnessLimit = 1,
-    Maturity = 2,
+    GasPrice = 0,
+    GasLimit = 1,
+    WitnessLimit = 2,
+    Maturity = 3,
 }
 ```
 
@@ -16,6 +17,13 @@ enum PolicyType : uint8 {
 Transaction is invalid if:
 
 - `type > PolicyType.Maturity`
+
+
+## GasPrice
+
+| name       | type     | description               |
+|------------|----------|---------------------------|
+| `gasPrice` | `uint64` | Gas price for transaction |
 
 ## GasLimit
 

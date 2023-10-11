@@ -80,6 +80,8 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
+- No policy of type `PolicyType.GasPrice`
+- No policy of type `PolicyType.GasLimit`
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
@@ -122,6 +124,7 @@ Transaction is invalid if:
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
+- No policy of type `PolicyType.GasPrice`
 
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
