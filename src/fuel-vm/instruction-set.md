@@ -87,7 +87,7 @@
   - [BHSH: Block hash](#bhsh-block-hash)
   - [BURN: Burn existing coins](#burn-burn-existing-coins)
   - [CALL: Call contract](#call-call-contract)
-  - [CB: Coinbase address](#cb-coinbase-address)
+  - [CB: Coinbase contract id](#cb-coinbase-contract-id)
   - [CCP: Code copy](#ccp-code-copy)
   - [CROO: Code Merkle root](#croo-code-merkle-root)
   - [CSIZ: Code size](#csiz-code-size)
@@ -1668,7 +1668,7 @@ Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 | Effects     | External call          |
 | Notes       |                        |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
@@ -1716,15 +1716,15 @@ A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to fillin
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### CB: Coinbase address
+### CB: Coinbase contract id
 
-|             |                                                                                                                   |
-|-------------|-------------------------------------------------------------------------------------------------------------------|
-| Description | Get the [coinbase address](../protocol/tx-validity.md#coinbase-transaction) associated with the block proposer. |
-| Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                  |
-| Syntax      | `cb $rA`                                                                                                          |
-| Encoding    | `0x00 rA - - -`                                                                                                   |
-| Notes       |                                                                                                                   |
+|             |                                                                                                                     |
+|-------------|---------------------------------------------------------------------------------------------------------------------|
+| Description | Get the [coinbase contract id](../protocol/tx-validity.md#coinbase-transaction) associated with the block proposer. |
+| Operation   | ```MEM[$rA, 32] = coinbase();```                                                                                    |
+| Syntax      | `cb $rA`                                                                                                            |
+| Encoding    | `0x00 rA - - -`                                                                                                     |
+| Notes       |                                                                                                                     |
 
 Panic if:
 
@@ -1999,7 +1999,7 @@ Cease VM execution and revert script effects. After a revert:
 | Effects     | Output message                                                                                                                                                |
 | Notes       |                                                                                                                                                               |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
@@ -2013,15 +2013,15 @@ Panic if:
 
 Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
-| name        | type          | description                                                                  |
-|-------------|---------------|------------------------------------------------------------------------------|
-| `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                     |
-| `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                           |
-| `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                        |
-| `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                         |
+| name        | type          | description                                                                     |
+|-------------|---------------|---------------------------------------------------------------------------------|
+| `type`      | `ReceiptType` | `ReceiptType.MessageOut`                                                        |
+| `sender`    | `byte[32]`    | The address of the message sender: `MEM[$fp, 32]`.                              |
+| `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                           |
+| `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                            |
 | `nonce`     | `byte[32]`    | The message nonce as described [here](../identifiers/utxo-id.md#message-nonce). |
-| `len`       | `uint16`      | Length of message data, in bytes: `$rC`.                                     |
-| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                  |
+| `len`       | `uint16`      | Length of message data, in bytes: `$rC`.                                        |
+| `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                     |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. This modifies the `balanceRoot` field of the appropriate contract that had its' funds deducted.
 
@@ -2158,7 +2158,7 @@ Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.y
 | Effects     | Balance tree read, balance tree write                                     |
 | Notes       |                                                                           |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 
@@ -2198,7 +2198,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 | Effects     | Balance tree read, balance tree write                                               |
 | Notes       |                                                                                     |
 
-Given helper `balanceOfStart(asset_id: byte[32]) -> uint32` which returns the memory address of the remaining free balance of `asset_id`, or panics if `asset_id` has no free balance remaining.
+There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id`. If `asset_id` has no free balance remaining, the helper panics.
 
 Panic if:
 

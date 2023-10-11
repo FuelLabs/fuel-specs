@@ -131,15 +131,17 @@ Creates a contract with contract ID as computed [here](../identifiers/contract-i
 ## TransactionMint
 
 The transaction is created by the block producer and is not signed. Since it is not usable outside of block creation or execution, all fields must be fully set upon creation without any zeroing.
+This means that the transaction ID must also include the correct `txPointer` value, not zeroed out.
 
-| name           | type                         | description                                          |
-|----------------|------------------------------|------------------------------------------------------|
-| `txPointer`    | [TXPointer](./tx-pointer.md) | The location of the `Mint` transaction in the block. |
-| `outputsCount` | `uint8`                      | Number of outputs.                                   |
-| `outputs`      | [Output](./output.md)`[]`    | List of outputs.                                     |
+| name             | type                          | description                                          |
+|------------------|-------------------------------|------------------------------------------------------|
+| `txPointer`      | [TXPointer](./tx-pointer.md)  | The location of the `Mint` transaction in the block. |
+| `inputContract`  | [InputContract](./input.md)   | The contract utxo that assets are minted to.         |
+| `outputContract` | [OutputContract](./output.md) | The contract utxo that assets are being minted to.   |
+| `mintAmount`     | `uint64`                      | The amount of funds minted.                          |
+| `mintAssetId`    | `byte[32]`                    | The asset IDs corresponding to the minted amount.    |
 
 Transaction is invalid if:
 
-- Any output is not of type `OutputType.Coin`
-- Any two outputs have the same `asset_id`
 - `txPointer` is zero or doesn't match the block.
+- `outputContract.inputIndex` is not zero
