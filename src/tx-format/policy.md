@@ -18,7 +18,6 @@ Transaction is invalid if:
 
 - `type > PolicyType.Maturity`
 
-
 ## GasPrice
 
 | name       | type     | description               |

@@ -180,7 +180,7 @@ Once the free balances are computed, the [script is executed](../fuel-vm/index.m
 
 The fees incurred for a transaction are `ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)`.
 
-`size(tx)` includes the entire transaction serialized according to the transaction format, including witness data. 
+`size(tx)` includes the entire transaction serialized according to the transaction format, including witness data.
 This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.
 
 If the transaction as included in a block does not match this final transaction, the block is invalid.
