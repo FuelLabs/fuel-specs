@@ -9,10 +9,10 @@ enum PolicyType : uint8 {
 }
 ```
 
-| name   | type                                                                                  | description    |
-|--------|---------------------------------------------------------------------------------------|----------------|
-| `type` | [PolicyType](#policy)                                                                 | Type of input. |
-| `data` | One of [GasLimit](#gaslimit), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Input data.    |
+| name   | type                                                                                                         | description    |
+|--------|--------------------------------------------------------------------------------------------------------------|----------------|
+| `type` | [PolicyType](#policy)                                                                                        | Type of input. |
+| `data` | One of [GasPrice](#gasprice), [GasLimit](#gaslimit), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Input data.    |
 
 Transaction is invalid if:
 
