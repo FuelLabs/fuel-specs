@@ -44,7 +44,7 @@ Given helper `len()` that returns the number of bytes of a field.
 
 Transaction is invalid if:
 
-- `witnessLimit > len(tx.witnesses)`
+- `len(tx.witnesses) > witnessLimit`
 
 ## Maturity
 
