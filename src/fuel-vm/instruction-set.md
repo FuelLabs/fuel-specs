@@ -2425,30 +2425,28 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | name                                      | `imm`   | set `$rA` to                                     |
 |-------------------------------------------|---------|--------------------------------------------------|
 | `GTF_TYPE`                                | `0x001` | `tx.type`                                        |
-| `GTF_SCRIPT_MATURITY`                     | `0x002` | `tx.maturity`                                    |
-| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x003` | `tx.scriptLength`                                |
-| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x004` | `tx.scriptDataLength`                            |
-| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x005` | `tx.inputsCount`                                 |
-| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x006` | `tx.outputsCount`                                |
-| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x007` | `tx.witnessesCount`                              |
-| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x008` | Memory address of `tx.receiptsRoot`              |
-| `GTF_SCRIPT_SCRIPT`                       | `0x009` | Memory address of `tx.script`                    |
-| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x00A` | Memory address of `tx.scriptData`                |
-| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00B` | Memory address of `tx.inputs[$rB]`               |
-| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00C` | Memory address of `t.outputs[$rB]`               |
-| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00D` | Memory address of `tx.witnesses[$rB]`            |
-| `GTF_CREATE_MATURITY`                     | `0x100` | `tx.maturity`                                    |
-| `GTF_CREATE_BYTECODE_LENGTH`              | `0x101` | `tx.bytecodeLength`                              |
-| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x102` | `tx.bytecodeWitnessIndex`                        |
-| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x103` | `tx.storageSlotsCount`                           |
-| `GTF_CREATE_INPUTS_COUNT`                 | `0x104` | `tx.inputsCount`                                 |
-| `GTF_CREATE_OUTPUTS_COUNT`                | `0x105` | `tx.outputsCount`                                |
-| `GTF_CREATE_WITNESSES_COUNT`              | `0x106` | `tx.witnessesCount`                              |
-| `GTF_CREATE_SALT`                         | `0x107` | Memory address of `tx.salt`                      |
-| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x108` | Memory address of `tx.storageSlots[$rB]`         |
-| `GTF_CREATE_INPUT_AT_INDEX`               | `0x109` | Memory address of `tx.inputs[$rB]`               |
-| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x10A` | Memory address of `t.outputs[$rB]`               |
-| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x10D` | Memory address of `tx.witnesses[$rB]`            |
+| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x002` | `tx.scriptLength`                                |
+| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x003` | `tx.scriptDataLength`                            |
+| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x004` | `tx.inputsCount`                                 |
+| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x005` | `tx.outputsCount`                                |
+| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x006` | `tx.witnessesCount`                              |
+| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x007` | Memory address of `tx.receiptsRoot`              |
+| `GTF_SCRIPT_SCRIPT`                       | `0x008` | Memory address of `tx.script`                    |
+| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x009` | Memory address of `tx.scriptData`                |
+| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00A` | Memory address of `tx.inputs[$rB]`               |
+| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00B` | Memory address of `t.outputs[$rB]`               |
+| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00C` | Memory address of `tx.witnesses[$rB]`            |
+| `GTF_CREATE_BYTECODE_LENGTH`              | `0x100` | `tx.bytecodeLength`                              |
+| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x101` | `tx.bytecodeWitnessIndex`                        |
+| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x102` | `tx.storageSlotsCount`                           |
+| `GTF_CREATE_INPUTS_COUNT`                 | `0x103` | `tx.inputsCount`                                 |
+| `GTF_CREATE_OUTPUTS_COUNT`                | `0x104` | `tx.outputsCount`                                |
+| `GTF_CREATE_WITNESSES_COUNT`              | `0x105` | `tx.witnessesCount`                              |
+| `GTF_CREATE_SALT`                         | `0x106` | Memory address of `tx.salt`                      |
+| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x107` | Memory address of `tx.storageSlots[$rB]`         |
+| `GTF_CREATE_INPUT_AT_INDEX`               | `0x108` | Memory address of `tx.inputs[$rB]`               |
+| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x109` | Memory address of `t.outputs[$rB]`               |
+| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x10A` | Memory address of `tx.witnesses[$rB]`            |
 | `GTF_INPUT_TYPE`                          | `0x200` | `tx.inputs[$rB].type`                            |
 | `GTF_INPUT_COIN_TX_ID`                    | `0x201` | Memory address of `tx.inputs[$rB].txID`          |
 | `GTF_INPUT_COIN_OUTPUT_INDEX`             | `0x202` | `tx.inputs[$rB].outputIndex`                     |

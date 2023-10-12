@@ -56,7 +56,6 @@ enum ReceiptType : uint8 {
 
 | name               | type                        | description                            |
 |--------------------|-----------------------------|----------------------------------------|
-| `gasPrice`         | `uint64`                    | Gas price for transaction.             |
 | `scriptLength`     | `uint16`                    | Script length, in instructions.        |
 | `scriptDataLength` | `uint16`                    | Length of script input data, in bytes. |
 | `policyCount`      | `uint8`                     | Number of policies.                    |
@@ -95,7 +94,6 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 
 | name                   | type                        | description                                       |
 |------------------------|-----------------------------|---------------------------------------------------|
-| `gasPrice`             | `uint64`                    | Gas price for transaction.                        |
 | `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.     |
 | `policyCount`          | `uint8`                     | Number of policies.                               |
