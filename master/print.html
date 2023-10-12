@@ -2652,6 +2652,7 @@ abi MyContract {
 </li>
 <li><a href="fuel-vm/instruction-set.html#other-instructions">Other Instructions</a>
 <ul>
+<li><a href="fuel-vm/instruction-set.html#ecal-call-external-function">ECAL: Call external function</a></li>
 <li><a href="fuel-vm/instruction-set.html#flag-set-flags">FLAG: Set flags</a></li>
 <li><a href="fuel-vm/instruction-set.html#gm-get-metadata">GM: Get metadata</a></li>
 <li><a href="fuel-vm/instruction-set.html#gtf-get-transaction-fields">GTF: Get transaction fields</a></li>
@@ -4623,6 +4624,20 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </ul>
 <h2 id="other-instructions"><a class="header" href="#other-instructions">Other Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
+<h3 id="ecal-call-external-function"><a class="header" href="#ecal-call-external-function">ECAL: Call external function</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Call an external function that has full access to the VM state.</td></tr>
+<tr><td>Operation</td><td><code>external(&amp;mut vm, $rA, $rB, $rC, $rD)</code></td></tr>
+<tr><td>Syntax</td><td><code>ecal $rA $rB $rC $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Does nothing by default, but the VM user can define this to do anything.</td></tr>
+</tbody></table>
+</div>
+<p>This function provides an escape hatch from the VM, similar to <code>ecall</code> instruction of RISC-V. The suggested convention is to use <code>$rA</code> for &quot;system call number&quot;, i.e. identifying the procedure to call, but all arguments can be used freely. The operation can modify the VM state freely, including writing to registers and memory. Again, the suggested convention is to use <code>$rA</code> for the return value and <code>$err</code> for any possible errors. However, these conventions can be ignored when necessary.</p>
+<p>Panic if:</p>
+<ul>
+<li>The external function panics.</li>
+</ul>
 <h3 id="flag-set-flags"><a class="header" href="#flag-set-flags">FLAG: Set flags</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Set <code>$flag</code> to <code>$rA</code>.</td></tr>
