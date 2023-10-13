@@ -1,22 +1,18 @@
 # Policy
 
 ```c++
-enum PolicyType : uint8 {
-    GasPrice = 0,
-    GasLimit = 1,
-    WitnessLimit = 2,
-    Maturity = 3,
+// index using power of 2's for efficient bitmasking
+enum PolicyType : uint32 {
+    GasPrice = 1,
+    GasLimit = 2,
+    WitnessLimit = 4,
+    Maturity = 8,
 }
 ```
 
-| name   | type                                                                                                         | description    |
-|--------|--------------------------------------------------------------------------------------------------------------|----------------|
-| `type` | [PolicyType](#policy)                                                                                        | Type of input. |
-| `data` | One of [GasPrice](#gasprice), [GasLimit](#gaslimit), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Input data.    |
-
-Transaction is invalid if:
-
-- `type > PolicyType.Maturity`
+| name   | type                                                                                                         | description     |
+|--------|--------------------------------------------------------------------------------------------------------------|-----------------|
+| `data` | One of [GasPrice](#gasprice), [GasLimit](#gaslimit), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Policy data.    |
 
 ## GasPrice
 

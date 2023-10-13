@@ -58,19 +58,22 @@ enum ReceiptType : uint8 {
 |--------------------|-----------------------------|----------------------------------------|
 | `scriptLength`     | `uint16`                    | Script length, in instructions.        |
 | `scriptDataLength` | `uint16`                    | Length of script input data, in bytes. |
-| `policyCount`      | `uint8`                     | Number of policies.                    |
+| `policyTypes`      | `uint32`                    | Bitfield of used policy types.         |
 | `inputsCount`      | `uint8`                     | Number of inputs.                      |
 | `outputsCount`     | `uint8`                     | Number of outputs.                     |
 | `witnessesCount`   | `uint8`                     | Number of witnesses.                   |
 | `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.               |
 | `script`           | `byte[]`                    | Script to execute.                     |
 | `scriptData`       | `byte[]`                    | Script input data (parameters).        |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies.                      |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType.|
 | `inputs`           | [Input](./input.md)`[]`     | List of inputs.                        |
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                       |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                     |
 
 Given helper `len()` that returns the number of bytes of a field.
+Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
+Given helper `count_variants()` that returns the number of variants in an enum.
+Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
@@ -81,6 +84,9 @@ Transaction is invalid if:
 - `scriptDataLength != len(scriptData)`
 - No policy of type `PolicyType.GasPrice`
 - No policy of type `PolicyType.GasLimit`
+- `count_ones(policyTypes) > count_variants(PolicyType)`
+- `policyTypes > sum_variants(PolicyType)`
+- `len(policies) > count_ones(policyTypes)`
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
@@ -108,6 +114,10 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 | `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
 | `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
 
+Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
+Given helper `count_variants()` that returns the number of variants in an enum.
+Given helper `sum_variants()` that sums all variants of an enum.
+
 Transaction is invalid if:
 
 - Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
@@ -123,6 +133,9 @@ Transaction is invalid if:
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 - No policy of type `PolicyType.GasPrice`
+- `count_ones(policyTypes) > count_variants(PolicyType)`
+- `policyTypes > sum_variants(PolicyType)`
+- `len(policies) > count_ones(policyTypes)`
 
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
