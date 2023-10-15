@@ -30,6 +30,7 @@ These types are encoded in-place. Here's how to encode them. We define `enc(X)` 
 `u<M>` where `M` is either 8, 16, 32, 64, 128 or 256 bits.
 
 `enc(X)` is the big-endian (i.e. right-aligned) representation of `X` left-padded with zero-bytes.
+
 - In the case of `M` being 8, 16, 32 or 64, total length must be 8 bytes.
 - If `M` is 128, total length must be 16 bytes.
 - If `M` is 256, total length must be 32 bytes.
@@ -293,11 +294,10 @@ At the pointer address, then the vector's content are encoded as such:
 0000000000000004 // 4u32
 ```
 
-# Tuples
+## Tuples
 
 ABI calls containing tuples are encoded as such:
 If `X` is a tuple with the type signature `(T_1, T_2, ..., T_n)`, with `T_1,...,T_n` being any type except for vector, then `enc(X)` is encoded as the concatenation of `enc(T_1)`, `enc(T_2)`,`enc (T_3)`, ..., `enc(T_n)`.
-
 
 ```rust
 abi MyContract {
