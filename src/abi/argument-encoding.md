@@ -265,7 +265,7 @@ ABI calls containing vectors are encoded in the following way:
 abi MyContract {
   fn foo(a: Vec<u32>);
 } {
-  fn foo(a: Vec < u32 > ) {};
+  fn foo(a: Vec<u32>) {};
 }
 ```
 
