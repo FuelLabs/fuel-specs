@@ -35,7 +35,7 @@ When serializing a transaction, fields are serialized as follows (with inner str
 1. `byte[32]`: as-is.
 1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
 
-When deserializing a transaction, the reverse is done. If ,there are insufficient bytes or too many bytes, the transaction is invalid.
+When deserializing a transaction, the reverse is done. If there are insufficient bytes or too many bytes, the transaction is invalid.
 
 ## TransactionScript
 
