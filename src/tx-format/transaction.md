@@ -21,7 +21,7 @@ Transaction is invalid if:
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
--  `size > MAX_TRANSACTION_SIZE`. The size of a transaction is calculated as the sum of the sizes of its static and dynamic parts, as determined by canonical serialization.
+- `size > MAX_TRANSACTION_SIZE`. The size of a transaction is calculated as the sum of the sizes of its static and dynamic parts, as determined by canonical serialization.
 - No inputs are of type `InputType.Coin` or `InputType.Message` with `input.dataLength` == 0
 - More than one output is of type `OutputType.Change` for any asset ID in the input set
 - Any output is of type `OutputType.Change` for any asset ID not in the input set
