@@ -303,15 +303,15 @@ If `X` is a tuple with the type signature `(T_1, T_2, ..., T_n)`, with `T_1,...,
 abi MyContract {
   fn foo(a: (u64, str[3], bool));
 } {
-  fn foo(a: (u64, str[3], bool)) {};
+  fn foo(a: (u64, str[4], bool)) {};
 }
 ```
 
-Calling `foo` with `(1u64, "hel", true)` :
+Calling `foo` with `(1u64, "fuel", true)` :
 
 ```plaintext
 0x
 0000000000000001 // 1u64
-68656c0000000000 // "hel" encoded as per the specs
+6675656c00000000 // "fuel" encoded as per the specs
 0000000000000001 // true
 ```
