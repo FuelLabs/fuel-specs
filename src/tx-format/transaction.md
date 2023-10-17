@@ -27,6 +27,7 @@ Transaction is invalid if:
 - More than one input of type `InputType.Coin` for any [Coin ID](../identifiers/utxo-id.md#coin-id) in the input set
 - More than one input of type `InputType.Contract` for any [Contract ID](../identifiers/utxo-id.md#contract-id) in the input set
 - More than one input of type `InputType.Message` for any [Message ID](../identifiers/utxo-id.md#message-id) in the input set
+- The size of the transaction, in bytes, exceeds the maximum transaction size as specified in the consensus parameters. The size of a transaction is calculated as the sum of the sizes its static and dynamic parts as determined by canonical serialization.   
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
@@ -34,7 +35,7 @@ When serializing a transaction, fields are serialized as follows (with inner str
 1. `byte[32]`: as-is.
 1. `byte[]`: as-is, with padding zeroes aligned to 8 bytes.
 
-When deserializing a transaction, the reverse is done. If there are insufficient bytes or too many bytes, the transaction is invalid.
+When deserializing a transaction, the reverse is done. If ,there are insufficient bytes or too many bytes, the transaction is invalid.
 
 ## TransactionScript
 
