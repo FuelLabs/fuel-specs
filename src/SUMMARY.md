@@ -3,7 +3,7 @@
 [Fuel Specifications](./index.md)
 
 - [Transaction Format](./tx-format/index.md)
-  - [Constants](./tx-format/constants.md)
+  - [Consensus Parameters](./tx-format/consensus_parameters)
   - [Transaction](./tx-format/transaction.md)
   - [Input](./tx-format/input.md)
   - [Output](./tx-format/output.md)

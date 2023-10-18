@@ -2,7 +2,7 @@
 
 The Fuel Transaction Format.
 
-- [Constants](./constants.md)
+- [Consensus Parameters](./consensus_parameters)
 - [Transaction](./transaction.md)
   - [TransactionScript](./transaction.md#transactionscript)
   - [TransactionCreate](./transaction.md#transactioncreate)
