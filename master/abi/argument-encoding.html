@@ -148,6 +148,8 @@
 <li><code>u16</code>, 16 bits.</li>
 <li><code>u32</code>, 32 bits.</li>
 <li><code>u64</code>, 64 bits.</li>
+<li><code>u128</code>, 128 bits.</li>
+<li><code>u256</code>, 256 bits.</li>
 </ul>
 </li>
 <li>Boolean: <code>bool</code>, either <code>0</code> or <code>1</code> encoded identically to <code>u8</code>.</li>
@@ -157,16 +159,24 @@
 <li>Array</li>
 <li>Enums (sum types)</li>
 <li>Structs</li>
+<li>Vectors</li>
+<li>Tuples</li>
 </ul>
 <p>These types are encoded in-place. Here's how to encode them. We define <code>enc(X)</code> the encoding of the type <code>X</code>.</p>
 <h2 id="unsigned-integers"><a class="header" href="#unsigned-integers">Unsigned Integers</a></h2>
-<p><code>u&lt;M&gt;</code> where <code>M</code> is either 8, 16, 32, or 64 bits.</p>
-<p><code>enc(X)</code> is the big-endian (i.e. right-aligned) representation of <code>X</code> left-padded with zero-bytes. Total length must be 8 bytes.</p>
+<p><code>u&lt;M&gt;</code> where <code>M</code> is either 8, 16, 32, 64, 128 or 256 bits.</p>
+<p><code>enc(X)</code> is the big-endian (i.e. right-aligned) representation of <code>X</code> left-padded with zero-bytes.</p>
+<ul>
+<li>In the case of <code>M</code> being 8, 16, 32 or 64, total length must be 8 bytes.</li>
+<li>If <code>M</code> is 128, total length must be 16 bytes.</li>
+<li>If <code>M</code> is 256, total length must be 32 bytes.</li>
+</ul>
 <blockquote>
 <p><strong>Note:</strong> since all integer values are unsigned, there is no need to preserve the sign when extending/padding; padding with only zeroes is sufficient._</p>
 </blockquote>
 <p><strong>Example:</strong></p>
-<p>Encoding <code>42</code> yields: <code>0x000000000000002a</code>, which is the hexadecimal representation of the decimal number <code>42</code>, right-aligned to 8 bytes.</p>
+<p>Encoding <code>42</code> yields: <code>0x000000000000002a</code>, which is the hexadecimal representation of the decimal number <code>42</code>, right-aligned to 8 bytes.
+Encoding <code>u128::MAX - 1</code> yields: <code>0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE</code>, it's right-alined to 16 bytes</p>
 <h2 id="boolean"><a class="header" href="#boolean">Boolean</a></h2>
 <p><code>enc(X)</code> is <code>0</code> if <code>X</code> is false or <code>1</code> if <code>X</code> is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the <code>u8</code> encoding.</p>
 <p><strong>Example:</strong></p>
@@ -324,6 +334,61 @@ abi MyContract {
 <p>Calling <code>bar</code> with <code>MySumType::Z</code> yields:</p>
 <pre><code class="language-plaintext">0x
 0000000000000002 // The discriminant of the chosen enum, in this case `2`.
+</code></pre>
+<h2 id="vectors"><a class="header" href="#vectors">Vectors</a></h2>
+<p>ABI calls containing vectors are encoded in the following way:</p>
+<ul>
+<li>First, figure out the the length <code>l</code> of the vector. Its length will also be its capacity.</li>
+<li>Encode the content of the vector according to the spec of its type, e.g. for a <code>Vec&lt;bool&gt;</code>,
+encode each <code>bool</code> element according to the <code>bool</code> specs. This gives out data that is stored
+on the heap, and we encode only the pointer to this data</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>abi MyContract {
+  fn foo(a: Vec&lt;u32&gt;);
+} {
+  fn foo(a: Vec&lt;u32&gt;) {};
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Calling <code>foo</code> with <code>vec![1u32, 2u32, 3u32, 4u32]</code>:</p>
+<ul>
+<li><code>length</code> is 4, <code>capacity</code> is 4</li>
+<li><code>data</code>: [0x0000000000000001, 0x0000000000000002, 0x0000000000000003, 0x0000000000000004], stored at pointer address <code>0x000000000000beef</code></li>
+</ul>
+<blockquote>
+<p>Note: to understand how the <code>u32</code> are encoded, see the section about encoding integers.</p>
+</blockquote>
+<pre><code class="language-plaintext">0x
+000000000000beef // pointer address
+0000000000000004 // length = 4
+0000000000000004 // capacity = 4
+</code></pre>
+<p>At the pointer address, then the vector's content are encoded as such:</p>
+<pre><code class="language-plaintext">0x
+0000000000000001 // 1u32
+0000000000000002 // 2u32
+0000000000000003 // 3u32
+0000000000000004 // 4u32
+</code></pre>
+<h2 id="tuples"><a class="header" href="#tuples">Tuples</a></h2>
+<p>ABI calls containing tuples are encoded as such:
+If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)</code>, with <code>T_1,...,T_n</code> being any type except for vector, then <code>enc(X)</code> is encoded as the concatenation of <code>enc(T_1)</code>, <code>enc(T_2)</code>,<code>enc (T_3)</code>, ..., <code>enc(T_n)</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>abi MyContract {
+  fn foo(a: (u64, str[3], bool));
+} {
+  fn foo(a: (u64, str[4], bool)) {};
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Calling <code>foo</code> with <code>(1u64, &quot;fuel&quot;, true)</code> :</p>
+<pre><code class="language-plaintext">0x
+0000000000000001 // 1u64
+6675656c00000000 // &quot;fuel&quot; encoded as per the specs
+0000000000000001 // true
 </code></pre>
 
                     </main>
