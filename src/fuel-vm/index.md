@@ -81,7 +81,7 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 To initialize the VM, the following is pushed on the stack sequentially:
 
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../identifiers/transaction-id.md).
-1. [`MAX_INPUTS`](../tx-format/constants.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
+1. [`MAX_INPUTS`](../tx-format/consensus_parameters.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
