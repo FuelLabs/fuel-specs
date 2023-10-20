@@ -1,12 +1,13 @@
 # Policy
 
 ```c++
-// index using power of 2's for efficient bitmasking
+// index using powers of 2 for efficient bitmasking
 enum PolicyType : uint32 {
     GasPrice = 1,
     GasLimit = 2,
     WitnessLimit = 4,
     Maturity = 8,
+    MaxFee = 16,
 }
 ```
 
@@ -51,3 +52,14 @@ Transaction is invalid if:
 Transaction is invalid if:
 
 - `blockheight() < maturity`
+
+## MaxFee
+
+| name      | type     | description                                  |
+|-----------|----------|----------------------------------------------|
+| `max_fee` | `uint64` | The maximum fee payable by this transaction. |
+
+Transaction is invalid if:
+
+- `max_fee > sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)`
+- `max_fee < fee_balance(tx, BASE_ASSET_ID)`

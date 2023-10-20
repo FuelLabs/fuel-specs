@@ -54,21 +54,21 @@ enum ReceiptType : uint8 {
 }
 ```
 
-| name               | type                        | description                            |
-|--------------------|-----------------------------|----------------------------------------|
-| `scriptLength`     | `uint16`                    | Script length, in instructions.        |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes. |
-| `policyTypes`      | `uint32`                    | Bitfield of used policy types.         |
-| `inputsCount`      | `uint8`                     | Number of inputs.                      |
-| `outputsCount`     | `uint8`                     | Number of outputs.                     |
-| `witnessesCount`   | `uint8`                     | Number of witnesses.                   |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.               |
-| `script`           | `byte[]`                    | Script to execute.                     |
-| `scriptData`       | `byte[]`                    | Script input data (parameters).        |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType.|
-| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                        |
-| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                       |
-| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                     |
+| name               | type                        | description                             |
+|--------------------|-----------------------------|-----------------------------------------|
+| `scriptLength`     | `uint16`                    | Script length, in instructions.         |
+| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.  |
+| `policyTypes`      | `uint32`                    | Bitfield of used policy types.          |
+| `inputsCount`      | `uint8`                     | Number of inputs.                       |
+| `outputsCount`     | `uint8`                     | Number of outputs.                      |
+| `witnessesCount`   | `uint8`                     | Number of witnesses.                    |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
+| `script`           | `byte[]`                    | Script to execute.                      |
+| `scriptData`       | `byte[]`                    | Script input data (parameters).         |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType. |
+| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                         |
+| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
+| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
 
 Given helper `len()` that returns the number of bytes of a field.
 Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
@@ -102,7 +102,7 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 |------------------------|-----------------------------|---------------------------------------------------|
 | `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.     |
-| `policyCount`          | `uint8`                     | Number of policies.                               |
+| `policyTypes`          | `uint32`                    | Bitfield of used policy types.                    |
 | `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.            |
 | `inputsCount`          | `uint8`                     | Number of inputs.                                 |
 | `outputsCount`         | `uint8`                     | Number of outputs.                                |

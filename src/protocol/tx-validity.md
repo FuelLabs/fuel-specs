@@ -103,6 +103,15 @@ def sum_inputs(tx, asset_id) -> int:
             total += input.amount
     return total
 
+def sum_predicate_gas_used(tx) -> int:
+    total: int = 0
+    for input in tx.inputs:
+        if input.type == InputType.Coin:
+            total += input.predicateGasUsed
+        elif input.type == InputType.Message:
+            total += input.predicateGasUsed
+    return total
+
 """
 Returns any minted amounts by the transaction
 """
@@ -127,14 +136,24 @@ def available_balance(tx, asset_id) -> int:
 
 def unavailable_balance(tx, asset_id) -> int:
     sentBalance = sum_outputs(tx, asset_id)
-    gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
+    # Total fee balance
+    feeBalance = fee_balance(tx, asset_id)
+    # Only base asset can be used to pay for gas
+    if asset_id == 0:
+        return sentBalance + feeBalance
+    return sentBalance
+
+def fee_balance(tx, asset_id) -> int:
+    gas = tx.gasLimit + sum_predicate_gas_used(tx)
+    gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
-        return sentBalance + feeBalance
-    return sentBalance
+        return feeBalance
+    else:
+        return 0
 
 # The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
 # is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
