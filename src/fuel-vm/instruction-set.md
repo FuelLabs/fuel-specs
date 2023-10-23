@@ -2513,6 +2513,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_POLICY_GAS_LIMIT`                    | `0x503` | `tx.policies[count_ones(0x11 & tx.policyTypes) - 1].gasLimit`      |
 | `GTF_POLICY_WITNESS_LIMIT`                | `0x504` | `tx.policies[count_ones(0x111 & tx.policyTypes) - 1].witnessLimit` |
 | `GTF_POLICY_MATURITY`                     | `0x505` | `tx.policies[count_ones(0x1111 & tx.policyTypes) - 1].maturity`    |
+| `GTF_POLICY_MAX_FEE`                     | `0x506` | `tx.policies[count_ones(0x11111 & tx.policyTypes) - 1].maxFee`    |
 
 Panic if:
 
