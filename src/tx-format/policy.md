@@ -4,32 +4,21 @@
 // index using powers of 2 for efficient bitmasking
 enum PolicyType : uint32 {
     GasPrice = 1,
-    GasLimit = 2,
-    WitnessLimit = 4,
-    Maturity = 8,
-    MaxFee = 16,
+    WitnessLimit = 2,
+    Maturity = 4,
+    MaxFee = 8,
 }
 ```
 
-| name   | type                                                                                                         | description     |
-|--------|--------------------------------------------------------------------------------------------------------------|-----------------|
-| `data` | One of [GasPrice](#gasprice), [GasLimit](#gaslimit), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Policy data.    |
+| name   | type                                                                                  | description  |
+|--------|---------------------------------------------------------------------------------------|--------------|
+| `data` | One of [GasPrice](#gasprice), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Policy data. |
 
 ## GasPrice
 
 | name       | type     | description               |
 |------------|----------|---------------------------|
 | `gasPrice` | `uint64` | Gas price for transaction |
-
-## GasLimit
-
-| name       | type     | description                                                |
-|------------|----------|------------------------------------------------------------|
-| `gasLimit` | `uint64` | Gas limit for transaction (applicable to script execution) |
-
-Transaction is invalid if:
-
-- `gasLimit > MAX_GAS_PER_TX`
 
 ## WitnessLimit
 
@@ -55,9 +44,9 @@ Transaction is invalid if:
 
 ## MaxFee
 
-| name      | type     | description                                  |
-|-----------|----------|----------------------------------------------|
-| `max_fee` | `uint64` | The maximum fee payable by this transaction. |
+| name      | type     | description                                                     |
+|-----------|----------|-----------------------------------------------------------------|
+| `max_fee` | `uint64` | The maximum fee payable by this transaction using `BASE_ASSET`. |
 
 Transaction is invalid if:
 

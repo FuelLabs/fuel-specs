@@ -15,7 +15,7 @@ enum TransactionType : uint8 {
 
 Transaction is invalid if:
 
-- `type > TransactionType.Create`
+- `type > TransactionType.Mint`
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
@@ -55,21 +55,22 @@ enum ReceiptType : uint8 {
 }
 ```
 
-| name               | type                        | description                             |
-|--------------------|-----------------------------|-----------------------------------------|
-| `scriptLength`     | `uint16`                    | Script length, in instructions.         |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.  |
-| `policyTypes`      | `uint32`                    | Bitfield of used policy types.          |
-| `inputsCount`      | `uint8`                     | Number of inputs.                       |
-| `outputsCount`     | `uint8`                     | Number of outputs.                      |
-| `witnessesCount`   | `uint8`                     | Number of witnesses.                    |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
-| `script`           | `byte[]`                    | Script to execute.                      |
-| `scriptData`       | `byte[]`                    | Script input data (parameters).         |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType. |
-| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                         |
-| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
-| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
+| name               | type                        | description                                          |
+|--------------------|-----------------------------|------------------------------------------------------|
+| `gasLimit`         | `uint64`                    | Gas limit for transaction (including predicate gas). |
+| `scriptLength`     | `uint16`                    | Script length, in instructions.                      |
+| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.               |
+| `policyTypes`      | `uint32`                    | Bitfield of used policy types.                       |
+| `inputsCount`      | `uint8`                     | Number of inputs.                                    |
+| `outputsCount`     | `uint8`                     | Number of outputs.                                   |
+| `witnessesCount`   | `uint8`                     | Number of witnesses.                                 |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                             |
+| `script`           | `byte[]`                    | Script to execute.                                   |
+| `scriptData`       | `byte[]`                    | Script input data (parameters).                      |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType.              |
+| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                                      |
+| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
+| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
 
 Given helper `len()` that returns the number of bytes of a field.
 Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
@@ -83,8 +84,8 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
+- `gasLimit > MAX_GAS_PER_TX`
 - No policy of type `PolicyType.GasPrice`
-- No policy of type `PolicyType.GasLimit`
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
 - `len(policies) > count_ones(policyTypes)`

@@ -510,13 +510,13 @@ Panic if:
 
 ### MLDV: Fused multiply-divide
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Multiplies two registers with arbitrary precision, then divides by a third register.  |
-| Operation   | `a = (b * c) / d;`                                                                    |
-| Syntax      | `mldv $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       | Division by zero is treated as division by `1 << 64` instead.                         |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Multiplies two registers with arbitrary precision, then divides by a third register. |
+| Operation   | `a = (b * c) / d;`                                                                   |
+| Syntax      | `mldv $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                   |
+| Notes       | Division by zero is treated as division by `1 << 64` instead.                        |
 
 If the divisor (`$rD`) is zero, then instead the value is divided by `1 << 64`. This returns the higher half of the 128-bit multiplication result. This operation never overflows.
 
@@ -688,34 +688,34 @@ Panic if:
 
 ### WDCM: 128-bit integer comparison
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Compare or examine two 128-bit integers using selected mode                           |
-| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);`         |
-| Syntax      | `wdcm $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | Compare or examine two 128-bit integers using selected mode                   |
+| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`$rA = cmp_op(b,c);` |
+| Syntax      | `wdcm $rA, $rB, $rC, imm`                                                     |
+| Encoding    | `0x00 rA rB rC i`                                                             |
+| Notes       |                                                                               |
 
 The six-bit immediate value is used to select operating mode, as follows:
 
 Bits     | Short name | Description
----------|------------|-------------
+---------|------------|-------------------------------------
 `...XXX` | `mode`     | Compare mode selection
 `.XX...` | `reserved` | Reserved and must be zero
 `X.....` | `indirect` | Is rhs operand ($rC) indirect or not
 
 Then the actual operation that's performed:
 
-`mode`| Name | Description
-------|------|------------
-0     | eq   | Equality (`==`)
-1     | ne   | Inequality (`!=`)
-2     | lt   | Less than (`<`)
-3     | gt   | Greater than (`>`)
-4     | lte  | Less than or equals (`<=`)
-5     | gte  | Greater than or equals (`>=`)
-6     | lzc  | Leading zero count the lhs argument (`lzcnt`). Discards rhs.
-7     | -    | Reserved and must not be used
+`mode` | Name | Description
+-------|------|-------------------------------------------------------------
+0      | eq   | Equality (`==`)
+1      | ne   | Inequality (`!=`)
+2      | lt   | Less than (`<`)
+3      | gt   | Greater than (`>`)
+4      | lte  | Less than or equals (`<=`)
+5      | gte  | Greater than or equals (`>=`)
+6      | lzc  | Leading zero count the lhs argument (`lzcnt`). Discards rhs.
+7      | -    | Reserved and must not be used
 
 The leading zero count can be used to compute rounded-down log2 of a number using the following formula `TOTAL_BITS - 1 - lzc(n)`. Note that `log2(0)` is undefined, and will lead to integer overflow with this method.
 
@@ -730,13 +730,13 @@ Panic if:
 
 ### WQCM: 256-bit integer comparison
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Compare or examine two 256-bit integers using selected mode                           |
-| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);`         |
-| Syntax      | `wqcm $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | Compare or examine two 256-bit integers using selected mode                   |
+| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`$rA = cmp_op(b,c);` |
+| Syntax      | `wqcm $rA, $rB, $rC, imm`                                                     |
+| Encoding    | `0x00 rA rB rC i`                                                             |
+| Notes       |                                                                               |
 
 The immediate value is interpreted identically to `WDCM`.
 
@@ -751,18 +751,18 @@ Panic if:
 
 ### WDOP: Misc 128-bit integer operations
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Perform an ALU operation on two 128-bit integers                                      |
-| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = op(b,c);`     |
-| Syntax      | `wdop $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                                   |
+|-------------|-----------------------------------------------------------------------------------|
+| Description | Perform an ALU operation on two 128-bit integers                                  |
+| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = op(b,c);` |
+| Syntax      | `wdop $rA, $rB, $rC, imm`                                                         |
+| Encoding    | `0x00 rA rB rC i`                                                                 |
+| Notes       |                                                                                   |
 
 The six-bit immediate value is used to select operating mode, as follows:
 
 Bits     | Short name | Description
----------|------------|-------------
+---------|------------|-------------------------------------
 `...XXX` | `op`       | Operation selection, see below
 `.XX...` | `reserved` | Reserved and must be zero
 `X.....` | `indirect` | Is rhs operand ($rC) indirect or not
@@ -770,7 +770,7 @@ Bits     | Short name | Description
 Then the actual operation that's performed:
 
 `op` | Name | Description
------|------|------------
+-----|------|---------------------------
 0    | add  | Add
 1    | sub  | Subtract
 2    | not  | Invert bits (discards rhs)
@@ -791,13 +791,13 @@ Panic if:
 
 ### WQOP: Misc 256-bit integer operations
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Perform an ALU operation on two 256-bit integers                                      |
-| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = op(b,c);`     |
-| Syntax      | `wqop $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                                   |
+|-------------|-----------------------------------------------------------------------------------|
+| Description | Perform an ALU operation on two 256-bit integers                                  |
+| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = op(b,c);` |
+| Syntax      | `wqop $rA, $rB, $rC, imm`                                                         |
+| Encoding    | `0x00 rA rB rC i`                                                                 |
+| Notes       |                                                                                   |
 
 The immediate value is interpreted identically to `WDOP`.
 
@@ -812,21 +812,21 @@ Panic if:
 
 ### WDML: Multiply 128-bit integers
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Perform integer multiplication operation on two 128-bit integers.                     |
-| Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;`|
-| Syntax      | `wdml $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Perform integer multiplication operation on two 128-bit integers.                      |
+| Operation   | `b=indirect0?mem[$rB,16]:$rB;`<br>`c=indirect1?mem[$rC,16]:$rC;`<br>`mem[$rA,16]=b*c;` |
+| Syntax      | `wdml $rA, $rB, $rC, imm`                                                              |
+| Encoding    | `0x00 rA rB rC i`                                                                      |
+| Notes       |                                                                                        |
 
 The six-bit immediate value is used to select operating mode, as follows:
 
-Bits     | Short name | Description
----------|------------|-------------
-`..XXXX` | `reserved` | Reserved and must be zero
-`.X....` | `indirect0`| Is lhs operand ($rB) indirect or not
-`X.....` | `indirect1`| Is rhs operand ($rC) indirect or not
+Bits     | Short name  | Description
+---------|-------------|-------------------------------------
+`..XXXX` | `reserved`  | Reserved and must be zero
+`.X....` | `indirect0` | Is lhs operand ($rB) indirect or not
+`X.....` | `indirect1` | Is rhs operand ($rC) indirect or not
 
 `$of` is set to `1` in case of overflow, and cleared otherwise.
 
@@ -841,13 +841,13 @@ Panic if:
 
 ### WQML: Multiply 256-bit integers
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Perform integer multiplication operation on two 256-bit integers.                     |
-| Operation   | `b=indirect0?mem[$rB,32]:$rB;`<br>`c=indirect1?mem[$rC,32]:$rC;`<br>`mem[$rA,32]=b*c;`|
-| Syntax      | `wqml $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Perform integer multiplication operation on two 256-bit integers.                      |
+| Operation   | `b=indirect0?mem[$rB,32]:$rB;`<br>`c=indirect1?mem[$rC,32]:$rC;`<br>`mem[$rA,32]=b*c;` |
+| Syntax      | `wqml $rA, $rB, $rC, imm`                                                              |
+| Encoding    | `0x00 rA rB rC i`                                                                      |
+| Notes       |                                                                                        |
 
 The immediate value is interpreted identically to `WDML`.
 
@@ -864,18 +864,18 @@ Panic if:
 
 ### WDDV: 128-bit integer division
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Divide a 128-bit integer by another.                                                  |
-| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = b / c;`       |
-| Syntax      | `wddv $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                                 |
+|-------------|---------------------------------------------------------------------------------|
+| Description | Divide a 128-bit integer by another.                                            |
+| Operation   | `b = mem[$rB,16];`<br>`c = indirect?mem[$rC,16]:$rC;`<br>`mem[$rA,16] = b / c;` |
+| Syntax      | `wddv $rA, $rB, $rC, imm`                                                       |
+| Encoding    | `0x00 rA rB rC i`                                                               |
+| Notes       |                                                                                 |
 
 The six-bit immediate value is used to select operating mode, as follows:
 
 Bits     | Short name | Description
----------|------------|-------------
+---------|------------|-------------------------------------
 `.XXXXX` | `reserved` | Reserved and must be zero
 `X.....` | `indirect` | Is rhs operand ($rC) indirect or not
 
@@ -892,13 +892,13 @@ Panic if:
 
 ### WQDV: 256-bit integer division
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Divide a 256-bit integer by another.                                                  |
-| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = b / c;`       |
-| Syntax      | `wqdv $rA, $rB, $rC, imm`                                                             |
-| Encoding    | `0x00 rA rB rC i`                                                                     |
-| Notes       |                                                                                       |
+|             |                                                                                 |
+|-------------|---------------------------------------------------------------------------------|
+| Description | Divide a 256-bit integer by another.                                            |
+| Operation   | `b = mem[$rB,32];`<br>`c = indirect?mem[$rC,32]:$rC;`<br>`mem[$rA,32] = b / c;` |
+| Syntax      | `wqdv $rA, $rB, $rC, imm`                                                       |
+| Encoding    | `0x00 rA rB rC i`                                                               |
+| Notes       |                                                                                 |
 
 The immediate value is interpreted identically to `WDDV`.
 
@@ -915,13 +915,13 @@ Panic if:
 
 ### WDMD: 128-bit integer fused multiply-divide
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Combined multiply-divide of 128-bit integers with arbitrary precision.                |
-| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16]=(b * c) / d;`|
-| Syntax      | `wddv $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       | Division by zero is treated as division by `1 << 128` instead.                        |
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Combined multiply-divide of 128-bit integers with arbitrary precision.                 |
+| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16]=(b * c) / d;` |
+| Syntax      | `wddv $rA, $rB, $rC, $rD`                                                              |
+| Encoding    | `0x00 rA rB rC rD`                                                                     |
+| Notes       | Division by zero is treated as division by `1 << 128` instead.                         |
 
 If the divisor `MEM[$rA, 16]` is zero, then instead the value is divided by `1 << 128`. This returns the higher half of the 256-bit multiplication result.
 
@@ -938,13 +938,13 @@ Panic if:
 
 ### WQMD: 256-bit integer fused multiply-divide
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Combined multiply-divide of 256-bit integers with arbitrary precision.                |
-| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32]=(b * c) / d;`|
-| Syntax      | `wqdv $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       | Division by zero is treated as division by `1 << 256` instead.                        |
+|             |                                                                                        |
+|-------------|----------------------------------------------------------------------------------------|
+| Description | Combined multiply-divide of 256-bit integers with arbitrary precision.                 |
+| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32]=(b * c) / d;` |
+| Syntax      | `wqdv $rA, $rB, $rC, $rD`                                                              |
+| Encoding    | `0x00 rA rB rC rD`                                                                     |
+| Notes       | Division by zero is treated as division by `1 << 256` instead.                         |
 
 If the divisor `MEM[$rA, 32]` is zero, then instead the value is divided by `1 << 256`. This returns the higher half of the 512-bit multiplication result.
 
@@ -961,13 +961,13 @@ Panic if:
 
 ### WDAM: Modular 128-bit integer addition
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Add two 128-bit integers and compute modulo remainder with arbitrary precision.       |
-| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b+c)%d;`  |
-| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       |                                                                                       |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Add two 128-bit integers and compute modulo remainder with arbitrary precision.      |
+| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b+c)%d;` |
+| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                   |
+| Notes       |                                                                                      |
 
 `$of` is cleared.
 
@@ -982,13 +982,13 @@ Panic if:
 
 ### WQAM: Modular 256-bit integer addition
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Add two 256-bit integers and compute modulo remainder with arbitrary precision.       |
-| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b+c)%d;`  |
-| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       |                                                                                       |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Add two 256-bit integers and compute modulo remainder with arbitrary precision.      |
+| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b+c)%d;` |
+| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                   |
+| Notes       |                                                                                      |
 
 `$of` is cleared.
 
@@ -1003,13 +1003,13 @@ Panic if:
 
 ### WDMM: Modular 128-bit integer multiplication
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Multiply two 128-bit integers and compute modulo remainder with arbitrary precision.  |
-| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b*c)%d;`  |
-| Syntax      | `wdmm $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       |                                                                                       |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Multiply two 128-bit integers and compute modulo remainder with arbitrary precision. |
+| Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16] = (b*c)%d;` |
+| Syntax      | `wdmm $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                   |
+| Notes       |                                                                                      |
 
 `$of` is cleared.
 
@@ -1024,13 +1024,13 @@ Panic if:
 
 ### WQMM: Modular 256-bit integer multiplication
 
-|             |                                                                                       |
-|-------------|---------------------------------------------------------------------------------------|
-| Description | Multiply two 256-bit integers and compute modulo remainder with arbitrary precision.  |
-| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b*c)%d;`  |
-| Syntax      | `wqmm $rA, $rB, $rC, $rD`                                                             |
-| Encoding    | `0x00 rA rB rC rD`                                                                    |
-| Notes       |                                                                                       |
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | Multiply two 256-bit integers and compute modulo remainder with arbitrary precision. |
+| Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b*c)%d;` |
+| Syntax      | `wqmm $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                   |
+| Notes       |                                                                                      |
 
 `$of` is cleared.
 
@@ -1149,13 +1149,13 @@ Panic if:
 
 ### JMPB: Jump relative backwards
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rA + imm` instructions backwards.                                               |
-| Operation   | ```$pc -= ($rA + imm + 1) * 4;```                                                      |
-| Syntax      | `jmpb $rA imm`                                                                         |
-| Encoding    | `0x00 rA i i i`                                                                        |
-| Notes       |                                                                                        |
+|             |                                          |
+|-------------|------------------------------------------|
+| Description | Jump `$rA + imm` instructions backwards. |
+| Operation   | ```$pc -= ($rA + imm + 1) * 4;```        |
+| Syntax      | `jmpb $rA imm`                           |
+| Encoding    | `0x00 rA i i i`                          |
+| Notes       |                                          |
 
 Panic if:
 
@@ -1163,13 +1163,13 @@ Panic if:
 
 ### JMPF: Jump relative forwards
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rA + imm` instructions forwards                                                 |
-| Operation   | ```$pc += ($rA + imm + 1) * 4;```                                                      |
-| Syntax      | `jmpf $rA imm`                                                                         |
-| Encoding    | `0x00 rA i i i`                                                                        |
-| Notes       |                                                                                        |
+|             |                                        |
+|-------------|----------------------------------------|
+| Description | Jump `$rA + imm` instructions forwards |
+| Operation   | ```$pc += ($rA + imm + 1) * 4;```      |
+| Syntax      | `jmpf $rA imm`                         |
+| Encoding    | `0x00 rA i i i`                        |
+| Notes       |                                        |
 
 Panic if:
 
@@ -1177,13 +1177,13 @@ Panic if:
 
 ### JNZB: Jump if not zero relative backwards
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rB + imm` instructions backwards if `$rA != $zero`.                             |
-| Operation   | `if $rA != $zero:`<br>`$pc -= ($rB + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`          |
-| Syntax      | `jnzb $rA $rB imm`                                                                     |
-| Encoding    | `0x00 rA rB i i`                                                                       |
-| Notes       |                                                                                        |
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | Jump `$rB + imm` instructions backwards if `$rA != $zero`.                    |
+| Operation   | `if $rA != $zero:`<br>`$pc -= ($rB + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;` |
+| Syntax      | `jnzb $rA $rB imm`                                                            |
+| Encoding    | `0x00 rA rB i i`                                                              |
+| Notes       |                                                                               |
 
 Panic if:
 
@@ -1191,13 +1191,13 @@ Panic if:
 
 ### JNZF: Jump if not zero relative forwards
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rB + imm` instructions forwards if `$rA != $zero`.                              |
-| Operation   | `if $rA != $zero:`<br>`$pc += ($rB + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`          |
-| Syntax      | `jnzf $rA $rB imm`                                                                     |
-| Encoding    | `0x00 rA rB i i`                                                                       |
-| Notes       |                                                                                        |
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | Jump `$rB + imm` instructions forwards if `$rA != $zero`.                     |
+| Operation   | `if $rA != $zero:`<br>`$pc += ($rB + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;` |
+| Syntax      | `jnzf $rA $rB imm`                                                            |
+| Encoding    | `0x00 rA rB i i`                                                              |
+| Notes       |                                                                               |
 
 Panic if:
 
@@ -1205,13 +1205,13 @@ Panic if:
 
 ### JNEB: Jump if not equal relative backwards
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rC + imm` instructions backwards if `$rA != $rB`.                               |
-| Operation   | `if $rA != $rB:`<br>`$pc -= ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
-| Syntax      | `jneb $rA $rB $rC imm`                                                                 |
-| Encoding    | `0x00 rA rB rC i`                                                                      |
-| Notes       |                                                                                        |
+|             |                                                                             |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Jump `$rC + imm` instructions backwards if `$rA != $rB`.                    |
+| Operation   | `if $rA != $rB:`<br>`$pc -= ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;` |
+| Syntax      | `jneb $rA $rB $rC imm`                                                      |
+| Encoding    | `0x00 rA rB rC i`                                                           |
+| Notes       |                                                                             |
 
 Panic if:
 
@@ -1219,13 +1219,13 @@ Panic if:
 
 ### JNEF: Jump if not equal relative forwards
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Jump `$rC + imm` instructions forwards if `$rA != $rB`.                                |
-| Operation   | `if $rA != $rB:`<br>`$pc += ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;`            |
-| Syntax      | `jnef $rA $rB $rC imm`                                                                 |
-| Encoding    | `0x00 rA rB rC i`                                                                      |
-| Notes       |                                                                                        |
+|             |                                                                             |
+|-------------|-----------------------------------------------------------------------------|
+| Description | Jump `$rC + imm` instructions forwards if `$rA != $rB`.                     |
+| Operation   | `if $rA != $rB:`<br>`$pc += ($rC + imm + 1) * 4;`<br>`else:`<br>`$pc += 4;` |
+| Syntax      | `jnef $rA $rB $rC imm`                                                      |
+| Encoding    | `0x00 rA rB rC i`                                                           |
+| Notes       |                                                                             |
 
 Panic if:
 
@@ -1477,13 +1477,13 @@ Panic if:
 
 ### PSHH: Push a set of high registers to stack
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Push a set of registers from range 40..64 to the stack in order.                       |
-| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[40..64].mask(imm)`      |
-| Syntax      | `pshh imm`                                                                             |
-| Encoding    | `0x00 i i i i`                                                                         |
-| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+|             |                                                                                   |
+|-------------|-----------------------------------------------------------------------------------|
+| Description | Push a set of registers from range 40..64 to the stack in order.                  |
+| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[40..64].mask(imm)` |
+| Syntax      | `pshh imm`                                                                        |
+| Encoding    | `0x00 i i i i`                                                                    |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.             |
 
 Panic if:
 
@@ -1492,13 +1492,13 @@ Panic if:
 
 ### PSHL: Push a set of low registers to stack
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Push a set of registers from range 16..40 to the stack in order.                       |
-| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[16..40].mask(imm)`      |
-| Syntax      | `pshl imm`                                                                             |
-| Encoding    | `0x00 i i i i`                                                                         |
-| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+|             |                                                                                   |
+|-------------|-----------------------------------------------------------------------------------|
+| Description | Push a set of registers from range 16..40 to the stack in order.                  |
+| Operation   | `tmp=$sp;`<br>`$sp+=popcnt(imm)*8;`<br>`MEM[tmp,$sp]=registers[16..40].mask(imm)` |
+| Syntax      | `pshl imm`                                                                        |
+| Encoding    | `0x00 i i i i`                                                                    |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.             |
 
 Panic if:
 
@@ -1507,13 +1507,13 @@ Panic if:
 
 ### POPH: Pop a set of high registers from stack
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Pop to a set of registers from range 40..64 from the stack.                            |
-| Operation   |`tmp=$sp-popcnt(imm)*8;`<br>`registers[40..64].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;`   |
-| Syntax      | `poph imm`                                                                             |
-| Encoding    | `0x00 i i i i`                                                                         |
-| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------|
+| Description | Pop to a set of registers from range 40..64 from the stack.                           |
+| Operation   | `tmp=$sp-popcnt(imm)*8;`<br>`registers[40..64].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;` |
+| Syntax      | `poph imm`                                                                            |
+| Encoding    | `0x00 i i i i`                                                                        |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                 |
 
 Panic if:
 
@@ -1522,13 +1522,13 @@ Panic if:
 
 ### POPL: Pop a set of low registers from stack
 
-|             |                                                                                        |
-|-------------|----------------------------------------------------------------------------------------|
-| Description | Pop to a set of registers from range 16..40 from the stack.                            |
-| Operation   |`tmp=$sp-popcnt(imm)*8;`<br>`registers[16..40].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;`   |
-| Syntax      | `poph imm`                                                                             |
-| Encoding    | `0x00 i i i i`                                                                         |
-| Notes       | The immediate value is used as a bitmask for selecting the registers.                  |
+|             |                                                                                       |
+|-------------|---------------------------------------------------------------------------------------|
+| Description | Pop to a set of registers from range 16..40 from the stack.                           |
+| Operation   | `tmp=$sp-popcnt(imm)*8;`<br>`registers[16..40].mask(imm)=MEM[tmp,$sp]`<br>`$sp-=tmp;` |
+| Syntax      | `poph imm`                                                                            |
+| Encoding    | `0x00 i i i i`                                                                        |
+| Notes       | The immediate value is used as a bitmask for selecting the registers.                 |
 
 Panic if:
 
@@ -1649,14 +1649,14 @@ This modifies the `balanceRoot` field of the appropriate output.
 
 Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 
-| name     | type          | description                                                               |
-|----------|---------------|---------------------------------------------------------------------------|
-| `type`   | `ReceiptType` | `ReceiptType.Burn`                                                  |
-| `sub_id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
-| `contract_id`     | `byte[32]`    | Contract ID of the current context. |
-| `val`    | `uint64`      | Value of register `$rA`.   |
-| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `$is`.                                                  |
+| name          | type          | description                                |
+|---------------|---------------|--------------------------------------------|
+| `type`        | `ReceiptType` | `ReceiptType.Burn`                         |
+| `sub_id`      | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `contract_id` | `byte[32]`    | Contract ID of the current context.        |
+| `val`         | `uint64`      | Value of register `$rA`.                   |
+| `pc`          | `uint64`      | Value of register `$pc`.                   |
+| `is`          | `uint64`      | Value of register `$is`.                   |
 
 ### CALL: Call contract
 
@@ -1699,7 +1699,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `to`       | `byte[32]`    | Contract ID of called contract.                                           |
 | `amount`   | `uint64`      | Amount of coins to forward, i.e. `$rB`.                                   |
 | `asset_id` | `byte[32]`    | Asset ID of coins to forward, i.e. `MEM[$rC, 32]`.                        |
-| `gas`      | `uint64`      | Gas to forward, i.e. `min($rD, $cgas)`.                                               |
+| `gas`      | `uint64`      | Gas to forward, i.e. `min($rD, $cgas)`.                                   |
 | `param1`   | `uint64`      | First parameter.                                                          |
 | `param2`   | `uint64`      | Second parameter.                                                         |
 | `pc`       | `uint64`      | Value of register `$pc`.                                                  |
@@ -1895,14 +1895,14 @@ This modifies the `balanceRoot` field of the appropriate output.
 
 Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 
-| name     | type          | description                                                               |
-|----------|---------------|---------------------------------------------------------------------------|
-| `type`   | `ReceiptType` | `ReceiptType.Mint`                                                  |
-| `sub_id`     | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
-| `contract_id`     | `byte[32]`    | Contract ID of the current context. |
-| `val`    | `uint64`      | Value of register `$rA`.   |
-| `pc`     | `uint64`      | Value of register `$pc`.                                                  |
-| `is`     | `uint64`      | Value of register `$is`.                                                  |
+| name          | type          | description                                |
+|---------------|---------------|--------------------------------------------|
+| `type`        | `ReceiptType` | `ReceiptType.Mint`                         |
+| `sub_id`      | `byte[32]`    | Asset sub identifier `MEM[$rB, $rB + 32]`. |
+| `contract_id` | `byte[32]`    | Contract ID of the current context.        |
+| `val`         | `uint64`      | Value of register `$rA`.                   |
+| `pc`          | `uint64`      | Value of register `$pc`.                   |
+| `is`          | `uint64`      | Value of register `$is`.                   |
 
 ### RETD: Return from context with data
 
@@ -2439,81 +2439,80 @@ Set `$rA` to the index of the currently-verifying predicate.
 
 Get [fields from the transaction](../tx-format/transaction.md).
 
-| name                                      | `imm`   | set `$rA` to                                                       |
-|-------------------------------------------|---------|--------------------------------------------------------------------|
-| `GTF_TYPE`                                | `0x001` | `tx.type`                                                          |
-| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x002` | `tx.scriptLength`                                                  |
-| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x003` | `tx.scriptDataLength`                                              |
-| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x004` | `tx.inputsCount`                                                   |
-| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x005` | `tx.outputsCount`                                                  |
-| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x006` | `tx.witnessesCount`                                                |
-| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x007` | Memory address of `tx.receiptsRoot`                                |
-| `GTF_SCRIPT_SCRIPT`                       | `0x008` | Memory address of `tx.script`                                      |
-| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x009` | Memory address of `tx.scriptData`                                  |
-| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00A` | Memory address of `tx.inputs[$rB]`                                 |
-| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00B` | Memory address of `t.outputs[$rB]`                                 |
-| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00C` | Memory address of `tx.witnesses[$rB]`                              |
-| `GTF_CREATE_BYTECODE_LENGTH`              | `0x100` | `tx.bytecodeLength`                                                |
-| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x101` | `tx.bytecodeWitnessIndex`                                          |
-| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x102` | `tx.storageSlotsCount`                                             |
-| `GTF_CREATE_INPUTS_COUNT`                 | `0x103` | `tx.inputsCount`                                                   |
-| `GTF_CREATE_OUTPUTS_COUNT`                | `0x104` | `tx.outputsCount`                                                  |
-| `GTF_CREATE_WITNESSES_COUNT`              | `0x105` | `tx.witnessesCount`                                                |
-| `GTF_CREATE_SALT`                         | `0x106` | Memory address of `tx.salt`                                        |
-| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x107` | Memory address of `tx.storageSlots[$rB]`                           |
-| `GTF_CREATE_INPUT_AT_INDEX`               | `0x108` | Memory address of `tx.inputs[$rB]`                                 |
-| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x109` | Memory address of `t.outputs[$rB]`                                 |
-| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x10A` | Memory address of `tx.witnesses[$rB]`                              |
-| `GTF_INPUT_TYPE`                          | `0x200` | `tx.inputs[$rB].type`                                              |
-| `GTF_INPUT_COIN_TX_ID`                    | `0x201` | Memory address of `tx.inputs[$rB].txID`                            |
-| `GTF_INPUT_COIN_OUTPUT_INDEX`             | `0x202` | `tx.inputs[$rB].outputIndex`                                       |
-| `GTF_INPUT_COIN_OWNER`                    | `0x203` | Memory address of `tx.inputs[$rB].owner`                           |
-| `GTF_INPUT_COIN_AMOUNT`                   | `0x204` | `tx.inputs[$rB].amount`                                            |
-| `GTF_INPUT_COIN_ASSET_ID`                 | `0x205` | Memory address of `tx.inputs[$rB].asset_id`                        |
-| `GTF_INPUT_COIN_TX_POINTER`               | `0x206` | Memory address of `tx.inputs[$rB].txPointer`                       |
-| `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x207` | `tx.inputs[$rB].witnessIndex`                                      |
-| `GTF_INPUT_COIN_MATURITY`                 | `0x208` | `tx.inputs[$rB].maturity`                                          |
-| `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x209` | `tx.inputs[$rB].predicateLength`                                   |
-| `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x20A` | `tx.inputs[$rB].predicateDataLength`                               |
-| `GTF_INPUT_COIN_PREDICATE`                | `0x20B` | Memory address of `tx.inputs[$rB].predicate`                       |
-| `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x20C` | Memory address of `tx.inputs[$rB].predicateData`                   |
-| `GTF_INPUT_COIN_PREDICATE_GAS_USED`       | `0x20D` | `tx.inputs[$rB].predicateGasUsed`                                  |
-| `GTF_INPUT_CONTRACT_TX_ID`                | `0x220` | Memory address of `tx.inputs[$rB].txID`                            |
-| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x221` | `tx.inputs[$rB].outputIndex`                                       |
-| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x222` | Memory address of `tx.inputs[$rB].balanceRoot`                     |
-| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x223` | Memory address of `tx.inputs[$rB].stateRoot`                       |
-| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x224` | Memory address of `tx.inputs[$rB].txPointer`                       |
-| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x225` | Memory address of `tx.inputs[$rB].contractID`                      |
-| `GTF_INPUT_MESSAGE_SENDER`                | `0x240` | Memory address of `tx.inputs[$rB].sender`                          |
-| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x241` | Memory address of `tx.inputs[$rB].recipient`                       |
-| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x242` | `tx.inputs[$rB].amount`                                            |
-| `GTF_INPUT_MESSAGE_NONCE`                 | `0x243` | Memory address of `tx.inputs[$rB].nonce`                           |
-| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x244` | `tx.inputs[$rB].witnessIndex`                                      |
-| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x245` | `tx.inputs[$rB].dataLength`                                        |
-| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x246` | `tx.inputs[$rB].predicateLength`                                   |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x247` | `tx.inputs[$rB].predicateDataLength`                               |
-| `GTF_INPUT_MESSAGE_DATA`                  | `0x248` | Memory address of `tx.inputs[$rB].data`                            |
-| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x249` | Memory address of `tx.inputs[$rB].predicate`                       |
-| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x24A` | Memory address of `tx.inputs[$rB].predicateData`                   |
-| `GTF_INPUT_MESSAGE_PREDICATE_GAS_USED`    | `0x24B` | `tx.inputs[$rB].predicateGasUsed`                                  |
-| `GTF_OUTPUT_TYPE`                         | `0x300` | `tx.outputs[$rB].type`                                             |
-| `GTF_OUTPUT_COIN_TO`                      | `0x301` | Memory address of `tx.outputs[$rB].to`                             |
-| `GTF_OUTPUT_COIN_AMOUNT`                  | `0x302` | `tx.outputs[$rB].amount`                                           |
-| `GTF_OUTPUT_COIN_ASSET_ID`                | `0x303` | Memory address of `tx.outputs[$rB].asset_id`                       |
-| `GTF_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x304` | `tx.outputs[$rB].inputIndex`                                       |
-| `GTF_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x305` | Memory address of `tx.outputs[$rB].balanceRoot`                    |
-| `GTF_OUTPUT_CONTRACT_STATE_ROOT`          | `0x306` | Memory address of `tx.outputs[$rB].stateRoot`                      |
-| `GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x307` | Memory address of `tx.outputs[$rB].contractID`                     |
-| `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x308` | Memory address of `tx.outputs[$rB].stateRoot`                      |
-| `GTF_WITNESS_DATA_LENGTH`                 | `0x400` | `tx.witnesses[$rB].dataLength`                                     |
-| `GTF_WITNESS_DATA`                        | `0x401` | Memory address of `tx.witnesses[$rB].data`                         |
-| `GTF_POLICY_COUNT`                        | `0x500` | `len(tx.policies)`                                                 |
-| `GTF_POLICY_TYPE`                         | `0x501` | `tx.policies[$rB].type`                                            |
-| `GTF_POLICY_GAS_PRICE`                    | `0x502` | `tx.policies[0x00].gasPrice`                                       |
-| `GTF_POLICY_GAS_LIMIT`                    | `0x503` | `tx.policies[count_ones(0x11 & tx.policyTypes) - 1].gasLimit`      |
-| `GTF_POLICY_WITNESS_LIMIT`                | `0x504` | `tx.policies[count_ones(0x111 & tx.policyTypes) - 1].witnessLimit` |
-| `GTF_POLICY_MATURITY`                     | `0x505` | `tx.policies[count_ones(0x1111 & tx.policyTypes) - 1].maturity`    |
-| `GTF_POLICY_MAX_FEE`                     | `0x506` | `tx.policies[count_ones(0x11111 & tx.policyTypes) - 1].maxFee`    |
+| name                                      | `imm`   | set `$rA` to                                                      |
+|-------------------------------------------|---------|-------------------------------------------------------------------|
+| `GTF_TYPE`                                | `0x001` | `tx.type`                                                         |
+| `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x002` | `tx.scriptLength`                                                 |
+| `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x003` | `tx.scriptDataLength`                                             |
+| `GTF_SCRIPT_INPUTS_COUNT`                 | `0x004` | `tx.inputsCount`                                                  |
+| `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x005` | `tx.outputsCount`                                                 |
+| `GTF_SCRIPT_WITNESSES_COUNT`              | `0x006` | `tx.witnessesCount`                                               |
+| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x007` | Memory address of `tx.receiptsRoot`                               |
+| `GTF_SCRIPT_SCRIPT`                       | `0x008` | Memory address of `tx.script`                                     |
+| `GTF_SCRIPT_SCRIPT_DATA`                  | `0x009` | Memory address of `tx.scriptData`                                 |
+| `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00A` | Memory address of `tx.inputs[$rB]`                                |
+| `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00B` | Memory address of `t.outputs[$rB]`                                |
+| `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00C` | Memory address of `tx.witnesses[$rB]`                             |
+| `GTF_CREATE_BYTECODE_LENGTH`              | `0x100` | `tx.bytecodeLength`                                               |
+| `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x101` | `tx.bytecodeWitnessIndex`                                         |
+| `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x102` | `tx.storageSlotsCount`                                            |
+| `GTF_CREATE_INPUTS_COUNT`                 | `0x103` | `tx.inputsCount`                                                  |
+| `GTF_CREATE_OUTPUTS_COUNT`                | `0x104` | `tx.outputsCount`                                                 |
+| `GTF_CREATE_WITNESSES_COUNT`              | `0x105` | `tx.witnessesCount`                                               |
+| `GTF_CREATE_SALT`                         | `0x106` | Memory address of `tx.salt`                                       |
+| `GTF_CREATE_STORAGE_SLOT_AT_INDEX`        | `0x107` | Memory address of `tx.storageSlots[$rB]`                          |
+| `GTF_CREATE_INPUT_AT_INDEX`               | `0x108` | Memory address of `tx.inputs[$rB]`                                |
+| `GTF_CREATE_OUTPUT_AT_INDEX`              | `0x109` | Memory address of `t.outputs[$rB]`                                |
+| `GTF_CREATE_WITNESS_AT_INDEX`             | `0x10A` | Memory address of `tx.witnesses[$rB]`                             |
+| `GTF_INPUT_TYPE`                          | `0x200` | `tx.inputs[$rB].type`                                             |
+| `GTF_INPUT_COIN_TX_ID`                    | `0x201` | Memory address of `tx.inputs[$rB].txID`                           |
+| `GTF_INPUT_COIN_OUTPUT_INDEX`             | `0x202` | `tx.inputs[$rB].outputIndex`                                      |
+| `GTF_INPUT_COIN_OWNER`                    | `0x203` | Memory address of `tx.inputs[$rB].owner`                          |
+| `GTF_INPUT_COIN_AMOUNT`                   | `0x204` | `tx.inputs[$rB].amount`                                           |
+| `GTF_INPUT_COIN_ASSET_ID`                 | `0x205` | Memory address of `tx.inputs[$rB].asset_id`                       |
+| `GTF_INPUT_COIN_TX_POINTER`               | `0x206` | Memory address of `tx.inputs[$rB].txPointer`                      |
+| `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x207` | `tx.inputs[$rB].witnessIndex`                                     |
+| `GTF_INPUT_COIN_MATURITY`                 | `0x208` | `tx.inputs[$rB].maturity`                                         |
+| `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x209` | `tx.inputs[$rB].predicateLength`                                  |
+| `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x20A` | `tx.inputs[$rB].predicateDataLength`                              |
+| `GTF_INPUT_COIN_PREDICATE`                | `0x20B` | Memory address of `tx.inputs[$rB].predicate`                      |
+| `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x20C` | Memory address of `tx.inputs[$rB].predicateData`                  |
+| `GTF_INPUT_COIN_PREDICATE_GAS_USED`       | `0x20D` | `tx.inputs[$rB].predicateGasUsed`                                 |
+| `GTF_INPUT_CONTRACT_TX_ID`                | `0x220` | Memory address of `tx.inputs[$rB].txID`                           |
+| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x221` | `tx.inputs[$rB].outputIndex`                                      |
+| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x222` | Memory address of `tx.inputs[$rB].balanceRoot`                    |
+| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x223` | Memory address of `tx.inputs[$rB].stateRoot`                      |
+| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x224` | Memory address of `tx.inputs[$rB].txPointer`                      |
+| `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x225` | Memory address of `tx.inputs[$rB].contractID`                     |
+| `GTF_INPUT_MESSAGE_SENDER`                | `0x240` | Memory address of `tx.inputs[$rB].sender`                         |
+| `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x241` | Memory address of `tx.inputs[$rB].recipient`                      |
+| `GTF_INPUT_MESSAGE_AMOUNT`                | `0x242` | `tx.inputs[$rB].amount`                                           |
+| `GTF_INPUT_MESSAGE_NONCE`                 | `0x243` | Memory address of `tx.inputs[$rB].nonce`                          |
+| `GTF_INPUT_MESSAGE_WITNESS_INDEX`         | `0x244` | `tx.inputs[$rB].witnessIndex`                                     |
+| `GTF_INPUT_MESSAGE_DATA_LENGTH`           | `0x245` | `tx.inputs[$rB].dataLength`                                       |
+| `GTF_INPUT_MESSAGE_PREDICATE_LENGTH`      | `0x246` | `tx.inputs[$rB].predicateLength`                                  |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA_LENGTH` | `0x247` | `tx.inputs[$rB].predicateDataLength`                              |
+| `GTF_INPUT_MESSAGE_DATA`                  | `0x248` | Memory address of `tx.inputs[$rB].data`                           |
+| `GTF_INPUT_MESSAGE_PREDICATE`             | `0x249` | Memory address of `tx.inputs[$rB].predicate`                      |
+| `GTF_INPUT_MESSAGE_PREDICATE_DATA`        | `0x24A` | Memory address of `tx.inputs[$rB].predicateData`                  |
+| `GTF_INPUT_MESSAGE_PREDICATE_GAS_USED`    | `0x24B` | `tx.inputs[$rB].predicateGasUsed`                                 |
+| `GTF_OUTPUT_TYPE`                         | `0x300` | `tx.outputs[$rB].type`                                            |
+| `GTF_OUTPUT_COIN_TO`                      | `0x301` | Memory address of `tx.outputs[$rB].to`                            |
+| `GTF_OUTPUT_COIN_AMOUNT`                  | `0x302` | `tx.outputs[$rB].amount`                                          |
+| `GTF_OUTPUT_COIN_ASSET_ID`                | `0x303` | Memory address of `tx.outputs[$rB].asset_id`                      |
+| `GTF_OUTPUT_CONTRACT_INPUT_INDEX`         | `0x304` | `tx.outputs[$rB].inputIndex`                                      |
+| `GTF_OUTPUT_CONTRACT_BALANCE_ROOT`        | `0x305` | Memory address of `tx.outputs[$rB].balanceRoot`                   |
+| `GTF_OUTPUT_CONTRACT_STATE_ROOT`          | `0x306` | Memory address of `tx.outputs[$rB].stateRoot`                     |
+| `GTF_OUTPUT_CONTRACT_CREATED_CONTRACT_ID` | `0x307` | Memory address of `tx.outputs[$rB].contractID`                    |
+| `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x308` | Memory address of `tx.outputs[$rB].stateRoot`                     |
+| `GTF_WITNESS_DATA_LENGTH`                 | `0x400` | `tx.witnesses[$rB].dataLength`                                    |
+| `GTF_WITNESS_DATA`                        | `0x401` | Memory address of `tx.witnesses[$rB].data`                        |
+| `GTF_POLICY_COUNT`                        | `0x500` | `len(tx.policies)`                                                |
+| `GTF_POLICY_TYPE`                         | `0x501` | `tx.policies[$rB].type`                                           |
+| `GTF_POLICY_GAS_PRICE`                    | `0x502` | `tx.policies[0x00].gasPrice`                                      |
+| `GTF_POLICY_WITNESS_LIMIT`                | `0x504` | `tx.policies[count_ones(0b11 & tx.policyTypes) - 1].witnessLimit` |
+| `GTF_POLICY_MATURITY`                     | `0x505` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
+| `GTF_POLICY_MAX_FEE`                      | `0x506` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
 
 Panic if:
 
