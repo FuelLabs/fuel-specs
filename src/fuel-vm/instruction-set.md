@@ -2507,7 +2507,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x308` | Memory address of `tx.outputs[$rB].stateRoot`                     |
 | `GTF_WITNESS_DATA_LENGTH`                 | `0x400` | `tx.witnesses[$rB].dataLength`                                    |
 | `GTF_WITNESS_DATA`                        | `0x401` | Memory address of `tx.witnesses[$rB].data`                        |
-| `GTF_POLICY_COUNT`                        | `0x500` | `len(tx.policies)`                                                |
+| `GTF_POLICY_COUNT`                        | `0x500` | `count_ones(tx.policyTypes)`                                      |
 | `GTF_POLICY_TYPE`                         | `0x501` | `tx.policies[$rB].type`                                           |
 | `GTF_POLICY_GAS_PRICE`                    | `0x502` | `tx.policies[0x00].gasPrice`                                      |
 | `GTF_POLICY_WITNESS_LIMIT`                | `0x504` | `tx.policies[count_ones(0b11 & tx.policyTypes) - 1].witnessLimit` |
