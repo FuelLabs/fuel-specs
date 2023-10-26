@@ -84,10 +84,10 @@ For each asset ID `asset_id` in the input and output set:
 
 ```py
 def gas_to_fee(gas, gas_price) -> int:
-  """
-  Converts gas units into a fee amount
-  """
-  return gas * gas_price / GAS_PRICE_FACTOR
+    """
+    Converts gas units into a fee amount
+    """
+    return gas * gas_price / GAS_PRICE_FACTOR
 
 def sum_data_messages(tx, asset_id) -> int:
     """
