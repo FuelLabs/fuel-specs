@@ -83,6 +83,12 @@ If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract 
 For each asset ID `asset_id` in the input and output set:
 
 ```py
+def gas_to_fee(gas, gas_price) -> int:
+  """
+  Converts gas units into a fee amount
+  """
+  return gas * gas_price / GAS_PRICE_FACTOR
+
 def sum_data_messages(tx, asset_id) -> int:
     """
     Returns the total balance available from messages containing data
@@ -102,6 +108,20 @@ def sum_inputs(tx, asset_id) -> int:
         elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
             total += input.amount
     return total
+"""
+Returns any minted amounts by the transaction
+"""
+def minted(tx, asset_id) -> int:
+    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
+        return 0
+    return tx.mint_amount
+
+def sum_outputs(tx, asset_id) -> int:
+    total: int = 0
+    for output in tx.outputs:
+        if output.type == OutputType.Coin and output.asset_id == asset_id:
+            total += output.amount
+    return total
 
 def sum_input_intrinsic_fees(tx) -> int:
     """
@@ -117,7 +137,7 @@ def sum_input_intrinsic_fees(tx) -> int:
             # note: this does not apply to contract inputs, as they are updated in place by the output
             total += state_delete_fee()
             # add fees allocated for predicate execution
-            total += input.predicateGasUsed * tx.gasPrice / GAS_PRICE_FACTOR
+            total += gas_to_fee(input.predicateGasUsed, tx.gasPrice)
             if input.predicateLength == 0:
                 # notate witness index if input is signed
                 witness_indices.add(input.witnessIndex)
@@ -147,39 +167,24 @@ def sum_outputs_intrinsic_fees(tx) -> int:
     return total
 
 def intrinsic_fees(tx) -> int:
-    """
-    Computes intrinsic costs for a transaction
-    """
-    return sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
-
-"""
-Returns any minted amounts by the transaction
-"""
-def minted(tx, asset_id) -> int:
-    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
-        return 0
-    return tx.mint_amount
-
-def sum_outputs(tx, asset_id) -> int:
-    total: int = 0
-    for output in tx.outputs:
-        if output.type == OutputType.Coin and output.asset_id == asset_id:
-            total += output.amount
-    return total
+  """
+  Computes intrinsic costs for a transaction
+  """
+  return sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
 
 def reserved_fee_balance(tx, asset_id) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gasBalance = tx.gasLimit * tx.gasPrice / GAS_PRICE_FACTOR
-    bytesBalance = size(tx) * GAS_PER_BYTE * tx.gasPrice / GAS_PRICE_FACTOR
+    gasBalance = gas_to_fee(tx.gasLimit, tx.gasPrice)
+    bytesBalance = gas_to_fee(size(tx) * GAS_PER_BYTE, tx.gasPrice)
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance + intrinsic_fees(tx))
     # Only base asset can be used to pay for gas
     if asset_id == 0:
-      return feeBalance
+        return feeBalance
     else:
-      return 0
+        return 0
 
 def available_balance(tx, asset_id) -> int:
     """
