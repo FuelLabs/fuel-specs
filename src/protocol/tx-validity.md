@@ -110,11 +110,14 @@ def sum_input_intrinsic_fees(tx) -> int:
     total: int = 0
     witness_indices = set(())
     for input in tx.inputs:
-        # add gas required to read utxo from state
+        # add fees required to read utxo from state
         total += state_read_fee()
         if input.type == InputType.Coin or input.type == InputType.Message:
-            # add gas allocated for predicate execution
-            total += input.predicateGasUsed
+            # add fees required to remove coin or message from state
+            # note: this does not apply to contract inputs, as they are updated in place by the output
+            total += state_delete_fee()
+            # add fees allocated for predicate execution
+            total += input.predicateGasUsed * tx.gasPrice / GAS_PRICE_FACTOR
             if input.predicateLength == 0:
                 # notate witness index if input is signed
                 witness_indices.add(input.witnessIndex)
@@ -133,12 +136,14 @@ def sum_outputs_intrinsic_fees(tx) -> int:
     """
     total: int = 0
     for output in tx.outputs:
-        total += state_write_fee()
+        # adds fees required to write new output to state
+        total += state_write_fee(size(output))
         if output.type == OutputType.OutputContractCreated:
             # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
             total += bmt_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
             # add intrinsic cost of initializing contract storage
-            total += len(tx.storageSlotCount) * smt_insert_fee()
+            # note: smt_insert_fee may be dependent on the storage value if the protocol adopts dynamic sized slots
+            total += tx.storageSlotCount * smt_insert_fee()
     return total
 
 def intrinsic_fees(tx) -> int:
