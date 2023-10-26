@@ -109,7 +109,7 @@ For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.M
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to the minimum of `tx.gasLimit` or `MAX_GAS_PER_PREDICATE`.
+1. `$ggas` and `$cgas` are set to `MAX_GAS_PER_PREDICATE`.
 
 Predicate estimation will fail if gas is exhausted during execution.
 
@@ -121,7 +121,7 @@ In addition, during predicate mode if `$pc` is set to a value greater than the e
 
 A predicate that halts without returning Boolean `true` would not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
-After successful execution, `predicateGasUsed` is set to `tx.gasLimit - $ggas`.
+After successful execution, `predicateGasUsed` is set to `MAX_GAS_PER_PREDICATE - $ggas`.
 
 ## Predicate Verification
 
@@ -149,7 +149,7 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit` minus the sum of `predicateGasUsed` for all predicates.
+1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
 
 Following initialization, execution begins.
 

@@ -103,6 +103,15 @@ def sum_inputs(tx, asset_id) -> int:
             total += input.amount
     return total
 
+def sum_predicate_gas_used(tx) -> int:
+    total: int = 0
+    for input in tx.inputs:
+        if input.type == InputType.Coin:
+            total += input.predicateGasUsed
+        elif input.type == InputType.Message:
+            total += input.predicateGasUsed
+    return total
+
 """
 Returns any minted amounts by the transaction
 """
@@ -127,15 +136,24 @@ def available_balance(tx, asset_id) -> int:
 
 def unavailable_balance(tx, asset_id) -> int:
     sentBalance = sum_outputs(tx, asset_id)
-    gasBalance = gasPrice * gasLimit / GAS_PRICE_FACTOR
-    # Size excludes witness data as it is malleable (even by third parties!)
+    # Total fee balance
+    feeBalance = fee_balance(tx, asset_id)
+    # Only base asset can be used to pay for gas
+    if asset_id == 0:
+        return sentBalance + feeBalance
+    return sentBalance
+
+def fee_balance(tx, asset_id) -> int:
+    gas = tx.gasLimit + sum_predicate_gas_used(tx)
+    gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
     feeBalance = ceiling(gasBalance + bytesBalance)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
-        return sentBalance + feeBalance
-    return sentBalance
+        return feeBalance
+    else:
+        return 0
 
 # The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
 # is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
@@ -187,7 +205,10 @@ Once the free balances are computed, the [script is executed](../fuel-vm/index.m
 1. The unspent free balance `unspentBalance` for each asset ID.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
-The fees incurred for a transaction are `ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas)) * tx.gasPrice / GAS_PRICE_FACTOR)`.
+The fees incurred for a transaction are `ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)`.
+
+`size(tx)` includes the entire transaction serialized according to the transaction format, including witness data.
+This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.
 
 If the transaction as included in a block does not match this final transaction, the block is invalid.
 

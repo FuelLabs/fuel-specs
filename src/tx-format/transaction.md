@@ -15,9 +15,7 @@ enum TransactionType : uint8 {
 
 Transaction is invalid if:
 
-- `type > TransactionType.Create`
-- `gasLimit > MAX_GAS_PER_TX`
-- `blockheight() < maturity`
+- `type > TransactionType.Mint`
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
@@ -52,29 +50,32 @@ enum ReceiptType : uint8 {
     TransferOut = 8,
     ScriptResult = 9,
     MessageOut = 10,
-    Mint = 11
-    Burn = 12
+    Mint = 11,
+    Burn = 12,
 }
 ```
 
 | name               | type                        | description                                          |
 |--------------------|-----------------------------|------------------------------------------------------|
-| `gasPrice`         | `uint64`                    | Gas price for transaction.                           |
 | `gasLimit`         | `uint64`                    | Gas limit for transaction (including predicate gas). |
-| `maturity`         | `uint32`                    | Block until which tx cannot be included.             |
 | `scriptLength`     | `uint16`                    | Script length, in instructions.                      |
 | `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.               |
+| `policyTypes`      | `uint32`                    | Bitfield of used policy types.                       |
 | `inputsCount`      | `uint8`                     | Number of inputs.                                    |
 | `outputsCount`     | `uint8`                     | Number of outputs.                                   |
 | `witnessesCount`   | `uint8`                     | Number of witnesses.                                 |
 | `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                             |
 | `script`           | `byte[]`                    | Script to execute.                                   |
 | `scriptData`       | `byte[]`                    | Script input data (parameters).                      |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType.              |
 | `inputs`           | [Input](./input.md)`[]`     | List of inputs.                                      |
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
 
 Given helper `len()` that returns the number of bytes of a field.
+Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
+Given helper `count_variants()` that returns the number of variants in an enum.
+Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
@@ -83,7 +84,11 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `gasLimit` is less than the sum of all `predicateGasUsed` for `InputType.Coin` or `InputType.Message` where predicate length is greater than zero.
+- `gasLimit > MAX_GAS_PER_TX`
+- No policy of type `PolicyType.GasPrice`
+- `count_ones(policyTypes) > count_variants(PolicyType)`
+- `policyTypes > sum_variants(PolicyType)`
+- `len(policies) > count_ones(policyTypes)`
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
@@ -95,22 +100,25 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 
 ## TransactionCreate
 
-| name                   | type                        | description                                          |
-|------------------------|-----------------------------|------------------------------------------------------|
-| `gasPrice`             | `uint64`                    | Gas price for transaction.                           |
-| `gasLimit`             | `uint64`                    | Gas limit for transaction (including predicate gas). |
-| `maturity`             | `uint32`                    | Block until which tx cannot be included.             |
-| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.           |
-| `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.        |
-| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.               |
-| `inputsCount`          | `uint8`                     | Number of inputs.                                    |
-| `outputsCount`         | `uint8`                     | Number of outputs.                                   |
-| `witnessesCount`       | `uint8`                     | Number of witnesses.                                 |
-| `salt`                 | `byte[32]`                  | Salt.                                                |
-| `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value).    |
-| `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                      |
-| `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                     |
-| `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                   |
+| name                   | type                        | description                                       |
+|------------------------|-----------------------------|---------------------------------------------------|
+| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.        |
+| `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.     |
+| `policyTypes`          | `uint32`                    | Bitfield of used policy types.                    |
+| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.            |
+| `inputsCount`          | `uint8`                     | Number of inputs.                                 |
+| `outputsCount`         | `uint8`                     | Number of outputs.                                |
+| `witnessesCount`       | `uint8`                     | Number of witnesses.                              |
+| `salt`                 | `byte[32]`                  | Salt.                                             |
+| `policies`             | [Policy](./policy.md)`[]`   | List of policies.                                 |
+| `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value). |
+| `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                   |
+| `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
+| `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
+
+Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
+Given helper `count_variants()` that returns the number of variants in an enum.
+Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
@@ -126,6 +134,10 @@ Transaction is invalid if:
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
+- No policy of type `PolicyType.GasPrice`
+- `count_ones(policyTypes) > count_variants(PolicyType)`
+- `policyTypes > sum_variants(PolicyType)`
+- `len(policies) > count_ones(policyTypes)`
 
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
