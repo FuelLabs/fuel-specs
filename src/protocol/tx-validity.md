@@ -103,7 +103,7 @@ def sum_inputs(tx, asset_id) -> int:
             total += input.amount
     return total
 
-def sum_inputs_intrinsic_gas(tx) -> int:
+def sum_input_intrinsic_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of verifying input utxos
     """
@@ -111,7 +111,7 @@ def sum_inputs_intrinsic_gas(tx) -> int:
     witness_indices = set(())
     for input in tx.inputs:
         # add gas required to read utxo from state
-        total += state_read_gas_cost()
+        total += state_read_fee()
         if input.type == InputType.Coin or input.type == InputType.Message:
             # add gas allocated for predicate execution
             total += input.predicateGasUsed
@@ -119,13 +119,34 @@ def sum_inputs_intrinsic_gas(tx) -> int:
                 # notate witness index if input is signed
                 witness_indices.add(input.witnessIndex)
             else:
-                # add intrinsic cost of predicate merkleization
-                total += bmt_root_gas_cost(input.predicateLength)
+                # add intrinsic cost of predicate merkleization based on number of predicate bytes
+                total += bmt_root_bytes_fee(input.predicateLength)
                 # add intrinsic cost of vm initialization
-                total += vm_initialization_gas_cost()
+                total += vm_initialization_fee()
     # add intrinsic cost of verifying witness signatures
-    total += len(witness_indices) * eck1_recover_gas_cost()
+    total += len(witness_indices) * eck1_recover_fee()
     return total
+
+def sum_outputs_intrinsic_fees(tx) -> int:
+    """
+    Computes the intrinsic gas cost of processing transaction outputs
+    """
+    total: int = 0
+    for output in tx.outputs:
+        total += state_write_fee()
+        if output.type == OutputType.OutputContractCreated:
+            # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
+            total += bmt_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
+            # add intrinsic cost of initializing contract storage
+            total += len(tx.storageSlotCount) * smt_insert_fee()
+    return total
+
+def intrinsic_fees(tx) -> int:
+    """
+    Computes intrinsic costs for a transaction
+    """
+    return sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
+
 """
 Returns any minted amounts by the transaction
 """
@@ -145,11 +166,10 @@ def reserved_fee_balance(tx, asset_id) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gas = tx.gasLimit + sum_inputs_intrinsic_gas(tx)
-    gasBalance = tx.gasPrice * gas / GAS_PRICE_FACTOR
+    gasBalance = tx.gasLimit * tx.gasPrice / GAS_PRICE_FACTOR
     bytesBalance = size(tx) * GAS_PER_BYTE * tx.gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
-    feeBalance = ceiling(gasBalance + bytesBalance)
+    feeBalance = ceiling(gasBalance + bytesBalance + intrinsic_fees(tx))
     # Only base asset can be used to pay for gas
     if asset_id == 0:
       return feeBalance

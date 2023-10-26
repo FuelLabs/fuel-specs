@@ -79,6 +79,7 @@ Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
+- More than one output is of type `OutputType.Change` with identical `asset_id` fields.
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
