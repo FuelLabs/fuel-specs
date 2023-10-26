@@ -167,10 +167,15 @@ def sum_outputs_intrinsic_fees(tx) -> int:
     return total
 
 def intrinsic_fees(tx) -> int:
-  """
-  Computes intrinsic costs for a transaction
-  """
-  return sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
+    """
+    Computes intrinsic costs for a transaction
+    """
+    fees: int = 0
+    # add the cost of initializing a vm for the script
+    if tx.type == TransactionType.Script:
+        fees += vm_initialization_fee()
+    fees += sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
+    return fees
 
 def reserved_fee_balance(tx, asset_id) -> int:
     """
