@@ -297,6 +297,8 @@
 <li><code>[$ssp, $sp)</code>: the writable stack area of the call frame.</li>
 <li><code>[$hp, $fp-&gt;$hp)</code>: the heap area allocated by this call frame.</li>
 </ol>
+<h2 id="executablity"><a class="header" href="#executablity">Executablity</a></h2>
+<p>Memory is only executable in range <code>[$is, $ssp)</code>. Attempting to execute instructions outside these boundaries will panic. This area never overlaps with writable registers, essentially providing <a href="https://en.wikipedia.org/wiki/W%5EX">W^X</a> protection.</p>
 
                     </main>
 
