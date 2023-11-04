@@ -110,6 +110,7 @@
   - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
   - [ED19: edDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
+  - [BLSA: Barreto-Lynn-Scott 12-381 signature verification](#blsa-bls12-381-verify)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
@@ -2312,6 +2313,32 @@ Panic if:
 Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
+
+### BLSA: BLS12-381 Verification
+
+|             |                                                                                                                                                     |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Description | Verification recovered from 48-byte public key(s) starting at `$rA` and 64-byte signature starting at `$rC` on 32-byte message hashes starting at `$rB` by 8-byte number of messages at `MEM[$rC + 64, 8]`. |
+| Operation   | ```bls_12381_verify(MEM[$rA, 48 * $rD], MEM[$rB, 32 * $rD], MEM[$rC, 64], $rD);```                                                                                         |
+| Syntax      | `ed19 $rA, $rB, $rC, #rD`                                                                                                                                |
+| Encoding    | `0x00 rA rB rC rD`                                                                                                                                   |
+| Notes       | If `$rD` is set to 0 verification will happen over an unaggregated signature, otherwise it will verify in aggregate form.  |
+
+Panic if:
+
+- `$rA + 48 * NUM_MESSAGES` overflows
+- `$rB + 32 * NUM_MESSAGES` overflows
+- `$rC + 64 * NUM_MESSAGES` overflows
+- `$rA + 48 * NUM_MESSAGES > VM_MAX_RAM`
+- `$rB + 32 * NUM_MESSAGES > VM_MAX_RAM`
+- `$rC + 64 * NUM_MESSAGES > VM_MAX_RAM`
+- `$rD == 0 && NUM_MESSAGES > 1`
+
+Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
+
+If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
+
+BLSA specifies BLS version A which in this case is the standardized BLS12-381 curve.
 
 ### K256: keccak-256
 
