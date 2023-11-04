@@ -110,7 +110,7 @@
   - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
   - [ED19: edDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
-  - [BLSA: Barreto-Lynn-Scott 12-381 signature verification](#blsa-bls12-381-verify)
+  - [BLSA: Barreto-Lynn-Scott 12-381 signature verification](#blsa-bls12-381-verification)
   - [K256: keccak-256](#k256-keccak-256)
   - [S256: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
@@ -2314,15 +2314,15 @@ Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
-### BLSA: BLS12-381 Verification
+### BLSA BLS12-381 verification
 
 |             |                                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | Description | Verification recovered from 48-byte public key(s) starting at `$rA` and 64-byte signature starting at `$rC` on 32-byte message hashes starting at `$rB` by 8-byte number of messages at `MEM[$rC + 64, 8]`. |
-| Operation   | ```bls_12381_verify(MEM[$rA, 48 * $rD], MEM[$rB, 32 * $rD], MEM[$rC, 64], $rD);```                                                                                         |
+| Operation   | ```bls_12381_verify(MEM[$rA, 48 * NUM_MESSAGES], MEM[$rB, 32 * NUM_MESSAGES], MEM[$rC, 64], $rD);```                                                                                         |
 | Syntax      | `ed19 $rA, $rB, $rC, #rD`                                                                                                                                |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                                                   |
-| Notes       | If `$rD` is set to 0 verification will happen over an unaggregated signature, otherwise it will verify in aggregate form.  |
+| Notes       | If `$rD` is set to a value of `0`, verification will happen over an unaggregated signature, `1` specifies verifying over an aggregate signature set by the transaction user in memory, `3` specifies the block producer will set the `NUM_MESSAGES` and enforce verification under the condition a single public key at `$rA`, a single message at `$rB` are included in a valid aggregated BLS12-381 signature verification within the current block or that a single valid signature be present at `$rC`.  |
 
 Panic if:
 
