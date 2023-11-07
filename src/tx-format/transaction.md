@@ -72,6 +72,7 @@ enum ReceiptType : uint8 {
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
 
+Given helper `max_gas()` returns the maximum gas that the transaction can use..
 Given helper `len()` that returns the number of bytes of a field.
 Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
 Given helper `count_variants()` that returns the number of variants in an enum.
@@ -84,7 +85,7 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `gasLimit > MAX_GAS_PER_TX`
+- `max_gas(tx) > MAX_GAS_PER_TX`
 - No policy of type `PolicyType.GasPrice`
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
