@@ -2268,10 +2268,10 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
-| Syntax      | `ecr1 $rA, $rB, $rC`                                                                                                        |
-| Encoding    | `0x00 rA rB rC -`                                                                                                           |
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC` to `$rC + $rD`. |
+| Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, $rC + $rD]);```                                                              |
+| Syntax      | `ecr1 $rA, $rB, $rC, $rD`                                                                                                        |
+| Encoding    | `0x00 rA rB rC rD`                                                                                                           |
 | Notes       |                                                                                                                             |
 
 Panic if:
@@ -2287,8 +2287,6 @@ Panic if:
 Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
 
 If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is set to `1`, otherwise `$err` is cleared.
-
-To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
 
 ### ED19: edDSA curve25519 verification
 
