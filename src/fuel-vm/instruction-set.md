@@ -158,7 +158,7 @@ A few instructions are annotated with the _effects_ they produce, the table belo
 | Balance tree write | Instruction writes to the balance tree             |
 | Output message     | Instruction sends a message to a recipient address |
 
-If an instruction is not annotated with an effect, it means it does not produce any of the aforementioned affects.
+If an instruction is not annotated with an effect, it means it does not produce any of the aforementioned effects.
 
 ## Arithmetic/Logic (ALU) Instructions
 
@@ -1251,7 +1251,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-If current context is external, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+If the current context is external, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
@@ -1259,13 +1259,13 @@ If current context is external, append an additional receipt to the list of rece
 | `result`   | `uint64`      | `0`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
 
-If current context is external, cease VM execution and return `$rA`.
+If the current context is external, cease VM execution and return `$rA`.
 
 Returns from contract call, popping the call frame. Before popping perform the following operations.
 
 Return the unused forwarded gas to the caller:
 
-1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from the previous context to current remaining context gas)
 
 Set the return value:
 
@@ -1623,7 +1623,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
-Block header hashes for blocks with height greater than or equal to current block height are zero (```0x00**32```).
+Block header hashes for blocks with height greater than or equal to the current block height are zero (```0x00**32```).
 
 ### BURN: Burn existing coins
 
@@ -1939,13 +1939,13 @@ If current context is a script, append an additional receipt to the list of rece
 | `result`   | `uint64`      | `0`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
 
-If current context is external, cease VM execution and return `MEM[$rA, $rB]`.
+If the current context is external, cease VM execution and return `MEM[$rA, $rB]`.
 
 Returns from contract call, popping the call frame. Before popping, perform the following operations.
 
 Return the unused forwarded gas to the caller:
 
-1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from previous context to current remaining context gas)
+1. `$cgas = $cgas + $fp->$cgas` (add remaining context gas from the previous context to current remaining context gas)
 
 Set the return value:
 
