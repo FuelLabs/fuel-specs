@@ -1,6 +1,6 @@
 # JSON Format for Contract Storage Initializers
 
-Contracts can request that certain storage slots are initialized to specific values. These initialized slots are represented in JSON format as an array where each element represents a storage slot and has the following properties:
+Contracts can request that certain storage slots be initialized to specific values. These initialized slots are represented in JSON format as an array where each element represents a storage slot and has the following properties:
 
 - `"key"`: String, a 32-byte key for a given storage slot;
 - `"value"`: String, a 32-byte value that initializes the slot;
