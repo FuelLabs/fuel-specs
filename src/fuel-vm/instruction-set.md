@@ -2268,8 +2268,8 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC` to `$rC + $rD`. |
-| Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, $rC + $rD]);```                                                              |
+| Description | The 64-byte public key (x, y) recovered from 64-byte signature starting at `$rB` on 32-byte message starting at `$rC` with a length of `$rD`. |
+| Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, $rD]);```                                                              |
 | Syntax      | `ecr1 $rA, $rB, $rC, $rD`                                                                                                        |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                           |
 | Notes       |                                                                                                                             |
