@@ -27,4 +27,4 @@ This book specifies the Fuel protocol, including the Fuel Virtual Machine
 
 ## Testing
 
-- [**Sparse Merkle Tree**](./tests/sparse-merkle-tree-tests.md) - A test suite for verifying correctness of SMT outputs.
+- [**Sparse Merkle Tree**](./tests/sparse-merkle-tree-tests.md) - A test suite for verifying the correctness of SMT outputs.
