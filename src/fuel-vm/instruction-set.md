@@ -2442,7 +2442,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | name                                      | `imm`   | set `$rA` to                                                      |
 |-------------------------------------------|---------|-------------------------------------------------------------------|
 | `GTF_TYPE`                                | `0x001` | `tx.type`                                                         |
-| `GTF_SCRIPT_GAS_LIMIT`                    | `0x002` | `tx.gasLimit`                                                     |
+| `GTF_SCRIPT_GAS_LIMIT`                    | `0x002` | `tx.scriptGasLimit`                                               |
 | `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x003` | `tx.scriptLength`                                                 |
 | `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x004` | `tx.scriptDataLength`                                             |
 | `GTF_SCRIPT_INPUTS_COUNT`                 | `0x005` | `tx.inputsCount`                                                  |

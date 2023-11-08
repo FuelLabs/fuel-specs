@@ -55,22 +55,22 @@ enum ReceiptType : uint8 {
 }
 ```
 
-| name               | type                        | description                                          |
-|--------------------|-----------------------------|------------------------------------------------------|
-| `gasLimit`         | `uint64`                    | Gas limit for transaction (including predicate gas). |
-| `scriptLength`     | `uint16`                    | Script length, in instructions.                      |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.               |
-| `policyTypes`      | `uint32`                    | Bitfield of used policy types.                       |
-| `inputsCount`      | `uint8`                     | Number of inputs.                                    |
-| `outputsCount`     | `uint8`                     | Number of outputs.                                   |
-| `witnessesCount`   | `uint8`                     | Number of witnesses.                                 |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                             |
-| `script`           | `byte[]`                    | Script to execute.                                   |
-| `scriptData`       | `byte[]`                    | Script input data (parameters).                      |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType.              |
-| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                                      |
-| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
-| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
+| name               | type                        | description                             |
+|--------------------|-----------------------------|-----------------------------------------|
+| `scriptGasLimit`   | `uint64`                    | Gas limits the script execution.        |
+| `scriptLength`     | `uint16`                    | Script length, in instructions.         |
+| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.  |
+| `policyTypes`      | `uint32`                    | Bitfield of used policy types.          |
+| `inputsCount`      | `uint8`                     | Number of inputs.                       |
+| `outputsCount`     | `uint8`                     | Number of outputs.                      |
+| `witnessesCount`   | `uint8`                     | Number of witnesses.                    |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
+| `script`           | `byte[]`                    | Script to execute.                      |
+| `scriptData`       | `byte[]`                    | Script input data (parameters).         |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType. |
+| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                         |
+| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
+| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
 
 Given helper `max_gas()` returns the maximum gas that the transaction can use.
 Given helper `len()` that returns the number of bytes of a field.

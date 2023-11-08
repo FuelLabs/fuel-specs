@@ -144,7 +144,7 @@ def unavailable_balance(tx, asset_id) -> int:
     return sentBalance
 
 def fee_balance(tx, asset_id) -> int:
-    gas = tx.gasLimit + sum_predicate_gas_used(tx)
+    gas = tx.scriptGasLimit + sum_predicate_gas_used(tx)
     gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
@@ -205,7 +205,7 @@ Once the free balances are computed, the [script is executed](../fuel-vm/index.m
 1. The unspent free balance `unspentBalance` for each asset ID.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
-The fees incurred for a transaction are `ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)`.
+The fees incurred for a transaction are `ceiling(((size(tx) * GAS_PER_BYTE) + (tx.scriptGasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)`.
 
 `size(tx)` includes the entire transaction serialized according to the transaction format, including witness data.
 This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.
