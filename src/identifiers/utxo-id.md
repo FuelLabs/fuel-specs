@@ -18,7 +18,7 @@ The ID of a message is computed as the [hash](../protocol/cryptographic-primitiv
 
 ### Message Nonce
 
-The nonce value for `InputMessage` is determined by the sending system and is published at the time the message is sent. The nonce value for `OutputMessage` is computed as the [hash](../protocol/cryptographic-primitives.md#hashing) of the [Transaction ID](./transaction-id.md) that emitted the message and the index of the message receipt `uint8`: `hash(byte[32] ++ uint8)`.
+The nonce value for `InputMessage` is determined by the sending system and is published at the time the message is sent. The nonce value for `OutputMessage` is computed as the [hash](../protocol/cryptographic-primitives.md#hashing) of the [Transaction ID](./transaction-id.md) that emitted the message and the index of the message receipt `uint16`: `hash(byte[32] ++ uint16)`.
 
 ## Fee ID
 
