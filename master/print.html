@@ -660,7 +660,7 @@ all non-witness data is hashed.</p>
 </ol>
 <p><code>hash(byte[32] ++ byte[32] ++ byte[32] ++ uint64 ++ byte[])</code>. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard <a href="identifiers/../tx-format/transaction.html">transaction serialization</a>. Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.</p>
 <h3 id="message-nonce"><a class="header" href="#message-nonce">Message Nonce</a></h3>
-<p>The nonce value for <code>InputMessage</code> is determined by the sending system and is published at the time the message is sent. The nonce value for <code>OutputMessage</code> is computed as the <a href="identifiers/../protocol/cryptographic-primitives.html#hashing">hash</a> of the <a href="identifiers/./transaction-id.html">Transaction ID</a> that emitted the message and the index of the message receipt <code>uint8</code>: <code>hash(byte[32] ++ uint8)</code>.</p>
+<p>The nonce value for <code>InputMessage</code> is determined by the sending system and is published at the time the message is sent. The nonce value for <code>OutputMessage</code> is computed as the <a href="identifiers/../protocol/cryptographic-primitives.html#hashing">hash</a> of the <a href="identifiers/./transaction-id.html">Transaction ID</a> that emitted the message and the index of the message receipt <code>uint16</code> (with canonical encoding): <code>hash(byte[32] ++ canonical(uint16))</code>.</p>
 <h2 id="fee-id"><a class="header" href="#fee-id">Fee ID</a></h2>
 <p>The UTXO ID of collected fees in a block is the block height as a 32-byte big-endian unsigned integer (i.e. the first byte of the 32-byte array is the most significant byte, and so on).</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="protocol-1"><a class="header" href="#protocol-1">Protocol</a></h1>
@@ -2813,6 +2813,7 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <li>The syntax <code>MEM[x, y]</code> used in this page means the memory range starting at byte <code>x</code>, of length <code>y</code> bytes.</li>
 <li>The syntax <code>STATE[x, y]</code> used in this page means the sequence of storage slots starting at key <code>x</code> and spanning <code>y</code> bytes.</li>
 </ul>
+<h3 id="panics"><a class="header" href="#panics">Panics</a></h3>
 <p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on <a href="fuel-vm/./index.html#contexts">context</a>:</p>
 <ul>
 <li>In a predicate context, cease VM execution and return <code>false</code>.</li>
@@ -2833,6 +2834,9 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <tr><td><code>gas_used</code></td><td><code>uint64</code></td><td>Gas consumed by the script.</td></tr>
 </tbody></table>
 </div>
+<h3 id="receipts-1"><a class="header" href="#receipts-1">Receipts</a></h3>
+<p>The number of receipts is limited to 2<sup>16</sup>, with the last two reserved to panic and script result receipts. Trying to add any other receipts after 2<sup>16</sup>-2 will panic.</p>
+<h3 id="effects"><a class="header" href="#effects">Effects</a></h3>
 <p>A few instructions are annotated with the <em>effects</em> they produce, the table below explains each effect:</p>
 <div class="table-wrapper"><table><thead><tr><th>effect name</th><th>description</th></tr></thead><tbody>
 <tr><td>Storage read</td><td>Instruction reads from storage slots</td></tr>

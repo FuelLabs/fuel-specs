@@ -151,7 +151,7 @@
 </ol>
 <p><code>hash(byte[32] ++ byte[32] ++ byte[32] ++ uint64 ++ byte[])</code>. The address values are serialized as a byte array of length 32 left-padded with zeroes, and all other value types are serialized according to the standard <a href="../tx-format/transaction.html">transaction serialization</a>. Note that the message data length is not included since there is only one dynamically sized field and can be implicitly determined by the hash preimage size.</p>
 <h3 id="message-nonce"><a class="header" href="#message-nonce">Message Nonce</a></h3>
-<p>The nonce value for <code>InputMessage</code> is determined by the sending system and is published at the time the message is sent. The nonce value for <code>OutputMessage</code> is computed as the <a href="../protocol/cryptographic-primitives.html#hashing">hash</a> of the <a href="./transaction-id.html">Transaction ID</a> that emitted the message and the index of the message receipt <code>uint8</code>: <code>hash(byte[32] ++ uint8)</code>.</p>
+<p>The nonce value for <code>InputMessage</code> is determined by the sending system and is published at the time the message is sent. The nonce value for <code>OutputMessage</code> is computed as the <a href="../protocol/cryptographic-primitives.html#hashing">hash</a> of the <a href="./transaction-id.html">Transaction ID</a> that emitted the message and the index of the message receipt <code>uint16</code> (with canonical encoding): <code>hash(byte[32] ++ canonical(uint16))</code>.</p>
 <h2 id="fee-id"><a class="header" href="#fee-id">Fee ID</a></h2>
 <p>The UTXO ID of collected fees in a block is the block height as a 32-byte big-endian unsigned integer (i.e. the first byte of the 32-byte array is the most significant byte, and so on).</p>
 
