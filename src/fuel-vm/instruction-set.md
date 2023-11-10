@@ -2098,7 +2098,7 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 | Syntax      | `sww $rA $rB $rC`                                                               |
 | Encoding    | `0x00 rA rB rC -`                                                               |
 | Effects     | Storage write                                                                   |
-| Notes       |                                                                                 |
+| Notes       | Additional gas is charged when a new storage slot is created.                   |
 
 Panic if:
 
@@ -2118,7 +2118,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will b
 | Syntax      | `swwq $rA, $rB, $rC, $rD`                                                   |
 | Encoding    | `0x00 rA rB rC rD`                                                          |
 | Effects     | Storage write                                                               |
-| Notes       |                                                                             |
+| Notes       | Additional gas is charged when for each new storage slot created.           |
 
 Panic if:
 
