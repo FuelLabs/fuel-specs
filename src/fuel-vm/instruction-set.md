@@ -125,6 +125,8 @@ This page provides a description of all instructions for the FuelVM. Encoding is
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
 - The syntax `STATE[x, y]` used in this page means the sequence of storage slots starting at key `x` and spanning `y` bytes.
 
+### Panics
+
 Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./index.md#contexts):
 
 - In a predicate context, cease VM execution and return `false`.
@@ -146,6 +148,12 @@ then append an additional receipt to the list of receipts, again modifying `tx.r
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`  |
 | `result`   | `uint64`      | `1`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
+
+### Receipts
+
+The number of receipts is limited to 2<sup>16</sup>, with the last two reserved to panic and script result receipts. Trying to add any other receipts after 2<sup>16</sup>-2 will panic.
+
+### Effects
 
 A few instructions are annotated with the _effects_ they produce, the table below explains each effect:
 
