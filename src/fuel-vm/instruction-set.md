@@ -2072,7 +2072,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
 
 ### SRWQ: State read sequential 32 byte slots
 
@@ -2095,7 +2095,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots are set.
 
 ### SWW: State write word
 
@@ -2106,7 +2106,7 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 | Syntax      | `sww $rA $rB $rC`                                                               |
 | Encoding    | `0x00 rA rB rC -`                                                               |
 | Effects     | Storage write                                                                   |
-| Notes       |                                                                                 |
+| Notes       | Additional gas is charged when a new storage slot is created.                   |
 
 Panic if:
 
@@ -2115,7 +2115,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
-The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to the number of new slots written, i.e. `1` if the slot was previously unset, and `0` if it alreaady contained a value.
 
 ### SWWQ: State write sequential 32 byte slots
 
@@ -2126,7 +2126,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will b
 | Syntax      | `swwq $rA, $rB, $rC, $rD`                                                   |
 | Encoding    | `0x00 rA rB rC rD`                                                          |
 | Effects     | Storage write                                                               |
-| Notes       |                                                                             |
+| Notes       | Additional gas is charged when for each new storage slot created.           |
 
 Panic if:
 
@@ -2137,7 +2137,7 @@ Panic if:
 - `$rC + 32 * $rD > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `false` if the first storage slot was previously unset (default) and `true` if the slot was set.
+Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
 
 ### TIME: Timestamp at height
 
