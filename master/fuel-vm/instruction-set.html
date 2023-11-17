@@ -1990,7 +1990,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
+<p>Register <code>$rB</code> will be set to <code>false</code> if the requested slot is unset (default) and <code>true</code> if it's set.</p>
 <h3 id="srwq-state-read-sequential-32-byte-slots"><a class="header" href="#srwq-state-read-sequential-32-byte-slots">SRWQ: State read sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is read from the current contract's state.</td></tr>
@@ -2011,7 +2011,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li>The memory range <code>MEM[$rA, 32 * rD]</code>  does not pass <a href="./index.html#ownership">ownership check</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots were set.</p>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots are set.</p>
 <h3 id="sww-state-write-word"><a class="header" href="#sww-state-write-word">SWW: State write word</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A word is written to the current contract's state.</td></tr>
@@ -2019,7 +2019,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td>Syntax</td><td><code>sww $rA $rB $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
 <tr><td>Effects</td><td>Storage write</td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td>Additional gas is charged when a new storage slot is created.</td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
@@ -2029,7 +2029,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rB</code> is a <a href="./index.html#semantics">reserved register</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>$rB</code> will be set to <code>false</code> if the storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
+<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>$rB</code> will be set to the number of new slots written, i.e. <code>1</code> if the slot was previously unset, and <code>0</code> if it alreaady contained a value.</p>
 <h3 id="swwq-state-write-sequential-32-byte-slots"><a class="header" href="#swwq-state-write-sequential-32-byte-slots">SWWQ: State write sequential 32 byte slots</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A sequential series of 32 bytes is written to the current contract's state.</td></tr>
@@ -2037,7 +2037,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td>Syntax</td><td><code>swwq $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
 <tr><td>Effects</td><td>Storage write</td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td>Additional gas is charged when for each new storage slot created.</td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
@@ -2049,7 +2049,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rC + 32 * $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
-<p>Register <code>$rB</code> will be set to <code>false</code> if the first storage slot was previously unset (default) and <code>true</code> if the slot was set.</p>
+<p>Register <code>$rB</code> will be set to the number of storage slots that were previously unset, and were set by this operation.</p>
 <h3 id="time-timestamp-at-height"><a class="header" href="#time-timestamp-at-height">TIME: Timestamp at height</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Get timestamp of block at given height.</td></tr>
