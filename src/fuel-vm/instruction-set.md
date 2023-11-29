@@ -125,6 +125,8 @@ This page provides a description of all instructions for the FuelVM. Encoding is
 - The syntax `MEM[x, y]` used in this page means the memory range starting at byte `x`, of length `y` bytes.
 - The syntax `STATE[x, y]` used in this page means the sequence of storage slots starting at key `x` and spanning `y` bytes.
 
+### Panics
+
 Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./index.md#contexts):
 
 - In a predicate context, cease VM execution and return `false`.
@@ -146,6 +148,12 @@ then append an additional receipt to the list of receipts, again modifying `tx.r
 | `type`     | `ReceiptType` | `ReceiptType.ScriptResult`  |
 | `result`   | `uint64`      | `1`                         |
 | `gas_used` | `uint64`      | Gas consumed by the script. |
+
+### Receipts
+
+The number of receipts is limited to 2<sup>16</sup>, with the last two reserved to panic and script result receipts. Trying to add any other receipts after 2<sup>16</sup>-2 will panic.
+
+### Effects
 
 A few instructions are annotated with the _effects_ they produce, the table below explains each effect:
 
@@ -2064,7 +2072,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
 
 ### SRWQ: State read sequential 32 byte slots
 
@@ -2087,7 +2095,7 @@ Panic if:
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots were set.
+Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots are set.
 
 ### SWW: State write word
 
@@ -2098,7 +2106,7 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 | Syntax      | `sww $rA $rB $rC`                                                               |
 | Encoding    | `0x00 rA rB rC -`                                                               |
 | Effects     | Storage write                                                                   |
-| Notes       |                                                                                 |
+| Notes       | Additional gas is charged when a new storage slot is created.                   |
 
 Panic if:
 
@@ -2107,7 +2115,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
-The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to `false` if the storage slot was previously unset (default) and `true` if the slot was set.
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to the number of new slots written, i.e. `1` if the slot was previously unset, and `0` if it alreaady contained a value.
 
 ### SWWQ: State write sequential 32 byte slots
 
@@ -2118,7 +2126,7 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will b
 | Syntax      | `swwq $rA, $rB, $rC, $rD`                                                   |
 | Encoding    | `0x00 rA rB rC rD`                                                          |
 | Effects     | Storage write                                                               |
-| Notes       |                                                                             |
+| Notes       | Additional gas is charged when for each new storage slot created.           |
 
 Panic if:
 
@@ -2129,7 +2137,7 @@ Panic if:
 - `$rC + 32 * $rD > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `false` if the first storage slot was previously unset (default) and `true` if the slot was set.
+Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
 
 ### TIME: Timestamp at height
 
