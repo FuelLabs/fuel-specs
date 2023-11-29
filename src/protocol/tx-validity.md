@@ -220,13 +220,20 @@ def unavailable_balance(tx, asset_id) -> int:
     return sentBalance
 
 
+def gas_balance(tx) -> int:
+    """
+    Computes the maximum amount of gas required to process a transaction.
+    """
+    gas = sum_predicate_gas_used(tx) + sum_tx_bytes_gas_used(tx) + intrinsic_fees(tx)
+    return gas
+
+
 def reserved_fee_balance(tx, asset_id) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gas = tx.gasLimit + sum_predicate_gas_used(tx) + sum_tx_bytes_gas_used(tx) + intrinsic_fees(tx)
-    # Total fee balance
-    fee_balance = gas_to_fee(gas, tx.gasPrice)
+    gas_balance = tx.gasLimit + gas_balance(tx)
+    fee_balance = gas_to_fee(gas_balance, tx.gasPrice)
     fee_balance =  math.ceil(fee_balance)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
@@ -285,12 +292,39 @@ Once the free balances are computed, the [script is executed](../fuel-vm/index.m
 1. The unspent free balance `unspentBalance` for each asset ID.
 1. The unspent gas `unspentGas` from the `$ggas` register.
 
-The fees incurred for a transaction are `reserved_fee_balance(tx, BASE_ASSET) - floor(unspentGas * tx.gasPrice / GAS_PRICE_FACTOR)`.
-
 `size(tx)` encompasses the entire transaction serialized according to the transaction format, including witness data.
 This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.
 
 If the transaction as included in a block does not match this final transaction, the block is invalid.
+
+### Fees
+
+The fee incurred for a transaction can be calculated by: 
+
+```
+fee = reserved_fee_balance(tx, BASE_ASSET) - floor(gas_to_fee(unspent_gas))
+```
+
+where
+
+- `reserved_fee_balance(tx, BASE_ASSET)` is the maximum cost of the transaction, including fees for inputs, outputs, and the bytes of the transaction, collectively known as intrinsic fees, predicate execution, as well as the amount of gas the user is willing to spend on script execution.
+- `unspent_gas` is the amount gas left over after intrinsic fees and execution of the transaction. Converting unspent gas to a fee describes how much "change" is left over from the user's payment; the block producer collects this unspent gas as reward.
+
+The cost of the transaction is the result of the calculation of this fee balance. Users wishing to submit transactions can incentivize block producers to include their transactions by providing a higher reward in the form of more unspent gas. This is achieved by specifying a higher gas limit on the transaction.
+
+```
+unspent_gas = tx.gas_limit - gas_balance(tx)
+```
+
+A natural result of the ability to vary the gas limit is the concept of minimum and maximum fees. The minimum fee is thus the exact fee required to pay the fee balance, while the maximum fee is, then, the minimum fee plus any gas remaining after execution paid as an incentive.
+
+```
+min_fee = reserved_fee_balance(tx, BASE_ASSET)
+max_fee = min_fee + floor(gas_to_fee(unspent_gas))
+```
+
+In the case that all gas was consumed during execution, the `min_fee` and `max_fee` will be equal.
+
 
 ## VM Postcondition Validity Rules
 
