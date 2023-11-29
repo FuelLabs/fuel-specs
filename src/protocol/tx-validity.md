@@ -89,6 +89,7 @@ def gas_to_fee(gas, gas_price) -> int:
     """
     return gas * gas_price / GAS_PRICE_FACTOR
 
+
 def sum_data_messages(tx, asset_id) -> int:
     """
     Returns the total balance available from messages containing data
@@ -100,6 +101,7 @@ def sum_data_messages(tx, asset_id) -> int:
                 total += input.amount
     return total
 
+
 def sum_inputs(tx, asset_id) -> int:
     total: int = 0
     for input in tx.inputs:
@@ -108,6 +110,7 @@ def sum_inputs(tx, asset_id) -> int:
         elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
             total += input.amount
     return total
+
 
 def sum_predicate_gas_used(tx) -> int:
     total: int = 0
@@ -118,13 +121,22 @@ def sum_predicate_gas_used(tx) -> int:
             total += input.predicateGasUsed
     return total
 
-"""
-Returns any minted amounts by the transaction
-"""
+    
+def sum_tx_bytes_gas_used(tx) -> int:
+    """
+    Computes the intrinsic gas cost of a transaction based on size in bytes
+    """
+    size(tx) * GAS_PER_BYTE
+
+
 def minted(tx, asset_id) -> int:
+    """
+    Returns any minted amounts by the transaction
+    """
     if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
         return 0
     return tx.mint_amount
+
 
 def sum_outputs(tx, asset_id) -> int:
     total: int = 0
@@ -132,6 +144,7 @@ def sum_outputs(tx, asset_id) -> int:
         if output.type == OutputType.Coin and output.asset_id == asset_id:
             total += output.amount
     return total
+
 
 def sum_input_intrinsic_fees(tx) -> int:
     """
@@ -153,12 +166,13 @@ def sum_input_intrinsic_fees(tx) -> int:
                 witness_indices.add(input.witnessIndex)
             else:
                 # add intrinsic cost of predicate merkleization based on number of predicate bytes
-                total += smt_root_bytes_fee(input.predicateLength)
+                total += contract_root_bytes_fee(input.predicateLength)
                 # add intrinsic cost of vm initialization
                 total += vm_initialization_fee()
     # add intrinsic cost of verifying witness signatures
     total += len(witness_indices) * eck1_recover_fee()
     return total
+
 
 def sum_output_intrinsic_fees(tx) -> int:
     """
@@ -170,11 +184,12 @@ def sum_output_intrinsic_fees(tx) -> int:
         total += state_write_fee(size(output))
         if output.type == OutputType.OutputContractCreated:
             # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
-            total += smt_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
+            total += contract_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
             # add intrinsic cost of initializing contract storage
             # note: smt_insert_fee may be dependent on the storage value if the protocol adopts dynamic sized slots
             total += tx.storageSlotCount * smt_insert_fee()
     return total
+
 
 def intrinsic_fees(tx) -> int:
     """
@@ -186,6 +201,7 @@ def intrinsic_fees(tx) -> int:
         fees += vm_initialization_fee()
     fees += sum_input_intrinsic_fees(tx) + sum_output_intrinsic_fees(tx)
     return fees
+
 
 def available_balance(tx, asset_id) -> int:
     """
@@ -203,20 +219,21 @@ def unavailable_balance(tx, asset_id) -> int:
         return sentBalance + feeBalance
     return sentBalance
 
+
 def reserved_fee_balance(tx, asset_id) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gas = tx.gasLimit + sum_predicate_gas_used(tx)
-    gasBalance = gas_to_fee(gas, tx.gasPrice)
-    bytesBalance = gas_to_fee(size(tx) * GAS_PER_BYTE, tx.gasPrice)
+    gas = tx.gasLimit + sum_predicate_gas_used(tx) + sum_tx_bytes_gas_used(tx) + intrinsic_fees(tx)
     # Total fee balance
-    feeBalance =  ceiling(gasBalance + bytesBalance + intrinsic_fees(tx))
+    fee_balance = gas_to_fee(gas, tx.gasPrice)
+    fee_balance =  math.ceil(fee_balance)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
-        return feeBalance
+        return fee_balance
     else:
         return 0
+
 
 # The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
 # is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
