@@ -187,20 +187,6 @@ def intrinsic_fees(tx) -> int:
     fees += sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
     return fees
 
-def reserved_fee_balance(tx, asset_id) -> int:
-    """
-    Computes the maximum potential amount of fees that may need to be charged to process a transaction.
-    """
-    gasBalance = gas_to_fee(tx.gasLimit, tx.gasPrice)
-    bytesBalance = gas_to_fee(size(tx) * GAS_PER_BYTE, tx.gasPrice)
-    # Total fee balance
-    feeBalance = ceiling(gasBalance + bytesBalance + intrinsic_fees(tx))
-    # Only base asset can be used to pay for gas
-    if asset_id == 0:
-        return feeBalance
-    else:
-        return 0
-
 def available_balance(tx, asset_id) -> int:
     """
     Make the data message balance available to the script
@@ -217,12 +203,15 @@ def unavailable_balance(tx, asset_id) -> int:
         return sentBalance + feeBalance
     return sentBalance
 
-def fee_balance(tx, asset_id) -> int:
+def reserved_fee_balance(tx, asset_id) -> int:
+    """
+    Computes the maximum potential amount of fees that may need to be charged to process a transaction.
+    """
     gas = tx.gasLimit + sum_predicate_gas_used(tx)
-    gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
-    bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
+    gasBalance = gas_to_fee(gas, tx.gasPrice)
+    bytesBalance = gas_to_fee(size(tx) * GAS_PER_BYTE, tx.gasPrice)
     # Total fee balance
-    feeBalance = reserved_fee_balance(tx, asset_id)
+    feeBalance =  ceiling(gasBalance + bytesBalance + intrinsic_fees(tx))
     # Only base asset can be used to pay for gas
     if asset_id == 0:
         return feeBalance
