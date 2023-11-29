@@ -153,14 +153,14 @@ def sum_input_intrinsic_fees(tx) -> int:
                 witness_indices.add(input.witnessIndex)
             else:
                 # add intrinsic cost of predicate merkleization based on number of predicate bytes
-                total += bmt_root_bytes_fee(input.predicateLength)
+                total += smt_root_bytes_fee(input.predicateLength)
                 # add intrinsic cost of vm initialization
                 total += vm_initialization_fee()
     # add intrinsic cost of verifying witness signatures
     total += len(witness_indices) * eck1_recover_fee()
     return total
 
-def sum_outputs_intrinsic_fees(tx) -> int:
+def sum_output_intrinsic_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of processing transaction outputs
     """
@@ -170,7 +170,7 @@ def sum_outputs_intrinsic_fees(tx) -> int:
         total += state_write_fee(size(output))
         if output.type == OutputType.OutputContractCreated:
             # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
-            total += bmt_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
+            total += smt_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
             # add intrinsic cost of initializing contract storage
             # note: smt_insert_fee may be dependent on the storage value if the protocol adopts dynamic sized slots
             total += tx.storageSlotCount * smt_insert_fee()
@@ -184,7 +184,7 @@ def intrinsic_fees(tx) -> int:
     # add the cost of initializing a vm for the script
     if tx.type == TransactionType.Script:
         fees += vm_initialization_fee()
-    fees += sum_input_intrinsic_fees(tx) + sum_outputs_intrinsic_fees(tx)
+    fees += sum_input_intrinsic_fees(tx) + sum_output_intrinsic_fees(tx)
     return fees
 
 def available_balance(tx, asset_id) -> int:
