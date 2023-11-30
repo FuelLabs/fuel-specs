@@ -55,23 +55,24 @@ enum ReceiptType : uint8 {
 }
 ```
 
-| name               | type                        | description                                          |
-|--------------------|-----------------------------|------------------------------------------------------|
-| `gasLimit`         | `uint64`                    | Gas limit for transaction (including predicate gas). |
-| `scriptLength`     | `uint16`                    | Script length, in instructions.                      |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.               |
-| `policyTypes`      | `uint32`                    | Bitfield of used policy types.                       |
-| `inputsCount`      | `uint8`                     | Number of inputs.                                    |
-| `outputsCount`     | `uint8`                     | Number of outputs.                                   |
-| `witnessesCount`   | `uint8`                     | Number of witnesses.                                 |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                             |
-| `script`           | `byte[]`                    | Script to execute.                                   |
-| `scriptData`       | `byte[]`                    | Script input data (parameters).                      |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType.              |
-| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                                      |
-| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                                     |
-| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                                   |
+| name               | type                        | description                             |
+|--------------------|-----------------------------|-----------------------------------------|
+| `scriptGasLimit`   | `uint64`                    | Gas limits the script execution.        |
+| `scriptLength`     | `uint16`                    | Script length, in instructions.         |
+| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.  |
+| `policyTypes`      | `uint32`                    | Bitfield of used policy types.          |
+| `inputsCount`      | `uint8`                     | Number of inputs.                       |
+| `outputsCount`     | `uint8`                     | Number of outputs.                      |
+| `witnessesCount`   | `uint8`                     | Number of witnesses.                    |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
+| `script`           | `byte[]`                    | Script to execute.                      |
+| `scriptData`       | `byte[]`                    | Script input data (parameters).         |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType. |
+| `inputs`           | [Input](./input.md)`[]`     | List of inputs.                         |
+| `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
+| `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
 
+Given helper `max_gas()` returns the maximum gas that the transaction can use.
 Given helper `len()` that returns the number of bytes of a field.
 Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
 Given helper `count_variants()` that returns the number of variants in an enum.
@@ -84,7 +85,7 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `gasLimit > MAX_GAS_PER_TX`
+- `max_gas(tx) > MAX_GAS_PER_TX`
 - No policy of type `PolicyType.GasPrice`
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
@@ -116,6 +117,7 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 | `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
 | `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
 
+Given helper `max_gas()` returns the maximum gas that the transaction can use.
 Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
 Given helper `count_variants()` that returns the number of variants in an enum.
 Given helper `sum_variants()` that sums all variants of an enum.
@@ -133,6 +135,7 @@ Transaction is invalid if:
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
+- `max_gas(tx) > MAX_GAS_PER_TX`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 - No policy of type `PolicyType.GasPrice`
 - `count_ones(policyTypes) > count_variants(PolicyType)`

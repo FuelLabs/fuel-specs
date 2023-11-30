@@ -149,7 +149,7 @@ If script bytecode is present, transaction validation requires execution.
 The VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the transaction's script bytecode.
-1. `$ggas` and `$cgas` are set to `tx.gasLimit`.
+1. `$ggas` and `$cgas` are set to `tx.scriptGasLimit`.
 
 Following initialization, execution begins.
 
