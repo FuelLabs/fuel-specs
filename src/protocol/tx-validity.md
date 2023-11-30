@@ -300,13 +300,13 @@ If the transaction as included in a block does not match this final transaction,
 
 ### Fees
 
-The cost incurred by a transaction can be calculated by: 
+The cost incurred by a transaction can be calculated by:
 
 ```py
 cost(tx) = gas_to_fee(gas_cost(tx) - unspentGas, tx.gasPrice)
 ```
 
-where
+where:
 
 - `gas_cost(tx)` is the final cost of the transaction in gas, including gas fees incurred from:
   - The number of bytes comprising the transaction
@@ -328,8 +328,6 @@ max_fee = gas_to_fee(max_gas, tx.gasPrice)
 ```
 
 The cost of the transaction `cost(tx)` must lie within the range defined by [`min_fee`, `max_fee`]. The definition of `max_gas` illustrates that the delta between minimum fees and maximum fees is the user-defined `gasLimit`. Therefore, `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged the cost of intrinsic fees. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect.
-
-
 
 ## VM Postcondition Validity Rules
 
