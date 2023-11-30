@@ -2319,7 +2319,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <p>Get <a href="../tx-format/transaction.html">fields from the transaction</a>.</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th><code>imm</code></th><th>set <code>$rA</code> to</th></tr></thead><tbody>
 <tr><td><code>GTF_TYPE</code></td><td><code>0x001</code></td><td><code>tx.type</code></td></tr>
-<tr><td><code>GTF_SCRIPT_GAS_LIMIT</code></td><td><code>0x002</code></td><td><code>tx.gasLimit</code></td></tr>
+<tr><td><code>GTF_SCRIPT_GAS_LIMIT</code></td><td><code>0x002</code></td><td><code>tx.scriptGasLimit</code></td></tr>
 <tr><td><code>GTF_SCRIPT_SCRIPT_LENGTH</code></td><td><code>0x003</code></td><td><code>tx.scriptLength</code></td></tr>
 <tr><td><code>GTF_SCRIPT_SCRIPT_DATA_LENGTH</code></td><td><code>0x004</code></td><td><code>tx.scriptDataLength</code></td></tr>
 <tr><td><code>GTF_SCRIPT_INPUTS_COUNT</code></td><td><code>0x005</code></td><td><code>tx.inputsCount</code></td></tr>
@@ -2385,12 +2385,11 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT</code></td><td><code>0x308</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA_LENGTH</code></td><td><code>0x400</code></td><td><code>tx.witnesses[$rB].dataLength</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA</code></td><td><code>0x401</code></td><td>Memory address of <code>tx.witnesses[$rB].data</code></td></tr>
-<tr><td><code>GTF_POLICY_COUNT</code></td><td><code>0x500</code></td><td><code>count_ones(tx.policyTypes)</code></td></tr>
-<tr><td><code>GTF_POLICY_TYPE</code></td><td><code>0x501</code></td><td><code>tx.policies[$rB].type</code></td></tr>
-<tr><td><code>GTF_POLICY_GAS_PRICE</code></td><td><code>0x502</code></td><td><code>tx.policies[0x00].gasPrice</code></td></tr>
-<tr><td><code>GTF_POLICY_WITNESS_LIMIT</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b11 &amp; tx.policyTypes) - 1].witnessLimit</code></td></tr>
-<tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x505</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
-<tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x506</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>
+<tr><td><code>GTF_POLICY_TYPES</code></td><td><code>0x500</code></td><td><code>tx.policies.policyTypes</code></td></tr>
+<tr><td><code>GTF_POLICY_GAS_PRICE</code></td><td><code>0x501</code></td><td><code>tx.policies[0x00].gasPrice</code></td></tr>
+<tr><td><code>GTF_POLICY_WITNESS_LIMIT</code></td><td><code>0x502</code></td><td><code>tx.policies[count_ones(0b11 &amp; tx.policyTypes) - 1].witnessLimit</code></td></tr>
+<tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x503</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
+<tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>

@@ -287,7 +287,7 @@ def unavailable_balance(tx, asset_id) -&gt; int:
     return sentBalance
 
 def fee_balance(tx, asset_id) -&gt; int:
-    gas = tx.gasLimit + sum_predicate_gas_used(tx)
+    gas = tx.scriptGasLimit + sum_predicate_gas_used(tx)
     gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
@@ -334,7 +334,7 @@ messageBalance = sum_data_messages(tx, 0)
 <li>The unspent free balance <code>unspentBalance</code> for each asset ID.</li>
 <li>The unspent gas <code>unspentGas</code> from the <code>$ggas</code> register.</li>
 </ol>
-<p>The fees incurred for a transaction are <code>ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)</code>.</p>
+<p>The fees incurred for a transaction are <code>ceiling(((size(tx) * GAS_PER_BYTE) + (tx.scriptGasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)</code>.</p>
 <p><code>size(tx)</code> includes the entire transaction serialized according to the transaction format, including witness data.
 This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.</p>
 <p>If the transaction as included in a block does not match this final transaction, the block is invalid.</p>

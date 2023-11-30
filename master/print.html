@@ -266,7 +266,7 @@
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>gasLimit</code></td><td><code>uint64</code></td><td>Gas limit for transaction (including predicate gas).</td></tr>
+<tr><td><code>scriptGasLimit</code></td><td><code>uint64</code></td><td>Gas limits the script execution.</td></tr>
 <tr><td><code>scriptLength</code></td><td><code>uint16</code></td><td>Script length, in instructions.</td></tr>
 <tr><td><code>scriptDataLength</code></td><td><code>uint16</code></td><td>Length of script input data, in bytes.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
@@ -282,7 +282,8 @@
 <tr><td><code>witnesses</code></td><td><a href="tx-format/./witness.html">Witness</a><code>[]</code></td><td>List of witnesses.</td></tr>
 </tbody></table>
 </div>
-<p>Given helper <code>len()</code> that returns the number of bytes of a field.
+<p>Given helper <code>max_gas()</code> returns the maximum gas that the transaction can use.
+Given helper <code>len()</code> that returns the number of bytes of a field.
 Given helper <code>count_ones()</code> that returns the number of ones in the binary representation of a field.
 Given helper <code>count_variants()</code> that returns the number of variants in an enum.
 Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
@@ -293,7 +294,7 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <li><code>scriptDataLength &gt; MAX_SCRIPT_DATA_LENGTH</code></li>
 <li><code>scriptLength * 4 != len(script)</code></li>
 <li><code>scriptDataLength != len(scriptData)</code></li>
-<li><code>gasLimit &gt; MAX_GAS_PER_TX</code></li>
+<li><code>max_gas(tx) &gt; MAX_GAS_PER_TX</code></li>
 <li>No policy of type <code>PolicyType.GasPrice</code></li>
 <li><code>count_ones(policyTypes) &gt; count_variants(PolicyType)</code></li>
 <li><code>policyTypes &gt; sum_variants(PolicyType)</code></li>
@@ -322,7 +323,8 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <tr><td><code>witnesses</code></td><td><a href="tx-format/./witness.html">Witness</a><code>[]</code></td><td>List of witnesses.</td></tr>
 </tbody></table>
 </div>
-<p>Given helper <code>count_ones()</code> that returns the number of ones in the binary representation of a field.
+<p>Given helper <code>max_gas()</code> returns the maximum gas that the transaction can use.
+Given helper <code>count_ones()</code> that returns the number of ones in the binary representation of a field.
 Given helper <code>count_variants()</code> that returns the number of variants in an enum.
 Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <p>Transaction is invalid if:</p>
@@ -338,6 +340,7 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <li>The keys of <code>storageSlots</code> are not in ascending lexicographic order</li>
 <li>The computed contract ID (see below) is not equal to the <code>contractID</code> of the one <code>OutputType.ContractCreated</code> output</li>
 <li><code>storageSlotsCount &gt; MAX_STORAGE_SLOTS</code></li>
+<li><code>max_gas(tx) &gt; MAX_GAS_PER_TX</code></li>
 <li>The <a href="tx-format/../protocol/cryptographic-primitives.html#sparse-merkle-tree">Sparse Merkle tree</a> root of <code>storageSlots</code> is not equal to the <code>stateRoot</code> of the one <code>OutputType.ContractCreated</code> output</li>
 <li>No policy of type <code>PolicyType.GasPrice</code></li>
 <li><code>count_ones(policyTypes) &gt; count_variants(PolicyType)</code></li>
@@ -820,7 +823,7 @@ def unavailable_balance(tx, asset_id) -&gt; int:
     return sentBalance
 
 def fee_balance(tx, asset_id) -&gt; int:
-    gas = tx.gasLimit + sum_predicate_gas_used(tx)
+    gas = tx.scriptGasLimit + sum_predicate_gas_used(tx)
     gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
     bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
     # Total fee balance
@@ -867,7 +870,7 @@ messageBalance = sum_data_messages(tx, 0)
 <li>The unspent free balance <code>unspentBalance</code> for each asset ID.</li>
 <li>The unspent gas <code>unspentGas</code> from the <code>$ggas</code> register.</li>
 </ol>
-<p>The fees incurred for a transaction are <code>ceiling(((size(tx) * GAS_PER_BYTE) + (tx.gasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)</code>.</p>
+<p>The fees incurred for a transaction are <code>ceiling(((size(tx) * GAS_PER_BYTE) + (tx.scriptGasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)</code>.</p>
 <p><code>size(tx)</code> includes the entire transaction serialized according to the transaction format, including witness data.
 This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.</p>
 <p>If the transaction as included in a block does not match this final transaction, the block is invalid.</p>
@@ -2630,7 +2633,7 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <p>The VM is <a href="fuel-vm/index.html#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the transaction's script bytecode.</li>
-<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code>.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.scriptGasLimit</code>.</li>
 </ol>
 <p>Following initialization, execution begins.</p>
 <p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="fuel-vm/./instruction-set.html#rvrt-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
@@ -4851,7 +4854,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>Get <a href="fuel-vm/../tx-format/transaction.html">fields from the transaction</a>.</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th><code>imm</code></th><th>set <code>$rA</code> to</th></tr></thead><tbody>
 <tr><td><code>GTF_TYPE</code></td><td><code>0x001</code></td><td><code>tx.type</code></td></tr>
-<tr><td><code>GTF_SCRIPT_GAS_LIMIT</code></td><td><code>0x002</code></td><td><code>tx.gasLimit</code></td></tr>
+<tr><td><code>GTF_SCRIPT_GAS_LIMIT</code></td><td><code>0x002</code></td><td><code>tx.scriptGasLimit</code></td></tr>
 <tr><td><code>GTF_SCRIPT_SCRIPT_LENGTH</code></td><td><code>0x003</code></td><td><code>tx.scriptLength</code></td></tr>
 <tr><td><code>GTF_SCRIPT_SCRIPT_DATA_LENGTH</code></td><td><code>0x004</code></td><td><code>tx.scriptDataLength</code></td></tr>
 <tr><td><code>GTF_SCRIPT_INPUTS_COUNT</code></td><td><code>0x005</code></td><td><code>tx.inputsCount</code></td></tr>
@@ -4917,12 +4920,11 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT</code></td><td><code>0x308</code></td><td>Memory address of <code>tx.outputs[$rB].stateRoot</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA_LENGTH</code></td><td><code>0x400</code></td><td><code>tx.witnesses[$rB].dataLength</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA</code></td><td><code>0x401</code></td><td>Memory address of <code>tx.witnesses[$rB].data</code></td></tr>
-<tr><td><code>GTF_POLICY_COUNT</code></td><td><code>0x500</code></td><td><code>count_ones(tx.policyTypes)</code></td></tr>
-<tr><td><code>GTF_POLICY_TYPE</code></td><td><code>0x501</code></td><td><code>tx.policies[$rB].type</code></td></tr>
-<tr><td><code>GTF_POLICY_GAS_PRICE</code></td><td><code>0x502</code></td><td><code>tx.policies[0x00].gasPrice</code></td></tr>
-<tr><td><code>GTF_POLICY_WITNESS_LIMIT</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b11 &amp; tx.policyTypes) - 1].witnessLimit</code></td></tr>
-<tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x505</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
-<tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x506</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>
+<tr><td><code>GTF_POLICY_TYPES</code></td><td><code>0x500</code></td><td><code>tx.policies.policyTypes</code></td></tr>
+<tr><td><code>GTF_POLICY_GAS_PRICE</code></td><td><code>0x501</code></td><td><code>tx.policies[0x00].gasPrice</code></td></tr>
+<tr><td><code>GTF_POLICY_WITNESS_LIMIT</code></td><td><code>0x502</code></td><td><code>tx.policies[count_ones(0b11 &amp; tx.policyTypes) - 1].witnessLimit</code></td></tr>
+<tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x503</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
+<tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>

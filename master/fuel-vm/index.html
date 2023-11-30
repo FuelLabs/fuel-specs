@@ -260,7 +260,7 @@
 <p>The VM is <a href="#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the transaction's script bytecode.</li>
-<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.gasLimit</code>.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to <code>tx.scriptGasLimit</code>.</li>
 </ol>
 <p>Following initialization, execution begins.</p>
 <p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="./instruction-set.html#rvrt-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
