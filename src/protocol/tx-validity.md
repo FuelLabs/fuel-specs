@@ -167,17 +167,18 @@ def metadata_gas_fees(tx) -> int:
     if tx.type == TransactionType.Create:
         for output in tx.outputs:
             if output.type == OutputType.OutputContractCreated:
-                # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
+                # add intrinsic cost of calculating the code root based on the size of the contract bytecode
                 total += contract_code_root_gas_fee(tx.witnesses[tx.bytecode_witness_index].data_length)
-                # add intrinsic cost of initializing contract storage
+                # add intrinsic cost of calculating the state root based on the number of sotrage slots
                 total += contract_state_root_gas_fee(tx.storage_slot_count)
-                # add intrinsic cost of calculating the contract id
-                total += sha256_gas_fee(96)
+                # add intrinsic cost of calculating the contract id 
+                # size = 4 byte seed + 32 byte salt + 32 byte code root + 32 byte state root
+                total += sha256_gas_fee(100)
                 # add intrinsic cost of calculating the transaction id
                 total += sha256_gas_fee(size(tx))
     elif tx.type == TransactionType.Script:
         # add intrinsic cost of calculating the transaction id
-        total += sha256(size(tx))
+        total += sha256_gas_fee(size(tx))
     return total
 
 
