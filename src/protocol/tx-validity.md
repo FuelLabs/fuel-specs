@@ -33,9 +33,9 @@ Read-only access list:
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](../tx-format/input.md#inputcoin)
-  - The [UTXO ID](../identifiers/utxo-id.md) `(txID, outputIndex)`
+  - The [UTXO ID](../identifiers/utxo-id.md) `(tx_id, output_index)`
 - For each [input `InputType.Contract`](../tx-format/input.md#inputcontract)
-  - The [UTXO ID](../identifiers/utxo-id.md) `(txID, outputIndex)`
+  - The [UTXO ID](../identifiers/utxo-id.md) `(tx_id, output_index)`
 - For each [input `InputType.Message`](../tx-format/input.md#inputmessage)
   - The [message ID](../identifiers/utxo-id.md#message-id) `messageID`
 
@@ -46,7 +46,7 @@ Write-create access list:
 - For each output
   - The [created UTXO ID](../identifiers/utxo-id.md)
 
-Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](../tx-format/input.md#inputcontract) and [`OutputType.Contract`](../tx-format/output.md#outputcontract) rather than the pair of `txID` and `outputIndex`.
+Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](../tx-format/input.md#inputcontract) and [`OutputType.Contract`](../tx-format/output.md#outputcontract) rather than the pair of `tx_id` and `output_index`.
 
 ## VM Precondition Validity Rules
 
@@ -54,7 +54,7 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
-> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
+> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.data_length > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
 
 ### Base Sanity Checks
 
@@ -71,12 +71,12 @@ for input in tx.inputs:
         if not input.nonce in messages:
                 return False
     else:
-        if not (input.txID, input.outputIndex) in state:
+        if not (input.tx_id, input.output_index) in state:
             return False
 return True
 ```
 
-If this check passes, the UTXO ID `(txID, outputIndex)` fields of each contract input is set to the UTXO ID of the respective contract. The `txPointer` of each input is also set to the TX pointer of the UTXO with ID `utxoID`.
+If this check passes, the UTXO ID `(tx_id, output_index)` fields of each contract input is set to the UTXO ID of the respective contract. The `txPointer` of each input is also set to the TX pointer of the UTXO with ID `utxoID`.
 
 ### Sufficient Balance
 
@@ -87,7 +87,7 @@ def gas_to_fee(gas, gas_price) -> int:
     """
     Converts gas units into a fee amount
     """
-    return gas * gas_price / GAS_PRICE_FACTOR
+    return ceil(gas * gas_price / GAS_PRICE_FACTOR)
 
 
 def sum_data_messages(tx, asset_id) -> int:
@@ -97,7 +97,7 @@ def sum_data_messages(tx, asset_id) -> int:
     total: int = 0
     if asset_id == 0:
         for input in tx.inputs:
-            if input.type == InputType.Message and input.dataLength > 0:
+            if input.type == InputType.Message and input.data_length > 0:
                 total += input.amount
     return total
 
@@ -107,22 +107,12 @@ def sum_inputs(tx, asset_id) -> int:
     for input in tx.inputs:
         if input.type == InputType.Coin and input.asset_id == asset_id:
             total += input.amount
-        elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
+        elif input.type == InputType.Message and asset_id == 0 and input.data_length == 0:
             total += input.amount
     return total
 
 
-def sum_predicate_gas_used(tx) -> int:
-    total: int = 0
-    for input in tx.inputs:
-        if input.type == InputType.Coin:
-            total += input.predicateGasUsed
-        elif input.type == InputType.Message:
-            total += input.predicateGasUsed
-    return total
-
-    
-def sum_tx_bytes_gas_used(tx) -> int:
+def transaction_size_gas_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of a transaction based on size in bytes
     """
@@ -146,60 +136,61 @@ def sum_outputs(tx, asset_id) -> int:
     return total
 
 
-def sum_input_intrinsic_fees(tx) -> int:
+def input_gas_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of verifying input utxos
     """
     total: int = 0
     witness_indices = set(())
     for input in tx.inputs:
-        # add fees required to read utxo from state
-        total += state_read_fee()
         if input.type == InputType.Coin or input.type == InputType.Message:
-            # add fees required to remove coin or message from state
-            # note: this does not apply to contract inputs, as they are updated in place by the output
-            total += state_delete_fee()
             # add fees allocated for predicate execution
-            total += gas_to_fee(input.predicateGasUsed, tx.gasPrice)
-            if input.predicateLength == 0:
+            if input.predicate_length == 0:
                 # notate witness index if input is signed
-                witness_indices.add(input.witnessIndex)
+                witness_indices.add(input.witness_index)
             else:
-                # add intrinsic cost of predicate merkleization based on number of predicate bytes
-                total += contract_root_bytes_fee(input.predicateLength)
+                # add intrinsic gas cost of predicate merkleization based on number of predicate bytes
+                total += contract_code_root_gas_fee(input.predicate_length)
+                total += input.predicate_gas_used
                 # add intrinsic cost of vm initialization
-                total += vm_initialization_fee()
+                total += vm_initialization_gas_fee()
     # add intrinsic cost of verifying witness signatures
-    total += len(witness_indices) * eck1_recover_fee()
+    total += len(witness_indices) * eck1_recover_gas_fee()
     return total
 
 
-def sum_output_intrinsic_fees(tx) -> int:
+def metadata_gas_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of processing transaction outputs
     """
     total: int = 0
-    for output in tx.outputs:
-        # adds fees required to write new output to state
-        total += state_write_fee(size(output))
-        if output.type == OutputType.OutputContractCreated:
-            # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
-            total += contract_root_bytes_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
-            # add intrinsic cost of initializing contract storage
-            # note: smt_insert_fee may be dependent on the storage value if the protocol adopts dynamic sized slots
-            total += tx.storageSlotCount * smt_insert_fee()
+    if tx.type == TransactionType.Create:
+        for output in tx.outputs:
+            if output.type == OutputType.OutputContractCreated:
+                # add intrinsic cost of verifying the contract root based on the size of the contract bytecode
+                total += contract_code_root_gas_fee(tx.witnesses[tx.bytecode_witness_index].data_length)
+                # add intrinsic cost of initializing contract storage
+                total += contract_state_root_gas_fee(tx.storage_slot_count)
+                # add intrinsic cost of calculating the contract id
+                total += sha256_gas_fee(96)
+                # add intrinsic cost of calculating the transaction id
+                total += sha256_gas_fee(size(tx))
+    elif tx.type == TransactionType.Script:
+        # add intrinsic cost of calculating the transaction id
+        total += sha256(size(tx))
     return total
 
 
-def intrinsic_fees(tx) -> int:
+def intrinsic_gas_fees(tx) -> int:
     """
     Computes intrinsic costs for a transaction
     """
     fees: int = 0
     # add the cost of initializing a vm for the script
-    if tx.type == TransactionType.Script:
-        fees += vm_initialization_fee()
-    fees += sum_input_intrinsic_fees(tx) + sum_output_intrinsic_fees(tx)
+    if tx.type == TransactionType.Create or tx.type == TransactionType.Script:
+        fees += vm_initialization_gas_fee()
+        fees += metadata_gas_fees(tx)
+        fees += intrinsic_input_gas_fees(tx)
     return fees
 
 
@@ -207,7 +198,7 @@ def gas_balance(tx) -> int:
     """
     Computes the maximum amount of gas required to process a transaction.
     """
-    gas = tx.gasLimit + sum_predicate_gas_used(tx) + sum_tx_bytes_gas_used(tx) + intrinsic_fees(tx)
+    gas = tx.gasLimit + transaction_size_gas_fees(tx) + intrinsic_gas_fees(tx)
     return gas
 
 
@@ -217,7 +208,6 @@ def reserved_fee_balance(tx, asset_id) -> int:
     """
     gas_balance = gas_balance(tx)
     fee_balance = gas_to_fee(gas_balance, tx.gasPrice)
-    fee_balance =  ceil(fee_balance)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
         return fee_balance
@@ -256,12 +246,12 @@ def address_from(pubkey: bytes) -> bytes:
     return sha256(pubkey)[0:32]
 
 for input in tx.inputs:
-    if (input.type == InputType.Coin or input.type == InputType.Message) and input.predicateLength == 0:
+    if (input.type == InputType.Coin or input.type == InputType.Message) and input.predicate_length == 0:
         # ECDSA signatures must be 64 bytes
-        if tx.witnesses[input.witnessIndex].dataLength != 64:
+        if tx.witnesses[input.witness_index].data_length != 64:
             return False
         # Signature must be from owner
-        if address_from(ecrecover_k1(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
+        if address_from(ecrecover_k1(txhash(), tx.witnesses[input.witness_index].data)) != input.owner:
             return False
 return True
 ```
@@ -272,7 +262,7 @@ The transaction hash is computed as defined [here](../identifiers/transaction-id
 
 ## Predicate Verification
 
-For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../fuel-vm/index.md#predicate-verification).
+For each input of type `InputType.Coin` or `InputType.Message`, and `predicate_length > 0`, [verify its predicate](../fuel-vm/index.md#predicate-verification).
 
 ## Script Execution
 
