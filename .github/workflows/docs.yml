@@ -13,3 +13,4 @@ jobs:
     uses: FuelLabs/github-actions/.github/workflows/mdbook-docs.yml@master
     with:
       docs-src-path: 'src'
+      spellcheck-config-path: '.spellcheck.yml'

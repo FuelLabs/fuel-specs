@@ -1,6 +1,6 @@
 # Transaction Validity
 
-- [Transaction Lifecycle](#transaction-lifecycle)
+- [Transaction Life Cycle](#transaction-life-cycle)
 - [Access Lists](#access-lists)
 - [VM Precondition Validity Rules](#vm-precondition-validity-rules)
   - [Base Sanity Checks](#base-sanity-checks)
@@ -13,7 +13,7 @@
   - [Correct Change](#correct-change)
   - [State Changes](#state-changes)
 
-## Transaction Lifecycle
+## Transaction Life Cycle
 
 Once a transaction is seen, it goes through several stages of validation, in this order:
 
@@ -54,7 +54,7 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
-> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
+> **Note:** [`InputMessages`](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
 
 ### Base Sanity Checks
 

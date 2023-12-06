@@ -7,7 +7,7 @@
 - [Instruction Set](#instruction-set)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
-- [Predicate Estmation](#predicate-estimation)
+- [Predicate Estimation](#predicate-estimation)
 - [Predicate Verification](#predicate-verification)
 - [Script Execution](#script-execution)
 - [Call Frames](#call-frames)
@@ -45,12 +45,12 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x04` | `$ssp`   | stack start pointer | Memory address of bottom of current writable stack area.                         |
 | `0x05` | `$sp`    | stack pointer       | Memory address on top of current writable stack area (points to free memory).    |
 | `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                               |
-| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to used/oob memory). |
+| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to used/OOB memory). |
 | `0x08` | `$err`   | error               | Error codes for particular operations.                                           |
 | `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                          |
 | `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                    |
 | `0x0B` | `$bal`   | balance             | Received balance for this context.                                               |
-| `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                            |
+| `0x0C` | `$is`    | INSTRs start        | Pointer to the start of the currently-executing code.                            |
 | `0x0D` | `$ret`   | return value        | Return value or pointer.                                                         |
 | `0x0E` | `$retl`  | return length       | Return value length in bytes.                                                    |
 | `0x0F` | `$flag`  | flags               | Flags register.                                                                  |
@@ -104,7 +104,7 @@ There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimati
 
 ## Predicate Estimation
 
-For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoin.it/wiki/P2SH) rather than a [P2PKH](https://en.bitcoin.it/P2PKH) output.
+For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [`P2SH`](https://en.bitcoin.it/wiki/P2SH) rather than a [`P2PKH`](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -125,7 +125,7 @@ After successful execution, `predicateGasUsed` is set to `MAX_GAS_PER_PREDICATE 
 
 ## Predicate Verification
 
-For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoin.it/P2SH) rather than a [P2PKH](https://en.bitcoin.it/P2PKH) output.
+For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [`P2SH`](https://en.bitcoin.it/P2SH) rather than a [`P2PKH`](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 

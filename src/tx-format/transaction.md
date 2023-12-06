@@ -10,8 +10,8 @@ enum TransactionType : uint8 {
 
 | name   | type                                                                                                                            | description       |
 |--------|---------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| `type` | [TransactionType](#transaction)                                                                                                 | Transaction type. |
-| `data` | One of [TransactionScript](#transactionscript), [TransactionCreate](#transactioncreate), or [TransactionMint](#transactionmint) | Transaction data. |
+| `type` | [`TransactionType`](#transaction)                                                                                                 | Transaction type. |
+| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), or [`TransactionMint`](#transactionmint) | Transaction data. |
 
 Transaction is invalid if:
 
@@ -35,7 +35,7 @@ When serializing a transaction, fields are serialized as follows (with inner str
 
 When deserializing a transaction, the reverse is done. If there are insufficient bytes or too many bytes, the transaction is invalid.
 
-## TransactionScript
+## `TransactionScript`
 
 ```c++
 enum ReceiptType : uint8 {
@@ -67,7 +67,7 @@ enum ReceiptType : uint8 {
 | `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
 | `script`           | `byte[]`                    | Script to execute.                      |
 | `scriptData`       | `byte[]`                    | Script input data (parameters).         |
-| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by PolicyType. |
+| `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by `PolicyType`. |
 | `inputs`           | [Input](./input.md)`[]`     | List of inputs.                         |
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
@@ -99,7 +99,7 @@ Transaction is invalid if:
 
 The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. `0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
 
-## TransactionCreate
+## `TransactionCreate`
 
 | name                   | type                        | description                                       |
 |------------------------|-----------------------------|---------------------------------------------------|
@@ -144,16 +144,16 @@ Transaction is invalid if:
 
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
-## TransactionMint
+## `TransactionMint`
 
 The transaction is created by the block producer and is not signed. Since it is not usable outside of block creation or execution, all fields must be fully set upon creation without any zeroing.
 This means that the transaction ID must also include the correct `txPointer` value, not zeroed out.
 
 | name             | type                          | description                                          |
 |------------------|-------------------------------|------------------------------------------------------|
-| `txPointer`      | [TXPointer](./tx-pointer.md)  | The location of the `Mint` transaction in the block. |
-| `inputContract`  | [InputContract](./input.md)   | The contract utxo that assets are minted to.         |
-| `outputContract` | [OutputContract](./output.md) | The contract utxo that assets are being minted to.   |
+| `txPointer`      | [`TXPointer`](./tx-pointer.md)  | The location of the `Mint` transaction in the block. |
+| `inputContract`  | [`InputContract`](./input.md)   | The contract UTXO that assets are minted to.         |
+| `outputContract` | [`OutputContract`](./output.md) | The contract UTXO that assets are being minted to.   |
 | `mintAmount`     | `uint64`                      | The amount of funds minted.                          |
 | `mintAssetId`    | `byte[32]`                    | The asset IDs corresponding to the minted amount.    |
 

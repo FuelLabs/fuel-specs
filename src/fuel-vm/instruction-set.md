@@ -2,121 +2,121 @@
 
 - [Reading Guide](#reading-guide)
 - [Arithmetic/Logic (ALU) Instructions](#arithmeticlogic-alu-instructions)
-  - [ADD: Add](#add-add)
-  - [ADDI: Add immediate](#addi-add-immediate)
-  - [AND: AND](#and-and)
-  - [ANDI: AND immediate](#andi-and-immediate)
-  - [DIV: Divide](#div-divide)
-  - [DIVI: Divide immediate](#divi-divide-immediate)
-  - [EQ: Equals](#eq-equals)
-  - [EXP: Exponentiate](#exp-exponentiate)
-  - [EXPI: Exponentiate immediate](#expi-exponentiate-immediate)
-  - [GT: Greater than](#gt-greater-than)
-  - [LT: Less than](#lt-less-than)
-  - [MLOG: Math logarithm](#mlog-math-logarithm)
-  - [MOD: Modulus](#mod-modulus)
-  - [MODI: Modulus immediate](#modi-modulus-immediate)
-  - [MOVE: Move](#move-move)
-  - [MOVI: Move immediate](#movi-move-immediate)
-  - [MROO: Math root](#mroo-math-root)
-  - [MUL: Multiply](#mul-multiply)
-  - [MULI: Multiply immediate](#muli-multiply-immediate)
-  - [MLDV: Fused multiply-divide](#mldv-fused-multiply-divide)
-  - [NOOP: No operation](#noop-no-operation)
-  - [NOT: Invert](#not-invert)
-  - [OR: OR](#or-or)
-  - [ORI: OR immediate](#ori-or-immediate)
-  - [SLL: Shift left logical](#sll-shift-left-logical)
-  - [SLLI: Shift left logical immediate](#slli-shift-left-logical-immediate)
-  - [SRL: Shift right logical](#srl-shift-right-logical)
-  - [SRLI: Shift right logical immediate](#srli-shift-right-logical-immediate)
-  - [SUB: Subtract](#sub-subtract)
-  - [SUBI: Subtract immediate](#subi-subtract-immediate)
-  - [SUBI: Subtract immediate](#subi-subtract-immediate)
-  - [WDCM: 128-bit integer comparison](#wdcm-128-bit-integer-comparison)
-  - [WQCM: 256-bit integer comparison](#wqcm-256-bit-integer-comparison)
-  - [WDOP: Misc 128-bit integer operations](#wdop-misc-128-bit-integer-operations)
-  - [WQOP: Misc 256-bit integer operations](#wqop-misc-256-bit-integer-operations)
-  - [WDML: Multiply 128-bit integers](#wdml-multiply-128-bit-integers)
-  - [WQML: Multiply 256-bit integers](#wqml-multiply-256-bit-integers)
-  - [WDDV: 128-bit integer division](#wddv-128-bit-integer-division)
-  - [WQDV: 256-bit integer division](#wqdv-256-bit-integer-division)
-  - [WDMD: 128-bit integer fused multiply-divide](#wdmd-128-bit-integer-fused-multiply-divide)
-  - [WQMD: 256-bit integer fused multiply-divide](#wqmd-256-bit-integer-fused-multiply-divide)
-  - [WDAM: Modular 128-bit integer addition](#wdam-modular-128-bit-integer-addition)
-  - [WQAM: Modular 256-bit integer addition](#wqam-modular-256-bit-integer-addition)
-  - [WDMM: Modular 128-bit integer multiplication](#wdmm-modular-128-bit-integer-multiplication)
-  - [WQMM: Modular 256-bit integer multiplication](#wqmm-modular-256-bit-integer-multiplication)
-  - [XOR: XOR](#xor-xor)
-  - [XORI: XOR immediate](#xori-xor-immediate)
+  - [`ADD`: Add](#add-add)
+  - [`ADDI`: Add immediate](#addi-add-immediate)
+  - [`AND`: AND](#and-and)
+  - [`ANDI`: AND immediate](#andi-and-immediate)
+  - [`DIV`: Divide](#div-divide)
+  - [`DIVI`: Divide immediate](#divi-divide-immediate)
+  - [`EQ`: Equals](#eq-equals)
+  - [`EXP`: Exponentiate](#exp-exponentiate)
+  - [`EXPI`: Exponentiate immediate](#expi-exponentiate-immediate)
+  - [`GT`: Greater than](#gt-greater-than)
+  - [`LT`: Less than](#lt-less-than)
+  - [`MLOG`: Math logarithm](#mlog-math-logarithm)
+  - [`MOD`: Modulus](#mod-modulus)
+  - [`MODI`: Modulus immediate](#modi-modulus-immediate)
+  - [`MOVE`: Move](#move-move)
+  - [`MOVI`: Move immediate](#movi-move-immediate)
+  - [`MROO`: Math root](#mroo-math-root)
+  - [`MUL`: Multiply](#mul-multiply)
+  - [`MULI`: Multiply immediate](#muli-multiply-immediate)
+  - [`MLDV`: Fused multiply-divide](#mldv-fused-multiply-divide)
+  - [`NOOP`: No operation](#noop-no-operation)
+  - [`NOT`: Invert](#not-invert)
+  - [`OR`: OR](#or-or)
+  - [`ORI`: OR immediate](#ori-or-immediate)
+  - [`SLL`: Shift left logical](#sll-shift-left-logical)
+  - [`SLLI`: Shift left logical immediate](#slli-shift-left-logical-immediate)
+  - [`SRL`: Shift right logical](#srl-shift-right-logical)
+  - [`SRLI`: Shift right logical immediate](#srli-shift-right-logical-immediate)
+  - [`SUB`: Subtract](#sub-subtract)
+  - [`SUBI`: Subtract immediate](#subi-subtract-immediate)
+  - [`SUBI`: Subtract immediate](#subi-subtract-immediate)
+  - [`WDCM`: 128-bit integer comparison](#wdcm-128-bit-integer-comparison)
+  - [`WQCM`: 256-bit integer comparison](#wqcm-256-bit-integer-comparison)
+  - [`WDOP`: Misc 128-bit integer operations](#wdop-misc-128-bit-integer-operations)
+  - [`WQOP`: Misc 256-bit integer operations](#wqop-misc-256-bit-integer-operations)
+  - [`WDML`: Multiply 128-bit integers](#wdml-multiply-128-bit-integers)
+  - [`WQML`: Multiply 256-bit integers](#wqml-multiply-256-bit-integers)
+  - [`WDDV`: 128-bit integer division](#wddv-128-bit-integer-division)
+  - [`WQDV`: 256-bit integer division](#wqdv-256-bit-integer-division)
+  - [`WDMD`: 128-bit integer fused multiply-divide](#wdmd-128-bit-integer-fused-multiply-divide)
+  - [`WQMD`: 256-bit integer fused multiply-divide](#wqmd-256-bit-integer-fused-multiply-divide)
+  - [`WDAM`: Modular 128-bit integer addition](#wdam-modular-128-bit-integer-addition)
+  - [`WQAM`: Modular 256-bit integer addition](#wqam-modular-256-bit-integer-addition)
+  - [`WDMM`: Modular 128-bit integer multiplication](#wdmm-modular-128-bit-integer-multiplication)
+  - [`WQMM`: Modular 256-bit integer multiplication](#wqmm-modular-256-bit-integer-multiplication)
+  - [`XOR`: XOR](#xor-xor)
+  - [`XORI`: XOR immediate](#xori-xor-immediate)
 - [Control Flow Instructions](#control-flow-instructions)
-  - [JMP: Jump](#jmp-jump)
-  - [JI: Jump immediate](#ji-jump-immediate)
-  - [JNE: Jump if not equal](#jne-jump-if-not-equal)
-  - [JNEI: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
-  - [JNZI: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
-  - [JMPB: Jump relative backwards](#jmpb-jump-relative-backwards)
-  - [JMPF: Jump relative forwards](#jmpf-jump-relative-forwards)
-  - [JNZB: Jump if not zero relative backwards](#jnzb-jump-if-not-zero-relative-backwards)
-  - [JNZF: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
-  - [JNEB: Jump if not equal relative backwards](#jneb-jump-if-not-equal-relative-backwards)
-  - [JNEF: Jump if not equal relative forwards](#jnef-jump-if-not-equal-relative-forwards)
-  - [RET: Return from context](#ret-return-from-context)
+  - [`JMP`: Jump](#jmp-jump)
+  - [`JI`: Jump immediate](#ji-jump-immediate)
+  - [`JNE`: Jump if not equal](#jne-jump-if-not-equal)
+  - [`JNEI`: Jump if not equal immediate](#jnei-jump-if-not-equal-immediate)
+  - [`JNZI`: Jump if not zero immediate](#jnzi-jump-if-not-zero-immediate)
+  - [`JMPB`: Jump relative backwards](#jmpb-jump-relative-backwards)
+  - [`JMPF`: Jump relative forwards](#jmpf-jump-relative-forwards)
+  - [`JNZB`: Jump if not zero relative backwards](#jnzb-jump-if-not-zero-relative-backwards)
+  - [`JNZF`: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
+  - [`JNEB`: Jump if not equal relative backwards](#jneb-jump-if-not-equal-relative-backwards)
+  - [`JNEF`: Jump if not equal relative forwards](#jnef-jump-if-not-equal-relative-forwards)
+  - [`RET`: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
-  - [ALOC: Allocate memory](#aloc-allocate-memory)
-  - [CFE: Extend call frame](#cfe-extend-call-frame)
-  - [CFEI: Extend call frame immediate](#cfei-extend-call-frame-immediate)
-  - [CFS: Shrink call frame](#cfs-shrink-call-frame)
-  - [CFSI: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
-  - [LB: Load byte](#lb-load-byte)
-  - [LW: Load word](#lw-load-word)
-  - [MCL: Memory clear](#mcl-memory-clear)
-  - [MCLI: Memory clear immediate](#mcli-memory-clear-immediate)
-  - [MCP: Memory copy](#mcp-memory-copy)
-  - [MCPI: Memory copy immediate](#mcpi-memory-copy-immediate)
-  - [MEQ: Memory equality](#meq-memory-equality)
-  - [POPH: Pop a set of high registers from stack](#poph-pop-a-set-of-high-registers-from-stack)
-  - [POPL: Pop a set of low registers from stack](#popl-pop-a-set-of-low-registers-from-stack)
-  - [PSHH: Push a set of high registers to stack](#pshh-push-a-set-of-high-registers-to-stack)
-  - [PSHL: Push a set of low registers to stack](#pshl-push-a-set-of-low-registers-to-stack)
-  - [SB: Store byte](#sb-store-byte)
-  - [SW: Store word](#sw-store-word)
+  - [`ALOC`: Allocate memory](#aloc-allocate-memory)
+  - [`CFE`: Extend call frame](#cfe-extend-call-frame)
+  - [`CFEI`: Extend call frame immediate](#cfei-extend-call-frame-immediate)
+  - [`CFS`: Shrink call frame](#cfs-shrink-call-frame)
+  - [`CFSI`: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
+  - [`LB`: Load byte](#lb-load-byte)
+  - [`LW`: Load word](#lw-load-word)
+  - [`MCL`: Memory clear](#mcl-memory-clear)
+  - [`MCLI`: Memory clear immediate](#mcli-memory-clear-immediate)
+  - [`MCP`: Memory copy](#mcp-memory-copy)
+  - [`MCPI`: Memory copy immediate](#mcpi-memory-copy-immediate)
+  - [`MEQ`: Memory equality](#meq-memory-equality)
+  - [`POPH`: Pop a set of high registers from stack](#poph-pop-a-set-of-high-registers-from-stack)
+  - [`POPL`: Pop a set of low registers from stack](#popl-pop-a-set-of-low-registers-from-stack)
+  - [`PSHH`: Push a set of high registers to stack](#pshh-push-a-set-of-high-registers-to-stack)
+  - [`PSHL`: Push a set of low registers to stack](#pshl-push-a-set-of-low-registers-to-stack)
+  - [`SB`: Store byte](#sb-store-byte)
+  - [`SW`: Store word](#sw-store-word)
 - [Contract Instructions](#contract-instructions)
-  - [BAL: Balance of contract ID](#bal-balance-of-contract-id)
-  - [BHEI: Block height](#bhei-block-height)
-  - [BHSH: Block hash](#bhsh-block-hash)
-  - [BURN: Burn existing coins](#burn-burn-existing-coins)
-  - [CALL: Call contract](#call-call-contract)
-  - [CB: Coinbase contract id](#cb-coinbase-contract-id)
-  - [CCP: Code copy](#ccp-code-copy)
-  - [CROO: Code Merkle root](#croo-code-merkle-root)
-  - [CSIZ: Code size](#csiz-code-size)
-  - [LDC: Load code from an external contract](#ldc-load-code-from-an-external-contract)
-  - [LOG: Log event](#log-log-event)
-  - [LOGD: Log data event](#logd-log-data-event)
-  - [MINT: Mint new coins](#mint-mint-new-coins)
-  - [RETD: Return from context with data](#retd-return-from-context-with-data)
-  - [RVRT: Revert](#rvrt-revert)
-  - [SMO: Send message to output](#smo-send-message-out)
-  - [SCWQ: State clear sequential 32 byte slots](#scwq-state-clear-sequential-32-byte-slots)
-  - [SRW: State read word](#srw-state-read-word)
-  - [SRWQ: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
-  - [SWW: State write word](#sww-state-write-word)
-  - [SWWQ: State write sequential 32 byte slots](#swwq-state-write-sequential-32-byte-slots)
-  - [TIME: Timestamp at height](#time-timestamp-at-height)
-  - [TR: Transfer coins to contract](#tr-transfer-coins-to-contract)
-  - [TRO: Transfer coins to output](#tro-transfer-coins-to-output)
+  - [`BAL`: Balance of contract ID](#bal-balance-of-contract-id)
+  - [`BHEI`: Block height](#bhei-block-height)
+  - [`BHSH`: Block hash](#bhsh-block-hash)
+  - [`BURN`: Burn existing coins](#burn-burn-existing-coins)
+  - [`CALL`: Call contract](#call-call-contract)
+  - [`CB`: Coinbase contract id](#cb-coinbase-contract-id)
+  - [`CCP`: Code copy](#ccp-code-copy)
+  - [`CROO`: Code Merkle root](#croo-code-merkle-root)
+  - [`CSIZ`: Code size](#csiz-code-size)
+  - [`LDC`: Load code from an external contract](#ldc-load-code-from-an-external-contract)
+  - [`LOG`: Log event](#log-log-event)
+  - [`LOGD`: Log data event](#logd-log-data-event)
+  - [`MINT`: Mint new coins](#mint-mint-new-coins)
+  - [`RETD`: Return from context with data](#retd-return-from-context-with-data)
+  - [`RVRT`: Revert](#rvrt-revert)
+  - [`SMO`: Send message to output](#smo-send-message-out)
+  - [`SCWQ`: State clear sequential 32 byte slots](#scwq-state-clear-sequential-32-byte-slots)
+  - [`SRW`: State read word](#srw-state-read-word)
+  - [`SRWQ`: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
+  - [`SWW`: State write word](#sww-state-write-word)
+  - [`SWWQ`: State write sequential 32 byte slots](#swwq-state-write-sequential-32-byte-slots)
+  - [`TIME`: Timestamp at height](#time-timestamp-at-height)
+  - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
+  - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Cryptographic Instructions](#cryptographic-instructions)
-  - [ECK1: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
-  - [ECR1: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
-  - [ED19: edDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
-  - [K256: keccak-256](#k256-keccak-256)
-  - [S256: SHA-2-256](#s256-sha-2-256)
+  - [`ECK1`: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
+  - [`ECR1`: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
+  - [`ED19`: EdDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
+  - [`K256`: keccak-256](#k256-keccak-256)
+  - [`S256`: SHA-2-256](#s256-sha-2-256)
 - [Other Instructions](#other-instructions)
-  - [ECAL: Call external function](#ecal-call-external-function)
-  - [FLAG: Set flags](#flag-set-flags)
-  - [GM: Get metadata](#gm-get-metadata)
-  - [GTF: Get transaction fields](#gtf-get-transaction-fields)
+  - [`ECAL`: Call external function](#ecal-call-external-function)
+  - [`FLAG`: Set flags](#flag-set-flags)
+  - [`GM`: Get metadata](#gm-get-metadata)
+  - [`GTF`: Get transaction fields](#gtf-get-transaction-fields)
 
 ## Reading Guide
 
@@ -180,7 +180,7 @@ If an operation would overflow, so that the result doesn't fit into the target f
 Results below zero are also considered overflows. If the [`F_WRAPPING`](./index.md#flags) flag is set,
 instead `$of` is set to `true` or the overflowing part of the result, depending on the operation.
 
-### ADD: Add
+### `ADD`: Add
 
 |             |                        |
 |-------------|------------------------|
@@ -198,7 +198,7 @@ Panic if:
 
 `$err` is cleared.
 
-### ADDI: Add immediate
+### `ADDI`: Add immediate
 
 |             |                                         |
 |-------------|-----------------------------------------|
@@ -216,7 +216,7 @@ Panic if:
 
 `$err` is cleared.
 
-### AND: AND
+### `AND`: AND
 
 |             |                             |
 |-------------|-----------------------------|
@@ -232,7 +232,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### ANDI: AND immediate
+### `ANDI`: AND immediate
 
 |             |                                                 |
 |-------------|-------------------------------------------------|
@@ -250,7 +250,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### DIV: Divide
+### `DIV`: Divide
 
 |             |                         |
 |-------------|-------------------------|
@@ -270,7 +270,7 @@ Otherwise, `$err` is cleared.
 
 `$of` is cleared.
 
-### DIVI: Divide immediate
+### `DIVI`: Divide immediate
 
 |             |                                            |
 |-------------|--------------------------------------------|
@@ -290,7 +290,7 @@ Otherwise, `$err` is cleared.
 
 `$of` is cleared.
 
-### EQ: Equals
+### `EQ`: Equals
 
 |             |                                      |
 |-------------|--------------------------------------|
@@ -306,7 +306,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### EXP: Exponentiate
+### `EXP`: Exponentiate
 
 |             |                                              |
 |-------------|----------------------------------------------|
@@ -324,7 +324,7 @@ If the result cannot fit in 8 bytes, `$of` is set to `1` and `$rA` is instead se
 
 `$err` is cleared.
 
-### EXPI: Exponentiate immediate
+### `EXPI`: Exponentiate immediate
 
 |             |                                                         |
 |-------------|---------------------------------------------------------|
@@ -342,7 +342,7 @@ If the result cannot fit in 8 bytes, `$of` is set to `1` and `$rA` is instead se
 
 `$err` is cleared.
 
-### GT: Greater than
+### `GT`: Greater than
 
 |             |                                          |
 |-------------|------------------------------------------|
@@ -358,7 +358,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### LT: Less than
+### `LT`: Less than
 
 |             |                                       |
 |-------------|---------------------------------------|
@@ -374,7 +374,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### MLOG: Math logarithm
+### `MLOG`: Math logarithm
 
 |             |                                              |
 |-------------|----------------------------------------------|
@@ -394,7 +394,7 @@ If `$rC <= 1`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
-### MOD: Modulus
+### `MOD`: Modulus
 
 |             |                                    |
 |-------------|------------------------------------|
@@ -412,7 +412,7 @@ If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
-### MODI: Modulus immediate
+### `MODI`: Modulus immediate
 
 |             |                                                        |
 |-------------|--------------------------------------------------------|
@@ -430,7 +430,7 @@ If `imm == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
-### MOVE: Move
+### `MOVE`: Move
 
 |             |                                    |
 |-------------|------------------------------------|
@@ -446,7 +446,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### MOVI: Move immediate
+### `MOVI`: Move immediate
 
 |             |                                          |
 |-------------|------------------------------------------|
@@ -462,11 +462,11 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### MROO: Math root
+### `MROO`: Math root
 
 |             |                                              |
 |-------------|----------------------------------------------|
-| Description | The (integer) `$rC`th root of `$rB`.         |
+| Description | The (integer) `$rC`ᵗʰ root of `$rB`.         |
 | Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
 | Syntax      | `mroo $rA, $rB, $rC`                         |
 | Encoding    | `0x00 rA rB rC -`                            |
@@ -480,7 +480,7 @@ If `$rC == 0`, both `$rA` and `$of` are cleared and `$err` is set to `true`.
 
 Otherwise, `$of` and `$err` are cleared.
 
-### MUL: Multiply
+### `MUL`: Multiply
 
 |             |                           |
 |-------------|---------------------------|
@@ -498,7 +498,7 @@ Panic if:
 
 `$err` is cleared.
 
-### MULI: Multiply immediate
+### `MULI`: Multiply immediate
 
 |             |                                               |
 |-------------|-----------------------------------------------|
@@ -516,7 +516,7 @@ Panic if:
 
 `$err` is cleared.
 
-### MLDV: Fused multiply-divide
+### `MLDV`: Fused multiply-divide
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -532,7 +532,7 @@ If the result of after the division doesn't fit into a register, `$of` is assign
 
 `$err` is cleared.
 
-### NOOP: No operation
+### `NOOP`: No operation
 
 |             |                        |
 |-------------|------------------------|
@@ -544,7 +544,7 @@ If the result of after the division doesn't fit into a register, `$of` is assign
 
 `$of` and `$err` are cleared.
 
-### NOT: Invert
+### `NOT`: Invert
 
 |             |                         |
 |-------------|-------------------------|
@@ -560,7 +560,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### OR: OR
+### `OR`: OR
 
 |             |                            |
 |-------------|----------------------------|
@@ -576,7 +576,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### ORI: OR immediate
+### `ORI`: OR immediate
 
 |             |                                                |
 |-------------|------------------------------------------------|
@@ -594,7 +594,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### SLL: Shift left logical
+### `SLL`: Shift left logical
 
 |             |                                       |
 |-------------|---------------------------------------|
@@ -610,7 +610,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### SLLI: Shift left logical immediate
+### `SLLI`: Shift left logical immediate
 
 |             |                                               |
 |-------------|-----------------------------------------------|
@@ -626,7 +626,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### SRL: Shift right logical
+### `SRL`: Shift right logical
 
 |             |                                        |
 |-------------|----------------------------------------|
@@ -642,7 +642,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### SRLI: Shift right logical immediate
+### `SRLI`: Shift right logical immediate
 
 |             |                                                |
 |-------------|------------------------------------------------|
@@ -658,7 +658,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### SUB: Subtract
+### `SUB`: Subtract
 
 |             |                                                  |
 |-------------|--------------------------------------------------|
@@ -676,7 +676,7 @@ Panic if:
 
 `$err` is cleared.
 
-### SUBI: Subtract immediate
+### `SUBI`: Subtract immediate
 
 |             |                                                  |
 |-------------|--------------------------------------------------|
@@ -694,7 +694,7 @@ Panic if:
 
 `$err` is cleared.
 
-### WDCM: 128-bit integer comparison
+### `WDCM`: 128-bit integer comparison
 
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
@@ -710,19 +710,19 @@ Bits     | Short name | Description
 ---------|------------|-------------------------------------
 `...XXX` | `mode`     | Compare mode selection
 `.XX...` | `reserved` | Reserved and must be zero
-`X.....` | `indirect` | Is rhs operand ($rC) indirect or not
+`X.....` | `indirect` | Is rhs operand (`$rC`) indirect or not
 
 Then the actual operation that's performed:
 
 `mode` | Name | Description
 -------|------|-------------------------------------------------------------
-0      | eq   | Equality (`==`)
-1      | ne   | Inequality (`!=`)
-2      | lt   | Less than (`<`)
-3      | gt   | Greater than (`>`)
-4      | lte  | Less than or equals (`<=`)
-5      | gte  | Greater than or equals (`>=`)
-6      | lzc  | Leading zero count the lhs argument (`lzcnt`). Discards rhs.
+0      | `eq`   | Equality (`==`)
+1      | `ne`   | Inequality (`!=`)
+2      | `lt`   | Less than (`<`)
+3      | `gt`   | Greater than (`>`)
+4      | `lte`  | Less than or equals (`<=`)
+5      | `gte`  | Greater than or equals (`>=`)
+6      | `lzc`  | Leading zero count the lhs argument (`lzcnt`). Discards rhs.
 7      | -    | Reserved and must not be used
 
 The leading zero count can be used to compute rounded-down log2 of a number using the following formula `TOTAL_BITS - 1 - lzc(n)`. Note that `log2(0)` is undefined, and will lead to integer overflow with this method.
@@ -736,7 +736,7 @@ Panic if:
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
 
-### WQCM: 256-bit integer comparison
+### `WQCM`: 256-bit integer comparison
 
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
@@ -757,7 +757,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
 
-### WDOP: Misc 128-bit integer operations
+### `WDOP`: Misc 128-bit integer operations
 
 |             |                                                                                   |
 |-------------|-----------------------------------------------------------------------------------|
@@ -773,20 +773,20 @@ Bits     | Short name | Description
 ---------|------------|-------------------------------------
 `...XXX` | `op`       | Operation selection, see below
 `.XX...` | `reserved` | Reserved and must be zero
-`X.....` | `indirect` | Is rhs operand ($rC) indirect or not
+`X.....` | `indirect` | Is rhs operand (`$rC`) indirect or not
 
 Then the actual operation that's performed:
 
 `op` | Name | Description
 -----|------|---------------------------
-0    | add  | Add
-1    | sub  | Subtract
-2    | not  | Invert bits (discards rhs)
-3    | or   | Bitwise or
-4    | xor  | Bitwise exclusive or
-5    | and  | Bitwise and
-6    | shl  | Shift left (logical)
-7    | shr  | Shift right (logical)
+0    | `add`  | Add
+1    | `sub`  | Subtract
+2    | `not`  | Invert bits (discards rhs)
+3    | `or`   | Bitwise or
+4    | `xor`  | Bitwise exclusive or
+5    | `and`  | Bitwise and
+6    | `shl`  | Shift left (logical)
+7    | `shr`  | Shift right (logical)
 
 Operations behave `$of` and `$err` similarly to their 64-bit counterparts, except that `$of` is set to `1` instead of the overflowing part.
 
@@ -797,7 +797,7 @@ Panic if:
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
 
-### WQOP: Misc 256-bit integer operations
+### `WQOP`: Misc 256-bit integer operations
 
 |             |                                                                                   |
 |-------------|-----------------------------------------------------------------------------------|
@@ -818,7 +818,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
 
-### WDML: Multiply 128-bit integers
+### `WDML`: Multiply 128-bit integers
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
@@ -833,8 +833,8 @@ The six-bit immediate value is used to select operating mode, as follows:
 Bits     | Short name  | Description
 ---------|-------------|-------------------------------------
 `..XXXX` | `reserved`  | Reserved and must be zero
-`.X....` | `indirect0` | Is lhs operand ($rB) indirect or not
-`X.....` | `indirect1` | Is rhs operand ($rC) indirect or not
+`.X....` | `indirect0` | Is lhs operand (`$rB`) indirect or not
+`X.....` | `indirect1` | Is rhs operand (`$rC`) indirect or not
 
 `$of` is set to `1` in case of overflow, and cleared otherwise.
 
@@ -847,7 +847,7 @@ Panic if:
 - `indirect0 == 1` and `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect1 == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
 
-### WQML: Multiply 256-bit integers
+### `WQML`: Multiply 256-bit integers
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
@@ -870,7 +870,7 @@ Panic if:
 - `indirect0 == 1` and `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect1 == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
 
-### WDDV: 128-bit integer division
+### `WDDV`: 128-bit integer division
 
 |             |                                                                                 |
 |-------------|---------------------------------------------------------------------------------|
@@ -885,7 +885,7 @@ The six-bit immediate value is used to select operating mode, as follows:
 Bits     | Short name | Description
 ---------|------------|-------------------------------------
 `.XXXXX` | `reserved` | Reserved and must be zero
-`X.....` | `indirect` | Is rhs operand ($rC) indirect or not
+`X.....` | `indirect` | Is rhs operand (`$rC`) indirect or not
 
 `$of` is cleared.
 
@@ -898,7 +898,7 @@ Panic if:
 - `$rB + 16` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 16` overflows or `> VM_MAX_RAM`
 
-### WQDV: 256-bit integer division
+### `WQDV`: 256-bit integer division
 
 |             |                                                                                 |
 |-------------|---------------------------------------------------------------------------------|
@@ -921,7 +921,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `indirect == 1` and `$rC + 32` overflows or `> VM_MAX_RAM`
 
-### WDMD: 128-bit integer fused multiply-divide
+### `WDMD`: 128-bit integer fused multiply-divide
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
@@ -944,7 +944,7 @@ Panic if:
 - `$rC + 16` overflows or `> VM_MAX_RAM`
 - `$rD + 16` overflows or `> VM_MAX_RAM`
 
-### WQMD: 256-bit integer fused multiply-divide
+### `WQMD`: 256-bit integer fused multiply-divide
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
@@ -967,7 +967,7 @@ Panic if:
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$rD + 32` overflows or `> VM_MAX_RAM`
 
-### WDAM: Modular 128-bit integer addition
+### `WDAM`: Modular 128-bit integer addition
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -988,7 +988,7 @@ Panic if:
 - `$rC + 16` overflows or `> VM_MAX_RAM`
 - `$rD + 16` overflows or `> VM_MAX_RAM`
 
-### WQAM: Modular 256-bit integer addition
+### `WQAM`: Modular 256-bit integer addition
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -1009,7 +1009,7 @@ Panic if:
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$rD + 32` overflows or `> VM_MAX_RAM`
 
-### WDMM: Modular 128-bit integer multiplication
+### `WDMM`: Modular 128-bit integer multiplication
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -1030,7 +1030,7 @@ Panic if:
 - `$rC + 16` overflows or `> VM_MAX_RAM`
 - `$rD + 16` overflows or `> VM_MAX_RAM`
 
-### WQMM: Modular 256-bit integer multiplication
+### `WQMM`: Modular 256-bit integer multiplication
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -1051,7 +1051,7 @@ Panic if:
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$rD + 32` overflows or `> VM_MAX_RAM`
 
-### XOR: XOR
+### `XOR`: XOR
 
 |             |                             |
 |-------------|-----------------------------|
@@ -1067,7 +1067,7 @@ Panic if:
 
 `$of` and `$err` are cleared.
 
-### XORI: XOR immediate
+### `XORI`: XOR immediate
 
 |             |                                                 |
 |-------------|-------------------------------------------------|
@@ -1085,7 +1085,7 @@ Panic if:
 
 ## Control Flow Instructions
 
-### JMP: Jump
+### `JMP`: Jump
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
@@ -1099,7 +1099,7 @@ Panic if:
 
 - `$is + $rA * 4 > VM_MAX_RAM - 1`
 
-### JI: Jump immediate
+### `JI`: Jump immediate
 
 |             |                                                |
 |-------------|------------------------------------------------|
@@ -1113,7 +1113,7 @@ Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`
 
-### JNE: Jump if not equal
+### `JNE`: Jump if not equal
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -1127,7 +1127,7 @@ Panic if:
 
 - `$is + $rC * 4 > VM_MAX_RAM - 1` and the jump would be performed (i.e. `$rA != $rB`)
 
-### JNEI: Jump if not equal immediate
+### `JNEI`: Jump if not equal immediate
 
 |             |                                                                                      |
 |-------------|--------------------------------------------------------------------------------------|
@@ -1141,7 +1141,7 @@ Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1` and the jump would be performed (i.e. `$rA != $rB`)
 
-### JNZI: Jump if not zero immediate
+### `JNZI`: Jump if not zero immediate
 
 |             |                                                                                        |
 |-------------|----------------------------------------------------------------------------------------|
@@ -1155,7 +1155,7 @@ Panic if:
 
 - `$is + imm * 4 > VM_MAX_RAM - 1`and the jump would be performed (i.e. `$rA != $zero`)
 
-### JMPB: Jump relative backwards
+### `JMPB`: Jump relative backwards
 
 |             |                                          |
 |-------------|------------------------------------------|
@@ -1169,7 +1169,7 @@ Panic if:
 
 - `$pc - ($rA + imm + 1) * 4 < 0`
 
-### JMPF: Jump relative forwards
+### `JMPF`: Jump relative forwards
 
 |             |                                        |
 |-------------|----------------------------------------|
@@ -1183,7 +1183,7 @@ Panic if:
 
 - `$pc + ($rA + imm + 1) * 4 > VM_MAX_RAM - 1`
 
-### JNZB: Jump if not zero relative backwards
+### `JNZB`: Jump if not zero relative backwards
 
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
@@ -1197,7 +1197,7 @@ Panic if:
 
 - `$pc - ($rB + imm + 1) * 4 < 0`
 
-### JNZF: Jump if not zero relative forwards
+### `JNZF`: Jump if not zero relative forwards
 
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
@@ -1211,7 +1211,7 @@ Panic if:
 
 - `$pc + ($rB + imm + 1) * 4 > VM_MAX_RAM - 1`
 
-### JNEB: Jump if not equal relative backwards
+### `JNEB`: Jump if not equal relative backwards
 
 |             |                                                                             |
 |-------------|-----------------------------------------------------------------------------|
@@ -1225,7 +1225,7 @@ Panic if:
 
 - `$pc - ($rC + imm + 1) * 4 < 0`
 
-### JNEF: Jump if not equal relative forwards
+### `JNEF`: Jump if not equal relative forwards
 
 |             |                                                                             |
 |-------------|-----------------------------------------------------------------------------|
@@ -1239,7 +1239,7 @@ Panic if:
 
 - `$pc + ($rC + imm + 1) * 4 > VM_MAX_RAM - 1`
 
-### RET: Return from context
+### `RET`: Return from context
 
 |             |                                                               |
 |-------------|---------------------------------------------------------------|
@@ -1288,7 +1288,7 @@ Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$r
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ALOC: Allocate memory
+### `ALOC`: Allocate memory
 
 |             |                                           |
 |-------------|-------------------------------------------|
@@ -1303,7 +1303,7 @@ Panic if:
 - `$hp - $rA` underflows
 - `$hp - $rA < $sp`
 
-### CFE: Extend call frame
+### `CFE`: Extend call frame
 
 |             |                                        |
 |-------------|----------------------------------------|
@@ -1318,7 +1318,7 @@ Panic if:
 - `$sp + $rA` overflows
 - `$sp + $rA > $hp`
 
-### CFEI: Extend call frame immediate
+### `CFEI`: Extend call frame immediate
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
@@ -1333,7 +1333,7 @@ Panic if:
 - `$sp + imm` overflows
 - `$sp + imm > $hp`
 
-### CFS: Shrink call frame
+### `CFS`: Shrink call frame
 
 |             |                                        |
 |-------------|----------------------------------------|
@@ -1348,7 +1348,7 @@ Panic if:
 - `$sp - $rA` underflows
 - `$sp - $rA < $ssp`
 
-### CFSI: Shrink call frame immediate
+### `CFSI`: Shrink call frame immediate
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
@@ -1363,7 +1363,7 @@ Panic if:
 - `$sp - imm` underflows
 - `$sp - imm < $ssp`
 
-### LB: Load byte
+### `LB`: Load byte
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
@@ -1379,7 +1379,7 @@ Panic if:
 - `$rB + imm + 1` overflows
 - `$rB + imm + 1 > VM_MAX_RAM`
 
-### LW: Load word
+### `LW`: Load word
 
 |             |                                                              |
 |-------------|--------------------------------------------------------------|
@@ -1395,7 +1395,7 @@ Panic if:
 - `$rB + (imm * 8) + 8` overflows
 - `$rB + (imm * 8) + 8 > VM_MAX_RAM`
 
-### MCL: Memory clear
+### `MCL`: Memory clear
 
 |             |                          |
 |-------------|--------------------------|
@@ -1411,7 +1411,7 @@ Panic if:
 - `$rA + $rB > VM_MAX_RAM`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./index.md#ownership)
 
-### MCLI: Memory clear immediate
+### `MCLI`: Memory clear immediate
 
 |             |                          |
 |-------------|--------------------------|
@@ -1427,7 +1427,7 @@ Panic if:
 - `$rA + imm > VM_MAX_RAM`
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
-### MCP: Memory copy
+### `MCP`: Memory copy
 
 |             |                                      |
 |-------------|--------------------------------------|
@@ -1446,7 +1446,7 @@ Panic if:
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./index.md#ownership)
 
-### MCPI: Memory copy immediate
+### `MCPI`: Memory copy immediate
 
 |             |                                      |
 |-------------|--------------------------------------|
@@ -1465,7 +1465,7 @@ Panic if:
 - The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
-### MEQ: Memory equality
+### `MEQ`: Memory equality
 
 |             |                                             |
 |-------------|---------------------------------------------|
@@ -1483,7 +1483,7 @@ Panic if:
 - `$rB + $rD > VM_MAX_RAM`
 - `$rC + $rD > VM_MAX_RAM`
 
-### PSHH: Push a set of high registers to stack
+### `PSHH`: Push a set of high registers to stack
 
 |             |                                                                                   |
 |-------------|-----------------------------------------------------------------------------------|
@@ -1498,7 +1498,7 @@ Panic if:
 - `$sp + popcnt(imm)*8` overflows
 - `$sp + popcnt(imm)*8 > $hp`
 
-### PSHL: Push a set of low registers to stack
+### `PSHL`: Push a set of low registers to stack
 
 |             |                                                                                   |
 |-------------|-----------------------------------------------------------------------------------|
@@ -1513,7 +1513,7 @@ Panic if:
 - `$sp + popcnt(imm)*8` overflows
 - `$sp + popcnt(imm)*8 > $hp`
 
-### POPH: Pop a set of high registers from stack
+### `POPH`: Pop a set of high registers from stack
 
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
@@ -1528,7 +1528,7 @@ Panic if:
 - `$sp - popcnt(imm)*8` overflows
 - `$sp - popcnt(imm)*8 < $ssp`
 
-### POPL: Pop a set of low registers from stack
+### `POPL`: Pop a set of low registers from stack
 
 |             |                                                                                       |
 |-------------|---------------------------------------------------------------------------------------|
@@ -1543,7 +1543,7 @@ Panic if:
 - `$sp - popcnt(imm)*8` overflows
 - `$sp - popcnt(imm)*8 < $ssp`
 
-### SB: Store byte
+### `SB`: Store byte
 
 |             |                                                                                     |
 |-------------|-------------------------------------------------------------------------------------|
@@ -1559,7 +1559,7 @@ Panic if:
 - `$rA + imm + 1 > VM_MAX_RAM`
 - The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./index.md#ownership)
 
-### SW: Store word
+### `SW`: Store word
 
 |             |                                                                    |
 |-------------|--------------------------------------------------------------------|
@@ -1577,9 +1577,9 @@ Panic if:
 
 ## Contract Instructions
 
-All these instructions advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [RETD](#retd-return-from-context-with-data) and [RVRT](#rvrt-revert).
+All these instructions advance the program counter `$pc` by `4` after performing their operation, except for [CALL](#call-call-contract), [`RETD`](#retd-return-from-context-with-data) and [`RVRT`](#rvrt-revert).
 
-### BAL: Balance of contract ID
+### `BAL`: Balance of contract ID
 
 |             |                                                                              |
 |-------------|------------------------------------------------------------------------------|
@@ -1601,7 +1601,7 @@ Panic if:
 - `$rC + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
 
-### BHEI: Block height
+### `BHEI`: Block height
 
 |             |                            |
 |-------------|----------------------------|
@@ -1615,7 +1615,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
 
-### BHSH: Block hash
+### `BHSH`: Block hash
 
 |             |                                      |
 |-------------|--------------------------------------|
@@ -1633,7 +1633,7 @@ Panic if:
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (```0x00**32```).
 
-### BURN: Burn existing coins
+### `BURN`: Burn existing coins
 
 |             |                                                             |
 |-------------|-------------------------------------------------------------|
@@ -1655,7 +1655,7 @@ For output with contract ID `MEM[$fp, 32]`, decrease balance of asset ID `constr
 
 This modifies the `balanceRoot` field of the appropriate output.
 
-Append a receipt to the list of receipts, modifying tx.receiptsRoot:
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name          | type          | description                                |
 |---------------|---------------|--------------------------------------------|
@@ -1666,7 +1666,7 @@ Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 | `pc`          | `uint64`      | Value of register `$pc`.                   |
 | `is`          | `uint64`      | Value of register `$is`.                   |
 
-### CALL: Call contract
+### `CALL`: Call contract
 
 |             |                        |
 |-------------|------------------------|
@@ -1725,7 +1725,7 @@ A [call frame](./index.md#call-frames) is pushed at `$sp`. In addition to fillin
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### CB: Coinbase contract id
+### `CB`: Coinbase contract id
 
 |             |                                                                                                                     |
 |-------------|---------------------------------------------------------------------------------------------------------------------|
@@ -1741,7 +1741,7 @@ Panic if:
 - `$rA + 32 > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
-### CCP: Code copy
+### `CCP`: Code copy
 
 |             |                                                                                                                                                  |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1763,7 +1763,7 @@ Panic if:
 - The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./index.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### CROO: Code Merkle root
+### `CROO`: Code Merkle root
 
 |             |                                                                                                                                       |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -1784,7 +1784,7 @@ Panic if:
 
 Code root computation is defined [here](../identifiers/contract-id.md).
 
-### CSIZ: Code size
+### `CSIZ`: Code size
 
 |             |                                                                                                           |
 |-------------|-----------------------------------------------------------------------------------------------------------|
@@ -1801,7 +1801,7 @@ Panic if:
 - `$rB + 32 > VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### LDC: Load code from an external contract
+### `LDC`: Load code from an external contract
 
 |             |                                                                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1825,7 +1825,7 @@ Increment `$fp->codesize`, `$ssp` by `$rC` padded to word alignment. Then set `$
 
 This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
 
-### LOG: Log event
+### `LOG`: Log event
 
 |             |                                |
 |-------------|--------------------------------|
@@ -1848,7 +1848,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-### LOGD: Log data event
+### `LOGD`: Log data event
 
 |             |                                 |
 |-------------|---------------------------------|
@@ -1879,7 +1879,7 @@ Panics if:
 - `$rC + $rD` overflows
 - `$rA + $rD > VM_MAX_RAM`
 
-### MINT: Mint new coins
+### `MINT`: Mint new coins
 
 |             |                                                             |
 |-------------|-------------------------------------------------------------|
@@ -1901,7 +1901,7 @@ For output with contract ID `MEM[$fp, 32]`, increase balance of asset ID `constr
 
 This modifies the `balanceRoot` field of the appropriate output.
 
-Append a receipt to the list of receipts, modifying tx.receiptsRoot:
+Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 | name          | type          | description                                |
 |---------------|---------------|--------------------------------------------|
@@ -1912,7 +1912,7 @@ Append a receipt to the list of receipts, modifying tx.receiptsRoot:
 | `pc`          | `uint64`      | Value of register `$pc`.                   |
 | `is`          | `uint64`      | Value of register `$is`.                   |
 
-### RETD: Return from context with data
+### `RETD`: Return from context with data
 
 |             |                                                                         |
 |-------------|-------------------------------------------------------------------------|
@@ -1964,7 +1964,7 @@ Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$r
 
 1. `$pc = $pc + 4` (advance program counter from where we called)
 
-### RVRT: Revert
+### `RVRT`: Revert
 
 |             |                                                                       |
 |-------------|-----------------------------------------------------------------------|
@@ -1994,10 +1994,10 @@ Then append an additional receipt to the list of receipts, modifying `tx.receipt
 
 Cease VM execution and revert script effects. After a revert:
 
-1. All [OutputContract](../tx-format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
-1. All [OutputVariable](../tx-format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
+1. All [`OutputContract`](../tx-format/output.md#outputcontract) outputs will have the same `balanceRoot` and `stateRoot` as on initialization.
+1. All [`OutputVariable`](../tx-format/output.md#outputvariable) outputs will have `to`, `amount`, and `asset_id` of zero.
 
-### SMO: Send message out
+### `SMO`: Send message out
 
 |             |                                                                                                                                                               |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2034,7 +2034,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. This modifies the `balanceRoot` field of the appropriate contract that had its' funds deducted.
 
-### SCWQ: State clear sequential 32 byte slots
+### `SCWQ`: State clear sequential 32 byte slots
 
 |             |                                                                               |
 |-------------|-------------------------------------------------------------------------------|
@@ -2053,7 +2053,7 @@ Panic if:
 
 Register `$rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
 
-### SRW: State read word
+### `SRW`: State read word
 
 |             |                                                   |
 |-------------|---------------------------------------------------|
@@ -2074,7 +2074,7 @@ Panic if:
 
 Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
 
-### SRWQ: State read sequential 32 byte slots
+### `SRWQ`: State read sequential 32 byte slots
 
 |             |                                                                            |
 |-------------|----------------------------------------------------------------------------|
@@ -2097,7 +2097,7 @@ Panic if:
 
 Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots are set.
 
-### SWW: State write word
+### `SWW`: State write word
 
 |             |                                                                                 |
 |-------------|---------------------------------------------------------------------------------|
@@ -2115,9 +2115,9 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
-The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to the number of new slots written, i.e. `1` if the slot was previously unset, and `0` if it alreaady contained a value.
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to the number of new slots written, i.e. `1` if the slot was previously unset, and `0` if it already contained a value.
 
-### SWWQ: State write sequential 32 byte slots
+### `SWWQ`: State write sequential 32 byte slots
 
 |             |                                                                             |
 |-------------|-----------------------------------------------------------------------------|
@@ -2139,7 +2139,7 @@ Panic if:
 
 Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
 
-### TIME: Timestamp at height
+### `TIME`: Timestamp at height
 
 |             |                                         |
 |-------------|-----------------------------------------|
@@ -2156,7 +2156,7 @@ Panic if:
 
 Gets the timestamp of the block at height `$rB`. Time is in [TAI64](https://cr.yp.to/libtai/tai64.html) format.
 
-### TR: Transfer coins to contract
+### `TR`: Transfer coins to contract
 
 |             |                                                                           |
 |-------------|---------------------------------------------------------------------------|
@@ -2196,7 +2196,7 @@ For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$r
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
-### TRO: Transfer coins to output
+### `TRO`: Transfer coins to output
 
 |             |                                                                                     |
 |-------------|-------------------------------------------------------------------------------------|
@@ -2246,7 +2246,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ECK1: Secp256k1 signature recovery
+### `ECK1`: Secp256k1 signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
@@ -2272,7 +2272,7 @@ If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is 
 
 To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
 
-### ECR1: Secp256r1 signature recovery
+### `ECR1`: Secp256r1 signature recovery
 
 |             |                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------|
@@ -2298,7 +2298,7 @@ If the signature cannot be verified, `MEM[$rA, 64]` is set to `0` and `$err` is 
 
 To get the address from the public key, hash the public key with [SHA-2-256](../protocol/cryptographic-primitives.md#hashing).
 
-### ED19: edDSA curve25519 verification
+### `ED19`: EdDSA curve25519 verification
 
 |             |                                                                                                                                                     |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2321,7 +2321,7 @@ Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
-### K256: keccak-256
+### `K256`: keccak-256
 
 |             |                                                       |
 |-------------|-------------------------------------------------------|
@@ -2339,7 +2339,7 @@ Panic if:
 - `$rB + $rC > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
-### S256: SHA-2-256
+### `S256`: SHA-2-256
 
 |             |                                                      |
 |-------------|------------------------------------------------------|
@@ -2361,7 +2361,7 @@ Panic if:
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
 
-### ECAL: Call external function
+### `ECAL`: Call external function
 
 |             |                                                                          |
 |-------------|--------------------------------------------------------------------------|
@@ -2377,7 +2377,7 @@ Panic if:
 
 - The external function panics.
 
-### FLAG: Set flags
+### `FLAG`: Set flags
 
 |             |                       |
 |-------------|-----------------------|
@@ -2391,7 +2391,7 @@ Panic if:
 
 - Any reserved flags are set
 
-### GM: Get metadata
+### `GM`: Get metadata
 
 |             |                           |
 |-------------|---------------------------|
@@ -2435,7 +2435,7 @@ Panic if:
 
 Set `$rA` to the index of the currently-verifying predicate.
 
-### GTF: Get transaction fields
+### `GTF`: Get transaction fields
 
 |             |                         |
 |-------------|-------------------------|

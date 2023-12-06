@@ -12,15 +12,15 @@ enum PolicyType : uint32 {
 
 | name   | type                                                                                  | description  |
 |--------|---------------------------------------------------------------------------------------|--------------|
-| `data` | One of [GasPrice](#gasprice), [WitnessLimit](#witnesslimit), or [Maturity](#maturity) | Policy data. |
+| `data` | One of [`GasPrice`](#gasprice), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
 
-## GasPrice
+## `GasPrice`
 
 | name       | type     | description               |
 |------------|----------|---------------------------|
 | `gasPrice` | `uint64` | Gas price for transaction |
 
-## WitnessLimit
+## `WitnessLimit`
 
 | name           | type     | description                                                    |
 |----------------|----------|----------------------------------------------------------------|
@@ -32,17 +32,17 @@ Transaction is invalid if:
 
 - `len(tx.witnesses) > witnessLimit`
 
-## Maturity
+## `Maturity`
 
 | name       | type     | description                              |
 |------------|----------|------------------------------------------|
-| `maturity` | `uint32` | Block until which tx cannot be included. |
+| `maturity` | `uint32` | Block until which the transaction cannot be included. |
 
 Transaction is invalid if:
 
 - `blockheight() < maturity`
 
-## MaxFee
+## `MaxFee`
 
 | name      | type     | description                                                     |
 |-----------|----------|-----------------------------------------------------------------|
