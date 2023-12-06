@@ -116,7 +116,7 @@ def transaction_size_gas_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of a transaction based on size in bytes
     """
-    size(tx) * GAS_PER_BYTE
+    return size(tx) * GAS_PER_BYTE
 
 
 def minted(tx, asset_id) -> int:
@@ -141,7 +141,7 @@ def input_gas_fees(tx) -> int:
     Computes the intrinsic gas cost of verifying input utxos
     """
     total: int = 0
-    witness_indices = set(())
+    witness_indices = set()
     for input in tx.inputs:
         if input.type == InputType.Coin or input.type == InputType.Message:
             # add fees allocated for predicate execution
