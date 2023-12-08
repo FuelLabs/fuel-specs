@@ -2450,7 +2450,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | name                                      | `imm`   | set `$rA` to                                                      |
 |-------------------------------------------|---------|-------------------------------------------------------------------|
 | `GTF_TYPE`                                | `0x001` | `tx.type`                                                         |
-| `GTF_SCRIPT_GAS_LIMIT`                    | `0x002` | `tx.gasLimit`                                                     |
+| `GTF_SCRIPT_GAS_LIMIT`                    | `0x002` | `tx.scriptGasLimit`                                               |
 | `GTF_SCRIPT_SCRIPT_LENGTH`                | `0x003` | `tx.scriptLength`                                                 |
 | `GTF_SCRIPT_SCRIPT_DATA_LENGTH`           | `0x004` | `tx.scriptDataLength`                                             |
 | `GTF_SCRIPT_INPUTS_COUNT`                 | `0x005` | `tx.inputsCount`                                                  |
@@ -2516,12 +2516,11 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_OUTPUT_CONTRACT_CREATED_STATE_ROOT`  | `0x308` | Memory address of `tx.outputs[$rB].stateRoot`                     |
 | `GTF_WITNESS_DATA_LENGTH`                 | `0x400` | `tx.witnesses[$rB].dataLength`                                    |
 | `GTF_WITNESS_DATA`                        | `0x401` | Memory address of `tx.witnesses[$rB].data`                        |
-| `GTF_POLICY_COUNT`                        | `0x500` | `count_ones(tx.policyTypes)`                                      |
-| `GTF_POLICY_TYPE`                         | `0x501` | `tx.policies[$rB].type`                                           |
-| `GTF_POLICY_GAS_PRICE`                    | `0x502` | `tx.policies[0x00].gasPrice`                                      |
-| `GTF_POLICY_WITNESS_LIMIT`                | `0x504` | `tx.policies[count_ones(0b11 & tx.policyTypes) - 1].witnessLimit` |
-| `GTF_POLICY_MATURITY`                     | `0x505` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
-| `GTF_POLICY_MAX_FEE`                      | `0x506` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
+| `GTF_POLICY_TYPES`                        | `0x500` | `tx.policies.policyTypes`                                         |
+| `GTF_POLICY_GAS_PRICE`                    | `0x501` | `tx.policies[0x00].gasPrice`                                      |
+| `GTF_POLICY_WITNESS_LIMIT`                | `0x502` | `tx.policies[count_ones(0b11 & tx.policyTypes) - 1].witnessLimit` |
+| `GTF_POLICY_MATURITY`                     | `0x503` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
+| `GTF_POLICY_MAX_FEE`                      | `0x504` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
 
 Panic if:
 
