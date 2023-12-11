@@ -151,7 +151,7 @@ def input_gas_fees(tx) -> int:
             else:
                 # add intrinsic gas cost of predicate merkleization based on number of predicate bytes
                 total += contract_code_root_gas_fee(input.predicateLength)
-                total += input.predicate_gas_used
+                total += input.predicateGasUsed
                 # add intrinsic cost of vm initialization
                 total += vm_initialization_gas_fee()
     # add intrinsic cost of verifying witness signatures
