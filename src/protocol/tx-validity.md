@@ -215,8 +215,8 @@ def reserved_feeBalance(tx, assetId) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gasBalance = max_gas(tx)
-    feeBalance = gas_to_fee(gasBalance, tx.gasPrice)
+    maxGas = max_gas(tx)
+    feeBalance = gas_to_fee(maxGas, tx.gasPrice)
     # Only base asset can be used to pay for gas
     if assetId == 0:
         return feeBalance
