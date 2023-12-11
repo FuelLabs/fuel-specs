@@ -33,9 +33,9 @@ Read-only access list:
 Write-destroy access list:
 
 - For each [input `InputType.Coin`](../tx-format/input.md#inputcoin)
-  - The [UTXO ID](../identifiers/utxo-id.md) `(tx_id, output_index)`
+  - The [UTXO ID](../identifiers/utxo-id.md) `(txId, outputIndex)`
 - For each [input `InputType.Contract`](../tx-format/input.md#inputcontract)
-  - The [UTXO ID](../identifiers/utxo-id.md) `(tx_id, output_index)`
+  - The [UTXO ID](../identifiers/utxo-id.md) `(txId, outputIndex)`
 - For each [input `InputType.Message`](../tx-format/input.md#inputmessage)
   - The [message ID](../identifiers/utxo-id.md#message-id) `messageID`
 
@@ -46,7 +46,7 @@ Write-create access list:
 - For each output
   - The [created UTXO ID](../identifiers/utxo-id.md)
 
-Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](../tx-format/input.md#inputcontract) and [`OutputType.Contract`](../tx-format/output.md#outputcontract) rather than the pair of `tx_id` and `output_index`.
+Note that block proposers use the contract ID `contractID` for inputs and outputs of type [`InputType.Contract`](../tx-format/input.md#inputcontract) and [`OutputType.Contract`](../tx-format/output.md#outputcontract) rather than the pair of `txId` and `outputIndex`.
 
 ## VM Precondition Validity Rules
 
@@ -54,7 +54,7 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
-> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.data_length > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
+> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
 
 ### Base Sanity Checks
 
@@ -71,43 +71,43 @@ for input in tx.inputs:
         if not input.nonce in messages:
                 return False
     else:
-        if not (input.tx_id, input.output_index) in state:
+        if not (input.txId, input.outputIndex) in state:
             return False
 return True
 ```
 
-If this check passes, the UTXO ID `(tx_id, output_index)` fields of each contract input is set to the UTXO ID of the respective contract. The `txPointer` of each input is also set to the TX pointer of the UTXO with ID `utxoID`.
+If this check passes, the UTXO ID `(txId, outputIndex)` fields of each contract input is set to the UTXO ID of the respective contract. The `txPointer` of each input is also set to the TX pointer of the UTXO with ID `utxoID`.
 
 ### Sufficient Balance
 
-For each asset ID `asset_id` in the input and output set:
+For each asset ID `assetId` in the input and output set:
 
 ```py
-def gas_to_fee(gas, gas_price) -> int:
+def gas_to_fee(gas, gasPrice) -> int:
     """
     Converts gas units into a fee amount
     """
-    return ceil(gas * gas_price / GAS_PRICE_FACTOR)
+    return ceil(gas * gasPrice / GAS_PRICE_FACTOR)
 
 
-def sum_data_messages(tx, asset_id) -> int:
+def sum_data_messages(tx, assetId) -> int:
     """
     Returns the total balance available from messages containing data
     """
     total: int = 0
-    if asset_id == 0:
+    if assetId == 0:
         for input in tx.inputs:
-            if input.type == InputType.Message and input.data_length > 0:
+            if input.type == InputType.Message and input.dataLength > 0:
                 total += input.amount
     return total
 
 
-def sum_inputs(tx, asset_id) -> int:
+def sum_inputs(tx, assetId) -> int:
     total: int = 0
     for input in tx.inputs:
-        if input.type == InputType.Coin and input.asset_id == asset_id:
+        if input.type == InputType.Coin and input.assetId == assetId:
             total += input.amount
-        elif input.type == InputType.Message and asset_id == 0 and input.data_length == 0:
+        elif input.type == InputType.Message and assetId == 0 and input.dataLength == 0:
             total += input.amount
     return total
 
@@ -119,19 +119,19 @@ def transaction_size_gas_fees(tx) -> int:
     return size(tx) * GAS_PER_BYTE
 
 
-def minted(tx, asset_id) -> int:
+def minted(tx, assetId) -> int:
     """
     Returns any minted amounts by the transaction
     """
-    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
+    if tx.type != TransactionType.Mint or assetId != tx.mintAssetId:
         return 0
     return tx.mint_amount
 
 
-def sum_outputs(tx, asset_id) -> int:
+def sum_outputs(tx, assetId) -> int:
     total: int = 0
     for output in tx.outputs:
-        if output.type == OutputType.Coin and output.asset_id == asset_id:
+        if output.type == OutputType.Coin and output.assetId == assetId:
             total += output.amount
     return total
 
@@ -141,21 +141,21 @@ def input_gas_fees(tx) -> int:
     Computes the intrinsic gas cost of verifying input utxos
     """
     total: int = 0
-    witness_indices = set()
+    witnessIndices = set()
     for input in tx.inputs:
         if input.type == InputType.Coin or input.type == InputType.Message:
             # add fees allocated for predicate execution
-            if input.predicate_length == 0:
+            if input.predicateLength == 0:
                 # notate witness index if input is signed
-                witness_indices.add(input.witness_index)
+                witnessIndices.add(input.witnessIndex)
             else:
                 # add intrinsic gas cost of predicate merkleization based on number of predicate bytes
-                total += contract_code_root_gas_fee(input.predicate_length)
+                total += contract_code_root_gas_fee(input.predicateLength)
                 total += input.predicate_gas_used
                 # add intrinsic cost of vm initialization
                 total += vm_initialization_gas_fee()
     # add intrinsic cost of verifying witness signatures
-    total += len(witness_indices) * eck1_recover_gas_fee()
+    total += len(witnessIndices) * eck1_recover_gas_fee()
     return total
 
 
@@ -168,9 +168,9 @@ def metadata_gas_fees(tx) -> int:
         for output in tx.outputs:
             if output.type == OutputType.OutputContractCreated:
                 # add intrinsic cost of calculating the code root based on the size of the contract bytecode
-                total += contract_code_root_gas_fee(tx.witnesses[tx.bytecode_witness_index].data_length)
+                total += contract_code_root_gas_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
                 # add intrinsic cost of calculating the state root based on the number of sotrage slots
-                total += contract_state_root_gas_fee(tx.storage_slot_count)
+                total += contract_state_root_gas_fee(tx.storageSlotCount)
                 # add intrinsic cost of calculating the contract id 
                 # size = 4 byte seed + 32 byte salt + 32 byte code root + 32 byte state root
                 total += sha256_gas_fee(100)
@@ -211,33 +211,33 @@ def max_gas(tx) -> int:
     return gas
 
 
-def reserved_fee_balance(tx, asset_id) -> int:
+def reserved_feeBalance(tx, assetId) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gas_balance = max_gas(tx)
-    fee_balance = gas_to_fee(gas_balance, tx.gasPrice)
+    gasBalance = max_gas(tx)
+    feeBalance = gas_to_fee(gasBalance, tx.gasPrice)
     # Only base asset can be used to pay for gas
-    if asset_id == 0:
-        return fee_balance
+    if assetId == 0:
+        return feeBalance
     else:
         return 0
 
 
-def available_balance(tx, asset_id) -> int:
+def available_balance(tx, assetId) -> int:
     """
     Make the data message balance available to the script
     """
-    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id) + minted(tx, asset_id)
+    availableBalance = sum_inputs(tx, assetId) + sum_data_messages(tx, assetId) + minted(tx, assetId)
     return availableBalance
 
 
-def unavailable_balance(tx, asset_id) -> int:
-    sentBalance = sum_outputs(tx, asset_id)
+def unavailable_balance(tx, assetId) -> int:
+    sentBalance = sum_outputs(tx, assetId)
     # Total fee balance
-    feeBalance = reserved_fee_balance(tx, asset_id)
+    feeBalance = reserved_fee_balance(tx, assetId)
     # Only base asset can be used to pay for gas
-    if asset_id == 0:
+    if assetId == 0:
         return sentBalance + feeBalance
     return sentBalance
 
@@ -245,7 +245,7 @@ def unavailable_balance(tx, asset_id) -> int:
 # The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
 # is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
 # cover gas costs since they are retryable.
-return available_balance(tx, asset_id) >= (unavailable_balance(tx, asset_id) + sum_data_messages(tx, asset_id))
+return available_balance(tx, assetId) >= (unavailable_balance(tx, assetId) + sum_data_messages(tx, assetId))
 ```
 
 ### Valid Signatures
@@ -255,12 +255,12 @@ def address_from(pubkey: bytes) -> bytes:
     return sha256(pubkey)[0:32]
 
 for input in tx.inputs:
-    if (input.type == InputType.Coin or input.type == InputType.Message) and input.predicate_length == 0:
+    if (input.type == InputType.Coin or input.type == InputType.Message) and input.predicateLength == 0:
         # ECDSA signatures must be 64 bytes
-        if tx.witnesses[input.witness_index].data_length != 64:
+        if tx.witnesses[input.witnessIndex].dataLength != 64:
             return False
         # Signature must be from owner
-        if address_from(ecrecover_k1(txhash(), tx.witnesses[input.witness_index].data)) != input.owner:
+        if address_from(ecrecover_k1(txhash(), tx.witnesses[input.witnessIndex].data)) != input.owner:
             return False
 return True
 ```
@@ -271,7 +271,7 @@ The transaction hash is computed as defined [here](../identifiers/transaction-id
 
 ## Predicate Verification
 
-For each input of type `InputType.Coin` or `InputType.Message`, and `predicate_length > 0`, [verify its predicate](../fuel-vm/index.md#predicate-verification).
+For each input of type `InputType.Coin` or `InputType.Message`, and `predicateLength > 0`, [verify its predicate](../fuel-vm/index.md#predicate-verification).
 
 ## Script Execution
 
@@ -279,10 +279,10 @@ Given transaction `tx`, the following checks must pass:
 
 If `tx.scriptLength == 0`, there is no script and the transaction defines a simple balance transfer, so no further checks are required.
 
-If `tx.scriptLength > 0`, the script must be executed. For each asset ID `asset_id` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[asset_id]`. The initial message balance available to be moved around by the script and called contracts is `messageBalance`:
+If `tx.scriptLength > 0`, the script must be executed. For each asset ID `assetId` in the input set, the free balance available to be moved around by the script and called contracts is `freeBalance[assetId]`. The initial message balance available to be moved around by the script and called contracts is `messageBalance`:
 
 ```py
-freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
+freeBalance[assetId] = available_balance(tx, assetId) - unavailable_balance(tx, assetId)
 messageBalance = sum_data_messages(tx, 0)
 ```
 
@@ -358,7 +358,7 @@ In order for a coinbase transaction to be valid:
 1. It must be a [Mint](../tx-format/transaction.md#TransactionMint) transaction.
 1. The coinbase transaction must be the last transaction within a block, even if there are no other transactions in the block and the fee is zero.
 1. The `mintAmount` doesn't exceed the total amount of fees processed from all other transactions within the same block.
-1. The `mintAssetId` matches the `asset_id` that fees are paid in (`asset_id == 0`).
+1. The `mintAssetId` matches the `assetId` that fees are paid in (`assetId == 0`).
 
 The minted amount of the coinbase transaction intrinsically increases the balance corresponding to the `inputContract`.
 This means the balance of `mintAssetId` is directly increased by `mintAmount` on the input contract,
