@@ -330,7 +330,7 @@ The cost of the transaction `cost(tx)` must lie within the range defined by [`mi
 - The remaining allocation of witness bytes, converted to gas 
 - The user-defined `tx.gasLimit`
 
-Note that `gasLimit` applies to transactions of type `Script`. `gas_limit` is not applicable for transactions of type `Create` and is defined to equal `0` in the above formula.   
+Note that `gasLimit` applies to transactions of type `Script`. `gasLimit` is not applicable for transactions of type `Create` and is defined to equal `0` in the above formula.   
 
 A transaction cost `cost(tx)`, in gas, greater than `max_gas` is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, `unspentGas` is the remainder of `max_gas` after intrinsic fees and the variable cost of execution. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect in addition to `min_fee`.
 
