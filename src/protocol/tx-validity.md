@@ -195,11 +195,19 @@ def intrinsic_gas_fees(tx) -> int:
     return fees
 
 
-def gas_balance(tx) -> int:
+def min_gas(tx) -> int:
     """
-    Computes the maximum amount of gas required to process a transaction.
+    Comutes the minimum amount of gas required for a transaction to begin processing.
     """
-    gas = tx.gasLimit + transaction_size_gas_fees(tx) + intrinsic_gas_fees(tx)
+    gas = transaction_size_gas_fees(tx) + intrinsic_gas_fees(tx)
+    return gas
+
+
+def max_gas(tx) -> int:
+    """
+    Computes the amount of gas required to process a transaction.
+    """
+    gas = min_gas(tx) + tx.gasLimit
     return gas
 
 
@@ -207,7 +215,7 @@ def reserved_fee_balance(tx, asset_id) -> int:
     """
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     """
-    gas_balance = gas_balance(tx)
+    gas_balance = max_gas(tx)
     fee_balance = gas_to_fee(gas_balance, tx.gasPrice)
     # Only base asset can be used to pay for gas
     if asset_id == 0:
@@ -294,23 +302,20 @@ If the transaction as included in a block does not match this final transaction,
 The cost of a transaction can be described by:
 
 ```py
-cost(tx) = gas_to_fee(gas_cost(tx) - unspentGas, tx.gasPrice)
+cost(tx) = gas_to_fee(min_gas(tx) + tx.gasLimit - unspentGas, tx.gasPrice)
 ```
 
 where:
 
-- `gas_cost(tx)` is the final cost of the transaction in gas, including gas fees incurred from:
-  - Intrinsic fees:
-    - The number of bytes comprising the transaction
-    - Processing inputs and outputs
-    - VM initialization
-  - Predicate and script execution
+- `min_gas(tx)` is the minimum cost of the transaction in gas, including intrinsic gas fees incurred from:
+  - The number of bytes comprising the transaction
+  - Processing inputs, including predicates
+  - Processing outputs
+  - VM initialization
 - `unspentGas` is the amount gas left over after intrinsic fees and execution of the transaction, extracted from the `$ggas` register. Converting unspent gas to a fee describes how much "change" is left over from the user's payment; the block producer collects this unspent gas as reward.
 - `gas_to_fee` is a function that converts gas to a concrete fee based on a given gas price.
 
-Fees incurred by transaction processing outside the context of execution are collectively referred to as intrinsic fees. Intrinsic fees include the cost of storing the transaction, calculated on a per-byte basis, the cost of processing inputs and outputs, including signature verification, and initialization of the VM prior to any predicate or script execution. Because intrinsic fees are independent of execution, they can be determined _a priori_ and represent the bare minimum cost of the transaction.
-
-Users wishing to submit transactions can incentivize block producers to include their transactions by providing a higher reward in the form of more unspent gas. This is achieved by specifying a higher [gas limit](../tx-format/transaction.md) on the transaction.
+Fees incurred by transaction processing outside the context of execution are collectively referred to as intrinsic fees. Intrinsic fees include the cost of storing the transaction, calculated on a per-byte basis, the cost of processing inputs and outputs, including predicates and signature verification, and initialization of the VM prior to any predicate or script execution. Because intrinsic fees are independent of execution, they can be determined _a priori_ and represent the bare minimum cost of the transaction.
 
 A naturally occurring result of a variable gas limit is the concept of minimum and maximum fees. The minimum fee is, thus, the exact fee required to pay the fee balance, while the maximum fee is the minimum fee plus the gas limit:
 
@@ -321,7 +326,7 @@ min_fee = gas_to_fee(min_gas, tx.gasPrice)
 max_fee = gas_to_fee(max_gas, tx.gasPrice)
 ```
 
-The cost of the transaction `cost(tx)` must lie within the range defined by [`min_fee`, `max_fee`]. `min_gas` is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of `max_gas` illustrates that the delta between minimum gas and maximum gas is the user-defined `tx.gasLimit`. A transaction cost `cost(tx)`, in gas, greater than `max_gas` is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, `unspentGas` is the remainder of `max_gas` after intrinsic fees and the variable cost of execution. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect.
+The cost of the transaction `cost(tx)` must lie within the range defined by [`min_fee`, `max_fee`]. `min_gas` is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of `max_gas` illustrates that the delta between minimum gas and maximum gas is the user-defined `tx.gasLimit`. A transaction cost `cost(tx)`, in gas, greater than `max_gas` is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, `unspentGas` is the remainder of `max_gas` after intrinsic fees and the variable cost of execution. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect in addition to `min_fee`.
 
 ## VM Postcondition Validity Rules
 
