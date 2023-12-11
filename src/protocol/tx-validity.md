@@ -208,7 +208,7 @@ def max_gas(tx) -> int:
     Computes the amount of gas required to process a transaction.
     """
     gas = min_gas(tx)
-    gas = gas + (tx.witnessLimit - size(tx.witnesses)) * GAS_PER_BYTE
+    gas = gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE
     if tx.type == TransactionType.Script:
        gas = gas + tx.gasLimit
     return gas
@@ -324,7 +324,7 @@ A naturally occurring result of a variable gas limit is the concept of minimum a
 
 ```py
 min_gas = min_gas(tx)
-max_gas = min_gas + (WitnessBytesLimit - ActualWitnessBytes) * GAS_PER_BYTE + tx.gasLimit
+max_gas = min_gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE + tx.gasLimit
 min_fee = gas_to_fee(min_gas, tx.gasPrice)
 max_fee = gas_to_fee(max_gas, tx.gasPrice)
 ```
