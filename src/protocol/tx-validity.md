@@ -321,12 +321,18 @@ A naturally occurring result of a variable gas limit is the concept of minimum a
 
 ```py
 min_gas = min_gas(tx)
-max_gas = min_gas + tx.gasLimit
+max_gas = min_gas + (WitnessBytesLimit - ActualWitnessBytes) * GAS_PER_BYTE + tx.gasLimit
 min_fee = gas_to_fee(min_gas, tx.gasPrice)
 max_fee = gas_to_fee(max_gas, tx.gasPrice)
 ```
 
-The cost of the transaction `cost(tx)` must lie within the range defined by [`min_fee`, `max_fee`]. `min_gas` is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of `max_gas` illustrates that the delta between minimum gas and maximum gas is the user-defined `tx.gasLimit`. A transaction cost `cost(tx)`, in gas, greater than `max_gas` is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, `unspentGas` is the remainder of `max_gas` after intrinsic fees and the variable cost of execution. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect in addition to `min_fee`.
+The cost of the transaction `cost(tx)` must lie within the range defined by [`min_fee`, `max_fee`]. `min_gas` is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of `max_gas` illustrates that the delta between minimum gas and maximum gas is the sum of:
+- The remaining allocation of witness bytes, converted to gas 
+- The user-defined `tx.gasLimit`
+
+Note that `gasLimit` applies to transactions of type `Script`. `gas_limit` is not applicable for transactions of type `Create` and is defined to equal `0` in the above formula.   
+
+A transaction cost `cost(tx)`, in gas, greater than `max_gas` is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, `unspentGas` is the remainder of `max_gas` after intrinsic fees and the variable cost of execution. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect in addition to `min_fee`.
 
 ## VM Postcondition Validity Rules
 
