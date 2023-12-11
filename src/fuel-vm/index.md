@@ -50,7 +50,7 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                          |
 | `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                    |
 | `0x0B` | `$bal`   | balance             | Received balance for this context.                                               |
-| `0x0C` | `$is`    | INSTRs start        | Pointer to the start of the currently-executing code.                            |
+| `0x0C` | `$is`    | instructions start        | Pointer to the start of the currently-executing code.                            |
 | `0x0D` | `$ret`   | return value        | Return value or pointer.                                                         |
 | `0x0E` | `$retl`  | return length       | Return value length in bytes.                                                    |
 | `0x0F` | `$flag`  | flags               | Flags register.                                                                  |

@@ -466,7 +466,7 @@ Panic if:
 
 |             |                                              |
 |-------------|----------------------------------------------|
-| Description | The (integer) `$rC`ᵗʰ root of `$rB`.         |
+| Description | The (integer) `$rCth` root of `$rB`.         |
 | Operation   | ```$rA = math.floor(math.root($rB, $rC));``` |
 | Syntax      | `mroo $rA, $rB, $rC`                         |
 | Encoding    | `0x00 rA rB rC -`                            |

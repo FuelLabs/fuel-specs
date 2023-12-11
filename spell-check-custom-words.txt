@@ -266,6 +266,4 @@ unwritable
 untrusted
 intra
 OOB
-INSTRs
-INSTR
 unspendable
