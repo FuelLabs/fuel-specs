@@ -207,7 +207,10 @@ def max_gas(tx) -> int:
     """
     Computes the amount of gas required to process a transaction.
     """
-    gas = min_gas(tx) + tx.gasLimit
+    gas = min_gas(tx)
+    gas = gas + (tx.witnessLimit - size(tx.witnesses)) * GAS_PER_BYTE
+    if tx.type == TransactionType.Script:
+       gas = gas + tx.gasLimit
     return gas
 
 
