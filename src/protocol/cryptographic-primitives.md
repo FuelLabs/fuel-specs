@@ -11,7 +11,7 @@
 
 All hashing is done with SHA-2-256 (also known as SHA-256), defined in [FIPS 180-4](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf).
 
-## HashDigest
+## `HashDigest`
 
 Output of the [hashing](#hashing) function. Exactly 256 bits (32 bytes) long.
 
@@ -27,7 +27,7 @@ Nodes contain a single field:
 
 | name | type                      | description |
 |------|---------------------------|-------------|
-| `v`  | [HashDigest](#hashdigest) | Node value. |
+| `v`  | [`HashDigest`](#hashdigest) | Node value. |
 
 The base case (an empty tree) is defined as the [hash](#hashing) of the empty string:
 
@@ -55,9 +55,9 @@ Leaves and internal nodes are hashed differently: the one-byte `0x00` is prepend
 
 | name       | type                          | description                                                     |
 |------------|-------------------------------|-----------------------------------------------------------------|
-| `root`     | [HashDigest](#hashdigest)`[]` | The expected root of the Merkle tree.                           |
+| `root`     | [`HashDigest`](#hashdigest)`[]` | The expected root of the Merkle tree.                           |
 | `data`     | Bytes                         | The data of the leaf (unhashed).                                |
-| `siblings` | [HashDigest](#hashdigest)`[]` | Sibling hash values, ordered starting from the leaf's neighbor. |
+| `siblings` | [`HashDigest`](#hashdigest)`[]` | Sibling hash values, ordered starting from the leaf's neighbor. |
 
 A proof for a leaf in a [binary Merkle tree](#binary-merkle-tree), as per Section 2.1.1 of [Certificate Transparency (RFC-6962)](https://tools.ietf.org/html/rfc6962#section-2.1.1).
 
@@ -77,7 +77,7 @@ Nodes contain a single field:
 
 | name | type                      | description |
 |------|---------------------------|-------------|
-| `v`  | [HashDigest](#hashdigest) | Node value. |
+| `v`  | [`HashDigest`](#hashdigest) | Node value. |
 
 In the base case, where a sparse Merkle tree has `height = 0`, the root of a tree is defined as the [hash](#hashing) of the empty string:
 
@@ -125,7 +125,7 @@ A proof into an SMT is structured as:
 | name               | type                          | description                                                              |
 |--------------------|-------------------------------|--------------------------------------------------------------------------|
 | `depth`            | `uint16`                      | Depth of the leaf node. The root node is at depth `0`. Must be `<= 256`. |
-| `siblings`         | [HashDigest](#hashdigest)`[]` | Sibling hash values, ordered starting from the leaf's neighbor.          |
+| `siblings`         | [`HashDigest`](#hashdigest)`[]` | Sibling hash values, ordered starting from the leaf's neighbor.          |
 | `includedSiblings` | `byte[32]`                    | Bitfield of explicitly included sibling hashes.                          |
 
 The `includedSiblings` is ordered by most-significant-byte first, with each byte ordered by most-significant-bit first. The lowest bit corresponds to the leaf node level.
@@ -134,7 +134,7 @@ A specification describing a suite of test vectors and outputs of a Sparse Merkl
 
 ## ECDSA Public-Key Cryptography
 
-Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1-v2.pdf), with the curve [secp256k1](https://en.bitcoin.it/wiki/Secp256k1). A highly-optimized library is available in C (<https://github.com/bitcoin-core/secp256k1>), with wrappers in Go (<https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1>) and Rust (<https://docs.rs/crate/secp256k1>).
+Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1-v2.pdf), with the curve [secp256k1](https://en.bitcoin.it/wiki/Secp256k1). A highly-optimized library is available in [C](https://github.com/bitcoin-core/secp256k1), with wrappers in [Go](https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1) and [Rust](https://docs.rs/crate/secp256k1).
 
 Public keys are encoded in uncompressed form, as the concatenation of the `x` and `y` values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.
 

@@ -40,9 +40,9 @@ These types are encoded in-place. Here's how to encode them. We define `enc(X)` 
 **Example:**
 
 Encoding `42` yields: `0x000000000000002a`, which is the hexadecimal representation of the decimal number `42`, right-aligned to 8 bytes.
-Encoding `u128::MAX - 1` yields: `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE`, it's right-alined to 16 bytes
+Encoding `u128::MAX - 1` yields: `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE`, it's right-aligned to 16 bytes
 
-## Boolean
+## `Boolean`
 
 `enc(X)` is `0` if `X` is false or `1` if `X` is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the `u8` encoding.
 
@@ -54,7 +54,7 @@ Encoding `true` yields:
 0x0000000000000001
 ```
 
-## B256
+## `B256`
 
 `b256` is a fixed size bit array of length 256. Used for 256-bit hash digests and other 256-bit types. It is encoded as-is.
 
@@ -66,7 +66,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 ```
 
-## Address
+## `Address`
 
 A 256-bit (32-byte) address, encoded in the same way as a `b256` argument: encoded as-is.
 

@@ -17,19 +17,19 @@ Upon execution of ABI calls, i.e scripts being executed, a JSON object represent
 All receipts will have a `type` property:
 
 - `type`: String; the type of the receipt. Can be one of:
-  - [Call](#call-receipt)
-  - [Return](#return-receipt)
-  - [ReturnData](#returndata-receipt)
-  - [Panic](#panic-receipt)
-  - [Revert](#revert-receipt)
-  - [Log](#log-receipt)
-  - [Mint](#mint-receipt)
-  - [Burn](#burn-receipt)
-  - [LogData](#logdata-receipt)
-  - [Transfer](#transfer-receipt)
-  - [TransferOut](#transferout-receipt)
-  - [ScriptResult](#scriptresult-receipt)
-  - [MessageOut](#messageout-receipt)
+  - [`Call`](#call-receipt)
+  - [`Return`](#return-receipt)
+  - [`ReturnData`](#returndata-receipt)
+  - [`Panic`](#panic-receipt)
+  - [`Revert`](#revert-receipt)
+  - [`Log`](#log-receipt)
+  - [`Mint`](#mint-receipt)
+  - [`Burn`](#burn-receipt)
+  - [`LogData`](#logdata-receipt)
+  - [`Transfer`](#transfer-receipt)
+  - [`TransferOut`](#transferout-receipt)
+  - [`ScriptResult`](#scriptresult-receipt)
+  - [`MessageOut`](#messageout-receipt)
 
 Then, each receipt type will have its own properties. Some of these properties are related to the FuelVM's registers, as specified in more detail [here](../fuel-vm/instruction-set.md).
 
@@ -56,7 +56,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Return Receipt
+## `Return` Receipt
 
 - `type`: `Return`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
@@ -74,7 +74,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Call Receipt
+## `Call` Receipt
 
 - `type`: `Call`.
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
@@ -102,7 +102,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Log Receipt
+## `Log` Receipt
 
 - `type`: `Log`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -126,7 +126,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Mint Receipt
+## `Mint` Receipt
 
 - `type`: `Mint`.
 - `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register `$rB`.
@@ -146,7 +146,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Burn Receipt
+## `Burn` Receipt
 
 - `type`: `Burn`.
 - `sub_id`: Hexadecimal string representation of the 256-bit (32-byte) asset sub identifier ID; derived from register `$rB`.
@@ -166,7 +166,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## LogData Receipt
+## `LogData` Receipt
 
 - `type`: `LogData`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -194,7 +194,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## ReturnData Receipt
+## `ReturnData` Receipt
 
 - `type`: `ReturnData`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -218,7 +218,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Revert Receipt
+## `Revert` Receipt
 
 - `type`: `Revert`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -236,7 +236,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## Transfer Receipt
+## `Transfer` Receipt
 
 - `type`: `Transfer`.
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -258,7 +258,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## TransferOut Receipt
+## `TransferOut` Receipt
 
 - `type`: `TransferOut`.
 - `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
@@ -280,7 +280,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## ScriptResult Receipt
+## `ScriptResult` Receipt
 
 - `type`: `ScriptResult`.
 - `result`: Hexadecimal string representation of a 64-bit unsigned integer; `0` if script exited successfully, `any` otherwise.
@@ -294,7 +294,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 }
 ```
 
-## MessageOut Receipt
+## `MessageOut` Receipt
 
 - `type`: `MessageOut`.
 - `sender`: Hexadecimal string representation of the 256-bit (32-byte) address of the message sender: `MEM[$fp, 32]`.

@@ -10,14 +10,14 @@ enum InputType : uint8 {
 
 | name   | type                                                                                              | description    |
 |--------|---------------------------------------------------------------------------------------------------|----------------|
-| `type` | [InputType](#input)                                                                               | Type of input. |
-| `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract), or [InputMessage](#inputmessage) | Input data.    |
+| `type` | [`InputType`](#input)                                                                               | Type of input. |
+| `data` | One of [`InputCoin`](#inputcoin), [`InputContract`](#inputcontract), or [`InputMessage`](#inputmessage) | Input data.    |
 
 Transaction is invalid if:
 
 - `type > InputType.Message`
 
-## InputCoin
+## `InputCoin`
 
 | name                  | type                         | description                                                            |
 |-----------------------|------------------------------|------------------------------------------------------------------------|
@@ -26,7 +26,7 @@ Transaction is invalid if:
 | `owner`               | `byte[32]`                   | Owning address or predicate root.                                      |
 | `amount`              | `uint64`                     | Amount of coins.                                                       |
 | `asset_id`            | `byte[32]`                   | Asset ID of the coins.                                                 |
-| `txPointer`           | [TXPointer](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
+| `txPointer`           | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
 | `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
 | `maturity`            | `uint32`                     | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
@@ -57,7 +57,7 @@ If `h` is the block height the UTXO being spent was created, transaction is inva
 
 The predicate root is computed [here](../identifiers/predicate-id.md).
 
-## InputContract
+## `InputContract`
 
 | name          | type                         | description                                                             |
 |---------------|------------------------------|-------------------------------------------------------------------------|
@@ -65,7 +65,7 @@ The predicate root is computed [here](../identifiers/predicate-id.md).
 | `outputIndex` | `uint8`                      | Index of transaction output.                                            |
 | `balanceRoot` | `byte[32]`                   | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]`                   | State root of contract before transaction execution.                    |
-| `txPointer`   | [TXPointer](./tx-pointer.md) | Points to the TX whose output is being spent.                           |
+| `txPointer`   | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                           |
 | `contractID`  | `byte[32]`                   | Contract ID.                                                            |
 
 Transaction is invalid if:
@@ -78,7 +78,7 @@ Transaction is invalid if:
 >
 > **Note:** when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to the TX whose output is being spent.
 
-## InputMessage
+## `InputMessage`
 
 | name                  | type       | description                                             |
 |-----------------------|------------|---------------------------------------------------------|

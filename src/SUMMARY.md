@@ -9,7 +9,7 @@
   - [Input](./tx-format/input.md)
   - [Output](./tx-format/output.md)
   - [Witness](./tx-format/witness.md)
-  - [TXPointer](./tx-format/tx-pointer.md)
+  - [Transaction Pointer](./tx-format/tx-pointer.md)
 - [Computing Identifiers](./identifiers/index.md)
   - [Asset ID](./identifiers/asset.md)
   - [Contract ID](./identifiers/contract-id.md)

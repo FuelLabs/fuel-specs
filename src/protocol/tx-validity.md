@@ -1,6 +1,6 @@
 # Transaction Validity
 
-- [Transaction Lifecycle](#transaction-lifecycle)
+- [Transaction Life Cycle](#transaction-life-cycle)
 - [Access Lists](#access-lists)
 - [VM Precondition Validity Rules](#vm-precondition-validity-rules)
   - [Base Sanity Checks](#base-sanity-checks)
@@ -13,7 +13,7 @@
   - [Correct Change](#correct-change)
   - [State Changes](#state-changes)
 
-## Transaction Lifecycle
+## Transaction Life Cycle
 
 Once a transaction is seen, it goes through several stages of validation, in this order:
 
@@ -54,7 +54,7 @@ This section defines _VM precondition validity rules_ for transactions: the bare
 
 For a transaction `tx`, UTXO set `state`, contract set `contracts`, and message set `messages`, the following checks must pass.
 
-> **Note:** [InputMessages](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
+> **Note:** [`InputMessages`](../tx-format/input.md#inputmessage) where `input.dataLength > 0` are not dropped from the `messages` message set until they are included in a transaction of type `TransactionType.Script` with a `ScriptResult` receipt where `result` is equal to `0` indicating a successful script exit.
 
 ### Base Sanity Checks
 
@@ -330,10 +330,11 @@ max_fee = gas_to_fee(max_gas, tx.gasPrice)
 ```
 
 The cost of the transaction `cost(tx)` must lie within the range defined by [`min_fee`, `max_fee`]. `min_gas` is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of `max_gas` illustrates that the delta between minimum gas and maximum gas is the sum of:
-- The remaining allocation of witness bytes, converted to gas 
+
+- The remaining allocation of witness bytes, converted to gas
 - The user-defined `tx.gasLimit`
 
-Note that `gasLimit` applies to transactions of type `Script`. `gasLimit` is not applicable for transactions of type `Create` and is defined to equal `0` in the above formula.   
+Note that `gasLimit` applies to transactions of type `Script`. `gasLimit` is not applicable for transactions of type `Create` and is defined to equal `0` in the above formula.
 
 A transaction cost `cost(tx)`, in gas, greater than `max_gas` is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. `min_fee` is the minimum reward the producer is guaranteed to collect, and `max_fee` is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, `unspentGas` is the remainder of `max_gas` after intrinsic fees and the variable cost of execution. Calculating a conversion from `unspentGas` to an unspent fee describes the reward the producer will collect in addition to `min_fee`.
 
