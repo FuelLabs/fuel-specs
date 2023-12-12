@@ -211,6 +211,7 @@ Given helper <code>count_variants()</code> that returns the number of variants i
 Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <p>Transaction is invalid if:</p>
 <ul>
+<li>More than one output is of type <code>OutputType.Change</code> with identical <code>asset_id</code> fields.</li>
 <li>Any output is of type <code>OutputType.ContractCreated</code></li>
 <li><code>scriptLength &gt; MAX_SCRIPT_LENGTH</code></li>
 <li><code>scriptDataLength &gt; MAX_SCRIPT_DATA_LENGTH</code></li>

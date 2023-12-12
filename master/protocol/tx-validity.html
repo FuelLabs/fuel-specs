@@ -174,12 +174,12 @@
 <ul>
 <li>For each <a href="../tx-format/input.html#inputcoin">input <code>InputType.Coin</code></a>
 <ul>
-<li>The <a href="../identifiers/utxo-id.html">UTXO ID</a> <code>(txID, outputIndex)</code></li>
+<li>The <a href="../identifiers/utxo-id.html">UTXO ID</a> <code>(txId, outputIndex)</code></li>
 </ul>
 </li>
 <li>For each <a href="../tx-format/input.html#inputcontract">input <code>InputType.Contract</code></a>
 <ul>
-<li>The <a href="../identifiers/utxo-id.html">UTXO ID</a> <code>(txID, outputIndex)</code></li>
+<li>The <a href="../identifiers/utxo-id.html">UTXO ID</a> <code>(txId, outputIndex)</code></li>
 </ul>
 </li>
 <li>For each <a href="../tx-format/input.html#inputmessage">input <code>InputType.Message</code></a>
@@ -201,7 +201,7 @@
 </ul>
 </li>
 </ul>
-<p>Note that block proposers use the contract ID <code>contractID</code> for inputs and outputs of type <a href="../tx-format/input.html#inputcontract"><code>InputType.Contract</code></a> and <a href="../tx-format/output.html#outputcontract"><code>OutputType.Contract</code></a> rather than the pair of <code>txID</code> and <code>outputIndex</code>.</p>
+<p>Note that block proposers use the contract ID <code>contractID</code> for inputs and outputs of type <a href="../tx-format/input.html#inputcontract"><code>InputType.Contract</code></a> and <a href="../tx-format/output.html#outputcontract"><code>OutputType.Contract</code></a> rather than the pair of <code>txId</code> and <code>outputIndex</code>.</p>
 <h2 id="vm-precondition-validity-rules"><a class="header" href="#vm-precondition-validity-rules">VM Precondition Validity Rules</a></h2>
 <p>This section defines <em>VM precondition validity rules</em> for transactions: the bare minimum required to accept an unconfirmed transaction into a mempool, and preconditions that the VM assumes to hold prior to execution. Chains of unconfirmed transactions are omitted.</p>
 <p>For a transaction <code>tx</code>, UTXO set <code>state</code>, contract set <code>contracts</code>, and message set <code>messages</code>, the following checks must pass.</p>
@@ -219,96 +219,186 @@
         if not input.nonce in messages:
                 return False
     else:
-        if not (input.txID, input.outputIndex) in state:
+        if not (input.txId, input.outputIndex) in state:
             return False
 return True
 </code></pre>
-<p>If this check passes, the UTXO ID <code>(txID, outputIndex)</code> fields of each contract input is set to the UTXO ID of the respective contract. The <code>txPointer</code> of each input is also set to the TX pointer of the UTXO with ID <code>utxoID</code>.</p>
+<p>If this check passes, the UTXO ID <code>(txId, outputIndex)</code> fields of each contract input is set to the UTXO ID of the respective contract. The <code>txPointer</code> of each input is also set to the TX pointer of the UTXO with ID <code>utxoID</code>.</p>
 <h3 id="sufficient-balance"><a class="header" href="#sufficient-balance">Sufficient Balance</a></h3>
-<p>For each asset ID <code>asset_id</code> in the input and output set:</p>
-<pre><code class="language-py">def sum_data_messages(tx, asset_id) -&gt; int:
+<p>For each asset ID <code>assetId</code> in the input and output set:</p>
+<pre><code class="language-py">def gas_to_fee(gas, gasPrice) -&gt; int:
+    &quot;&quot;&quot;
+    Converts gas units into a fee amount
+    &quot;&quot;&quot;
+    return ceil(gas * gasPrice / GAS_PRICE_FACTOR)
+
+
+def sum_data_messages(tx, assetId) -&gt; int:
     &quot;&quot;&quot;
     Returns the total balance available from messages containing data
     &quot;&quot;&quot;
     total: int = 0
-    if asset_id == 0:
+    if assetId == 0:
         for input in tx.inputs:
             if input.type == InputType.Message and input.dataLength &gt; 0:
                 total += input.amount
     return total
 
-def sum_inputs(tx, asset_id) -&gt; int:
+
+def sum_inputs(tx, assetId) -&gt; int:
     total: int = 0
     for input in tx.inputs:
-        if input.type == InputType.Coin and input.asset_id == asset_id:
+        if input.type == InputType.Coin and input.assetId == assetId:
             total += input.amount
-        elif input.type == InputType.Message and asset_id == 0 and input.dataLength == 0:
+        elif input.type == InputType.Message and assetId == 0 and input.dataLength == 0:
             total += input.amount
     return total
 
-def sum_predicate_gas_used(tx) -&gt; int:
-    total: int = 0
-    for input in tx.inputs:
-        if input.type == InputType.Coin:
-            total += input.predicateGasUsed
-        elif input.type == InputType.Message:
-            total += input.predicateGasUsed
-    return total
 
-&quot;&quot;&quot;
-Returns any minted amounts by the transaction
-&quot;&quot;&quot;
-def minted(tx, asset_id) -&gt; int:
-    if tx.type != TransactionType.Mint or asset_id != tx.mint_asset_id:
+def transaction_size_gas_fees(tx) -&gt; int:
+    &quot;&quot;&quot;
+    Computes the intrinsic gas cost of a transaction based on size in bytes
+    &quot;&quot;&quot;
+    return size(tx) * GAS_PER_BYTE
+
+
+def minted(tx, assetId) -&gt; int:
+    &quot;&quot;&quot;
+    Returns any minted amounts by the transaction
+    &quot;&quot;&quot;
+    if tx.type != TransactionType.Mint or assetId != tx.mintAssetId:
         return 0
     return tx.mint_amount
 
-def sum_outputs(tx, asset_id) -&gt; int:
+
+def sum_outputs(tx, assetId) -&gt; int:
     total: int = 0
     for output in tx.outputs:
-        if output.type == OutputType.Coin and output.asset_id == asset_id:
+        if output.type == OutputType.Coin and output.assetId == assetId:
             total += output.amount
     return total
 
-def available_balance(tx, asset_id) -&gt; int:
-    &quot;&quot;&quot;
-    Make the data message balance available to the script
-    &quot;&quot;&quot;
-    availableBalance = sum_inputs(tx, asset_id) + sum_data_messages(tx, asset_id) + minted(tx, asset_id)
-    return availableBalance
 
-def unavailable_balance(tx, asset_id) -&gt; int:
-    sentBalance = sum_outputs(tx, asset_id)
-    # Total fee balance
-    feeBalance = fee_balance(tx, asset_id)
-    # Only base asset can be used to pay for gas
-    if asset_id == 0:
-        return sentBalance + feeBalance
-    return sentBalance
+def input_gas_fees(tx) -&gt; int:
+    &quot;&quot;&quot;
+    Computes the intrinsic gas cost of verifying input utxos
+    &quot;&quot;&quot;
+    total: int = 0
+    witnessIndices = set()
+    for input in tx.inputs:
+        if input.type == InputType.Coin or input.type == InputType.Message:
+            # add fees allocated for predicate execution
+            if input.predicateLength == 0:
+                # notate witness index if input is signed
+                witnessIndices.add(input.witnessIndex)
+            else:
+                # add intrinsic gas cost of predicate merkleization based on number of predicate bytes
+                total += contract_code_root_gas_fee(input.predicateLength)
+                total += input.predicateGasUsed
+                # add intrinsic cost of vm initialization
+                total += vm_initialization_gas_fee()
+    # add intrinsic cost of verifying witness signatures
+    total += len(witnessIndices) * eck1_recover_gas_fee()
+    return total
 
-def fee_balance(tx, asset_id) -&gt; int:
-    gas = tx.scriptGasLimit + sum_predicate_gas_used(tx)
-    gasBalance = gasPrice * gas / GAS_PRICE_FACTOR
-    bytesBalance = size(tx) * GAS_PER_BYTE * gasPrice / GAS_PRICE_FACTOR
-    # Total fee balance
-    feeBalance = ceiling(gasBalance + bytesBalance)
+
+def metadata_gas_fees(tx) -&gt; int:
+    &quot;&quot;&quot;
+    Computes the intrinsic gas cost of processing transaction outputs
+    &quot;&quot;&quot;
+    total: int = 0
+    if tx.type == TransactionType.Create:
+        for output in tx.outputs:
+            if output.type == OutputType.OutputContractCreated:
+                # add intrinsic cost of calculating the code root based on the size of the contract bytecode
+                total += contract_code_root_gas_fee(tx.witnesses[tx.bytecodeWitnessIndex].dataLength)
+                # add intrinsic cost of calculating the state root based on the number of sotrage slots
+                total += contract_state_root_gas_fee(tx.storageSlotCount)
+                # add intrinsic cost of calculating the contract id 
+                # size = 4 byte seed + 32 byte salt + 32 byte code root + 32 byte state root
+                total += sha256_gas_fee(100)
+                # add intrinsic cost of calculating the transaction id
+                total += sha256_gas_fee(size(tx))
+    elif tx.type == TransactionType.Script:
+        # add intrinsic cost of calculating the transaction id
+        total += sha256_gas_fee(size(tx))
+    return total
+
+
+def intrinsic_gas_fees(tx) -&gt; int:
+    &quot;&quot;&quot;
+    Computes intrinsic costs for a transaction
+    &quot;&quot;&quot;
+    fees: int = 0
+    # add the cost of initializing a vm for the script
+    if tx.type == TransactionType.Create or tx.type == TransactionType.Script:
+        fees += vm_initialization_gas_fee()
+        fees += metadata_gas_fees(tx)
+        fees += intrinsic_input_gas_fees(tx)
+    return fees
+
+
+def min_gas(tx) -&gt; int:
+    &quot;&quot;&quot;
+    Comutes the minimum amount of gas required for a transaction to begin processing.
+    &quot;&quot;&quot;
+    gas = transaction_size_gas_fees(tx) + intrinsic_gas_fees(tx)
+    return gas
+
+
+def max_gas(tx) -&gt; int:
+    &quot;&quot;&quot;
+    Computes the amount of gas required to process a transaction.
+    &quot;&quot;&quot;
+    gas = min_gas(tx)
+    gas = gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE
+    if tx.type == TransactionType.Script:
+       gas = gas + tx.gasLimit
+    return gas
+
+
+def reserved_feeBalance(tx, assetId) -&gt; int:
+    &quot;&quot;&quot;
+    Computes the maximum potential amount of fees that may need to be charged to process a transaction.
+    &quot;&quot;&quot;
+    maxGas = max_gas(tx)
+    feeBalance = gas_to_fee(maxGas, tx.gasPrice)
     # Only base asset can be used to pay for gas
-    if asset_id == 0:
+    if assetId == 0:
         return feeBalance
     else:
         return 0
 
+
+def available_balance(tx, assetId) -&gt; int:
+    &quot;&quot;&quot;
+    Make the data message balance available to the script
+    &quot;&quot;&quot;
+    availableBalance = sum_inputs(tx, assetId) + sum_data_messages(tx, assetId) + minted(tx, assetId)
+    return availableBalance
+
+
+def unavailable_balance(tx, assetId) -&gt; int:
+    sentBalance = sum_outputs(tx, assetId)
+    # Total fee balance
+    feeBalance = reserved_fee_balance(tx, assetId)
+    # Only base asset can be used to pay for gas
+    if assetId == 0:
+        return sentBalance + feeBalance
+    return sentBalance
+
+
 # The sum_data_messages total is not included in the unavailable_balance since it is spendable as long as there 
 # is enough base asset amount to cover gas costs without using data messages. Messages containing data can't
 # cover gas costs since they are retryable.
-return available_balance(tx, asset_id) &gt;= (unavailable_balance(tx, asset_id) + sum_data_messages(tx, asset_id))
+return available_balance(tx, assetId) &gt;= (unavailable_balance(tx, assetId) + sum_data_messages(tx, assetId))
 </code></pre>
 <h3 id="valid-signatures"><a class="header" href="#valid-signatures">Valid Signatures</a></h3>
 <pre><code class="language-py">def address_from(pubkey: bytes) -&gt; bytes:
     return sha256(pubkey)[0:32]
 
 for input in tx.inputs:
-    if (input.type == InputType.Coin || input.type == InputType.Message) and input.predicateLength == 0:
+    if (input.type == InputType.Coin or input.type == InputType.Message) and input.predicateLength == 0:
         # ECDSA signatures must be 64 bytes
         if tx.witnesses[input.witnessIndex].dataLength != 64:
             return False
@@ -324,8 +414,8 @@ return True
 <h2 id="script-execution"><a class="header" href="#script-execution">Script Execution</a></h2>
 <p>Given transaction <code>tx</code>, the following checks must pass:</p>
 <p>If <code>tx.scriptLength == 0</code>, there is no script and the transaction defines a simple balance transfer, so no further checks are required.</p>
-<p>If <code>tx.scriptLength &gt; 0</code>, the script must be executed. For each asset ID <code>asset_id</code> in the input set, the free balance available to be moved around by the script and called contracts is <code>freeBalance[asset_id]</code>. The initial message balance available to be moved around by the script and called contracts is <code>messageBalance</code>:</p>
-<pre><code class="language-py">freeBalance[asset_id] = available_balance(tx, asset_id) - unavailable_balance(tx, asset_id)
+<p>If <code>tx.scriptLength &gt; 0</code>, the script must be executed. For each asset ID <code>assetId</code> in the input set, the free balance available to be moved around by the script and called contracts is <code>freeBalance[assetId]</code>. The initial message balance available to be moved around by the script and called contracts is <code>messageBalance</code>:</p>
+<pre><code class="language-py">freeBalance[assetId] = available_balance(tx, assetId) - unavailable_balance(tx, assetId)
 messageBalance = sum_data_messages(tx, 0)
 </code></pre>
 <p>Once the free balances are computed, the <a href="../fuel-vm/index.html#script-execution">script is executed</a>. After execution, the following is extracted:</p>
@@ -334,10 +424,40 @@ messageBalance = sum_data_messages(tx, 0)
 <li>The unspent free balance <code>unspentBalance</code> for each asset ID.</li>
 <li>The unspent gas <code>unspentGas</code> from the <code>$ggas</code> register.</li>
 </ol>
-<p>The fees incurred for a transaction are <code>ceiling(((size(tx) * GAS_PER_BYTE) + (tx.scriptGasLimit - unspentGas) + sum(tx.inputs[i].predicateGasUsed)) * tx.gasPrice / GAS_PRICE_FACTOR)</code>.</p>
-<p><code>size(tx)</code> includes the entire transaction serialized according to the transaction format, including witness data.
+<p><code>size(tx)</code> encompasses the entire transaction serialized according to the transaction format, including witness data.
 This ensures every byte of block space either on Fuel or corresponding DA layer can be accounted for.</p>
 <p>If the transaction as included in a block does not match this final transaction, the block is invalid.</p>
+<h3 id="fees"><a class="header" href="#fees">Fees</a></h3>
+<p>The cost of a transaction can be described by:</p>
+<pre><code class="language-py">cost(tx) = gas_to_fee(min_gas(tx) + tx.gasLimit - unspentGas, tx.gasPrice)
+</code></pre>
+<p>where:</p>
+<ul>
+<li><code>min_gas(tx)</code> is the minimum cost of the transaction in gas, including intrinsic gas fees incurred from:
+<ul>
+<li>The number of bytes comprising the transaction</li>
+<li>Processing inputs, including predicates</li>
+<li>Processing outputs</li>
+<li>VM initialization</li>
+</ul>
+</li>
+<li><code>unspentGas</code> is the amount gas left over after intrinsic fees and execution of the transaction, extracted from the <code>$ggas</code> register. Converting unspent gas to a fee describes how much &quot;change&quot; is left over from the user's payment; the block producer collects this unspent gas as reward.</li>
+<li><code>gas_to_fee</code> is a function that converts gas to a concrete fee based on a given gas price.</li>
+</ul>
+<p>Fees incurred by transaction processing outside the context of execution are collectively referred to as intrinsic fees. Intrinsic fees include the cost of storing the transaction, calculated on a per-byte basis, the cost of processing inputs and outputs, including predicates and signature verification, and initialization of the VM prior to any predicate or script execution. Because intrinsic fees are independent of execution, they can be determined <em>a priori</em> and represent the bare minimum cost of the transaction.</p>
+<p>A naturally occurring result of a variable gas limit is the concept of minimum and maximum fees. The minimum fee is, thus, the exact fee required to pay the fee balance, while the maximum fee is the minimum fee plus the gas limit:</p>
+<pre><code class="language-py">min_gas = min_gas(tx)
+max_gas = min_gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE + tx.gasLimit
+min_fee = gas_to_fee(min_gas, tx.gasPrice)
+max_fee = gas_to_fee(max_gas, tx.gasPrice)
+</code></pre>
+<p>The cost of the transaction <code>cost(tx)</code> must lie within the range defined by [<code>min_fee</code>, <code>max_fee</code>]. <code>min_gas</code> is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of <code>max_gas</code> illustrates that the delta between minimum gas and maximum gas is the sum of:</p>
+<ul>
+<li>The remaining allocation of witness bytes, converted to gas </li>
+<li>The user-defined <code>tx.gasLimit</code></li>
+</ul>
+<p>Note that <code>gasLimit</code> applies to transactions of type <code>Script</code>. <code>gasLimit</code> is not applicable for transactions of type <code>Create</code> and is defined to equal <code>0</code> in the above formula.</p>
+<p>A transaction cost <code>cost(tx)</code>, in gas, greater than <code>max_gas</code> is invalid and must be rejected; this signifies that the user must provide a higher gas limit for the given transaction. <code>min_fee</code> is the minimum reward the producer is guaranteed to collect, and <code>max_fee</code> is the maximum reward the producer is potentially eligible to collect. In practice, the user is always charged intrinsic fees; thus, <code>unspentGas</code> is the remainder of <code>max_gas</code> after intrinsic fees and the variable cost of execution. Calculating a conversion from <code>unspentGas</code> to an unspent fee describes the reward the producer will collect in addition to <code>min_fee</code>.</p>
 <h2 id="vm-postcondition-validity-rules"><a class="header" href="#vm-postcondition-validity-rules">VM Postcondition Validity Rules</a></h2>
 <p>This section defines <em>VM postcondition validity rules</em> for transactions: the requirements for a transaction to be valid after it has been executed.</p>
 <p>Given transaction <code>tx</code>, state <code>state</code>, and contract set <code>contracts</code>, the following checks must pass.</p>
@@ -366,7 +486,7 @@ This ensures every byte of block space either on Fuel or corresponding DA layer 
 <li>It must be a <a href="../tx-format/transaction.html#TransactionMint">Mint</a> transaction.</li>
 <li>The coinbase transaction must be the last transaction within a block, even if there are no other transactions in the block and the fee is zero.</li>
 <li>The <code>mintAmount</code> doesn't exceed the total amount of fees processed from all other transactions within the same block.</li>
-<li>The <code>mintAssetId</code> matches the <code>asset_id</code> that fees are paid in (<code>asset_id == 0</code>).</li>
+<li>The <code>mintAssetId</code> matches the <code>assetId</code> that fees are paid in (<code>assetId == 0</code>).</li>
 </ol>
 <p>The minted amount of the coinbase transaction intrinsically increases the balance corresponding to the <code>inputContract</code>.
 This means the balance of <code>mintAssetId</code> is directly increased by <code>mintAmount</code> on the input contract,

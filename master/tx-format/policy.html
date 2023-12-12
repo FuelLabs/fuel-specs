@@ -182,7 +182,7 @@ enum PolicyType : uint32 {
 <p>Transaction is invalid if:</p>
 <ul>
 <li><code>max_fee &gt; sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)</code></li>
-<li><code>max_fee &lt; fee_balance(tx, BASE_ASSET_ID)</code></li>
+<li><code>max_fee &lt; reserved_fee_balance(tx, BASE_ASSET_ID)</code></li>
 </ul>
 
                     </main>
