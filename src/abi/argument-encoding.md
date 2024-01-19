@@ -2,7 +2,7 @@
 
 ## Version 0
 
-Warning: This version is being deprecated!
+> :warning: This version is being deprecated for Version 1 (see below).
 
 When crafting transaction script data, you must encode the arguments you wish to pass to the script.
 
@@ -322,7 +322,7 @@ Calling `foo` with `(1u64, "fuel", true)` :
 
 ## Version 1
 
-This version follows three philosophical tenets of
+This version was created to replace the older version 0 described above, and follows three philosophical tenets:
 
 - being self-sufficient: it must be possible to completely decode what was encoded only using the encoded bytes;
 - no overhead: only the bare minimum bytes are necessary to do the encoding. No metadata, headers, etc...;
@@ -332,14 +332,14 @@ This version follows three philosophical tenets of
 
 Primitive types will be encoded using the exact number of bits they need:
 
-- u8: 1 byte;
-- u16: 2 bytes;
-- u32: 4 bytes;
-- u64: 8 bytes;
-- u256: 32 bytes;
-- b256: 32 bytes;
+- `u8`: 1 byte;
+- `u16`: 2 bytes;
+- `u32`: 4 bytes;
+- `u64`: 8 bytes;
+- `u256`: 32 bytes;
+- `b256`: 32 bytes;
 
-### Arrays 
+### Arrays
 
 Arrays are encoded without any paddings or alignments, with one item after the other.
 
@@ -350,36 +350,36 @@ Arrays are encoded without any paddings or alignments, with one item after the o
 
 String arrays are encoded just like arrays, without any overhead.
 
-- str[1] = 1 byte
-- str[2] = 2 bytes
-- etc...
+- `str[1]` = 1 byte
+- `str[2]` = 2 bytes
+- `str[n]` = `n` bytes
 
 String slices do contain their length as u64, and the string itself is encoded packed without alignment or padding.
 
-- "abc" = [0, 0, 0, 0, 0, 0, 0, 3, "a", "b", "c]
+- `"abc"` = `[0, 0, 0, 0, 0, 0, 0, 3, "a", "b", "c"]`
 
 ### Slices
 
-`raw_slice` also being dynamic contains their length as u64 and is treated as a "slice of bytes". Each byte is encoded as u8 (1 byte) and is packed without alignment and padding.
+`raw_slice`, also being dynamic, contains their length as u64 and is treated as a "slice of bytes". Each byte is encoded as `u8` (1 byte) and is packed without alignment and padding.
 
-- slice of three bytes like [0u8, 1u8, 2u8] = [0, 0, 0, 0, 0, 0, 0, 3, 0, 1, 2]
+For example, a slice of three bytes like `[0u8, 1u8, 2u8]` will be encoded as bytes `[0, 0, 0, 0, 0, 0, 0, 3, 0, 1, 2]`
 
 ### Tuple
 
 Tuples are encoded just like arrays, without any overhead like paddings and alignments:
 
-- (A, B, C) = [encode(A), encode(B), encode(C)]
+- `(A, B, C)` = `[encode(A), encode(B), encode(C)]`
 
-### Structs
+### Structs (v1)
 
 Structs can be encoded in two ways:
 
 - first, with the automatic implementation;
-- second, with the custom implementation;
+- second, with the custom implementation.
 
-Auto implementation follows the same rules as tuples. So we can imagine that 
+Auto implementation follows the same rules as tuples. So we can imagine that
 
-```
+```sway
 struct S {
     a: A,
     b: B,
@@ -397,17 +397,17 @@ A struct has auto-implemented encoding if no custom was found.
 
 `Enums` can also be encoded with the automatic or the custom implementation.
 
-The auto implementation first encoded the variant with a u64 number starting from zero as the first variant and increments this value for each variant, following declaration order.
+The auto implementation first encoded the variant with a `u64` number starting from zero as the first variant and increments this value for each variant, following declaration order.
 
-```
-enum E{
+```sway
+enum E {
     VARIANT_A: A, // <- variant 0
     VARIANT_B: B, // <- variant 1
     VARIANT_C: C  // <- variant 2 
 }
 ```
 
-will be encoded as [encode(variant), encode(value)].
+will be encoded as `[encode(variant), encode(value)]`.
 
 The variant data will be encoded right after the variant tag, without any alignments or padding.
 
@@ -417,8 +417,8 @@ An enum has auto-implemented encoding if no custom was found.
 
 Some common data structures also have well-defined encoding:
 
-- Vec = [encode(length), <encode each item>]
-- Bytes = [encode(length), <bytes>]
-- String = [encode (length), <data>]
+- `Vec` will be encoded as `[encode(length), <encode each item>]`
+- `Bytes` will be encoded as `[encode(length), <bytes>]`
+- `String` will be encoded as `[encode (length), <data>]`
 
 All of them first contain the length and then their data right after, without any padding or alignment.
