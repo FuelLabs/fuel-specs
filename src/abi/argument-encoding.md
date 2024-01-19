@@ -326,7 +326,7 @@ This version was created to replace the older version 0 described above, and fol
 
 - being self-sufficient: it must be possible to completely decode what was encoded only using the encoded bytes;
 - no overhead: only the bare minimum bytes are necessary to do the encoding. No metadata, headers, etc...;
-- no relation with runtime memory layout: no paddings, no alignments, etc...
+- no relation with runtime memory layout: no padding, no alignment, etc...
 
 ### Primitive Types
 
@@ -341,7 +341,7 @@ Primitive types will be encoded using the exact number of bits they need:
 
 ### Arrays
 
-Arrays are encoded without any paddings or alignments, with one item after the other.
+Arrays are encoded without any padding or alignment, with one item after the other.
 
 - [T; 1] is encoded [encode(T)];
 - [T; 2] is encoded [encode(T), encode(T)]
@@ -366,7 +366,7 @@ For example, a slice of three bytes like `[0u8, 1u8, 2u8]` will be encoded as by
 
 ### Tuple
 
-Tuples are encoded just like arrays, without any overhead like paddings and alignments:
+Tuples are encoded just like arrays, without any overhead like padding and alignment:
 
 - `(A, B, C)` = `[encode(A), encode(B), encode(C)]`
 
@@ -409,7 +409,7 @@ enum E {
 
 will be encoded as `[encode(variant), encode(value)]`.
 
-The variant data will be encoded right after the variant tag, without any alignments or padding.
+The variant data will be encoded right after the variant tag, without any alignment or padding.
 
 An enum has auto-implemented encoding if no custom was found.
 
