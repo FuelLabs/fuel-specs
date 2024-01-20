@@ -324,7 +324,7 @@ Calling `foo` with `(1u64, "fuel", true)` :
 
 This version was created to replace the older version 0 described above, and follows three philosophical tenets:
 
-- being self-sufficient: it must be possible to completely decode what was encoded only using the encoded bytes;
+- being self-sufficient: it must be possible to completely decode the original data only using the encoded bytes and the original type (there are no references to data outside the encoded bytes);
 - no overhead: only the bare minimum bytes are necessary to do the encoding. No metadata, headers, etc...;
 - no relation with runtime memory layout: no padding, no alignment, etc...
 
