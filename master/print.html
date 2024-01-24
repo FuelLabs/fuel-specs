@@ -2379,8 +2379,12 @@ fn complex_function(
 <pre><code class="language-text">0x0000000051fdfdad
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="argument-encoding"><a class="header" href="#argument-encoding">Argument Encoding</a></h1>
+<h2 id="version-0"><a class="header" href="#version-0">Version 0</a></h2>
+<blockquote>
+<p>:warning: This version is being deprecated for Version 1 (see below).</p>
+</blockquote>
 <p>When crafting transaction script data, you must encode the arguments you wish to pass to the script.</p>
-<h2 id="types"><a class="header" href="#types">Types</a></h2>
+<h3 id="types"><a class="header" href="#types">Types</a></h3>
 <p>These are the available types that can be encoded in the ABI:</p>
 <ul>
 <li>Unsigned integers:
@@ -2404,7 +2408,7 @@ fn complex_function(
 <li>Tuples</li>
 </ul>
 <p>These types are encoded in-place. Here's how to encode them. We define <code>enc(X)</code> the encoding of the type <code>X</code>.</p>
-<h2 id="unsigned-integers"><a class="header" href="#unsigned-integers">Unsigned Integers</a></h2>
+<h3 id="unsigned-integers"><a class="header" href="#unsigned-integers">Unsigned Integers</a></h3>
 <p><code>u&lt;M&gt;</code> where <code>M</code> is either 8, 16, 32, 64, 128 or 256 bits.</p>
 <p><code>enc(X)</code> is the big-endian (i.e. right-aligned) representation of <code>X</code> left-padded with zero-bytes.</p>
 <ul>
@@ -2418,25 +2422,25 @@ fn complex_function(
 <p><strong>Example:</strong></p>
 <p>Encoding <code>42</code> yields: <code>0x000000000000002a</code>, which is the hexadecimal representation of the decimal number <code>42</code>, right-aligned to 8 bytes.
 Encoding <code>u128::MAX - 1</code> yields: <code>0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE</code>, it's right-aligned to 16 bytes</p>
-<h2 id="boolean"><a class="header" href="#boolean"><code>Boolean</code></a></h2>
+<h3 id="boolean"><a class="header" href="#boolean"><code>Boolean</code></a></h3>
 <p><code>enc(X)</code> is <code>0</code> if <code>X</code> is false or <code>1</code> if <code>X</code> is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the <code>u8</code> encoding.</p>
 <p><strong>Example:</strong></p>
 <p>Encoding <code>true</code> yields:</p>
 <pre><code class="language-text">0x0000000000000001
 </code></pre>
-<h2 id="b256-1"><a class="header" href="#b256-1"><code>B256</code></a></h2>
+<h3 id="b256-1"><a class="header" href="#b256-1"><code>B256</code></a></h3>
 <p><code>b256</code> is a fixed size bit array of length 256. Used for 256-bit hash digests and other 256-bit types. It is encoded as-is.</p>
 <p><strong>Example:</strong></p>
 <p>Encoding <code>0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745</code> yields:</p>
 <pre><code class="language-text">0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 </code></pre>
-<h2 id="address"><a class="header" href="#address"><code>Address</code></a></h2>
+<h3 id="address"><a class="header" href="#address"><code>Address</code></a></h3>
 <p>A 256-bit (32-byte) address, encoded in the same way as a <code>b256</code> argument: encoded as-is.</p>
 <p><strong>Example:</strong></p>
 <p>Encoding <code>0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745</code> yields:</p>
 <pre><code class="language-text">0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 </code></pre>
-<h2 id="array-1"><a class="header" href="#array-1">Array</a></h2>
+<h3 id="array-1"><a class="header" href="#array-1">Array</a></h3>
 <p>An array of a certain type <code>T</code>, <code>[T; n]</code>, where <code>n</code> is the length of the array.</p>
 <p>Arrays in Sway have a fixed-length which is known at compile time. This means the ABI encoding for arrays also happens in-place, with no need to account for dynamic sizing.</p>
 <p>The encoding for the array contains, in order, the encoding of each element in <code>[T; n]</code>, recursively following the encoding for the type <code>T</code>.</p>
@@ -2450,7 +2454,7 @@ Encoding <code>u128::MAX - 1</code> yields: <code>0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 <p>The resulting encoded ABI will be:</p>
 <pre><code class="language-text">0x000000000000000100000000000000010000000000000002
 </code></pre>
-<h2 id="fixed-length-strings"><a class="header" href="#fixed-length-strings">Fixed-length Strings</a></h2>
+<h3 id="fixed-length-strings"><a class="header" href="#fixed-length-strings">Fixed-length Strings</a></h3>
 <p>Strings have fixed length and are encoded in-place. <code>str[n]</code>, where <code>n</code> is the fixed-size of the string. Rather than padding the string, the encoding of the elements of the string is tightly packed. And unlike the other type encodings, the string encoding is left-aligned.</p>
 <p>Note that all strings are encoded in UTF-8.</p>
 <p><strong>Example:</strong></p>
@@ -2458,7 +2462,7 @@ Encoding <code>u128::MAX - 1</code> yields: <code>0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 <pre><code class="language-text">0x48656c6c6f2c20576f726c6400000000
 </code></pre>
 <p>Note that we're padding with zeroes in order to keep it right-aligned to 8 bytes (FuelVM's word size).</p>
-<h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
+<h3 id="structs"><a class="header" href="#structs">Structs</a></h3>
 <p>Encoding ABIs that contain custom types, such as structs, is similar to encoding a set of primitive types. The encoding will proceed in the order that the inner types of a custom type are declared and <em>recursively</em> just like encoding any other type. This way you can encode structs with primitive types or structs with more complex types in them such as other structs, arrays, strings, and enums.</p>
 <p>Here's an example:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -2505,7 +2509,7 @@ abi MyContract {
 0000000000000001 // `1` encoded as u8
 0000000000000002 // `2` encoded as u8
 </code></pre>
-<h2 id="enums-sum-types"><a class="header" href="#enums-sum-types">Enums (sum types)</a></h2>
+<h3 id="enums-sum-types"><a class="header" href="#enums-sum-types">Enums (sum types)</a></h3>
 <p>ABI calls containing enums (sum types) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -2576,7 +2580,7 @@ abi MyContract {
 <pre><code class="language-plaintext">0x
 0000000000000002 // The discriminant of the chosen enum, in this case `2`.
 </code></pre>
-<h2 id="vectors"><a class="header" href="#vectors">Vectors</a></h2>
+<h3 id="vectors"><a class="header" href="#vectors">Vectors</a></h3>
 <p>ABI calls containing vectors are encoded in the following way:</p>
 <ul>
 <li>First, figure out the the length <code>l</code> of the vector. Its length will also be its capacity.</li>
@@ -2613,7 +2617,7 @@ on the heap, and we encode only the pointer to this data</li>
 0000000000000003 // 3u32
 0000000000000004 // 4u32
 </code></pre>
-<h2 id="tuples"><a class="header" href="#tuples">Tuples</a></h2>
+<h3 id="tuples"><a class="header" href="#tuples">Tuples</a></h3>
 <p>ABI calls containing tuples are encoded as such:
 If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)</code>, with <code>T_1,...,T_n</code> being any type except for vector, then <code>enc(X)</code> is encoded as the concatenation of <code>enc(T_1)</code>, <code>enc(T_2)</code>,<code>enc (T_3)</code>, ..., <code>enc(T_n)</code>.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -2631,6 +2635,84 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 6675656c00000000 // &quot;fuel&quot; encoded as per the specs
 0000000000000001 // true
 </code></pre>
+<h2 id="version-1"><a class="header" href="#version-1">Version 1</a></h2>
+<p>This version was created to replace the older version 0 described above, and follows three philosophical tenets:</p>
+<ul>
+<li>being self-sufficient: it must be possible to completely decode the original data only using the encoded bytes and the original type (there are no references to data outside the encoded bytes);</li>
+<li>no overhead: only the bare minimum bytes are necessary to do the encoding. No metadata, headers, etc...;</li>
+<li>no relation with runtime memory layout: no padding, no alignment, etc...</li>
+</ul>
+<h3 id="primitive-types"><a class="header" href="#primitive-types">Primitive Types</a></h3>
+<p>Primitive types will be encoded using the exact number of bits they need:</p>
+<ul>
+<li><code>u8</code>: 1 byte;</li>
+<li><code>u16</code>: 2 bytes;</li>
+<li><code>u32</code>: 4 bytes;</li>
+<li><code>u64</code>: 8 bytes;</li>
+<li><code>u256</code>: 32 bytes;</li>
+<li><code>b256</code>: 32 bytes;</li>
+</ul>
+<h3 id="arrays"><a class="header" href="#arrays">Arrays</a></h3>
+<p>Arrays are encoded without any padding or alignment, with one item after the other.</p>
+<ul>
+<li>[T; 1] is encoded [encode(T)];</li>
+<li>[T; 2] is encoded [encode(T), encode(T)]</li>
+</ul>
+<h3 id="strings"><a class="header" href="#strings">Strings</a></h3>
+<p>String arrays are encoded just like arrays, without any overhead.</p>
+<ul>
+<li><code>str[1]</code> = 1 byte</li>
+<li><code>str[2]</code> = 2 bytes</li>
+<li><code>str[n]</code> = <code>n</code> bytes</li>
+</ul>
+<p>String slices do contain their length as u64, and the string itself is encoded packed without alignment or padding.</p>
+<ul>
+<li><code>&quot;abc&quot;</code> = <code>[0, 0, 0, 0, 0, 0, 0, 3, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</code></li>
+</ul>
+<h3 id="slices"><a class="header" href="#slices">Slices</a></h3>
+<p><code>raw_slice</code>, also being dynamic, contains their length as u64 and is treated as a &quot;slice of bytes&quot;. Each byte is encoded as <code>u8</code> (1 byte) and is packed without alignment and padding.</p>
+<p>For example, a slice of three bytes like <code>[0u8, 1u8, 2u8]</code> will be encoded as bytes <code>[0, 0, 0, 0, 0, 0, 0, 3, 0, 1, 2]</code></p>
+<h3 id="tuple-1"><a class="header" href="#tuple-1">Tuple</a></h3>
+<p>Tuples are encoded just like arrays, without any overhead like padding and alignment:</p>
+<ul>
+<li><code>(A, B, C)</code> = <code>[encode(A), encode(B), encode(C)]</code></li>
+</ul>
+<h3 id="structs-v1"><a class="header" href="#structs-v1">Structs (v1)</a></h3>
+<p>Structs can be encoded in two ways:</p>
+<ul>
+<li>first, with the automatic implementation;</li>
+<li>second, with the custom implementation.</li>
+</ul>
+<p>Auto implementation follows the same rules as tuples. So we can imagine that</p>
+<pre><code class="language-sway">struct S {
+    a: A,
+    b: B,
+    c: C
+}
+</code></pre>
+<p>is encoded the same way as the tuple <code>(A, B, C)</code>.</p>
+<p>Custom implementation allows the developer to choose how a struct is encoded.</p>
+<p>A struct has auto-implemented encoding if no custom was found.</p>
+<h3 id="enums"><a class="header" href="#enums">Enums</a></h3>
+<p><code>Enums</code> can also be encoded with the automatic or the custom implementation.</p>
+<p>The auto implementation first encoded the variant with a <code>u64</code> number starting from zero as the first variant and increments this value for each variant, following declaration order.</p>
+<pre><code class="language-sway">enum E {
+    VARIANT_A: A, // &lt;- variant 0
+    VARIANT_B: B, // &lt;- variant 1
+    VARIANT_C: C  // &lt;- variant 2 
+}
+</code></pre>
+<p>will be encoded as <code>[encode(variant), encode(value)]</code>.</p>
+<p>The variant data will be encoded right after the variant tag, without any alignment or padding.</p>
+<p>An enum has auto-implemented encoding if no custom was found.</p>
+<h3 id="data-structures"><a class="header" href="#data-structures">Data Structures</a></h3>
+<p>Some common data structures also have well-defined encoding:</p>
+<ul>
+<li><code>Vec</code> will be encoded as <code>[encode(length), &lt;encode each item&gt;]</code></li>
+<li><code>Bytes</code> will be encoded as <code>[encode(length), &lt;bytes&gt;]</code></li>
+<li><code>String</code> will be encoded as <code>[encode (length), &lt;data&gt;]</code></li>
+</ul>
+<p>All of them first contain the length and then their data right after, without any padding or alignment.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fuel-vm-specification"><a class="header" href="#fuel-vm-specification">Fuel VM Specification</a></h1>
 <ul>
 <li><a href="fuel-vm/index.html#introduction">Introduction</a></li>
