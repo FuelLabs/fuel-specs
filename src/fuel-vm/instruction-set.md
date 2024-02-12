@@ -1493,6 +1493,8 @@ Panic if:
 | Encoding    | `0x00 i i i i`                                                                    |
 | Notes       | The immediate value is used as a bitmask for selecting the registers.             |
 
+The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask `011000000000000000000000` pushes the register 61 followed by register 62.
+
 Panic if:
 
 - `$sp + popcnt(imm)*8` overflows
@@ -1507,6 +1509,8 @@ Panic if:
 | Syntax      | `pshl imm`                                                                        |
 | Encoding    | `0x00 i i i i`                                                                    |
 | Notes       | The immediate value is used as a bitmask for selecting the registers.             |
+
+The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask `011000000000000000000000` pushes the register 37 followed by register 38.
 
 Panic if:
 
@@ -1523,6 +1527,10 @@ Panic if:
 | Encoding    | `0x00 i i i i`                                                                        |
 | Notes       | The immediate value is used as a bitmask for selecting the registers.                 |
 
+The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask `011000000000000000000000` pops the register 62 followed by register 61.
+
+Note that the order is reverse from `PSHH`, so that `PSHH a; POPH a` returns to the original state.
+
 Panic if:
 
 - `$sp - popcnt(imm)*8` overflows
@@ -1537,6 +1545,10 @@ Panic if:
 | Syntax      | `poph imm`                                                                            |
 | Encoding    | `0x00 i i i i`                                                                        |
 | Notes       | The immediate value is used as a bitmask for selecting the registers.                 |
+
+The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask `011000000000000000000000` pops the register 38 followed by register 37.
+
+Note that the order is reverse from `PSHL`, so that `PSHL a; POPL a` returns to the original state.
 
 Panic if:
 
