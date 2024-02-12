@@ -4207,6 +4207,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
 </tbody></table>
 </div>
+<p>The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask <code>011000000000000000000000</code> pushes the register 61 followed by register 62.</p>
 <p>Panic if:</p>
 <ul>
 <li><code>$sp + popcnt(imm)*8</code> overflows</li>
@@ -4221,6 +4222,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
 </tbody></table>
 </div>
+<p>The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask <code>011000000000000000000000</code> pushes the register 37 followed by register 38.</p>
 <p>Panic if:</p>
 <ul>
 <li><code>$sp + popcnt(imm)*8</code> overflows</li>
@@ -4235,6 +4237,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
 </tbody></table>
 </div>
+<p>The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask <code>011000000000000000000000</code> pops the register 62 followed by register 61.</p>
+<p>Note that the order is reverse from <code>PSHH</code>, so that <code>PSHH a; POPH a</code> returns to the original state.</p>
 <p>Panic if:</p>
 <ul>
 <li><code>$sp - popcnt(imm)*8</code> overflows</li>
@@ -4249,6 +4253,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Notes</td><td>The immediate value is used as a bitmask for selecting the registers.</td></tr>
 </tbody></table>
 </div>
+<p>The nth bit of the bitmask corresponds to nth entry of the register range. In other words, the most significant (i.e. leftmost) bit of the bitmask corresponds to the highest register index. So for instance bitmask <code>011000000000000000000000</code> pops the register 38 followed by register 37.</p>
+<p>Note that the order is reverse from <code>PSHL</code>, so that <code>PSHL a; POPL a</code> returns to the original state.</p>
 <p>Panic if:</p>
 <ul>
 <li><code>$sp - popcnt(imm)*8</code> overflows</li>
