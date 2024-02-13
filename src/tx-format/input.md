@@ -49,11 +49,9 @@ Transaction is invalid if:
 
 If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
-> **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` is set to zero.
+> **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` are set to zero.
 >
-> **Note:** when verifying and estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
->
-> **Note:** when executing a script, `txPointer` is initialized to the TX whose output is being spent.
+> **Note:** when verifying and estimating a predicate or executing a script, `txPointer` and `predicateGasUsed` are initialized to zero.
 
 The predicate root is computed [here](../identifiers/predicate-id.md).
 
@@ -74,9 +72,7 @@ Transaction is invalid if:
 
 > **Note:** when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are set to zero.
 >
-> **Note:** when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
->
-> **Note:** when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to the TX whose output is being spent.
+> **Note:** when verifying a predicate or executing a script, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
 
 ## `InputMessage`
 
