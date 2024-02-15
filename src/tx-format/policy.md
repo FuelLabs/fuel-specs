@@ -3,7 +3,7 @@
 ```c++
 // index using powers of 2 for efficient bitmasking
 enum PolicyType : uint32 {
-    GasPrice = 1,
+    Tip = 1,
     WitnessLimit = 2,
     Maturity = 4,
     MaxFee = 8,
@@ -14,11 +14,11 @@ enum PolicyType : uint32 {
 |--------|---------------------------------------------------------------------------------------|--------------|
 | `data` | One of [`GasPrice`](#gasprice), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
 
-## `GasPrice`
+## `Tip`
 
-| name       | type     | description               |
-|------------|----------|---------------------------|
-| `gasPrice` | `uint64` | Gas price for transaction |
+| name       | type     | description                                                                                   |
+|------------|----------|-----------------------------------------------------------------------------------------------|
+| `gasPrice` | `uint64` | Additional, optional fee in `BASE_ASSET` to incentivize block producer to include transaction |
 
 ## `WitnessLimit`
 
