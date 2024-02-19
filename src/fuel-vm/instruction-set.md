@@ -132,7 +132,7 @@ Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, 
 - In a predicate context, cease VM execution and return `false`.
 - In other contexts, revert (described below).
 
-On a non-predicate panic, append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+On a non-predicate panic, append a receipt to the list of receipts:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
@@ -141,7 +141,7 @@ On a non-predicate panic, append a receipt to the list of receipts, modifying `t
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-then append an additional receipt to the list of receipts, again modifying `tx.receiptsRoot`:
+then append an additional receipt to the list of receipts:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
@@ -1249,7 +1249,7 @@ Panic if:
 | Encoding    | `0x00 rA - - -`                                               |
 | Notes       |                                                               |
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
@@ -1259,7 +1259,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-If current context is external, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+If current context is external, append an additional receipt to the list of receipts:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
@@ -1667,7 +1667,7 @@ For output with contract ID `MEM[$fp, 32]`, decrease balance of asset ID `constr
 
 This modifies the `balanceRoot` field of the appropriate output.
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name          | type          | description                                |
 |---------------|---------------|--------------------------------------------|
@@ -1710,7 +1710,7 @@ Register `$rA` is a memory address from which the following fields are set (word
 
 `$rB` is the amount of coins to forward. `$rC` points to the 32-byte asset ID of the coins to forward. `$rD` is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name       | type          | description                                                               |
 |------------|---------------|---------------------------------------------------------------------------|
@@ -1847,7 +1847,7 @@ This instruction can be used to concatenate the code of multiple contracts toget
 | Encoding    | `0x00 rA rB rC rD`             |
 | Notes       |                                |
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
@@ -1870,7 +1870,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | Encoding    | `0x00 rA rB rC rD`              |
 | Notes       |                                 |
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name     | type          | description                                                               |
 |----------|---------------|---------------------------------------------------------------------------|
@@ -1913,7 +1913,7 @@ For output with contract ID `MEM[$fp, 32]`, increase balance of asset ID `constr
 
 This modifies the `balanceRoot` field of the appropriate output.
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name          | type          | description                                |
 |---------------|---------------|--------------------------------------------|
@@ -1939,7 +1939,7 @@ Panic if:
 - `$rA + $rB` overflows
 - `$rA + $rB > VM_MAX_RAM`
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name     | type          | description                                                               |
 |----------|---------------|---------------------------------------------------------------------------|
@@ -1951,7 +1951,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`     | `uint64`      | Value of register `$pc`.                                                  |
 | `is`     | `uint64`      | Value of register `$is`.                                                  |
 
-If current context is a script, append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+If current context is a script, append an additional receipt to the list of receipts:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
@@ -1986,7 +1986,7 @@ Then pop the call frame and restore all registers _except_ `$ggas`, `$cgas`, `$r
 | Encoding    | `0x00 rA - - -`                                                       |
 | Notes       |                                                                       |
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name   | type          | description                                                               |
 |--------|---------------|---------------------------------------------------------------------------|
@@ -1996,7 +1996,7 @@ Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
 | `pc`   | `uint64`      | Value of register `$pc`.                                                  |
 | `is`   | `uint64`      | Value of register `$is`.                                                  |
 
-Then append an additional receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Then append an additional receipt to the list of receipts:
 
 | name       | type          | description                 |
 |------------|---------------|-----------------------------|
@@ -2032,7 +2032,7 @@ Panic if:
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name        | type          | description                                                                     |
 |-------------|---------------|---------------------------------------------------------------------------------|
@@ -2192,7 +2192,7 @@ Panic if:
 - In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
 - `$rB == 0`
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name       | type          | description                                                               |
 |------------|---------------|---------------------------------------------------------------------------|
@@ -2234,7 +2234,7 @@ Panic if:
 - `tx.outputs[$rB].type != OutputType.Variable`
 - `tx.outputs[$rB].amount != 0`
 
-Append a receipt to the list of receipts, modifying `tx.receiptsRoot`:
+Append a receipt to the list of receipts:
 
 | name       | type          | description                                                               |
 |------------|---------------|---------------------------------------------------------------------------|
@@ -2468,7 +2468,6 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_SCRIPT_INPUTS_COUNT`                 | `0x005` | `tx.inputsCount`                                                  |
 | `GTF_SCRIPT_OUTPUTS_COUNT`                | `0x006` | `tx.outputsCount`                                                 |
 | `GTF_SCRIPT_WITNESSES_COUNT`              | `0x007` | `tx.witnessesCount`                                               |
-| `GTF_SCRIPT_RECEIPTS_ROOT`                | `0x008` | Memory address of `tx.receiptsRoot`                               |
 | `GTF_SCRIPT_SCRIPT`                       | `0x009` | Memory address of `tx.script`                                     |
 | `GTF_SCRIPT_SCRIPT_DATA`                  | `0x00A` | Memory address of `tx.scriptData`                                 |
 | `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00B` | Memory address of `tx.inputs[$rB]`                                |
@@ -2491,7 +2490,6 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_INPUT_COIN_OWNER`                    | `0x203` | Memory address of `tx.inputs[$rB].owner`                          |
 | `GTF_INPUT_COIN_AMOUNT`                   | `0x204` | `tx.inputs[$rB].amount`                                           |
 | `GTF_INPUT_COIN_ASSET_ID`                 | `0x205` | Memory address of `tx.inputs[$rB].asset_id`                       |
-| `GTF_INPUT_COIN_TX_POINTER`               | `0x206` | Memory address of `tx.inputs[$rB].txPointer`                      |
 | `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x207` | `tx.inputs[$rB].witnessIndex`                                     |
 | `GTF_INPUT_COIN_MATURITY`                 | `0x208` | `tx.inputs[$rB].maturity`                                         |
 | `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x209` | `tx.inputs[$rB].predicateLength`                                  |
