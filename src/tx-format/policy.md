@@ -18,7 +18,7 @@ enum PolicyType : uint32 {
 
 | name       | type     | description                                                                                   |
 |------------|----------|-----------------------------------------------------------------------------------------------|
-| `gasPrice` | `uint64` | Additional, optional fee in `BASE_ASSET` to incentivize block producer to include transaction |
+| `tip` | `uint64` | Additional, optional fee in `BASE_ASSET` to incentivize block producer to include transaction |
 
 ## `WitnessLimit`
 
