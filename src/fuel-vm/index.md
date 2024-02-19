@@ -155,7 +155,7 @@ Following initialization, execution begins.
 
 For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction-set.md#rvrt-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
-After the script has been executed, `tx.receiptsRoot` is updated to contain the Merkle root of the receipts, [as described in the tx spec](../tx-format/transaction.md#`TransactionScript`).
+After the script has been executed, `tx.receiptsRoot` is updated to contain the Merkle root of the receipts, [as described in the TransactionScript spec](../tx-format/transaction.md#`TransactionScript`).
 
 ## Call Frames
 
