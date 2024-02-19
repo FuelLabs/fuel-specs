@@ -87,7 +87,6 @@ Transaction is invalid if:
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
 - `max_gas(tx) > MAX_GAS_PER_TX`
-- No policy of type `PolicyType.GasPrice`
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
 - `len(policies) > count_ones(policyTypes)`
@@ -138,7 +137,6 @@ Transaction is invalid if:
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - `max_gas(tx) > MAX_GAS_PER_TX`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
-- No policy of type `PolicyType.GasPrice`
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
 - `len(policies) > count_ones(policyTypes)`

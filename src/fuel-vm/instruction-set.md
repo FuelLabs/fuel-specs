@@ -2529,7 +2529,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_WITNESS_DATA_LENGTH`                 | `0x400` | `tx.witnesses[$rB].dataLength`                                    |
 | `GTF_WITNESS_DATA`                        | `0x401` | Memory address of `tx.witnesses[$rB].data`                        |
 | `GTF_POLICY_TYPES`                        | `0x500` | `tx.policies.policyTypes`                                         |
-| `GTF_POLICY_GAS_PRICE`                    | `0x501` | `tx.policies[0x00].gasPrice`                                      |
+| `GTF_POLICY_TIP`                          | `0x501` | `tx.policies[0x00].tip`                                           |
 | `GTF_POLICY_WITNESS_LIMIT`                | `0x502` | `tx.policies[count_ones(0b11 & tx.policyTypes) - 1].witnessLimit` |
 | `GTF_POLICY_MATURITY`                     | `0x503` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
 | `GTF_POLICY_MAX_FEE`                      | `0x504` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
