@@ -2497,11 +2497,6 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_INPUT_COIN_PREDICATE`                | `0x20B` | Memory address of `tx.inputs[$rB].predicate`                      |
 | `GTF_INPUT_COIN_PREDICATE_DATA`           | `0x20C` | Memory address of `tx.inputs[$rB].predicateData`                  |
 | `GTF_INPUT_COIN_PREDICATE_GAS_USED`       | `0x20D` | `tx.inputs[$rB].predicateGasUsed`                                 |
-| `GTF_INPUT_CONTRACT_TX_ID`                | `0x220` | Memory address of `tx.inputs[$rB].txID`                           |
-| `GTF_INPUT_CONTRACT_OUTPUT_INDEX`         | `0x221` | `tx.inputs[$rB].outputIndex`                                      |
-| `GTF_INPUT_CONTRACT_BALANCE_ROOT`         | `0x222` | Memory address of `tx.inputs[$rB].balanceRoot`                    |
-| `GTF_INPUT_CONTRACT_STATE_ROOT`           | `0x223` | Memory address of `tx.inputs[$rB].stateRoot`                      |
-| `GTF_INPUT_CONTRACT_TX_POINTER`           | `0x224` | Memory address of `tx.inputs[$rB].txPointer`                      |
 | `GTF_INPUT_CONTRACT_CONTRACT_ID`          | `0x225` | Memory address of `tx.inputs[$rB].contractID`                     |
 | `GTF_INPUT_MESSAGE_SENDER`                | `0x240` | Memory address of `tx.inputs[$rB].sender`                         |
 | `GTF_INPUT_MESSAGE_RECIPIENT`             | `0x241` | Memory address of `tx.inputs[$rB].recipient`                      |
