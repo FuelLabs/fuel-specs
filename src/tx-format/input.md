@@ -28,7 +28,6 @@ Transaction is invalid if:
 | `asset_id`            | `byte[32]`                   | Asset ID of the coins.                                                 |
 | `txPointer`           | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
 | `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint32`                     | UTXO being spent must have been created at least this many blocks ago. |
 | `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
 | `predicateLength`     | `uint16`                     | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
@@ -46,8 +45,6 @@ Transaction is invalid if:
 - `predicateLength * 4 != len(predicate)`
 - `predicateDataLength != len(predicateData)`
 - `predicateGasUsed > MAX_GAS_PER_PREDICATE`
-
-If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
 
 > **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` is set to zero.
 >

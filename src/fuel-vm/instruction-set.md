@@ -2493,7 +2493,6 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_INPUT_COIN_ASSET_ID`                 | `0x205` | Memory address of `tx.inputs[$rB].asset_id`                       |
 | `GTF_INPUT_COIN_TX_POINTER`               | `0x206` | Memory address of `tx.inputs[$rB].txPointer`                      |
 | `GTF_INPUT_COIN_WITNESS_INDEX`            | `0x207` | `tx.inputs[$rB].witnessIndex`                                     |
-| `GTF_INPUT_COIN_MATURITY`                 | `0x208` | `tx.inputs[$rB].maturity`                                         |
 | `GTF_INPUT_COIN_PREDICATE_LENGTH`         | `0x209` | `tx.inputs[$rB].predicateLength`                                  |
 | `GTF_INPUT_COIN_PREDICATE_DATA_LENGTH`    | `0x20A` | `tx.inputs[$rB].predicateDataLength`                              |
 | `GTF_INPUT_COIN_PREDICATE`                | `0x20B` | Memory address of `tx.inputs[$rB].predicate`                      |
