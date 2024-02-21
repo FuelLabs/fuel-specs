@@ -162,7 +162,6 @@
 <tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>Asset ID of the coins.</td></tr>
 <tr><td><code>txPointer</code></td><td><a href="./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
-<tr><td><code>maturity</code></td><td><code>uint32</code></td><td>UTXO being spent must have been created at least this many blocks ago.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
 <tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
@@ -181,7 +180,6 @@
 <li><code>predicateDataLength != len(predicateData)</code></li>
 <li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
-<p>If <code>h</code> is the block height the UTXO being spent was created, transaction is invalid if <code>blockheight() &lt; h + maturity</code>.</p>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> and <code>predicateGasUsed</code> is set to zero.</p>
 <p><strong>Note:</strong> when verifying and estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>

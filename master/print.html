@@ -437,7 +437,6 @@ enum PolicyType : uint32 {
 <tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>Asset ID of the coins.</td></tr>
 <tr><td><code>txPointer</code></td><td><a href="tx-format/./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
-<tr><td><code>maturity</code></td><td><code>uint32</code></td><td>UTXO being spent must have been created at least this many blocks ago.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
 <tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
@@ -456,7 +455,6 @@ enum PolicyType : uint32 {
 <li><code>predicateDataLength != len(predicateData)</code></li>
 <li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
-<p>If <code>h</code> is the block height the UTXO being spent was created, transaction is invalid if <code>blockheight() &lt; h + maturity</code>.</p>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> and <code>predicateGasUsed</code> is set to zero.</p>
 <p><strong>Note:</strong> when verifying and estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
@@ -5094,7 +5092,6 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>GTF_INPUT_COIN_ASSET_ID</code></td><td><code>0x205</code></td><td>Memory address of <code>tx.inputs[$rB].asset_id</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_TX_POINTER</code></td><td><code>0x206</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_WITNESS_INDEX</code></td><td><code>0x207</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_COIN_MATURITY</code></td><td><code>0x208</code></td><td><code>tx.inputs[$rB].maturity</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_LENGTH</code></td><td><code>0x209</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA_LENGTH</code></td><td><code>0x20A</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE</code></td><td><code>0x20B</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
