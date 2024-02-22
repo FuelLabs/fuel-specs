@@ -212,6 +212,19 @@ def max_gas(tx) -> int:
     if tx.type == TransactionType.Script:
        gas = gas + tx.gasLimit
     return gas
+    
+    
+def maxFee(tx, assetId, gasPrice) -> int:
+    """
+    Computes the maximum potential amount of fees that may need to be charged to process a transaction.
+    """
+    maxGas = max_gas(tx)
+    feeBalance = gas_to_fee(maxGas, gasPrice)
+    # Only base asset can be used to pay for gas
+    if assetId == 0:
+        return feeBalance
+    else:
+        return 0
 
 
 def available_balance(tx, assetId) -> int:
