@@ -42,9 +42,7 @@ Transaction is invalid if:
 
 > **Note:** when signing a transaction, `balanceRoot` and `stateRoot` are set to zero.
 >
-> **Note:** when verifying a predicate, `balanceRoot` and `stateRoot` are initialized to zero.
->
-> **Note:** when executing a script, `balanceRoot` and `stateRoot` are initialized to the balance root and state root of the contract with ID `tx.inputs[inputIndex].contractID`.
+> **Note:** when verifying a predicate or executing a script, `balanceRoot` and `stateRoot` are initialized to zero.
 
 The balance root `balanceRoot` is the root of the [SMT](../protocol/cryptographic-primitives.md#sparse-merkle-tree) of balance leaves. Each balance is a `uint64`, keyed by asset ID (a `byte[32]`).
 
