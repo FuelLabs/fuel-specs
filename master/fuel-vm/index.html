@@ -264,6 +264,7 @@
 </ol>
 <p>Following initialization, execution begins.</p>
 <p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="./instruction-set.html#rvrt-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
+<p>After the script has been executed, <code>tx.receiptsRoot</code> is updated to contain the Merkle root of the receipts, <a href="../tx-format/transaction.html#%60TransactionScript%60">as described in the <code>TransactionScript</code> spec</a>.</p>
 <h2 id="call-frames"><a class="header" href="#call-frames">Call Frames</a></h2>
 <p>Cross-contract calls push a <em>call frame</em> onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that targets the FuelVM). The distinction is as follows:</p>
 <ol>

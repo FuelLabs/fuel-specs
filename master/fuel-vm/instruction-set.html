@@ -287,7 +287,7 @@
 <li>In a predicate context, cease VM execution and return <code>false</code>.</li>
 <li>In other contexts, revert (described below).</li>
 </ul>
-<p>On a non-predicate panic, append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>On a non-predicate panic, append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Panic</code></td></tr>
 <tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -295,7 +295,7 @@
 <tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
 </tbody></table>
 </div>
-<p>then append an additional receipt to the list of receipts, again modifying <code>tx.receiptsRoot</code>:</p>
+<p>then append an additional receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
 <tr><td><code>result</code></td><td><code>uint64</code></td><td><code>1</code></td></tr>
@@ -1244,7 +1244,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Return</code></td></tr>
 <tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -1253,7 +1253,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
 </tbody></table>
 </div>
-<p>If current context is external, append an additional receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>If current context is external, append an additional receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
 <tr><td><code>result</code></td><td><code>uint64</code></td><td><code>0</code></td></tr>
@@ -1621,7 +1621,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </ul>
 <p>For output with contract ID <code>MEM[$fp, 32]</code>, decrease balance of asset ID <code>constructAssetID(MEM[$fp, 32], MEM[$rB, 32])</code> by <code>$rA</code>.</p>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output.</p>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Burn</code></td></tr>
 <tr><td><code>sub_id</code></td><td><code>byte[32]</code></td><td>Asset sub identifier <code>MEM[$rB, $rB + 32]</code>.</td></tr>
@@ -1659,7 +1659,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </tbody></table>
 </div>
 <p><code>$rB</code> is the amount of coins to forward. <code>$rC</code> points to the 32-byte asset ID of the coins to forward. <code>$rD</code> is the amount of gas to forward. If it is set to an amount greater than the available gas, all available gas is forwarded.</p>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Call</code></td></tr>
 <tr><td><code>from</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -1783,7 +1783,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Log</code></td></tr>
 <tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -1804,7 +1804,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.LogData</code></td></tr>
 <tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -1841,7 +1841,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 </ul>
 <p>For output with contract ID <code>MEM[$fp, 32]</code>, increase balance of asset ID <code>constructAssetID(MEM[$fp, 32], MEM[$rB])</code> by <code>$rA</code>.</p>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output.</p>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Mint</code></td></tr>
 <tr><td><code>sub_id</code></td><td><code>byte[32]</code></td><td>Asset sub identifier <code>MEM[$rB, $rB + 32]</code>.</td></tr>
@@ -1865,7 +1865,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>$rA + $rB</code> overflows</li>
 <li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
 </ul>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ReturnData</code></td></tr>
 <tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -1876,7 +1876,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
 </tbody></table>
 </div>
-<p>If current context is a script, append an additional receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>If current context is a script, append an additional receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
 <tr><td><code>result</code></td><td><code>uint64</code></td><td><code>0</code></td></tr>
@@ -1907,7 +1907,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Revert</code></td></tr>
 <tr><td><code>id</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -1916,7 +1916,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>is</code></td><td><code>uint64</code></td><td>Value of register <code>$is</code>.</td></tr>
 </tbody></table>
 </div>
-<p>Then append an additional receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Then append an additional receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.ScriptResult</code></td></tr>
 <tr><td><code>result</code></td><td><code>uint64</code></td><td><code>1</code></td></tr>
@@ -1949,7 +1949,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li>In an external context, if <code>$rD &gt; MEM[balanceOfStart(0), 8]</code></li>
 <li>In an internal context, if <code>$rD</code> is greater than the balance of asset ID 0 of output with contract ID <code>MEM[$fp, 32]</code></li>
 </ul>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.MessageOut</code></td></tr>
 <tr><td><code>sender</code></td><td><code>byte[32]</code></td><td>The address of the message sender: <code>MEM[$fp, 32]</code>.</td></tr>
@@ -2093,7 +2093,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li>In an internal context, if <code>$rB</code> is greater than the balance of asset ID <code>MEM[$rC, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
 <li><code>$rB == 0</code></li>
 </ul>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.Transfer</code></td></tr>
 <tr><td><code>from</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -2130,7 +2130,7 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <li><code>tx.outputs[$rB].type != OutputType.Variable</code></li>
 <li><code>tx.outputs[$rB].amount != 0</code></li>
 </ul>
-<p>Append a receipt to the list of receipts, modifying <code>tx.receiptsRoot</code>:</p>
+<p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><code>ReceiptType</code></td><td><code>ReceiptType.TransferOut</code></td></tr>
 <tr><td><code>from</code></td><td><code>byte[32]</code></td><td>Contract ID of current context if in an internal context, zero otherwise.</td></tr>
@@ -2331,7 +2331,6 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>GTF_SCRIPT_INPUTS_COUNT</code></td><td><code>0x005</code></td><td><code>tx.inputsCount</code></td></tr>
 <tr><td><code>GTF_SCRIPT_OUTPUTS_COUNT</code></td><td><code>0x006</code></td><td><code>tx.outputsCount</code></td></tr>
 <tr><td><code>GTF_SCRIPT_WITNESSES_COUNT</code></td><td><code>0x007</code></td><td><code>tx.witnessesCount</code></td></tr>
-<tr><td><code>GTF_SCRIPT_RECEIPTS_ROOT</code></td><td><code>0x008</code></td><td>Memory address of <code>tx.receiptsRoot</code></td></tr>
 <tr><td><code>GTF_SCRIPT_SCRIPT</code></td><td><code>0x009</code></td><td>Memory address of <code>tx.script</code></td></tr>
 <tr><td><code>GTF_SCRIPT_SCRIPT_DATA</code></td><td><code>0x00A</code></td><td>Memory address of <code>tx.scriptData</code></td></tr>
 <tr><td><code>GTF_SCRIPT_INPUT_AT_INDEX</code></td><td><code>0x00B</code></td><td>Memory address of <code>tx.inputs[$rB]</code></td></tr>
@@ -2354,18 +2353,12 @@ Use <a href="#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to l
 <tr><td><code>GTF_INPUT_COIN_OWNER</code></td><td><code>0x203</code></td><td>Memory address of <code>tx.inputs[$rB].owner</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_AMOUNT</code></td><td><code>0x204</code></td><td><code>tx.inputs[$rB].amount</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_ASSET_ID</code></td><td><code>0x205</code></td><td>Memory address of <code>tx.inputs[$rB].asset_id</code></td></tr>
-<tr><td><code>GTF_INPUT_COIN_TX_POINTER</code></td><td><code>0x206</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_WITNESS_INDEX</code></td><td><code>0x207</code></td><td><code>tx.inputs[$rB].witnessIndex</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_LENGTH</code></td><td><code>0x209</code></td><td><code>tx.inputs[$rB].predicateLength</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA_LENGTH</code></td><td><code>0x20A</code></td><td><code>tx.inputs[$rB].predicateDataLength</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE</code></td><td><code>0x20B</code></td><td>Memory address of <code>tx.inputs[$rB].predicate</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_DATA</code></td><td><code>0x20C</code></td><td>Memory address of <code>tx.inputs[$rB].predicateData</code></td></tr>
 <tr><td><code>GTF_INPUT_COIN_PREDICATE_GAS_USED</code></td><td><code>0x20D</code></td><td><code>tx.inputs[$rB].predicateGasUsed</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_TX_ID</code></td><td><code>0x220</code></td><td>Memory address of <code>tx.inputs[$rB].txID</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_OUTPUT_INDEX</code></td><td><code>0x221</code></td><td><code>tx.inputs[$rB].outputIndex</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_BALANCE_ROOT</code></td><td><code>0x222</code></td><td>Memory address of <code>tx.inputs[$rB].balanceRoot</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_STATE_ROOT</code></td><td><code>0x223</code></td><td>Memory address of <code>tx.inputs[$rB].stateRoot</code></td></tr>
-<tr><td><code>GTF_INPUT_CONTRACT_TX_POINTER</code></td><td><code>0x224</code></td><td>Memory address of <code>tx.inputs[$rB].txPointer</code></td></tr>
 <tr><td><code>GTF_INPUT_CONTRACT_CONTRACT_ID</code></td><td><code>0x225</code></td><td>Memory address of <code>tx.inputs[$rB].contractID</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_SENDER</code></td><td><code>0x240</code></td><td>Memory address of <code>tx.inputs[$rB].sender</code></td></tr>
 <tr><td><code>GTF_INPUT_MESSAGE_RECIPIENT</code></td><td><code>0x241</code></td><td>Memory address of <code>tx.inputs[$rB].recipient</code></td></tr>

@@ -176,8 +176,7 @@
 </ul>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>balanceRoot</code> and <code>stateRoot</code> are set to zero.</p>
-<p><strong>Note:</strong> when verifying a predicate, <code>balanceRoot</code> and <code>stateRoot</code> are initialized to zero.</p>
-<p><strong>Note:</strong> when executing a script, <code>balanceRoot</code> and <code>stateRoot</code> are initialized to the balance root and state root of the contract with ID <code>tx.inputs[inputIndex].contractID</code>.</p>
+<p><strong>Note:</strong> when verifying a predicate or executing a script, <code>balanceRoot</code> and <code>stateRoot</code> are initialized to zero.</p>
 </blockquote>
 <p>The balance root <code>balanceRoot</code> is the root of the <a href="../protocol/cryptographic-primitives.html#sparse-merkle-tree">SMT</a> of balance leaves. Each balance is a <code>uint64</code>, keyed by asset ID (a <code>byte[32]</code>).</p>
 <p>The state root <code>stateRoot</code> is the root of the <a href="../protocol/cryptographic-primitives.html#sparse-merkle-tree">SMT</a> of storage slots. Each storage slot is a <code>byte[32]</code>, keyed by a <code>byte[32]</code>.</p>

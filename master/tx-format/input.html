@@ -181,9 +181,8 @@
 <li><code>predicateGasUsed &gt; MAX_GAS_PER_PREDICATE</code></li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> and <code>predicateGasUsed</code> is set to zero.</p>
-<p><strong>Note:</strong> when verifying and estimating a predicate, <code>txPointer</code> and <code>predicateGasUsed</code> is initialized to zero.</p>
-<p><strong>Note:</strong> when executing a script, <code>txPointer</code> is initialized to the TX whose output is being spent.</p>
+<p><strong>Note:</strong> when signing a transaction, <code>txPointer</code> and <code>predicateGasUsed</code> are set to zero.</p>
+<p><strong>Note:</strong> when verifying and estimating a predicate or executing a script, <code>txPointer</code> and <code>predicateGasUsed</code> are initialized to zero.</p>
 </blockquote>
 <p>The predicate root is computed <a href="../identifiers/predicate-id.html">here</a>.</p>
 <h2 id="inputcontract"><a class="header" href="#inputcontract"><code>InputContract</code></a></h2>
@@ -202,8 +201,7 @@
 </ul>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, <code>stateRoot</code>, and <code>txPointer</code> are set to zero.</p>
-<p><strong>Note:</strong> when verifying a predicate, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, <code>stateRoot</code>, and <code>txPointer</code> are initialized to zero.</p>
-<p><strong>Note:</strong> when executing a script, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, and <code>stateRoot</code> are initialized to the transaction ID, output index, amount, and state root of the contract with ID <code>contractID</code>, and <code>txPointer</code> is initialized to the TX whose output is being spent.</p>
+<p><strong>Note:</strong> when verifying a predicate or executing a script, <code>txID</code>, <code>outputIndex</code>, <code>balanceRoot</code>, <code>stateRoot</code>, and <code>txPointer</code> are initialized to zero.</p>
 </blockquote>
 <h2 id="inputmessage"><a class="header" href="#inputmessage"><code>InputMessage</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>

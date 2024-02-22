@@ -225,8 +225,7 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 </ul>
 <blockquote>
 <p><strong>Note:</strong> when signing a transaction, <code>receiptsRoot</code> is set to zero.</p>
-<p><strong>Note:</strong> when verifying a predicate, <code>receiptsRoot</code> is initialized to zero.</p>
-<p><strong>Note:</strong> when executing a script, <code>receiptsRoot</code> is initialized to zero.</p>
+<p><strong>Note:</strong> when verifying a predicate or executing a script, <code>receiptsRoot</code> is initialized to zero.</p>
 </blockquote>
 <p>The receipts root <code>receiptsRoot</code> is the root of the <a href="../protocol/cryptographic-primitives.html#binary-merkle-tree">binary Merkle tree</a> of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. <code>0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code>.</p>
 <h2 id="transactioncreate"><a class="header" href="#transactioncreate"><code>TransactionCreate</code></a></h2>
