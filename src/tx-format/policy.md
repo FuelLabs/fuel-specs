@@ -10,9 +10,9 @@ enum PolicyType : uint32 {
 }
 ```
 
-| name   | type                                                                                  | description  |
-|--------|---------------------------------------------------------------------------------------|--------------|
-| `data` | One of [`GasPrice`](#gasprice), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
+| name   | type                                                                              | description  |
+|--------|-----------------------------------------------------------------------------------|--------------|
+| `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
 
 ## `Tip`
 
