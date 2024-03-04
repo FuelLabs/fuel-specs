@@ -44,11 +44,12 @@ Transaction is invalid if:
 
 ## `MaxFee`
 
-| name      | type     | description                                                     |
-|-----------|----------|-----------------------------------------------------------------|
-| `max_fee` | `uint64` | The maximum fee payable by this transaction using `BASE_ASSET`. |
+| name      | type     | description                                                                                                                                |
+|-----------|----------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `max_fee` | `uint64` | The maximum fee payable by this transaction using `BASE_ASSET`. This is used to check transactions before the actual `gas_price` is known. |
 
 Transaction is invalid if:
 
+- `max_fee` is not set
 - `max_fee > sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)`
 - `max_fee < reserved_fee_balance(tx, BASE_ASSET_ID)`

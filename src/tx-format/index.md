@@ -18,4 +18,5 @@ The Fuel Transaction Format.
   - [`OutputVariable`](./output.md#outputvariable)
   - [`OutputContractCreated`](./output.md#outputcontractcreated)
 - [`Witness`](./witness.md)
+- [`Policy`](./policy.md)
 - [`TXPointer`](./tx-pointer.md)
