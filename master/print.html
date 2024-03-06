@@ -208,8 +208,8 @@
 <tr><td><code>MAX_PREDICATE_DATA_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of predicate data, in bytes.</td></tr>
 <tr><td><code>MAX_SCRIPT_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of script, in instructions.</td></tr>
 <tr><td><code>MAX_SCRIPT_DATA_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of script data, in bytes.</td></tr>
-<tr><td><code>MAX_MESSAGE_DATA_LENGTH</code></td><td><code>uint16</code></td><td>Maximum length of message data, in bytes.</td></tr>
-<tr><td><code>MAX_STORAGE_SLOTS</code></td><td><code>uint16</code></td><td>Maximum number of initial storage slots.</td></tr>
+<tr><td><code>MAX_MESSAGE_DATA_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of message data, in bytes.</td></tr>
+<tr><td><code>MAX_STORAGE_SLOTS</code></td><td><code>uint64</code></td><td>Maximum number of initial storage slots.</td></tr>
 <tr><td><code>MAX_TRANSACTION_SIZE</code></td><td><code>uint64</code></td><td>Maximum size of a transaction, in bytes.</td></tr>
 <tr><td><code>MAX_WITNESSES</code></td><td><code>uint64</code></td><td>Maximum number of witnesses.</td></tr>
 <tr><td><code>CHAIN_ID</code></td><td><code>uint64</code></td><td>A unique per-chain identifier.</td></tr>
@@ -267,8 +267,8 @@
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>scriptGasLimit</code></td><td><code>uint64</code></td><td>Gas limits the script execution.</td></tr>
-<tr><td><code>scriptLength</code></td><td><code>uint16</code></td><td>Script length, in instructions.</td></tr>
-<tr><td><code>scriptDataLength</code></td><td><code>uint16</code></td><td>Length of script input data, in bytes.</td></tr>
+<tr><td><code>scriptLength</code></td><td><code>uint64</code></td><td>Script length, in instructions.</td></tr>
+<tr><td><code>scriptDataLength</code></td><td><code>uint64</code></td><td>Length of script input data, in bytes.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
 <tr><td><code>inputsCount</code></td><td><code>uint8</code></td><td>Number of inputs.</td></tr>
 <tr><td><code>outputsCount</code></td><td><code>uint8</code></td><td>Number of outputs.</td></tr>
@@ -308,10 +308,10 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <p>The receipts root <code>receiptsRoot</code> is the root of the <a href="tx-format/../protocol/cryptographic-primitives.html#binary-merkle-tree">binary Merkle tree</a> of receipts. If there are no receipts, its value is set to the root of the empty tree, i.e. <code>0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code>.</p>
 <h2 id="transactioncreate"><a class="header" href="#transactioncreate"><code>TransactionCreate</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>bytecodeLength</code></td><td><code>uint16</code></td><td>Contract bytecode length, in instructions.</td></tr>
+<tr><td><code>bytecodeLength</code></td><td><code>uint64</code></td><td>Contract bytecode length, in instructions.</td></tr>
 <tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint8</code></td><td>Witness index of contract bytecode to create.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
-<tr><td><code>storageSlotsCount</code></td><td><code>uint16</code></td><td>Number of storage slots to initialize.</td></tr>
+<tr><td><code>storageSlotsCount</code></td><td><code>uint64</code></td><td>Number of storage slots to initialize.</td></tr>
 <tr><td><code>inputsCount</code></td><td><code>uint8</code></td><td>Number of inputs.</td></tr>
 <tr><td><code>outputsCount</code></td><td><code>uint8</code></td><td>Number of outputs.</td></tr>
 <tr><td><code>witnessesCount</code></td><td><code>uint8</code></td><td>Number of witnesses.</td></tr>
@@ -437,8 +437,8 @@ enum PolicyType : uint32 {
 <tr><td><code>txPointer</code></td><td><a href="tx-format/./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
-<tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
-<tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
+<tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
+<tr><td><code>predicateDataLength</code></td><td><code>uint64</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
 </tbody></table>
@@ -485,9 +485,9 @@ enum PolicyType : uint32 {
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
-<tr><td><code>dataLength</code></td><td><code>uint16</code></td><td>Length of message data, in bytes.</td></tr>
-<tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
-<tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
+<tr><td><code>dataLength</code></td><td><code>uint64</code></td><td>Length of message data, in bytes.</td></tr>
+<tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
+<tr><td><code>predicateDataLength</code></td><td><code>uint64</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>data</code></td><td><code>byte[]</code></td><td>The message data.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
@@ -590,7 +590,7 @@ enum PolicyType : uint32 {
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="witness"><a class="header" href="#witness">Witness</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>dataLength</code></td><td><code>uint16</code></td><td>Length of witness data, in bytes.</td></tr>
+<tr><td><code>dataLength</code></td><td><code>uint64</code></td><td>Length of witness data, in bytes.</td></tr>
 <tr><td><code>data</code></td><td><code>byte[]</code></td><td>Witness data.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="txpointer"><a class="header" href="#txpointer"><code>TXPointer</code></a></h1>
@@ -2729,7 +2729,7 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <tr><td><code>CONTRACT_MAX_SIZE</code></td><td><code>uint64</code></td><td></td><td>Maximum contract size, in bytes.</td></tr>
 <tr><td><code>MEM_MAX_ACCESS_SIZE</code></td><td><code>uint64</code></td><td></td><td>Maximum memory access size, in bytes.</td></tr>
 <tr><td><code>VM_MAX_RAM</code></td><td><code>uint64</code></td><td><code>2**26</code></td><td>64 MiB.</td></tr>
-<tr><td><code>MESSAGE_MAX_DATA_SIZE</code></td><td><code>uint16</code></td><td></td><td>Maximum size of message data, in bytes.</td></tr>
+<tr><td><code>MESSAGE_MAX_DATA_SIZE</code></td><td><code>uint64</code></td><td></td><td>Maximum size of message data, in bytes.</td></tr>
 </tbody></table>
 </div>
 <h2 id="semantics"><a class="header" href="#semantics">Semantics</a></h2>
@@ -4689,7 +4689,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address of the message recipient: <code>MEM[$rA, 32]</code>.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message: <code>$rD</code>.</td></tr>
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce as described <a href="fuel-vm/../identifiers/utxo-id.html#message-nonce">here</a>.</td></tr>
-<tr><td><code>len</code></td><td><code>uint16</code></td><td>Length of message data, in bytes: <code>$rC</code>.</td></tr>
+<tr><td><code>len</code></td><td><code>uint64</code></td><td>Length of message data, in bytes: <code>$rC</code>.</td></tr>
 <tr><td><code>digest</code></td><td><code>byte[32]</code></td><td><a href="fuel-vm/instruction-set.html#s256-sha-2-256">Hash</a> of <code>MEM[$rB, $rC]</code>.</td></tr>
 </tbody></table>
 </div>

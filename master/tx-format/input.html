@@ -163,8 +163,8 @@
 <tr><td><code>txPointer</code></td><td><a href="./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
-<tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
-<tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
+<tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
+<tr><td><code>predicateDataLength</code></td><td><code>uint64</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
 </tbody></table>
@@ -211,9 +211,9 @@
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce.</td></tr>
 <tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
-<tr><td><code>dataLength</code></td><td><code>uint16</code></td><td>Length of message data, in bytes.</td></tr>
-<tr><td><code>predicateLength</code></td><td><code>uint16</code></td><td>Length of predicate, in instructions.</td></tr>
-<tr><td><code>predicateDataLength</code></td><td><code>uint16</code></td><td>Length of predicate input data, in bytes.</td></tr>
+<tr><td><code>dataLength</code></td><td><code>uint64</code></td><td>Length of message data, in bytes.</td></tr>
+<tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
+<tr><td><code>predicateDataLength</code></td><td><code>uint64</code></td><td>Length of predicate input data, in bytes.</td></tr>
 <tr><td><code>data</code></td><td><code>byte[]</code></td><td>The message data.</td></tr>
 <tr><td><code>predicate</code></td><td><code>byte[]</code></td><td>Predicate bytecode.</td></tr>
 <tr><td><code>predicateData</code></td><td><code>byte[]</code></td><td>Predicate input data (parameters).</td></tr>
