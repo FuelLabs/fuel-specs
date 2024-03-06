@@ -12,8 +12,8 @@
 | `MAX_PREDICATE_DATA_LENGTH` | `uint64`  | Maximum length of predicate data, in bytes.   |
 | `MAX_SCRIPT_LENGTH`         | `uint64`  | Maximum length of script, in instructions.    |
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64`  | Maximum length of script data, in bytes.      |
-| `MAX_MESSAGE_DATA_LENGTH`   | `uint16`  | Maximum length of message data, in bytes.     |
-| `MAX_STORAGE_SLOTS`         | `uint16`  | Maximum number of initial storage slots.      |
+| `MAX_MESSAGE_DATA_LENGTH`   | `uint64`  | Maximum length of message data, in bytes.     |
+| `MAX_STORAGE_SLOTS`         | `uint64`  | Maximum number of initial storage slots.      |
 | `MAX_TRANSACTION_SIZE`      | `uint64`  | Maximum size of a transaction, in bytes.      |
 | `MAX_WITNESSES`             | `uint64`  | Maximum number of witnesses.                  |
 | `CHAIN_ID`                  | `uint64`  | A unique per-chain identifier.                |

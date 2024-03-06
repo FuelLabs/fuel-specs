@@ -29,8 +29,8 @@ Transaction is invalid if:
 | `txPointer`           | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
 | `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
 | `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
-| `predicateLength`     | `uint16`                     | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
+| `predicateLength`     | `uint64`                     | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint64`                     | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`                     | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`                     | Predicate input data (parameters).                                     |
 
@@ -81,9 +81,9 @@ Transaction is invalid if:
 | `nonce`               | `byte[32]` | The message nonce.                                      |
 | `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.     |
 | `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                        |
-| `dataLength`          | `uint16`   | Length of message data, in bytes.                       |
-| `predicateLength`     | `uint16`   | Length of predicate, in instructions.                   |
-| `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.               |
+| `dataLength`          | `uint64`   | Length of message data, in bytes.                       |
+| `predicateLength`     | `uint64`   | Length of predicate, in instructions.                   |
+| `predicateDataLength` | `uint64`   | Length of predicate input data, in bytes.               |
 | `data`                | `byte[]`   | The message data.                                       |
 | `predicate`           | `byte[]`   | Predicate bytecode.                                     |
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                      |
