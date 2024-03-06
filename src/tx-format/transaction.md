@@ -58,8 +58,8 @@ enum ReceiptType : uint8 {
 | name               | type                        | description                             |
 |--------------------|-----------------------------|-----------------------------------------|
 | `scriptGasLimit`   | `uint64`                    | Gas limits the script execution.        |
-| `scriptLength`     | `uint16`                    | Script length, in instructions.         |
-| `scriptDataLength` | `uint16`                    | Length of script input data, in bytes.  |
+| `scriptLength`     | `uint64`                    | Script length, in instructions.         |
+| `scriptDataLength` | `uint64`                    | Length of script input data, in bytes.  |
 | `policyTypes`      | `uint32`                    | Bitfield of used policy types.          |
 | `inputsCount`      | `uint8`                     | Number of inputs.                       |
 | `outputsCount`     | `uint8`                     | Number of outputs.                      |
@@ -102,10 +102,10 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 
 | name                   | type                        | description                                       |
 |------------------------|-----------------------------|---------------------------------------------------|
-| `bytecodeLength`       | `uint16`                    | Contract bytecode length, in instructions.        |
+| `bytecodeLength`       | `uint64`                    | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint8`                     | Witness index of contract bytecode to create.     |
 | `policyTypes`          | `uint32`                    | Bitfield of used policy types.                    |
-| `storageSlotsCount`    | `uint16`                    | Number of storage slots to initialize.            |
+| `storageSlotsCount`    | `uint64`                    | Number of storage slots to initialize.            |
 | `inputsCount`          | `uint8`                     | Number of inputs.                                 |
 | `outputsCount`         | `uint8`                     | Number of outputs.                                |
 | `witnessesCount`       | `uint8`                     | Number of witnesses.                              |
