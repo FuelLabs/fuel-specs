@@ -2473,6 +2473,8 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00B` | Memory address of `tx.inputs[$rB]`                                |
 | `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00C` | Memory address of `t.outputs[$rB]`                                |
 | `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00D` | Memory address of `tx.witnesses[$rB]`                             |
+| `GTF_TX_START_ADDRESS`                    | `0x0A0` | Memory address of the raw transaction bytes                         |
+| `GTF_TX_LENGTH`                           | `0x0A1` | Length of raw transction types in memory                        |
 | `GTF_CREATE_BYTECODE_LENGTH`              | `0x100` | `tx.bytecodeLength`                                               |
 | `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x101` | `tx.bytecodeWitnessIndex`                                         |
 | `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x102` | `tx.storageSlotsCount`                                            |
