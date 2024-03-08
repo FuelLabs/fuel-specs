@@ -2421,6 +2421,7 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_GET_CALLER`              | `0x00002` | Get caller's contract ID.       |
 | `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate. |
 | `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`     |
+| `GM_GET_TX_START`            | `0x00005` | Get transaction start address   |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
@@ -2473,8 +2474,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00B` | Memory address of `tx.inputs[$rB]`                                |
 | `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00C` | Memory address of `t.outputs[$rB]`                                |
 | `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00D` | Memory address of `tx.witnesses[$rB]`                             |
-| `GTF_TX_START_ADDRESS`                    | `0x0A0` | Memory address of the raw transaction bytes                         |
-| `GTF_TX_LENGTH`                           | `0x0A1` | Length of raw transaction types in memory                        |
+| `GTF_TX_LENGTH`                           | `0x00E` | Length of raw transaction types in memory                        |
 | `GTF_CREATE_BYTECODE_LENGTH`              | `0x100` | `tx.bytecodeLength`                                               |
 | `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x101` | `tx.bytecodeWitnessIndex`                                         |
 | `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x102` | `tx.storageSlotsCount`                                            |
