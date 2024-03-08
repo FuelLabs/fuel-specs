@@ -5025,6 +5025,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>GM_GET_CALLER</code></td><td><code>0x00002</code></td><td>Get caller's contract ID.</td></tr>
 <tr><td><code>GM_GET_VERIFYING_PREDICATE</code></td><td><code>0x00003</code></td><td>Get index of current predicate.</td></tr>
 <tr><td><code>GM_GET_CHAIN_ID</code></td><td><code>0x00004</code></td><td>Get the value of <code>CHAIN_ID</code></td></tr>
+<tr><td><code>GM_GET_TX_START</code></td><td><code>0x00005</code></td><td>Get transaction start address</td></tr>
 </tbody></table>
 </div>
 <p>If <code>imm == GM_IS_CALLER_EXTERNAL</code>:</p>
@@ -5069,6 +5070,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>GTF_SCRIPT_INPUT_AT_INDEX</code></td><td><code>0x00B</code></td><td>Memory address of <code>tx.inputs[$rB]</code></td></tr>
 <tr><td><code>GTF_SCRIPT_OUTPUT_AT_INDEX</code></td><td><code>0x00C</code></td><td>Memory address of <code>t.outputs[$rB]</code></td></tr>
 <tr><td><code>GTF_SCRIPT_WITNESS_AT_INDEX</code></td><td><code>0x00D</code></td><td>Memory address of <code>tx.witnesses[$rB]</code></td></tr>
+<tr><td><code>GTF_TX_LENGTH</code></td><td><code>0x00E</code></td><td>Length of raw transaction types in memory</td></tr>
 <tr><td><code>GTF_CREATE_BYTECODE_LENGTH</code></td><td><code>0x100</code></td><td><code>tx.bytecodeLength</code></td></tr>
 <tr><td><code>GTF_CREATE_BYTECODE_WITNESS_INDEX</code></td><td><code>0x101</code></td><td><code>tx.bytecodeWitnessIndex</code></td></tr>
 <tr><td><code>GTF_CREATE_STORAGE_SLOTS_COUNT</code></td><td><code>0x102</code></td><td><code>tx.storageSlotsCount</code></td></tr>
