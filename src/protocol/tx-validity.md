@@ -238,7 +238,7 @@ def available_balance(tx, assetId) -> int:
 def unavailable_balance(tx, assetId) -> int:
     sentBalance = sum_outputs(tx, assetId)
     # Total fee balance
-    feeBalance = reserved_fee_balance(tx, assetId)
+    feeBalance = tx.policies.max_fee
     # Only base asset can be used to pay for gas
     if assetId == 0:
         return sentBalance + feeBalance
