@@ -44,9 +44,9 @@ Transaction is invalid if:
 
 ## `MaxFee`
 
-| name      | type     | description                                                                                                                                |
-|-----------|----------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| `max_fee` | `uint64` | The maximum fee payable by this transaction using `BASE_ASSET`. This is used to check transactions before the actual `gas_price` is known. |
+| name      | type     | description                                                                                                                                                           |
+|-----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `max_fee` | `uint64` | Required policy to specify the maximum fee payable by this transaction using `BASE_ASSET`. This is used to check transactions before the actual `gas_price` is known. |
 
 Transaction is invalid if:
 
