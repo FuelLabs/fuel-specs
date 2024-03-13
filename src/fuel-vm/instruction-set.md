@@ -2041,7 +2041,7 @@ Append a receipt to the list of receipts:
 | `recipient` | `byte[32]`    | The address of the message recipient: `MEM[$rA, 32]`.                           |
 | `amount`    | `uint64`      | Amount of base asset coins sent with message: `$rD`.                            |
 | `nonce`     | `byte[32]`    | The message nonce as described [here](../identifiers/utxo-id.md#message-nonce). |
-| `len`       | `uint16`      | Length of message data, in bytes: `$rC`.                                        |
+| `len`       | `uint64`      | Length of message data, in bytes: `$rC`.                                        |
 | `digest`    | `byte[32]`    | [Hash](#s256-sha-2-256) of `MEM[$rB, $rC]`.                                     |
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. This modifies the `balanceRoot` field of the appropriate contract that had its' funds deducted.
@@ -2421,6 +2421,7 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_GET_CALLER`              | `0x00002` | Get caller's contract ID.       |
 | `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate. |
 | `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`     |
+| `GM_GET_TX_START`            | `0x00005` | Get transaction start address   |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
@@ -2473,6 +2474,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_SCRIPT_INPUT_AT_INDEX`               | `0x00B` | Memory address of `tx.inputs[$rB]`                                |
 | `GTF_SCRIPT_OUTPUT_AT_INDEX`              | `0x00C` | Memory address of `t.outputs[$rB]`                                |
 | `GTF_SCRIPT_WITNESS_AT_INDEX`             | `0x00D` | Memory address of `tx.witnesses[$rB]`                             |
+| `GTF_TX_LENGTH`                           | `0x00E` | Length of raw transaction types in memory                        |
 | `GTF_CREATE_BYTECODE_LENGTH`              | `0x100` | `tx.bytecodeLength`                                               |
 | `GTF_CREATE_BYTECODE_WITNESS_INDEX`       | `0x101` | `tx.bytecodeWitnessIndex`                                         |
 | `GTF_CREATE_STORAGE_SLOTS_COUNT`          | `0x102` | `tx.storageSlotsCount`                                            |
