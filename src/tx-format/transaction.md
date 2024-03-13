@@ -87,7 +87,7 @@ Transaction is invalid if:
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
 - `max_gas(tx) > MAX_GAS_PER_TX`
-- No policy of type `PolicyType.GasPrice`
+- No policy of type `PolicyType.MaxFee` is set
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
 - `len(policies) > count_ones(policyTypes)`
@@ -136,7 +136,7 @@ Transaction is invalid if:
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - `max_gas(tx) > MAX_GAS_PER_TX`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
-- No policy of type `PolicyType.GasPrice`
+- No policy of type `PolicyType.MaxFee` is set
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
 - `len(policies) > count_ones(policyTypes)`
@@ -148,13 +148,14 @@ Creates a contract with contract ID as computed [here](../identifiers/contract-i
 The transaction is created by the block producer and is not signed. Since it is not usable outside of block creation or execution, all fields must be fully set upon creation without any zeroing.
 This means that the transaction ID must also include the correct `txPointer` value, not zeroed out.
 
-| name             | type                          | description                                          |
-|------------------|-------------------------------|------------------------------------------------------|
-| `txPointer`      | [`TXPointer`](./tx-pointer.md)  | The location of the `Mint` transaction in the block. |
-| `inputContract`  | [`InputContract`](./input.md)   | The contract UTXO that assets are minted to.         |
-| `outputContract` | [`OutputContract`](./output.md) | The contract UTXO that assets are being minted to.   |
-| `mintAmount`     | `uint64`                      | The amount of funds minted.                          |
-| `mintAssetId`    | `byte[32]`                    | The asset IDs corresponding to the minted amount.    |
+| name             | type                            | description                                                                |
+|------------------|---------------------------------|----------------------------------------------------------------------------|
+| `txPointer`      | [`TXPointer`](./tx-pointer.md)  | The location of the `Mint` transaction in the block.                       |
+| `inputContract`  | [`InputContract`](./input.md)   | The contract UTXO that assets are minted to.                               |
+| `outputContract` | [`OutputContract`](./output.md) | The contract UTXO that assets are being minted to.                         |
+| `mintAmount`     | `uint64`                        | The amount of funds minted.                                                |
+| `mintAssetId`    | `byte[32]`                      | The asset IDs corresponding to the minted amount.                          |
+| `gasPrice`       | `uint64`                        | The gas price to be used in calculating all fees for transactions on block |
 
 Transaction is invalid if:
 
