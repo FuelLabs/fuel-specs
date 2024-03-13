@@ -25,6 +25,9 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 | `MEM_MAX_ACCESS_SIZE`   | `uint64` |         | Maximum memory access size, in bytes.   |
 | `VM_MAX_RAM`            | `uint64` | `2**26` | 64 MiB.                                 |
 | `MESSAGE_MAX_DATA_SIZE` | `uint64` |         | Maximum size of message data, in bytes. |
+| `MAX_INPUTS`            | `uint16` | `256`   | Maximum number of inputs.               |
+| `MAX_OUTPUTS`           | `uint16` | `256`   | Maximum number of outputs.              |
+| `MAX_WITNESSES`         | `uint16` | `256`   | Maximum number of witnesses.            |
 
 ## Semantics
 

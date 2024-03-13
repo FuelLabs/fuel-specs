@@ -22,12 +22,12 @@ Transaction is invalid if:
 | name                  | type                         | description                                                            |
 |-----------------------|------------------------------|------------------------------------------------------------------------|
 | `txID`                | `byte[32]`                   | Hash of transaction.                                                   |
-| `outputIndex`         | `uint8`                      | Index of transaction output.                                           |
+| `outputIndex`         | `uint16`                      | Index of transaction output.                                           |
 | `owner`               | `byte[32]`                   | Owning address or predicate root.                                      |
 | `amount`              | `uint64`                     | Amount of coins.                                                       |
 | `asset_id`            | `byte[32]`                   | Asset ID of the coins.                                                 |
 | `txPointer`           | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
-| `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
+| `witnessIndex`        | `uint16`                     | Index of witness that authorizes spending the coin.                    |
 | `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
 | `predicateLength`     | `uint64`                     | Length of predicate, in instructions.                                  |
 | `predicateDataLength` | `uint64`                     | Length of predicate input data, in bytes.                              |
@@ -57,7 +57,7 @@ The predicate root is computed [here](../identifiers/predicate-id.md).
 | name          | type                         | description                                                             |
 |---------------|------------------------------|-------------------------------------------------------------------------|
 | `txID`        | `byte[32]`                   | Hash of transaction.                                                    |
-| `outputIndex` | `uint8`                      | Index of transaction output.                                            |
+| `outputIndex` | `uint16`                      | Index of transaction output.                                            |
 | `balanceRoot` | `byte[32]`                   | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]`                   | State root of contract before transaction execution.                    |
 | `txPointer`   | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                           |
@@ -79,7 +79,7 @@ Transaction is invalid if:
 | `recipient`           | `byte[32]` | The address or predicate root of the message recipient. |
 | `amount`              | `uint64`   | Amount of base asset coins sent with message.           |
 | `nonce`               | `byte[32]` | The message nonce.                                      |
-| `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.     |
+| `witnessIndex`        | `uint16`   | Index of witness that authorizes spending the coin.     |
 | `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                        |
 | `dataLength`          | `uint64`   | Length of message data, in bytes.                       |
 | `predicateLength`     | `uint64`   | Length of predicate, in instructions.                   |
