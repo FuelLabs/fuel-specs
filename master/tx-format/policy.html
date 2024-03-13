@@ -140,19 +140,19 @@
                         <h1 id="policy"><a class="header" href="#policy">Policy</a></h1>
 <pre><code class="language-c++">// index using powers of 2 for efficient bitmasking
 enum PolicyType : uint32 {
-    GasPrice = 1,
+    Tip = 1,
     WitnessLimit = 2,
     Maturity = 4,
     MaxFee = 8,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>data</code></td><td>One of <a href="#gasprice"><code>GasPrice</code></a>, <a href="#witnesslimit"><code>WitnessLimit</code></a>, or <a href="#maturity"><code>Maturity</code></a></td><td>Policy data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="#tip"><code>Tip</code></a>, <a href="#witnesslimit"><code>WitnessLimit</code></a>, or <a href="#maturity"><code>Maturity</code></a></td><td>Policy data.</td></tr>
 </tbody></table>
 </div>
-<h2 id="gasprice"><a class="header" href="#gasprice"><code>GasPrice</code></a></h2>
+<h2 id="tip"><a class="header" href="#tip"><code>Tip</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>Gas price for transaction</td></tr>
+<tr><td><code>tip</code></td><td><code>uint64</code></td><td>Additional, optional fee in <code>BASE_ASSET</code> to incentivize block producer to include transaction</td></tr>
 </tbody></table>
 </div>
 <h2 id="witnesslimit"><a class="header" href="#witnesslimit"><code>WitnessLimit</code></a></h2>
@@ -176,13 +176,13 @@ enum PolicyType : uint32 {
 </ul>
 <h2 id="maxfee"><a class="header" href="#maxfee"><code>MaxFee</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>max_fee</code></td><td><code>uint64</code></td><td>The maximum fee payable by this transaction using <code>BASE_ASSET</code>.</td></tr>
+<tr><td><code>max_fee</code></td><td><code>uint64</code></td><td>Required policy to specify the maximum fee payable by this transaction using <code>BASE_ASSET</code>. This is used to check transactions before the actual <code>gas_price</code> is known.</td></tr>
 </tbody></table>
 </div>
 <p>Transaction is invalid if:</p>
 <ul>
 <li><code>max_fee &gt; sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)</code></li>
-<li><code>max_fee &lt; reserved_fee_balance(tx, BASE_ASSET_ID)</code></li>
+<li><code>max_fee &lt; max_fee(tx, BASE_ASSET_ID, gas_price)</code></li>
 </ul>
 
                     </main>

@@ -194,6 +194,7 @@
 </ul>
 </li>
 <li><a href="tx-format/./witness.html"><code>Witness</code></a></li>
+<li><a href="tx-format/./policy.html"><code>Policy</code></a></li>
 <li><a href="tx-format/./tx-pointer.html"><code>TXPointer</code></a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="consensus-parameters"><a class="header" href="#consensus-parameters">Consensus Parameters</a></h1>
@@ -296,7 +297,7 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <li><code>scriptLength * 4 != len(script)</code></li>
 <li><code>scriptDataLength != len(scriptData)</code></li>
 <li><code>max_gas(tx) &gt; MAX_GAS_PER_TX</code></li>
-<li>No policy of type <code>PolicyType.GasPrice</code></li>
+<li>No policy of type <code>PolicyType.MaxFee</code> is set</li>
 <li><code>count_ones(policyTypes) &gt; count_variants(PolicyType)</code></li>
 <li><code>policyTypes &gt; sum_variants(PolicyType)</code></li>
 <li><code>len(policies) &gt; count_ones(policyTypes)</code></li>
@@ -342,7 +343,7 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <li><code>storageSlotsCount &gt; MAX_STORAGE_SLOTS</code></li>
 <li><code>max_gas(tx) &gt; MAX_GAS_PER_TX</code></li>
 <li>The <a href="tx-format/../protocol/cryptographic-primitives.html#sparse-merkle-tree">Sparse Merkle tree</a> root of <code>storageSlots</code> is not equal to the <code>stateRoot</code> of the one <code>OutputType.ContractCreated</code> output</li>
-<li>No policy of type <code>PolicyType.GasPrice</code></li>
+<li>No policy of type <code>PolicyType.MaxFee</code> is set</li>
 <li><code>count_ones(policyTypes) &gt; count_variants(PolicyType)</code></li>
 <li><code>policyTypes &gt; sum_variants(PolicyType)</code></li>
 <li><code>len(policies) &gt; count_ones(policyTypes)</code></li>
@@ -357,6 +358,7 @@ This means that the transaction ID must also include the correct <code>txPointer
 <tr><td><code>outputContract</code></td><td><a href="tx-format/./output.html"><code>OutputContract</code></a></td><td>The contract UTXO that assets are being minted to.</td></tr>
 <tr><td><code>mintAmount</code></td><td><code>uint64</code></td><td>The amount of funds minted.</td></tr>
 <tr><td><code>mintAssetId</code></td><td><code>byte[32]</code></td><td>The asset IDs corresponding to the minted amount.</td></tr>
+<tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>The gas price to be used in calculating all fees for transactions on block</td></tr>
 </tbody></table>
 </div>
 <p>Transaction is invalid if:</p>
@@ -367,19 +369,19 @@ This means that the transaction ID must also include the correct <code>txPointer
 <div style="break-before: page; page-break-before: always;"></div><h1 id="policy"><a class="header" href="#policy">Policy</a></h1>
 <pre><code class="language-c++">// index using powers of 2 for efficient bitmasking
 enum PolicyType : uint32 {
-    GasPrice = 1,
+    Tip = 1,
     WitnessLimit = 2,
     Maturity = 4,
     MaxFee = 8,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>data</code></td><td>One of <a href="tx-format/policy.html#gasprice"><code>GasPrice</code></a>, <a href="tx-format/policy.html#witnesslimit"><code>WitnessLimit</code></a>, or <a href="tx-format/policy.html#maturity"><code>Maturity</code></a></td><td>Policy data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="tx-format/policy.html#tip"><code>Tip</code></a>, <a href="tx-format/policy.html#witnesslimit"><code>WitnessLimit</code></a>, or <a href="tx-format/policy.html#maturity"><code>Maturity</code></a></td><td>Policy data.</td></tr>
 </tbody></table>
 </div>
-<h2 id="gasprice"><a class="header" href="#gasprice"><code>GasPrice</code></a></h2>
+<h2 id="tip"><a class="header" href="#tip"><code>Tip</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>gasPrice</code></td><td><code>uint64</code></td><td>Gas price for transaction</td></tr>
+<tr><td><code>tip</code></td><td><code>uint64</code></td><td>Additional, optional fee in <code>BASE_ASSET</code> to incentivize block producer to include transaction</td></tr>
 </tbody></table>
 </div>
 <h2 id="witnesslimit"><a class="header" href="#witnesslimit"><code>WitnessLimit</code></a></h2>
@@ -403,13 +405,13 @@ enum PolicyType : uint32 {
 </ul>
 <h2 id="maxfee"><a class="header" href="#maxfee"><code>MaxFee</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>max_fee</code></td><td><code>uint64</code></td><td>The maximum fee payable by this transaction using <code>BASE_ASSET</code>.</td></tr>
+<tr><td><code>max_fee</code></td><td><code>uint64</code></td><td>Required policy to specify the maximum fee payable by this transaction using <code>BASE_ASSET</code>. This is used to check transactions before the actual <code>gas_price</code> is known.</td></tr>
 </tbody></table>
 </div>
 <p>Transaction is invalid if:</p>
 <ul>
 <li><code>max_fee &gt; sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)</code></li>
-<li><code>max_fee &lt; reserved_fee_balance(tx, BASE_ASSET_ID)</code></li>
+<li><code>max_fee &lt; max_fee(tx, BASE_ASSET_ID, gas_price)</code></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="input"><a class="header" href="#input">Input</a></h1>
 <pre><code class="language-c++">enum InputType : uint8 {
@@ -886,14 +888,14 @@ def max_gas(tx) -&gt; int:
     if tx.type == TransactionType.Script:
        gas = gas + tx.gasLimit
     return gas
-
-
-def reserved_feeBalance(tx, assetId) -&gt; int:
+    
+    
+def maxFee(tx, assetId, gasPrice) -&gt; int:
     &quot;&quot;&quot;
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     &quot;&quot;&quot;
     maxGas = max_gas(tx)
-    feeBalance = gas_to_fee(maxGas, tx.gasPrice)
+    feeBalance = gas_to_fee(maxGas, gasPrice)
     # Only base asset can be used to pay for gas
     if assetId == 0:
         return feeBalance
@@ -912,7 +914,7 @@ def available_balance(tx, assetId) -&gt; int:
 def unavailable_balance(tx, assetId) -&gt; int:
     sentBalance = sum_outputs(tx, assetId)
     # Total fee balance
-    feeBalance = reserved_fee_balance(tx, assetId)
+    feeBalance = tx.policies.max_fee
     # Only base asset can be used to pay for gas
     if assetId == 0:
         return sentBalance + feeBalance
@@ -960,7 +962,8 @@ This ensures every byte of block space either on Fuel or corresponding DA layer 
 <p>If the transaction as included in a block does not match this final transaction, the block is invalid.</p>
 <h3 id="fees"><a class="header" href="#fees">Fees</a></h3>
 <p>The cost of a transaction can be described by:</p>
-<pre><code class="language-py">cost(tx) = gas_to_fee(min_gas(tx) + tx.gasLimit - unspentGas, tx.gasPrice)
+<pre><code class="language-py">def cost(tx, gasPrice) -&gt; int:
+    return gas_to_fee(min_gas(tx) + tx.gasLimit - unspentGas, gasPrice)
 </code></pre>
 <p>where:</p>
 <ul>
@@ -979,8 +982,8 @@ This ensures every byte of block space either on Fuel or corresponding DA layer 
 <p>A naturally occurring result of a variable gas limit is the concept of minimum and maximum fees. The minimum fee is, thus, the exact fee required to pay the fee balance, while the maximum fee is the minimum fee plus the gas limit:</p>
 <pre><code class="language-py">min_gas = min_gas(tx)
 max_gas = min_gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE + tx.gasLimit
-min_fee = gas_to_fee(min_gas, tx.gasPrice)
-max_fee = gas_to_fee(max_gas, tx.gasPrice)
+min_fee = gas_to_fee(min_gas, gasPrice)
+max_fee = gas_to_fee(max_gas, gasPrice)
 </code></pre>
 <p>The cost of the transaction <code>cost(tx)</code> must lie within the range defined by [<code>min_fee</code>, <code>max_fee</code>]. <code>min_gas</code> is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of <code>max_gas</code> illustrates that the delta between minimum gas and maximum gas is the sum of:</p>
 <ul>
@@ -997,13 +1000,13 @@ max_fee = gas_to_fee(max_gas, tx.gasPrice)
 <ul>
 <li>if the transaction does not revert;
 <ul>
-<li>if the asset ID is <code>0</code>; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)</code></li>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * gasPrice) / GAS_PRICE_FACTOR)</code></li>
 <li>otherwise; an <code>amount</code> of the unspent free balance for that asset ID after VM execution is complete</li>
 </ul>
 </li>
 <li>if the transaction reverts;
 <ul>
-<li>if the asset ID is <code>0</code>; an <code>amount</code> of the initial free balance plus <code>(unspentGas * tx.gasPrice) - messageBalance</code></li>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of the initial free balance plus <code>(unspentGas * gasPrice) - messageBalance</code></li>
 <li>otherwise; an <code>amount</code> of the initial free balance for that asset ID.</li>
 </ul>
 </li>
@@ -5119,7 +5122,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>GTF_WITNESS_DATA_LENGTH</code></td><td><code>0x400</code></td><td><code>tx.witnesses[$rB].dataLength</code></td></tr>
 <tr><td><code>GTF_WITNESS_DATA</code></td><td><code>0x401</code></td><td>Memory address of <code>tx.witnesses[$rB].data</code></td></tr>
 <tr><td><code>GTF_POLICY_TYPES</code></td><td><code>0x500</code></td><td><code>tx.policies.policyTypes</code></td></tr>
-<tr><td><code>GTF_POLICY_GAS_PRICE</code></td><td><code>0x501</code></td><td><code>tx.policies[0x00].gasPrice</code></td></tr>
+<tr><td><code>GTF_POLICY_TIP</code></td><td><code>0x501</code></td><td><code>tx.policies[0x00].tip</code></td></tr>
 <tr><td><code>GTF_POLICY_WITNESS_LIMIT</code></td><td><code>0x502</code></td><td><code>tx.policies[count_ones(0b11 &amp; tx.policyTypes) - 1].witnessLimit</code></td></tr>
 <tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x503</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
 <tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>

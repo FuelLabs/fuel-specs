@@ -355,14 +355,14 @@ def max_gas(tx) -&gt; int:
     if tx.type == TransactionType.Script:
        gas = gas + tx.gasLimit
     return gas
-
-
-def reserved_feeBalance(tx, assetId) -&gt; int:
+    
+    
+def maxFee(tx, assetId, gasPrice) -&gt; int:
     &quot;&quot;&quot;
     Computes the maximum potential amount of fees that may need to be charged to process a transaction.
     &quot;&quot;&quot;
     maxGas = max_gas(tx)
-    feeBalance = gas_to_fee(maxGas, tx.gasPrice)
+    feeBalance = gas_to_fee(maxGas, gasPrice)
     # Only base asset can be used to pay for gas
     if assetId == 0:
         return feeBalance
@@ -381,7 +381,7 @@ def available_balance(tx, assetId) -&gt; int:
 def unavailable_balance(tx, assetId) -&gt; int:
     sentBalance = sum_outputs(tx, assetId)
     # Total fee balance
-    feeBalance = reserved_fee_balance(tx, assetId)
+    feeBalance = tx.policies.max_fee
     # Only base asset can be used to pay for gas
     if assetId == 0:
         return sentBalance + feeBalance
@@ -429,7 +429,8 @@ This ensures every byte of block space either on Fuel or corresponding DA layer 
 <p>If the transaction as included in a block does not match this final transaction, the block is invalid.</p>
 <h3 id="fees"><a class="header" href="#fees">Fees</a></h3>
 <p>The cost of a transaction can be described by:</p>
-<pre><code class="language-py">cost(tx) = gas_to_fee(min_gas(tx) + tx.gasLimit - unspentGas, tx.gasPrice)
+<pre><code class="language-py">def cost(tx, gasPrice) -&gt; int:
+    return gas_to_fee(min_gas(tx) + tx.gasLimit - unspentGas, gasPrice)
 </code></pre>
 <p>where:</p>
 <ul>
@@ -448,8 +449,8 @@ This ensures every byte of block space either on Fuel or corresponding DA layer 
 <p>A naturally occurring result of a variable gas limit is the concept of minimum and maximum fees. The minimum fee is, thus, the exact fee required to pay the fee balance, while the maximum fee is the minimum fee plus the gas limit:</p>
 <pre><code class="language-py">min_gas = min_gas(tx)
 max_gas = min_gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE + tx.gasLimit
-min_fee = gas_to_fee(min_gas, tx.gasPrice)
-max_fee = gas_to_fee(max_gas, tx.gasPrice)
+min_fee = gas_to_fee(min_gas, gasPrice)
+max_fee = gas_to_fee(max_gas, gasPrice)
 </code></pre>
 <p>The cost of the transaction <code>cost(tx)</code> must lie within the range defined by [<code>min_fee</code>, <code>max_fee</code>]. <code>min_gas</code> is defined as the sum of all intrinsic costs of the transaction known prior to execution. The definition of <code>max_gas</code> illustrates that the delta between minimum gas and maximum gas is the sum of:</p>
 <ul>
@@ -466,13 +467,13 @@ max_fee = gas_to_fee(max_gas, tx.gasPrice)
 <ul>
 <li>if the transaction does not revert;
 <ul>
-<li>if the asset ID is <code>0</code>; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * tx.gasPrice) / GAS_PRICE_FACTOR)</code></li>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of <code>unspentBalance + floor((unspentGas * gasPrice) / GAS_PRICE_FACTOR)</code></li>
 <li>otherwise; an <code>amount</code> of the unspent free balance for that asset ID after VM execution is complete</li>
 </ul>
 </li>
 <li>if the transaction reverts;
 <ul>
-<li>if the asset ID is <code>0</code>; an <code>amount</code> of the initial free balance plus <code>(unspentGas * tx.gasPrice) - messageBalance</code></li>
+<li>if the asset ID is <code>0</code>; an <code>amount</code> of the initial free balance plus <code>(unspentGas * gasPrice) - messageBalance</code></li>
 <li>otherwise; an <code>amount</code> of the initial free balance for that asset ID.</li>
 </ul>
 </li>
