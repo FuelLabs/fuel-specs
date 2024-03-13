@@ -87,6 +87,7 @@ Transaction is invalid if:
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
 - `max_gas(tx) > MAX_GAS_PER_TX`
+- No policy of type `PolicyType.MaxFee` is set
 - `count_ones(policyTypes) > count_variants(PolicyType)`
 - `policyTypes > sum_variants(PolicyType)`
 - `len(policies) > count_ones(policyTypes)`

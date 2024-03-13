@@ -50,6 +50,5 @@ Transaction is invalid if:
 
 Transaction is invalid if:
 
-- `max_fee` is not set
 - `max_fee > sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)`
 - `max_fee < max_fee(tx, BASE_ASSET_ID)`
