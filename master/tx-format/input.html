@@ -156,12 +156,12 @@
 <h2 id="inputcoin"><a class="header" href="#inputcoin"><code>InputCoin</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txID</code></td><td><code>byte[32]</code></td><td>Hash of transaction.</td></tr>
-<tr><td><code>outputIndex</code></td><td><code>uint8</code></td><td>Index of transaction output.</td></tr>
+<tr><td><code>outputIndex</code></td><td><code>uint16</code></td><td>Index of transaction output.</td></tr>
 <tr><td><code>owner</code></td><td><code>byte[32]</code></td><td>Owning address or predicate root.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of coins.</td></tr>
 <tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>Asset ID of the coins.</td></tr>
 <tr><td><code>txPointer</code></td><td><a href="./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
-<tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
+<tr><td><code>witnessIndex</code></td><td><code>uint16</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
 <tr><td><code>predicateDataLength</code></td><td><code>uint64</code></td><td>Length of predicate input data, in bytes.</td></tr>
@@ -188,7 +188,7 @@
 <h2 id="inputcontract"><a class="header" href="#inputcontract"><code>InputContract</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txID</code></td><td><code>byte[32]</code></td><td>Hash of transaction.</td></tr>
-<tr><td><code>outputIndex</code></td><td><code>uint8</code></td><td>Index of transaction output.</td></tr>
+<tr><td><code>outputIndex</code></td><td><code>uint16</code></td><td>Index of transaction output.</td></tr>
 <tr><td><code>balanceRoot</code></td><td><code>byte[32]</code></td><td>Root of amount of coins owned by contract before transaction execution.</td></tr>
 <tr><td><code>stateRoot</code></td><td><code>byte[32]</code></td><td>State root of contract before transaction execution.</td></tr>
 <tr><td><code>txPointer</code></td><td><a href="./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
@@ -209,7 +209,7 @@
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address or predicate root of the message recipient.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce.</td></tr>
-<tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
+<tr><td><code>witnessIndex</code></td><td><code>uint16</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
 <tr><td><code>dataLength</code></td><td><code>uint64</code></td><td>Length of message data, in bytes.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>

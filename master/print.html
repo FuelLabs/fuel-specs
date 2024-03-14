@@ -271,9 +271,9 @@
 <tr><td><code>scriptLength</code></td><td><code>uint64</code></td><td>Script length, in instructions.</td></tr>
 <tr><td><code>scriptDataLength</code></td><td><code>uint64</code></td><td>Length of script input data, in bytes.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
-<tr><td><code>inputsCount</code></td><td><code>uint8</code></td><td>Number of inputs.</td></tr>
-<tr><td><code>outputsCount</code></td><td><code>uint8</code></td><td>Number of outputs.</td></tr>
-<tr><td><code>witnessesCount</code></td><td><code>uint8</code></td><td>Number of witnesses.</td></tr>
+<tr><td><code>inputsCount</code></td><td><code>uint16</code></td><td>Number of inputs.</td></tr>
+<tr><td><code>outputsCount</code></td><td><code>uint16</code></td><td>Number of outputs.</td></tr>
+<tr><td><code>witnessesCount</code></td><td><code>uint16</code></td><td>Number of witnesses.</td></tr>
 <tr><td><code>receiptsRoot</code></td><td><code>byte[32]</code></td><td>Merkle root of receipts.</td></tr>
 <tr><td><code>script</code></td><td><code>byte[]</code></td><td>Script to execute.</td></tr>
 <tr><td><code>scriptData</code></td><td><code>byte[]</code></td><td>Script input data (parameters).</td></tr>
@@ -310,12 +310,12 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <h2 id="transactioncreate"><a class="header" href="#transactioncreate"><code>TransactionCreate</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>bytecodeLength</code></td><td><code>uint64</code></td><td>Contract bytecode length, in instructions.</td></tr>
-<tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint8</code></td><td>Witness index of contract bytecode to create.</td></tr>
+<tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint16</code></td><td>Witness index of contract bytecode to create.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
 <tr><td><code>storageSlotsCount</code></td><td><code>uint64</code></td><td>Number of storage slots to initialize.</td></tr>
-<tr><td><code>inputsCount</code></td><td><code>uint8</code></td><td>Number of inputs.</td></tr>
-<tr><td><code>outputsCount</code></td><td><code>uint8</code></td><td>Number of outputs.</td></tr>
-<tr><td><code>witnessesCount</code></td><td><code>uint8</code></td><td>Number of witnesses.</td></tr>
+<tr><td><code>inputsCount</code></td><td><code>uint16</code></td><td>Number of inputs.</td></tr>
+<tr><td><code>outputsCount</code></td><td><code>uint16</code></td><td>Number of outputs.</td></tr>
+<tr><td><code>witnessesCount</code></td><td><code>uint16</code></td><td>Number of witnesses.</td></tr>
 <tr><td><code>salt</code></td><td><code>byte[32]</code></td><td>Salt.</td></tr>
 <tr><td><code>policies</code></td><td><a href="tx-format/./policy.html">Policy</a><code>[]</code></td><td>List of policies.</td></tr>
 <tr><td><code>storageSlots</code></td><td><code>(byte[32], byte[32]])[]</code></td><td>List of storage slots to initialize (key, value).</td></tr>
@@ -432,12 +432,12 @@ enum PolicyType : uint32 {
 <h2 id="inputcoin"><a class="header" href="#inputcoin"><code>InputCoin</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txID</code></td><td><code>byte[32]</code></td><td>Hash of transaction.</td></tr>
-<tr><td><code>outputIndex</code></td><td><code>uint8</code></td><td>Index of transaction output.</td></tr>
+<tr><td><code>outputIndex</code></td><td><code>uint16</code></td><td>Index of transaction output.</td></tr>
 <tr><td><code>owner</code></td><td><code>byte[32]</code></td><td>Owning address or predicate root.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of coins.</td></tr>
 <tr><td><code>asset_id</code></td><td><code>byte[32]</code></td><td>Asset ID of the coins.</td></tr>
 <tr><td><code>txPointer</code></td><td><a href="tx-format/./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
-<tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
+<tr><td><code>witnessIndex</code></td><td><code>uint16</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
 <tr><td><code>predicateDataLength</code></td><td><code>uint64</code></td><td>Length of predicate input data, in bytes.</td></tr>
@@ -464,7 +464,7 @@ enum PolicyType : uint32 {
 <h2 id="inputcontract"><a class="header" href="#inputcontract"><code>InputContract</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>txID</code></td><td><code>byte[32]</code></td><td>Hash of transaction.</td></tr>
-<tr><td><code>outputIndex</code></td><td><code>uint8</code></td><td>Index of transaction output.</td></tr>
+<tr><td><code>outputIndex</code></td><td><code>uint16</code></td><td>Index of transaction output.</td></tr>
 <tr><td><code>balanceRoot</code></td><td><code>byte[32]</code></td><td>Root of amount of coins owned by contract before transaction execution.</td></tr>
 <tr><td><code>stateRoot</code></td><td><code>byte[32]</code></td><td>State root of contract before transaction execution.</td></tr>
 <tr><td><code>txPointer</code></td><td><a href="tx-format/./tx-pointer.html"><code>TXPointer</code></a></td><td>Points to the TX whose output is being spent.</td></tr>
@@ -485,7 +485,7 @@ enum PolicyType : uint32 {
 <tr><td><code>recipient</code></td><td><code>byte[32]</code></td><td>The address or predicate root of the message recipient.</td></tr>
 <tr><td><code>amount</code></td><td><code>uint64</code></td><td>Amount of base asset coins sent with message.</td></tr>
 <tr><td><code>nonce</code></td><td><code>byte[32]</code></td><td>The message nonce.</td></tr>
-<tr><td><code>witnessIndex</code></td><td><code>uint8</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
+<tr><td><code>witnessIndex</code></td><td><code>uint16</code></td><td>Index of witness that authorizes spending the coin.</td></tr>
 <tr><td><code>predicateGasUsed</code></td><td><code>uint64</code></td><td>Gas used by predicate execution.</td></tr>
 <tr><td><code>dataLength</code></td><td><code>uint64</code></td><td>Length of message data, in bytes.</td></tr>
 <tr><td><code>predicateLength</code></td><td><code>uint64</code></td><td>Length of predicate, in instructions.</td></tr>
@@ -541,7 +541,7 @@ enum PolicyType : uint32 {
 </div>
 <h2 id="outputcontract"><a class="header" href="#outputcontract"><code>OutputContract</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>inputIndex</code></td><td><code>uint8</code></td><td>Index of input contract.</td></tr>
+<tr><td><code>inputIndex</code></td><td><code>uint16</code></td><td>Index of input contract.</td></tr>
 <tr><td><code>balanceRoot</code></td><td><code>byte[32]</code></td><td>Root of amount of coins owned by contract after transaction execution.</td></tr>
 <tr><td><code>stateRoot</code></td><td><code>byte[32]</code></td><td>State root of contract after transaction execution.</td></tr>
 </tbody></table>
@@ -648,7 +648,7 @@ all non-witness data is hashed.</p>
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="utxo-id"><a class="header" href="#utxo-id">UTXO ID</a></h1>
 <h2 id="coin-id"><a class="header" href="#coin-id">Coin ID</a></h2>
-<p>Is represented as an <em>outpoint</em>: a pair of <a href="identifiers/./transaction-id.html">transaction ID</a> as <code>byte[32]</code> and output index as a <code>uint8</code>.</p>
+<p>Is represented as an <em>outpoint</em>: a pair of <a href="identifiers/./transaction-id.html">transaction ID</a> as <code>byte[32]</code> and output index as a <code>uint16</code>.</p>
 <h2 id="message-id"><a class="header" href="#message-id">Message ID</a></h2>
 <p>The ID of a message is computed as the <a href="identifiers/../protocol/cryptographic-primitives.html#hashing">hash</a> of:</p>
 <ol>

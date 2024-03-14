@@ -192,9 +192,9 @@
 <tr><td><code>scriptLength</code></td><td><code>uint64</code></td><td>Script length, in instructions.</td></tr>
 <tr><td><code>scriptDataLength</code></td><td><code>uint64</code></td><td>Length of script input data, in bytes.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
-<tr><td><code>inputsCount</code></td><td><code>uint8</code></td><td>Number of inputs.</td></tr>
-<tr><td><code>outputsCount</code></td><td><code>uint8</code></td><td>Number of outputs.</td></tr>
-<tr><td><code>witnessesCount</code></td><td><code>uint8</code></td><td>Number of witnesses.</td></tr>
+<tr><td><code>inputsCount</code></td><td><code>uint16</code></td><td>Number of inputs.</td></tr>
+<tr><td><code>outputsCount</code></td><td><code>uint16</code></td><td>Number of outputs.</td></tr>
+<tr><td><code>witnessesCount</code></td><td><code>uint16</code></td><td>Number of witnesses.</td></tr>
 <tr><td><code>receiptsRoot</code></td><td><code>byte[32]</code></td><td>Merkle root of receipts.</td></tr>
 <tr><td><code>script</code></td><td><code>byte[]</code></td><td>Script to execute.</td></tr>
 <tr><td><code>scriptData</code></td><td><code>byte[]</code></td><td>Script input data (parameters).</td></tr>
@@ -231,12 +231,12 @@ Given helper <code>sum_variants()</code> that sums all variants of an enum.</p>
 <h2 id="transactioncreate"><a class="header" href="#transactioncreate"><code>TransactionCreate</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>bytecodeLength</code></td><td><code>uint64</code></td><td>Contract bytecode length, in instructions.</td></tr>
-<tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint8</code></td><td>Witness index of contract bytecode to create.</td></tr>
+<tr><td><code>bytecodeWitnessIndex</code></td><td><code>uint16</code></td><td>Witness index of contract bytecode to create.</td></tr>
 <tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
 <tr><td><code>storageSlotsCount</code></td><td><code>uint64</code></td><td>Number of storage slots to initialize.</td></tr>
-<tr><td><code>inputsCount</code></td><td><code>uint8</code></td><td>Number of inputs.</td></tr>
-<tr><td><code>outputsCount</code></td><td><code>uint8</code></td><td>Number of outputs.</td></tr>
-<tr><td><code>witnessesCount</code></td><td><code>uint8</code></td><td>Number of witnesses.</td></tr>
+<tr><td><code>inputsCount</code></td><td><code>uint16</code></td><td>Number of inputs.</td></tr>
+<tr><td><code>outputsCount</code></td><td><code>uint16</code></td><td>Number of outputs.</td></tr>
+<tr><td><code>witnessesCount</code></td><td><code>uint16</code></td><td>Number of witnesses.</td></tr>
 <tr><td><code>salt</code></td><td><code>byte[32]</code></td><td>Salt.</td></tr>
 <tr><td><code>policies</code></td><td><a href="./policy.html">Policy</a><code>[]</code></td><td>List of policies.</td></tr>
 <tr><td><code>storageSlots</code></td><td><code>(byte[32], byte[32]])[]</code></td><td>List of storage slots to initialize (key, value).</td></tr>
