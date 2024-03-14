@@ -31,7 +31,7 @@ Transaction is invalid if:
 
 | name          | type       | description                                                            |
 |---------------|------------|------------------------------------------------------------------------|
-| `inputIndex`  | `uint8`    | Index of input contract.                                               |
+| `inputIndex`  | `uint16`    | Index of input contract.                                               |
 | `balanceRoot` | `byte[32]` | Root of amount of coins owned by contract after transaction execution. |
 | `stateRoot`   | `byte[32]` | State root of contract after transaction execution.                    |
 
