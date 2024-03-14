@@ -3,22 +3,22 @@
 ```c++
 // index using powers of 2 for efficient bitmasking
 enum PolicyType : uint32 {
-    GasPrice = 1,
+    Tip = 1,
     WitnessLimit = 2,
     Maturity = 4,
     MaxFee = 8,
 }
 ```
 
-| name   | type                                                                                  | description  |
-|--------|---------------------------------------------------------------------------------------|--------------|
-| `data` | One of [`GasPrice`](#gasprice), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
+| name   | type                                                                              | description  |
+|--------|-----------------------------------------------------------------------------------|--------------|
+| `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
 
-## `GasPrice`
+## `Tip`
 
-| name       | type     | description               |
-|------------|----------|---------------------------|
-| `gasPrice` | `uint64` | Gas price for transaction |
+| name       | type     | description                                                                                   |
+|------------|----------|-----------------------------------------------------------------------------------------------|
+| `tip` | `uint64` | Additional, optional fee in `BASE_ASSET` to incentivize block producer to include transaction |
 
 ## `WitnessLimit`
 
@@ -44,11 +44,11 @@ Transaction is invalid if:
 
 ## `MaxFee`
 
-| name      | type     | description                                                     |
-|-----------|----------|-----------------------------------------------------------------|
-| `max_fee` | `uint64` | The maximum fee payable by this transaction using `BASE_ASSET`. |
+| name      | type     | description                                                                                                                                                           |
+|-----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `max_fee` | `uint64` | Required policy to specify the maximum fee payable by this transaction using `BASE_ASSET`. This is used to check transactions before the actual `gas_price` is known. |
 
 Transaction is invalid if:
 
 - `max_fee > sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)`
-- `max_fee < reserved_fee_balance(tx, BASE_ASSET_ID)`
+- `max_fee < max_fee(tx, BASE_ASSET_ID, gas_price)`
