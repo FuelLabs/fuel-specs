@@ -8,7 +8,7 @@ This repository specifies the Fuel protocol, including the Fuel Virtual Machine 
 ## mdbook
 
 The Fuel Specifications book is built with mdbook.
-
+login.wc
 Install `mdbook` and then open a new terminal session in order to run the subsequent commands
 
 ```sh
