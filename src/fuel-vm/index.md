@@ -81,6 +81,7 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 To initialize the VM, the following is pushed on the stack sequentially:
 
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../identifiers/transaction-id.md).
+1. Base asset ID (`byte[32]`, word-aligned)
 1. [`MAX_INPUTS`](../tx-format/consensus_parameters.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
@@ -89,7 +90,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
 
-1. `$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
+1. `$ssp = 32 + 32 + MAX_INPUTS*(32+8) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
 1. `$sp = $ssp`: writable stack area is empty to start.
 1. `$hp = VM_MAX_RAM`: the heap area begins at the top and is empty to start.
 
