@@ -2779,6 +2779,7 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <p>To initialize the VM, the following is pushed on the stack sequentially:</p>
 <ol>
 <li>Transaction hash (<code>byte[32]</code>, word-aligned), computed as defined <a href="fuel-vm/../identifiers/transaction-id.html">here</a>.</li>
+<li>Base asset ID (<code>byte[32]</code>, word-aligned)</li>
 <li><a href="fuel-vm/../tx-format/consensus_parameters.html"><code>MAX_INPUTS</code></a> pairs of <code>(asset_id: byte[32], balance: uint64)</code>, of:
 <ol>
 <li>For <a href="fuel-vm/index.html#predicate-estimation">predicate estimation</a> and <a href="fuel-vm/index.html#predicate-verification">predicate verification</a>, zeroes.</li>
@@ -2790,7 +2791,7 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 </ol>
 <p>Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):</p>
 <ol>
-<li><code>$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))</code>: the writable stack area starts immediately after the serialized transaction in memory (see above).</li>
+<li><code>$ssp = 32 + 32 + MAX_INPUTS*(32+8) + size(tx))</code>: the writable stack area starts immediately after the serialized transaction in memory (see above).</li>
 <li><code>$sp = $ssp</code>: writable stack area is empty to start.</li>
 <li><code>$hp = VM_MAX_RAM</code>: the heap area begins at the top and is empty to start.</li>
 </ol>
@@ -5028,7 +5029,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td><code>GM_GET_CALLER</code></td><td><code>0x00002</code></td><td>Get caller's contract ID.</td></tr>
 <tr><td><code>GM_GET_VERIFYING_PREDICATE</code></td><td><code>0x00003</code></td><td>Get index of current predicate.</td></tr>
 <tr><td><code>GM_GET_CHAIN_ID</code></td><td><code>0x00004</code></td><td>Get the value of <code>CHAIN_ID</code></td></tr>
-<tr><td><code>GM_GET_TX_START</code></td><td><code>0x00005</code></td><td>Get transaction start address</td></tr>
+<tr><td><code>GM_TX_START</code></td><td><code>0x00005</code></td><td>Transaction start memory address</td></tr>
+<tr><td><code>GM_BASE_ASSET_ID</code></td><td><code>0x00006</code></td><td>Base asset ID</td></tr>
 </tbody></table>
 </div>
 <p>If <code>imm == GM_IS_CALLER_EXTERNAL</code>:</p>
