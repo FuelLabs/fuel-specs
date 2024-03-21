@@ -2415,13 +2415,14 @@ Panic if:
 
 Read metadata from memory. A convenience instruction to avoid manually extracting metadata.
 
-| name                         | value     | description                     |
-|------------------------------|-----------|---------------------------------|
-| `GM_IS_CALLER_EXTERNAL`      | `0x00001` | Get if caller is external.      |
-| `GM_GET_CALLER`              | `0x00002` | Get caller's contract ID.       |
-| `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate. |
-| `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`     |
-| `GM_GET_TX_START`            | `0x00005` | Get transaction start address   |
+| name                         | value     | description                      |
+|------------------------------|-----------|----------------------------------|
+| `GM_IS_CALLER_EXTERNAL`      | `0x00001` | Get if caller is external.       |
+| `GM_GET_CALLER`              | `0x00002` | Get caller's contract ID.        |
+| `GM_GET_VERIFYING_PREDICATE` | `0x00003` | Get index of current predicate.  |
+| `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`      |
+| `GM_TX_START`                | `0x00005` | Transaction start memory address |
+| `GM_BASE_ASSET_ID`           | `0x00006` | Base asset ID                    |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
