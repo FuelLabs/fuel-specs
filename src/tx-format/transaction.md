@@ -58,13 +58,13 @@ enum ReceiptType : uint8 {
 | name               | type                        | description                             |
 |--------------------|-----------------------------|-----------------------------------------|
 | `scriptGasLimit`   | `uint64`                    | Gas limits the script execution.        |
+| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
 | `scriptLength`     | `uint64`                    | Script length, in instructions.         |
 | `scriptDataLength` | `uint64`                    | Length of script input data, in bytes.  |
 | `policyTypes`      | `uint32`                    | Bitfield of used policy types.          |
 | `inputsCount`      | `uint16`                    | Number of inputs.                       |
 | `outputsCount`     | `uint16`                    | Number of outputs.                      |
 | `witnessesCount`   | `uint16`                    | Number of witnesses.                    |
-| `receiptsRoot`     | `byte[32]`                  | Merkle root of receipts.                |
 | `script`           | `byte[]`                    | Script to execute.                      |
 | `scriptData`       | `byte[]`                    | Script input data (parameters).         |
 | `policies`         | [Policy](./policy.md)`[]`   | List of policies, sorted by `PolicyType`. |
@@ -104,14 +104,14 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 |------------------------|-----------------------------|---------------------------------------------------|
 | `bytecodeLength`       | `uint64`                    | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint16`                    | Witness index of contract bytecode to create.     |
-| `policyTypes`          | `uint32`                    | Bitfield of used policy types.                    |
+| `salt`                 | `byte[32]`                  | Salt.                                             |
 | `storageSlotsCount`    | `uint64`                    | Number of storage slots to initialize.            |
+| `policyTypes`          | `uint32`                    | Bitfield of used policy types.                    |
 | `inputsCount`          | `uint16`                    | Number of inputs.                                 |
 | `outputsCount`         | `uint16`                    | Number of outputs.                                |
 | `witnessesCount`       | `uint16`                    | Number of witnesses.                              |
-| `salt`                 | `byte[32]`                  | Salt.                                             |
-| `policies`             | [Policy](./policy.md)`[]`   | List of policies.                                 |
 | `storageSlots`         | `(byte[32], byte[32]])[]`   | List of storage slots to initialize (key, value). |
+| `policies`             | [Policy](./policy.md)`[]`    | List of policies.                                  |
 | `inputs`               | [Input](./input.md)`[]`     | List of inputs.                                   |
 | `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
 | `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
