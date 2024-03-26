@@ -102,7 +102,6 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 
 | name                   | type                        | description                                       |
 |------------------------|-----------------------------|---------------------------------------------------|
-| `bytecodeLength`       | `uint64`                    | Contract bytecode length, in instructions.        |
 | `bytecodeWitnessIndex` | `uint16`                    | Witness index of contract bytecode to create.     |
 | `salt`                 | `byte[32]`                  | Salt.                                             |
 | `storageSlotsCount`    | `uint64`                    | Number of storage slots to initialize.            |
@@ -128,8 +127,7 @@ Transaction is invalid if:
 - More than one output is of type `OutputType.Change` with `asset_id` of zero
 - Any output is of type `OutputType.Change` with non-zero `asset_id`
 - It does not have exactly one output of type `OutputType.ContractCreated`
-- `bytecodeLength * 4 > CONTRACT_MAX_SIZE`
-- `tx.data.witnesses[bytecodeWitnessIndex].dataLength != bytecodeLength * 4`
+- `tx.data.witnesses[bytecodeWitnessIndex].dataLength > CONTRACT_MAX_SIZE`
 - `bytecodeWitnessIndex >= tx.witnessesCount`
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
