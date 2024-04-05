@@ -132,7 +132,6 @@ Transaction is invalid if:
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
 
-
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
 ## `TransactionMint`
@@ -155,6 +154,24 @@ Transaction is invalid if:
 - `outputContract.inputIndex` is not zero
 
 ## `TransactionUpgrade`
+
+The `Upgrade` transaction allows upgrading either consensus parameters or state transition function used by the network to produce future blocks. The `Upgrade Purpose` type defines the purpose of the upgrade.
+
+The `Upgrade` transaction is chargeable, and the sender should pay for it. Transaction inputs should contain only base assets.
+
+Only the privileged address from [`ConsensusParameters`](./consensus_parameters.md) can upgrade the network. The privileged address can be either a real account or a predicate.
+
+When the upgrade type is `UpgradePurposeType.ConsensusParameters` serialized consensus parameters are available in the witnesses and the `Upgrade` transaction is self-contained because it has all the required information.
+
+When the upgrade type is `UpgradePurposeType.StateTransition`, the `bytecodeHash` field contains the hash of the new bytecode of the state transition function. The bytecode should already be available on the blockchain at the upgrade point; otherwise, the upgrade will fail. The bytecode can be part of the genesis block or can be uploaded via the `TransactionUpload` transaction.
+
+The block header contains information about which versions of consensus parameters and state transition function are used to produce a block, and the `Upgrade` transaction defines behavior corresponding to the version. When the block executes the `Upgrade` transaction, it defines new behavior for either `BlockHeader.consensusParametersVersion + 1` or `BlockHeader.stateTransitionBytecodeVersion + 1`(it depends on the purpose of the upgrade).
+
+When the `Upgrade` transaction is included in the block, it doesn't affect the current block execution. Since behavior is now defined, the inclusion of the `Upgrade` transaction allows the production of the next block with a new version. The block producer can still continue to use the previous version and start using a new version later unless the state transition function forbids it.
+
+The behavior is set once per version. It is forbidden to override the behavior of the network. Each behavior should have its own version. The version should grow monotonically without jumps.
+
+The `BlockHeader.consensusParametersVersion` and `BlockHeader.stateTransitionBytecodeVersion` are independent and can grow at different speeds.
 
 | name             | type                                   | description                    |
 |------------------|----------------------------------------|--------------------------------|
