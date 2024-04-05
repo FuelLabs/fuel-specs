@@ -14,7 +14,7 @@ enum UpgradePurposeType : uint8 {
 
 Transaction is invalid if:
 
-- `type > UpgradePurposeType.StateTransition`
+- `type` is not valid `UpgradePurposeType` value`
 
 ## `ConsensusParameters`
 

@@ -14,9 +14,14 @@ enum TransactionType : uint8 {
 | `type` | [`TransactionType`](#transaction)                                                                                                                                                  | Transaction type. |
 | `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), [`TransactionMint`](#transactionmint), or [`TransactionUpgrade`](#transactionupgrade) | Transaction data. |
 
+Given helper `max_gas()` returns the maximum gas that the transaction can use.
+Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
+Given helper `count_variants()` that returns the number of variants in an enum.
+Given helper `sum_variants()` that sums all variants of an enum.
+
 Transaction is invalid if:
 
-- `type > TransactionType.Upgrade`
+- `type` is not valid `TransactionType` value
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
@@ -28,6 +33,12 @@ Transaction is invalid if:
 - More than one input of type `InputType.Coin` for any [Coin ID](../identifiers/utxo-id.md#coin-id) in the input set
 - More than one input of type `InputType.Contract` for any [Contract ID](../identifiers/utxo-id.md#contract-id) in the input set
 - More than one input of type `InputType.Message` for any [Message ID](../identifiers/utxo-id.md#message-id) in the input set
+- if `type != TransactionType.Mint`
+  - `max_gas(tx) > MAX_GAS_PER_TX`
+  - No policy of type `PolicyType.MaxFee` is set
+  - `count_ones(policyTypes) > count_variants(PolicyType)`
+  - `policyTypes > sum_variants(PolicyType)`
+  - `len(policies) > count_ones(policyTypes)`
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
@@ -74,11 +85,7 @@ enum ReceiptType : uint8 {
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
 
-Given helper `max_gas()` returns the maximum gas that the transaction can use.
 Given helper `len()` that returns the number of bytes of a field.
-Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
-Given helper `count_variants()` that returns the number of variants in an enum.
-Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
@@ -87,11 +94,6 @@ Transaction is invalid if:
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `max_gas(tx) > MAX_GAS_PER_TX`
-- No policy of type `PolicyType.MaxFee` is set
-- `count_ones(policyTypes) > count_variants(PolicyType)`
-- `policyTypes > sum_variants(PolicyType)`
-- `len(policies) > count_ones(policyTypes)`
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
@@ -116,11 +118,6 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 | `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
 | `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
 
-Given helper `max_gas()` returns the maximum gas that the transaction can use.
-Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
-Given helper `count_variants()` that returns the number of variants in an enum.
-Given helper `sum_variants()` that sums all variants of an enum.
-
 Transaction is invalid if:
 
 - Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
@@ -133,12 +130,8 @@ Transaction is invalid if:
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
-- `max_gas(tx) > MAX_GAS_PER_TX`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
-- No policy of type `PolicyType.MaxFee` is set
-- `count_ones(policyTypes) > count_variants(PolicyType)`
-- `policyTypes > sum_variants(PolicyType)`
-- `len(policies) > count_ones(policyTypes)`
+
 
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
@@ -175,11 +168,6 @@ Transaction is invalid if:
 | `outputs`        | [Output](./output.md)`[]`              | List of outputs.               |
 | `witnesses`      | [Witness](./witness.md)`[]`            | List of witnesses.             |
 
-Given helper `max_gas()` returns the maximum gas that the transaction can use.
-Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
-Given helper `count_variants()` that returns the number of variants in an enum.
-Given helper `sum_variants()` that sums all variants of an enum.
-
 Transaction is invalid if:
 
 - Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
@@ -188,8 +176,3 @@ Transaction is invalid if:
 - Any output is of type `OutputType.Change` with non-base `asset_id`
 - No input where `InputType.Message.owner == PRIVILEGED_ADDRESS` or `InputType.Coint.owner == PRIVILEGED_ADDRESS`
 - The `UpgradePurpose` is invalid
-- `max_gas(tx) > MAX_GAS_PER_TX`
-- No policy of type `PolicyType.MaxFee` is set
-- `count_ones(policyTypes) > count_variants(PolicyType)`
-- `policyTypes > sum_variants(PolicyType)`
-- `len(policies) > count_ones(policyTypes)`
