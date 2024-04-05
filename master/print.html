@@ -2858,7 +2858,9 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <tr><td>*</td><td></td><td></td><td>Call frame's stack.</td></tr>
 </tbody></table>
 </div>
-<h2 id="ownership"><a class="header" href="#ownership">Ownership</a></h2>
+<h2 id="access-rights"><a class="header" href="#access-rights">Access rights</a></h2>
+<p>Only memory that has been allocated is accessible. Attempting to read or write memory that has not been allocated will result in VM panic. Similarly reads or writes that cross from the stack to the heap will panic. Note stack remains readable even after stack frame has been shrunk. However, if heap is alter expanded to cover that area, the crossing read prohibition still remains. In other word, memory between highest-ever <code>$sp</code> value and current <code>$hp</code> is inaccessible.</p>
+<h3 id="ownership"><a class="header" href="#ownership">Ownership</a></h3>
 <p>Whenever memory is written to (i.e. with <a href="fuel-vm/./instruction-set.html#sb-store-byte"><code>SB</code></a> or <a href="fuel-vm/./instruction-set.html#sw-store-word"><code>SW</code></a>), or write access is granted (i.e. with <a href="fuel-vm/./instruction-set.html#call-call-contract"><code>CALL</code></a>), ownership must be checked.</p>
 <p>If the context is external, the owned memory range is:</p>
 <ol>
@@ -2870,7 +2872,7 @@ If <code>X</code> is a tuple with the type signature <code>(T_1, T_2, ..., T_n)<
 <li><code>[$ssp, $sp)</code>: the writable stack area of the call frame.</li>
 <li><code>[$hp, $fp-&gt;$hp)</code>: the heap area allocated by this call frame.</li>
 </ol>
-<h2 id="executablity"><a class="header" href="#executablity">Executablity</a></h2>
+<h3 id="executablity"><a class="header" href="#executablity">Executablity</a></h3>
 <p>Memory is only executable in range <code>[$is, $ssp)</code>. Attempting to execute instructions outside these boundaries will panic. This area never overlaps with writable registers, essentially providing <a href="https://en.wikipedia.org/wiki/W%5EX">W^X</a> protection.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fuelvm-instruction-set"><a class="header" href="#fuelvm-instruction-set">FuelVM Instruction Set</a></h1>
 <ul>
@@ -4018,7 +4020,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Operation</td><td><code>$hp = $hp - $rA;</code></td></tr>
 <tr><td>Syntax</td><td><code>aloc $rA</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
-<tr><td>Notes</td><td>Does not initialize memory.</td></tr>
+<tr><td>Notes</td><td>Newly allocated memory is zeroed.</td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
