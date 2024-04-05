@@ -1296,7 +1296,7 @@ All these instructions advance the program counter `$pc` by `4` after performing
 | Operation   | ```$hp = $hp - $rA;```                    |
 | Syntax      | `aloc $rA`                                |
 | Encoding    | `0x00 rA - - -`                           |
-| Notes       | Does not initialize memory.               |
+| Notes       | Newly allocated memory is zeroed.         |
 
 Panic if:
 
