@@ -51,8 +51,7 @@ Sway
 TAI
 TODO
 TypeScript
-UpgradePurpose
-UpgradePurposeType
+`UpgradePurpose`
 UTF
 UTXO
 UTXOs
