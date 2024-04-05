@@ -182,7 +182,11 @@ A call frame consists of the following, word-aligned:
 |       |               |            | **Unwritable area ends.**                                                     |
 | *     |               |            | Call frame's stack.                                                           |
 
-## Ownership
+## Access rights
+
+Only memory that has been allocated is accessible. Attempting to read or write memory that has not been allocated will result in VM panic. Similarly reads or writes that cross from the stack to the heap will panic. Note stack remains readable even after stack frame has been shrunk. However, if heap is alter expanded to cover that area, the crossing read prohibition still remains. In other word, memory between highest-ever `$sp` value and current `$hp` is inaccessible.
+
+### Ownership
 
 Whenever memory is written to (i.e. with [`SB`](./instruction-set.md#sb-store-byte) or [`SW`](./instruction-set.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./instruction-set.md#call-call-contract)), ownership must be checked.
 
@@ -196,6 +200,6 @@ If the context is internal, the owned memory range for a call frame is:
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
 1. `[$hp, $fp->$hp)`: the heap area allocated by this call frame.
 
-## Executablity
+### Executablity
 
 Memory is only executable in range `[$is, $ssp)`. Attempting to execute instructions outside these boundaries will panic. This area never overlaps with writable registers, essentially providing [W^X](https://en.wikipedia.org/wiki/W%5EX) protection.
