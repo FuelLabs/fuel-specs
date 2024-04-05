@@ -9,8 +9,8 @@ enum UpgradePurposeType : uint8 {
 
 | name   | type                                                                                        | description              |
 |--------|---------------------------------------------------------------------------------------------|--------------------------|
-| `type` | [`UpgradePurposeType`](#UpgradePurposeType)                                                 | Type of upgrade purpose. |
-| `data` | One of [`ConsensusParameters`](#ConsensusParameters), [`StateTransition`](#StateTransition) | Upgrade purposes.        |
+| `type` | [`UpgradePurposeType`](#upgradepurposetype)                                                 | Type of upgrade purpose. |
+| `data` | One of [`ConsensusParameters`](#consensusparameters), [`StateTransition`](#statetransition) | Upgrade purposes.        |
 
 Transaction is invalid if:
 
