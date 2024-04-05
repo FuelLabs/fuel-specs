@@ -1,4 +1,4 @@
-# UpgradePurposeType
+# `UpgradePurposeType`
 
 ```c++
 enum UpgradePurposeType : uint8 {
