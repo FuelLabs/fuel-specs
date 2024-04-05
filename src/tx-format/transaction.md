@@ -12,7 +12,7 @@ enum TransactionType : uint8 {
 | name   | type                                                                                                                                                                               | description       |
 |--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
 | `type` | [`TransactionType`](#transaction)                                                                                                                                                  | Transaction type. |
-| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), [`TransactionMint`](#transactionmint), or [`Transactionupgrade`](#transactionUpgrade) | Transaction data. |
+| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), [`TransactionMint`](#transactionmint), or [`Transactionupgrade`](#transactionupgrade) | Transaction data. |
 
 Transaction is invalid if:
 
