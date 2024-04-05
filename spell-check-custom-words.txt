@@ -12,6 +12,7 @@ BrowserStack
 CLI
 Deserialization
 deserializing
+deserializes
 DApp
 subcurrency
 Subcurrency
@@ -50,6 +51,7 @@ Sway
 TAI
 TODO
 TypeScript
+UpgradePurposeType
 UTF
 UTXO
 UTXOs
