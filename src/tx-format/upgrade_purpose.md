@@ -1,0 +1,38 @@
+# UpgradePurposeType
+
+```c++
+enum UpgradePurposeType : uint8 {
+    ConsensusParameters = 0,
+    StateTransition = 1,
+}
+```
+
+| name   | type                                                                                        | description              |
+|--------|---------------------------------------------------------------------------------------------|--------------------------|
+| `type` | [`UpgradePurposeType`](#UpgradePurposeType)                                                 | Type of upgrade purpose. |
+| `data` | One of [`ConsensusParameters`](#ConsensusParameters), [`StateTransition`](#StateTransition) | Upgrade purposes.        |
+
+Transaction is invalid if:
+
+- `type > UpgradePurposeType.StateTransition`
+
+## `ConsensusParameters`
+
+| name           | type       | description                                                                                                                   |
+|----------------|------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `witnessIndex` | `uint16`   | Index of witness that contains a serialized(with [postcard](https://docs.rs/postcard/latest/postcard/)) consensus parameters. |
+| `checksum`     | `byte[32]` | The hash of the serialized consensus parameters.                                                                              |
+
+Given helper `deserialize_consensus_parameters()` that deserializes the consensus parameters from a witness by using [postcard](https://docs.rs/postcard/latest/postcard/) algorithm.
+
+Transaction is invalid if:
+
+- `witnessIndex >= tx.witnessesCount`
+- `checksum != sha256(tx.data.witnesses[witnessIndex])`
+- `deserialize_consensus_parameters(tx.data.witnesses[witnessIndex])` returns an error.
+
+## `StateTransition`
+
+| name           | type       | description                                                    |
+|----------------|------------|----------------------------------------------------------------|
+| `bytecodeHash` | `byte[32]` | The hash of the new bytecode of the state transition function. |

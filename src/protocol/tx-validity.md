@@ -179,6 +179,12 @@ def metadata_gas_fees(tx) -> int:
     elif tx.type == TransactionType.Script:
         # add intrinsic cost of calculating the transaction id
         total += sha256_gas_fee(size(tx))
+    elif tx.type == TransactionType.Upgrade:
+        # add intrinsic cost of calculating the transaction id
+        total += sha256_gas_fee(size(tx))
+        if tx.upgradePurpose.type == UpgradePurposeType.ConsensusParameters:
+            # add intrinsic cost of calculating the consensus parameters hash
+            total += sha256_gas_fee(size(tx.witnesses[tx.upgradePurpose.witnessIndex].data))
     return total
 
 
