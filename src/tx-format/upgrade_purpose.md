@@ -35,4 +35,4 @@ Transaction is invalid if:
 
 | name           | type       | description                                                    |
 |----------------|------------|----------------------------------------------------------------|
-| `bytecodeHash` | `byte[32]` | The hash of the new bytecode of the state transition function. |
+| `bytecodeRoot` | `byte[32]` | The root of the new bytecode of the state transition function. |

@@ -178,6 +178,11 @@ def metadata_gas_fees(tx) -> int:
         if tx.upgradePurpose.type == UpgradePurposeType.ConsensusParameters:
             # add intrinsic cost of calculating the consensus parameters hash
             total += sha256_gas_fee(size(tx.witnesses[tx.upgradePurpose.witnessIndex].data))
+    elif tx.type == TransactionType.Upload:
+        # add intrinsic cost of calculating the root based on the number of bytecode subsections
+        total += contract_state_root_gas_fee(tx.subsectionsNumber)
+        # add intrinsic cost of hashing the subsection for verification of the connection with Binary Merkle tree root
+        total += sha256_gas_fee(size(tx.witnesses[tx.witnessIndex]))
             
     if tx.type != TransactionType.Mint:
         # add intrinsic cost of calculating the transaction id
@@ -203,6 +208,10 @@ def min_gas(tx) -> int:
     Comutes the minimum amount of gas required for a transaction to begin processing.
     """
     gas = transaction_size_gas_fees(tx) + intrinsic_gas_fees(tx)
+    if tx.type == TransactionType.Upload
+        # charge additionally for storing bytecode on chain
+        gas += transaction_size_gas_fees(size(tx.witnesses[tx.witnessIndex]))
+        
     return gas
 
 
@@ -213,7 +222,7 @@ def max_gas(tx) -> int:
     gas = min_gas(tx)
     gas = gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE
     if tx.type == TransactionType.Script:
-       gas = gas + tx.gasLimit
+       gas += tx.gasLimit
     return gas
     
     
