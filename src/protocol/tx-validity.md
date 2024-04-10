@@ -162,6 +162,11 @@ def input_gas_fees(tx) -> int:
 def metadata_gas_fees(tx) -> int:
     """
     Computes the intrinsic gas cost of processing transaction outputs
+    
+    The `contract_code_root_gas_fee`, `sha256_gas_fee`, and `contract_state_root_gas_fee` 
+    are based on the benchmarked gas costs of these operations.
+    
+    Consensus parameters contain definitions of gas costs for all operations and opcodes in the network.
     """
     total: int = 0
     if tx.type == TransactionType.Create:

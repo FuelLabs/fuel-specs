@@ -229,5 +229,6 @@ Transaction is invalid if:
 - Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message` or `OutputType.ContractCreated`
 - Any output is of type `OutputType.Change` with non-base `asset_id`
 - `witnessIndex >= tx.witnessesCount`
+- `subsectionIndex` >= `subsectionsNumber`
 - `subsectionsNumber > MAX_BYTECODE_SUBSECTIONS`
-- The [Binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) root calculated from `(witnesses[witnessIndex], subsectionIndex, subsectionsNumber, proofSet)` is not equal to the `root`.
+- The [Binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) root calculated from `(witnesses[witnessIndex], subsectionIndex, subsectionsNumber, proofSet)` is not equal to the `root`. Root calculation is affected by all fields, so modification of one of them invalidates the proof.
