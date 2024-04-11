@@ -5,27 +5,40 @@ enum TransactionType : uint8 {
     Script = 0,
     Create = 1,
     Mint = 2,
+    Upgrade = 3,
 }
 ```
 
-| name   | type                                                                                                                            | description       |
-|--------|---------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| `type` | [`TransactionType`](#transaction)                                                                                                 | Transaction type. |
-| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), or [`TransactionMint`](#transactionmint) | Transaction data. |
+| name   | type                                                                                                                                                                               | description       |
+|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| `type` | [`TransactionType`](#transaction)                                                                                                                                                  | Transaction type. |
+| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), [`TransactionMint`](#transactionmint), or [`TransactionUpgrade`](#transactionupgrade) | Transaction data. |
+
+Given helper `max_gas()` returns the maximum gas that the transaction can use.
+Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
+Given helper `count_variants()` that returns the number of variants in an enum.
+Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
-- `type > TransactionType.Mint`
+- `type` is not valid `TransactionType` value
 - `inputsCount > MAX_INPUTS`
 - `outputsCount > MAX_OUTPUTS`
 - `witnessesCount > MAX_WITNESSES`
 - `size > MAX_TRANSACTION_SIZE`. The size of a transaction is calculated as the sum of the sizes of its static and dynamic parts, as determined by canonical serialization.
 - No inputs are of type `InputType.Coin` or `InputType.Message` with `input.dataLength` == 0
 - More than one output is of type `OutputType.Change` for any asset ID in the input set
+- More than one output is of type `OutputType.Change` with identical `asset_id` fields.
 - Any output is of type `OutputType.Change` for any asset ID not in the input set
 - More than one input of type `InputType.Coin` for any [Coin ID](../identifiers/utxo-id.md#coin-id) in the input set
 - More than one input of type `InputType.Contract` for any [Contract ID](../identifiers/utxo-id.md#contract-id) in the input set
 - More than one input of type `InputType.Message` for any [Message ID](../identifiers/utxo-id.md#message-id) in the input set
+- if `type != TransactionType.Mint`
+  - `max_gas(tx) > MAX_GAS_PER_TX`
+  - No policy of type `PolicyType.MaxFee` is set
+  - `count_ones(policyTypes) > count_variants(PolicyType)`
+  - `policyTypes > sum_variants(PolicyType)`
+  - `len(policies) > count_ones(policyTypes)`
 
 When serializing a transaction, fields are serialized as follows (with inner structs serialized recursively):
 
@@ -72,25 +85,15 @@ enum ReceiptType : uint8 {
 | `outputs`          | [Output](./output.md)`[]`   | List of outputs.                        |
 | `witnesses`        | [Witness](./witness.md)`[]` | List of witnesses.                      |
 
-Given helper `max_gas()` returns the maximum gas that the transaction can use.
 Given helper `len()` that returns the number of bytes of a field.
-Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
-Given helper `count_variants()` that returns the number of variants in an enum.
-Given helper `sum_variants()` that sums all variants of an enum.
 
 Transaction is invalid if:
 
-- More than one output is of type `OutputType.Change` with identical `asset_id` fields.
 - Any output is of type `OutputType.ContractCreated`
 - `scriptLength > MAX_SCRIPT_LENGTH`
 - `scriptDataLength > MAX_SCRIPT_DATA_LENGTH`
 - `scriptLength * 4 != len(script)`
 - `scriptDataLength != len(scriptData)`
-- `max_gas(tx) > MAX_GAS_PER_TX`
-- No policy of type `PolicyType.MaxFee` is set
-- `count_ones(policyTypes) > count_variants(PolicyType)`
-- `policyTypes > sum_variants(PolicyType)`
-- `len(policies) > count_ones(policyTypes)`
 
 > **Note:** when signing a transaction, `receiptsRoot` is set to zero.
 >
@@ -115,29 +118,19 @@ The receipts root `receiptsRoot` is the root of the [binary Merkle tree](../prot
 | `outputs`              | [Output](./output.md)`[]`   | List of outputs.                                  |
 | `witnesses`            | [Witness](./witness.md)`[]` | List of witnesses.                                |
 
-Given helper `max_gas()` returns the maximum gas that the transaction can use.
-Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
-Given helper `count_variants()` that returns the number of variants in an enum.
-Given helper `sum_variants()` that sums all variants of an enum.
-
 Transaction is invalid if:
 
 - Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
+- Any input uses non-base asset.
 - Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message`
-- More than one output is of type `OutputType.Change` with `asset_id` of zero
-- Any output is of type `OutputType.Change` with non-zero `asset_id`
+- Any output is of type `OutputType.Change` with non-base `asset_id`
 - It does not have exactly one output of type `OutputType.ContractCreated`
 - `tx.data.witnesses[bytecodeWitnessIndex].dataLength > CONTRACT_MAX_SIZE`
 - `bytecodeWitnessIndex >= tx.witnessesCount`
 - The keys of `storageSlots` are not in ascending lexicographic order
 - The computed contract ID (see below) is not equal to the `contractID` of the one `OutputType.ContractCreated` output
 - `storageSlotsCount > MAX_STORAGE_SLOTS`
-- `max_gas(tx) > MAX_GAS_PER_TX`
 - The [Sparse Merkle tree](../protocol/cryptographic-primitives.md#sparse-merkle-tree) root of `storageSlots` is not equal to the `stateRoot` of the one `OutputType.ContractCreated` output
-- No policy of type `PolicyType.MaxFee` is set
-- `count_ones(policyTypes) > count_variants(PolicyType)`
-- `policyTypes > sum_variants(PolicyType)`
-- `len(policies) > count_ones(policyTypes)`
 
 Creates a contract with contract ID as computed [here](../identifiers/contract-id.md).
 
@@ -159,3 +152,44 @@ Transaction is invalid if:
 
 - `txPointer` is zero or doesn't match the block.
 - `outputContract.inputIndex` is not zero
+
+## `TransactionUpgrade`
+
+The `Upgrade` transaction allows upgrading either consensus parameters or state transition function used by the network to produce future blocks. The `Upgrade Purpose` type defines the purpose of the upgrade.
+
+The `Upgrade` transaction is chargeable, and the sender should pay for it. Transaction inputs should contain only base assets.
+
+Only the privileged address from [`ConsensusParameters`](./consensus_parameters.md) can upgrade the network. The privileged address can be either a real account or a predicate.
+
+When the upgrade type is `UpgradePurposeType.ConsensusParameters` serialized consensus parameters are available in the witnesses and the `Upgrade` transaction is self-contained because it has all the required information.
+
+When the upgrade type is `UpgradePurposeType.StateTransition`, the `bytecodeHash` field contains the hash of the new bytecode of the state transition function. The bytecode should already be available on the blockchain at the upgrade point; otherwise, the upgrade will fail. The bytecode can be part of the genesis block or can be uploaded via the `TransactionUpload` transaction.
+
+The block header contains information about which versions of consensus parameters and state transition function are used to produce a block, and the `Upgrade` transaction defines behavior corresponding to the version. When the block executes the `Upgrade` transaction, it defines new behavior for either `BlockHeader.consensusParametersVersion + 1` or `BlockHeader.stateTransitionBytecodeVersion + 1`(it depends on the purpose of the upgrade).
+
+When the `Upgrade` transaction is included in the block, it doesn't affect the current block execution. Since behavior is now defined, the inclusion of the `Upgrade` transaction allows the production of the next block with a new version. The block producer can still continue to use the previous version and start using a new version later unless the state transition function forbids it.
+
+The behavior is set once per version. It is forbidden to override the behavior of the network. Each behavior should have its own version. The version should grow monotonically without jumps.
+
+The `BlockHeader.consensusParametersVersion` and `BlockHeader.stateTransitionBytecodeVersion` are independent and can grow at different speeds.
+
+| name             | type                                   | description                    |
+|------------------|----------------------------------------|--------------------------------|
+| `upgradePurpose` | [UpgradePurpose](./upgrade_purpose.md) | The purpose of the upgrade.    |
+| `policyTypes`    | `uint32`                               | Bitfield of used policy types. |
+| `inputsCount`    | `uint16`                               | Number of inputs.              |
+| `outputsCount`   | `uint16`                               | Number of outputs.             |
+| `witnessesCount` | `uint16`                               | Number of witnesses.           |
+| `policies`       | [Policy](./policy.md)`[]`              | List of policies.              |
+| `inputs`         | [Input](./input.md)`[]`                | List of inputs.                |
+| `outputs`        | [Output](./output.md)`[]`              | List of outputs.               |
+| `witnesses`      | [Witness](./witness.md)`[]`            | List of witnesses.             |
+
+Transaction is invalid if:
+
+- Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
+- Any input uses non-base asset.
+- Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message` or `OutputType.ContractCreated`
+- Any output is of type `OutputType.Change` with non-base `asset_id`
+- No input where `InputType.Message.owner == PRIVILEGED_ADDRESS` or `InputType.Coint.owner == PRIVILEGED_ADDRESS`
+- The `UpgradePurpose` is invalid
