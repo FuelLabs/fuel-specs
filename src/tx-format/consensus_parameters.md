@@ -19,4 +19,4 @@
 | `MAX_BYTECODE_SUBSECTIONS`  | `uint64`  | Maximum number of bytecode subsections.                        |
 | `CHAIN_ID`                  | `uint64`  | A unique per-chain identifier.                                 |
 | `BASE_ASSET_ID`             | `bytes32` | The base asset of the chain.                                   |
-| `PRIVELEGED_ADDRESS`        | `bytes32` | The privileged address of the network who can perform upgrade. |
+| `PRIVILEGED_ADDRESS`        | `bytes32` | The privileged address of the network who can perform upgrade. |
