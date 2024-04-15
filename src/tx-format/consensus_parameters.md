@@ -16,6 +16,7 @@
 | `MAX_STORAGE_SLOTS`         | `uint64`  | Maximum number of initial storage slots.                       |
 | `MAX_TRANSACTION_SIZE`      | `uint64`  | Maximum size of a transaction, in bytes.                       |
 | `MAX_WITNESSES`             | `uint64`  | Maximum number of witnesses.                                   |
+| `MAX_BYTECODE_SUBSECTIONS`  | `uint64`  | Maximum number of bytecode subsections.                        |
 | `CHAIN_ID`                  | `uint64`  | A unique per-chain identifier.                                 |
 | `BASE_ASSET_ID`             | `bytes32` | The base asset of the chain.                                   |
-| `PRIVELEGED_ADDRESS`        | `bytes32` | The privileged address of the network who can perform upgrade. |
+| `PRIVILEGED_ADDRESS`        | `bytes32` | The privileged address of the network who can perform upgrade. |

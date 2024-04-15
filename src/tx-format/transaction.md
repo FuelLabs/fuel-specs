@@ -6,13 +6,14 @@ enum TransactionType : uint8 {
     Create = 1,
     Mint = 2,
     Upgrade = 3,
+    Upload = 4,
 }
 ```
 
-| name   | type                                                                                                                                                                               | description       |
-|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| `type` | [`TransactionType`](#transaction)                                                                                                                                                  | Transaction type. |
-| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), [`TransactionMint`](#transactionmint), or [`TransactionUpgrade`](#transactionupgrade) | Transaction data. |
+| name   | type                                                                                                                                                                                                                          | description       |
+|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| `type` | [`TransactionType`](#transaction)                                                                                                                                                                                             | Transaction type. |
+| `data` | One of [`TransactionScript`](#transactionscript), [`TransactionCreate`](#transactioncreate), [`TransactionMint`](#transactionmint), [`TransactionUpgrade`](#transactionupgrade), or [`TransactionUpload`](#transactionupload) | Transaction data. |
 
 Given helper `max_gas()` returns the maximum gas that the transaction can use.
 Given helper `count_ones()` that returns the number of ones in the binary representation of a field.
@@ -163,7 +164,7 @@ Only the privileged address from [`ConsensusParameters`](./consensus_parameters.
 
 When the upgrade type is `UpgradePurposeType.ConsensusParameters` serialized consensus parameters are available in the witnesses and the `Upgrade` transaction is self-contained because it has all the required information.
 
-When the upgrade type is `UpgradePurposeType.StateTransition`, the `bytecodeHash` field contains the hash of the new bytecode of the state transition function. The bytecode should already be available on the blockchain at the upgrade point; otherwise, the upgrade will fail. The bytecode can be part of the genesis block or can be uploaded via the `TransactionUpload` transaction.
+When the upgrade type is `UpgradePurposeType.StateTransition`, the `bytecodeRoot` field contains the Merkle root of the new bytecode of the state transition function. The bytecode should already be available on the blockchain at the upgrade point; otherwise, the upgrade will fail. The bytecode can be part of the genesis block or can be uploaded via the `TransactionUpload` transaction.
 
 The block header contains information about which versions of consensus parameters and state transition function are used to produce a block, and the `Upgrade` transaction defines behavior corresponding to the version. When the block executes the `Upgrade` transaction, it defines new behavior for either `BlockHeader.consensusParametersVersion + 1` or `BlockHeader.stateTransitionBytecodeVersion + 1`(it depends on the purpose of the upgrade).
 
@@ -193,3 +194,41 @@ Transaction is invalid if:
 - Any output is of type `OutputType.Change` with non-base `asset_id`
 - No input where `InputType.Message.owner == PRIVILEGED_ADDRESS` or `InputType.Coint.owner == PRIVILEGED_ADDRESS`
 - The `UpgradePurpose` is invalid
+
+## `TransactionUpload`
+
+The `Upload` transaction allows the huge bytecode to be divided into subsections and uploaded slowly to the chain. The [Binary Merkle root](../protocol/cryptographic-primitives.md#binary-merkle-tree) built on top of subsections is an identifier of the bytecode.
+
+Each transaction uploads a subsection of the code and must contain proof of connection to the root. All subsections should be uploaded sequentially, which allows the concatenation of previously uploaded subsections with new subsection. The bytecode is considered final when the last subsection is uploaded, and future `Upload` transactions with the same `root` fields should be rejected.
+
+When the bytecode is completed it can be used to upgrade the network.
+
+The size of each subsection can be arbitrary; the only limit is the maximum number of subsections allowed by the network. The combination of the transaction gas limit and the number of subsections limits the final maximum size of the bytecode.
+
+| name                | type                        | description                                                                             |
+|---------------------|-----------------------------|-----------------------------------------------------------------------------------------|
+| `root`              | `byte[32]`                  | The root of the Merkle tree is created over the bytecode.                               |
+| `witnessIndex`      | `uint16`                    | The witness index of the subsection of the bytecode.                                    |
+| `subsectionIndex`   | `uint16`                    | The index of the subsection of the bytecode.                                            |
+| `subsectionsNumber` | `uint16`                    | The total number of subsections on which bytecode was divided.                          |
+| `proofSetCount`     | `uint16`                    | Number of Merkle nodes in the proof.                                                    |
+| `policyTypes`       | `uint32`                    | Bitfield of used policy types.                                                          |
+| `inputsCount`       | `uint16`                    | Number of inputs.                                                                       |
+| `outputsCount`      | `uint16`                    | Number of outputs.                                                                      |
+| `witnessesCount`    | `uint16`                    | Number of witnesses.                                                                    |
+| `proofSet`          | `byte[32][]`                | The proof set of Merkle nodes to verify the connection of the subsection to the `root`. |
+| `policies`          | [Policy](./policy.md)`[]`   | List of policies.                                                                       |
+| `inputs`            | [Input](./input.md)`[]`     | List of inputs.                                                                         |
+| `outputs`           | [Output](./output.md)`[]`   | List of outputs.                                                                        |
+| `witnesses`         | [Witness](./witness.md)`[]` | List of witnesses.                                                                      |
+
+Transaction is invalid if:
+
+- Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
+- Any input uses non-base asset.
+- Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message` or `OutputType.ContractCreated`
+- Any output is of type `OutputType.Change` with non-base `asset_id`
+- `witnessIndex >= tx.witnessesCount`
+- `subsectionIndex` >= `subsectionsNumber`
+- `subsectionsNumber > MAX_BYTECODE_SUBSECTIONS`
+- The [Binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) root calculated from `(witnesses[witnessIndex], subsectionIndex, subsectionsNumber, proofSet)` is not equal to the `root`. Root calculation is affected by all fields, so modification of one of them invalidates the proof.
