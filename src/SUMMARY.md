@@ -22,6 +22,7 @@
   - [Cryptographic Primitives](./protocol/cryptographic-primitives.md)
   - [Storage Slot Initialization](./protocol/storage-initialization.md)
   - [Block Header Format](./protocol/block-header.md)
+  - [Layer 1 Relayer/Bridge Protocol](./protocol/relayer.md)
 - [Application Binary Interface (ABI)](./abi/index.md)
   - [JSON ABI Format](./abi/json-abi-format.md)
   - [Receipts](./abi/receipts.md)

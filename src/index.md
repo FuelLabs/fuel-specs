@@ -15,6 +15,7 @@ This book specifies the Fuel protocol, including the Fuel Virtual Machine
 - [**Application Binary Interface (ABI)**](./abi/index.md) - Low-level details on interfacing with Fuel bytecode.
 - [**Storage Slot Initialization**](./protocol/storage-initialization.md) - JSON format for contract storage slot initialization.
 - [**Block Header Format**](./protocol/block-header.md) - The Fuel block header format.
+- [**Relayer/Bridge**](./protocol/relayer.md) - The Fuel relayer/bridge protocol.
 
 ## FuelVM
 
