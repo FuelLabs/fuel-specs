@@ -23,14 +23,14 @@ There are two types of events that can be received from the L1:
 1. **Messages**: An arbitrary message sent from the L1 to the Fuel blockchain. This can be used to move assets from the L1
 to the Fuel blockchain or send other arbitrary information to the Fuel blockchain.
 
-| name        | type      | description                                                          |
-|-------------|-----------|----------------------------------------------------------------------|
-| `sender`    | bytes[32] | The identity of the sender of the message on the L1                  |
-| `recipient` | bytes[32] | The recipient of the message on the Fuel Blockchain                  |
-| `nonce`     | bytes[32] | Unique identifier of message on L1                                   |
-| `amount`    | uint64    | The amount of the base asset transfere                               |
-| `data`      | byte[]    | Arbitrary messge data                                                |
-| `da_height` | uint64    | The height of the L1 blockchain when this message event was emitted  |
+| name        | type    | description                                                         |
+|-------------|---------|---------------------------------------------------------------------|
+| `sender`    | `bytes[32]` | The identity of the sender of the message on the L1                 |
+| `recipient` | `bytes[32]` | The recipient of the message on the Fuel Blockchain                 |
+| `nonce`     | `bytes[32]` | Unique identifier of message on L1                                  |
+| `amount`    | `uint64`  | The amount of the base asset transfer                              |
+| `data`      | `byte[]`  | Arbitrary message data                                              |
+| `da_height` | `uint64` | The height of the L1 blockchain when this message event was emitted |
 
 
 2. **Transactions**: These are transactions that are submitted on the L1 that must be executed on the Fuel blockchain.
@@ -39,10 +39,10 @@ there funds in the (unlikely) event that the Fuel blockchain block production is
 
 | name                     | type      | description                                                                           |
 |--------------------------|-----------|---------------------------------------------------------------------------------------|
-| `nonce`                  | bytes[32] | Unique identifier of the transaction on L1                                            |
-| `max_gas`                | uint64    | The maximum amount of gas executing this transaction will cost on the Fuel Blockchain |
-| `serialized_transaction` | byte[]    | The serialized transaction bytes                                                      |
-| `da_height`              | uint64    | The height of the L1 blockchain when this transaction event was emitted               |
+| `nonce`                  | `bytes[32]` | Unique identifier of the transaction on L1                                            |
+| `max_gas`                | `uint64`   | The maximum amount of gas executing this transaction will cost on the Fuel Blockchain |
+| `serialized_transaction` | `byte[]`   | The serialized transaction bytes                                                      |
+| `da_height`              | `uint64`   | The height of the L1 blockchain when this transaction event was emitted               |
 
 ### Ordering
 
