@@ -19,8 +19,11 @@ The block producer will receive the list of events from the L1 by some relayer, 
 merkle root of the events in the block header. 
 
 There are two types of events that can be received from the L1:
+1. Messages
+2. Transactions
 
-1. **Messages**: An arbitrary message sent from the L1 to the Fuel blockchain. This can be used to move assets from the L1
+### Messages
+An arbitrary message sent from the L1 to the Fuel blockchain. This can be used to move assets from the L1
 to the Fuel blockchain or send other arbitrary information to the Fuel blockchain.
 
 | name        | type    | description                                                         |
@@ -32,8 +35,8 @@ to the Fuel blockchain or send other arbitrary information to the Fuel blockchai
 | `data`      | `byte[]`  | Arbitrary message data                                              |
 | `da_height` | `uint64` | The height of the L1 blockchain when this message event was emitted |
 
-
-2. **Transactions**: These are transactions that are submitted on the L1 that must be executed on the Fuel blockchain.
+### Transactions
+These are transactions that are submitted on the L1 that must be executed on the Fuel blockchain.
 This "Forced Transaction Inclusion" is a security feature that allows participants of the Fuel Blockchain to access 
 there funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious.
 
