@@ -213,9 +213,10 @@
 <tr><td><code>MAX_STORAGE_SLOTS</code></td><td><code>uint64</code></td><td>Maximum number of initial storage slots.</td></tr>
 <tr><td><code>MAX_TRANSACTION_SIZE</code></td><td><code>uint64</code></td><td>Maximum size of a transaction, in bytes.</td></tr>
 <tr><td><code>MAX_WITNESSES</code></td><td><code>uint64</code></td><td>Maximum number of witnesses.</td></tr>
+<tr><td><code>MAX_BYTECODE_SUBSECTIONS</code></td><td><code>uint64</code></td><td>Maximum number of bytecode subsections.</td></tr>
 <tr><td><code>CHAIN_ID</code></td><td><code>uint64</code></td><td>A unique per-chain identifier.</td></tr>
 <tr><td><code>BASE_ASSET_ID</code></td><td><code>bytes32</code></td><td>The base asset of the chain.</td></tr>
-<tr><td><code>PRIVELEGED_ADDRESS</code></td><td><code>bytes32</code></td><td>The privileged address of the network who can perform upgrade.</td></tr>
+<tr><td><code>PRIVILEGED_ADDRESS</code></td><td><code>bytes32</code></td><td>The privileged address of the network who can perform upgrade.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="transaction"><a class="header" href="#transaction">Transaction</a></h1>
 <pre><code class="language-c++">enum TransactionType : uint8 {
@@ -223,11 +224,12 @@
     Create = 1,
     Mint = 2,
     Upgrade = 3,
+    Upload = 4,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td><code>type</code></td><td><a href="tx-format/transaction.html#transaction"><code>TransactionType</code></a></td><td>Transaction type.</td></tr>
-<tr><td><code>data</code></td><td>One of <a href="tx-format/transaction.html#transactionscript"><code>TransactionScript</code></a>, <a href="tx-format/transaction.html#transactioncreate"><code>TransactionCreate</code></a>, <a href="tx-format/transaction.html#transactionmint"><code>TransactionMint</code></a>, or <a href="tx-format/transaction.html#transactionupgrade"><code>TransactionUpgrade</code></a></td><td>Transaction data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="tx-format/transaction.html#transactionscript"><code>TransactionScript</code></a>, <a href="tx-format/transaction.html#transactioncreate"><code>TransactionCreate</code></a>, <a href="tx-format/transaction.html#transactionmint"><code>TransactionMint</code></a>, <a href="tx-format/transaction.html#transactionupgrade"><code>TransactionUpgrade</code></a>, or <a href="tx-format/transaction.html#transactionupload"><code>TransactionUpload</code></a></td><td>Transaction data.</td></tr>
 </tbody></table>
 </div>
 <p>Given helper <code>max_gas()</code> returns the maximum gas that the transaction can use.
@@ -366,7 +368,7 @@ This means that the transaction ID must also include the correct <code>txPointer
 <p>The <code>Upgrade</code> transaction is chargeable, and the sender should pay for it. Transaction inputs should contain only base assets.</p>
 <p>Only the privileged address from <a href="tx-format/./consensus_parameters.html"><code>ConsensusParameters</code></a> can upgrade the network. The privileged address can be either a real account or a predicate.</p>
 <p>When the upgrade type is <code>UpgradePurposeType.ConsensusParameters</code> serialized consensus parameters are available in the witnesses and the <code>Upgrade</code> transaction is self-contained because it has all the required information.</p>
-<p>When the upgrade type is <code>UpgradePurposeType.StateTransition</code>, the <code>bytecodeHash</code> field contains the hash of the new bytecode of the state transition function. The bytecode should already be available on the blockchain at the upgrade point; otherwise, the upgrade will fail. The bytecode can be part of the genesis block or can be uploaded via the <code>TransactionUpload</code> transaction.</p>
+<p>When the upgrade type is <code>UpgradePurposeType.StateTransition</code>, the <code>bytecodeRoot</code> field contains the Merkle root of the new bytecode of the state transition function. The bytecode should already be available on the blockchain at the upgrade point; otherwise, the upgrade will fail. The bytecode can be part of the genesis block or can be uploaded via the <code>TransactionUpload</code> transaction.</p>
 <p>The block header contains information about which versions of consensus parameters and state transition function are used to produce a block, and the <code>Upgrade</code> transaction defines behavior corresponding to the version. When the block executes the <code>Upgrade</code> transaction, it defines new behavior for either <code>BlockHeader.consensusParametersVersion + 1</code> or <code>BlockHeader.stateTransitionBytecodeVersion + 1</code>(it depends on the purpose of the upgrade).</p>
 <p>When the <code>Upgrade</code> transaction is included in the block, it doesn't affect the current block execution. Since behavior is now defined, the inclusion of the <code>Upgrade</code> transaction allows the production of the next block with a new version. The block producer can still continue to use the previous version and start using a new version later unless the state transition function forbids it.</p>
 <p>The behavior is set once per version. It is forbidden to override the behavior of the network. Each behavior should have its own version. The version should grow monotonically without jumps.</p>
@@ -391,6 +393,39 @@ This means that the transaction ID must also include the correct <code>txPointer
 <li>Any output is of type <code>OutputType.Change</code> with non-base <code>asset_id</code></li>
 <li>No input where <code>InputType.Message.owner == PRIVILEGED_ADDRESS</code> or <code>InputType.Coint.owner == PRIVILEGED_ADDRESS</code></li>
 <li>The <code>UpgradePurpose</code> is invalid</li>
+</ul>
+<h2 id="transactionupload"><a class="header" href="#transactionupload"><code>TransactionUpload</code></a></h2>
+<p>The <code>Upload</code> transaction allows the huge bytecode to be divided into subsections and uploaded slowly to the chain. The <a href="tx-format/../protocol/cryptographic-primitives.html#binary-merkle-tree">Binary Merkle root</a> built on top of subsections is an identifier of the bytecode.</p>
+<p>Each transaction uploads a subsection of the code and must contain proof of connection to the root. All subsections should be uploaded sequentially, which allows the concatenation of previously uploaded subsections with new subsection. The bytecode is considered final when the last subsection is uploaded, and future <code>Upload</code> transactions with the same <code>root</code> fields should be rejected.</p>
+<p>When the bytecode is completed it can be used to upgrade the network.</p>
+<p>The size of each subsection can be arbitrary; the only limit is the maximum number of subsections allowed by the network. The combination of the transaction gas limit and the number of subsections limits the final maximum size of the bytecode.</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>root</code></td><td><code>byte[32]</code></td><td>The root of the Merkle tree is created over the bytecode.</td></tr>
+<tr><td><code>witnessIndex</code></td><td><code>uint16</code></td><td>The witness index of the subsection of the bytecode.</td></tr>
+<tr><td><code>subsectionIndex</code></td><td><code>uint16</code></td><td>The index of the subsection of the bytecode.</td></tr>
+<tr><td><code>subsectionsNumber</code></td><td><code>uint16</code></td><td>The total number of subsections on which bytecode was divided.</td></tr>
+<tr><td><code>proofSetCount</code></td><td><code>uint16</code></td><td>Number of Merkle nodes in the proof.</td></tr>
+<tr><td><code>policyTypes</code></td><td><code>uint32</code></td><td>Bitfield of used policy types.</td></tr>
+<tr><td><code>inputsCount</code></td><td><code>uint16</code></td><td>Number of inputs.</td></tr>
+<tr><td><code>outputsCount</code></td><td><code>uint16</code></td><td>Number of outputs.</td></tr>
+<tr><td><code>witnessesCount</code></td><td><code>uint16</code></td><td>Number of witnesses.</td></tr>
+<tr><td><code>proofSet</code></td><td><code>byte[32][]</code></td><td>The proof set of Merkle nodes to verify the connection of the subsection to the <code>root</code>.</td></tr>
+<tr><td><code>policies</code></td><td><a href="tx-format/./policy.html">Policy</a><code>[]</code></td><td>List of policies.</td></tr>
+<tr><td><code>inputs</code></td><td><a href="tx-format/./input.html">Input</a><code>[]</code></td><td>List of inputs.</td></tr>
+<tr><td><code>outputs</code></td><td><a href="tx-format/./output.html">Output</a><code>[]</code></td><td>List of outputs.</td></tr>
+<tr><td><code>witnesses</code></td><td><a href="tx-format/./witness.html">Witness</a><code>[]</code></td><td>List of witnesses.</td></tr>
+</tbody></table>
+</div>
+<p>Transaction is invalid if:</p>
+<ul>
+<li>Any input is of type <code>InputType.Contract</code> or <code>InputType.Message</code> where <code>input.dataLength &gt; 0</code></li>
+<li>Any input uses non-base asset.</li>
+<li>Any output is of type <code>OutputType.Contract</code> or <code>OutputType.Variable</code> or <code>OutputType.Message</code> or <code>OutputType.ContractCreated</code></li>
+<li>Any output is of type <code>OutputType.Change</code> with non-base <code>asset_id</code></li>
+<li><code>witnessIndex &gt;= tx.witnessesCount</code></li>
+<li><code>subsectionIndex</code> &gt;= <code>subsectionsNumber</code></li>
+<li><code>subsectionsNumber &gt; MAX_BYTECODE_SUBSECTIONS</code></li>
+<li>The <a href="tx-format/../protocol/cryptographic-primitives.html#binary-merkle-tree">Binary Merkle tree</a> root calculated from <code>(witnesses[witnessIndex], subsectionIndex, subsectionsNumber, proofSet)</code> is not equal to the <code>root</code>. Root calculation is affected by all fields, so modification of one of them invalidates the proof.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="upgradepurposetype"><a class="header" href="#upgradepurposetype"><code>UpgradePurposeType</code></a></h1>
 <pre><code class="language-c++">enum UpgradePurposeType : uint8 {
@@ -422,7 +457,7 @@ This means that the transaction ID must also include the correct <code>txPointer
 </ul>
 <h2 id="statetransition"><a class="header" href="#statetransition"><code>StateTransition</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>bytecodeHash</code></td><td><code>byte[32]</code></td><td>The hash of the new bytecode of the state transition function.</td></tr>
+<tr><td><code>bytecodeRoot</code></td><td><code>byte[32]</code></td><td>The root of the new bytecode of the state transition function.</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="policy"><a class="header" href="#policy">Policy</a></h1>
 <pre><code class="language-c++">// index using powers of 2 for efficient bitmasking
@@ -896,6 +931,11 @@ def input_gas_fees(tx) -&gt; int:
 def metadata_gas_fees(tx) -&gt; int:
     &quot;&quot;&quot;
     Computes the intrinsic gas cost of processing transaction outputs
+    
+    The `contract_code_root_gas_fee`, `sha256_gas_fee`, and `contract_state_root_gas_fee` 
+    are based on the benchmarked gas costs of these operations.
+    
+    Consensus parameters contain definitions of gas costs for all operations and opcodes in the network.
     &quot;&quot;&quot;
     total: int = 0
     if tx.type == TransactionType.Create:
@@ -912,6 +952,11 @@ def metadata_gas_fees(tx) -&gt; int:
         if tx.upgradePurpose.type == UpgradePurposeType.ConsensusParameters:
             # add intrinsic cost of calculating the consensus parameters hash
             total += sha256_gas_fee(size(tx.witnesses[tx.upgradePurpose.witnessIndex].data))
+    elif tx.type == TransactionType.Upload:
+        # add intrinsic cost of calculating the root based on the number of bytecode subsections
+        total += contract_state_root_gas_fee(tx.subsectionsNumber)
+        # add intrinsic cost of hashing the subsection for verification of the connection with Binary Merkle tree root
+        total += sha256_gas_fee(size(tx.witnesses[tx.witnessIndex]))
             
     if tx.type != TransactionType.Mint:
         # add intrinsic cost of calculating the transaction id
@@ -937,6 +982,10 @@ def min_gas(tx) -&gt; int:
     Comutes the minimum amount of gas required for a transaction to begin processing.
     &quot;&quot;&quot;
     gas = transaction_size_gas_fees(tx) + intrinsic_gas_fees(tx)
+    if tx.type == TransactionType.Upload
+        # charge additionally for storing bytecode on chain
+        gas += transaction_size_gas_fees(size(tx.witnesses[tx.witnessIndex]))
+        
     return gas
 
 
@@ -947,7 +996,7 @@ def max_gas(tx) -&gt; int:
     gas = min_gas(tx)
     gas = gas + (tx.witnessBytesLimit - tx.witnessBytes) * GAS_PER_BYTE
     if tx.type == TransactionType.Script:
-       gas = gas + tx.gasLimit
+       gas += tx.gasLimit
     return gas
     
     
