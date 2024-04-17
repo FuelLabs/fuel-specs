@@ -36,7 +36,6 @@ to the Fuel blockchain or send other arbitrary information to the Fuel blockchai
 | `amount`    | `uint64`  | The amount of the base asset transfer                              |
 | `data`      | `byte[]`  | Arbitrary message data                                              |
 
-
 ### Transactions
 
 These are transactions that are submitted on the L1 that must be executed on the Fuel blockchain.
