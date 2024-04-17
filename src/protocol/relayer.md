@@ -5,7 +5,7 @@ Layer 1 (L1) blockchain (e.g. Ethereum).
 
 The Fuel blockchain can emit messages that will be processed by the smart contract on the L1 blockchain. The smart
 contract on the L1 can also emit events that will be processed by the Fuel blockchain.
-This is used to move assets between the two blockchains.
+This is used to move any data between the L1 blockchain and the Fuel blockchain.
 
 ## Fuel Message Outbox
 
@@ -35,7 +35,7 @@ to the Fuel blockchain or send other arbitrary information to the Fuel blockchai
 | `nonce`     | `bytes[32]` | Unique identifier of the message assigned by the L1 contract                                 |
 | `amount`    | `uint64`  | The amount of the base asset transfer                              |
 | `data`      | `byte[]`  | Arbitrary message data                                              |
-| `da_height` | `uint64` | The height of the L1 blockchain when this message event was emitted |
+
 
 ### Transactions
 
@@ -43,12 +43,11 @@ These are transactions that are submitted on the L1 that must be executed on the
 This "Forced Transaction Inclusion" is a security feature that allows participants of the Fuel Blockchain to access
 their funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious.
 
-| name                     | type      | description                                                                           |
-|--------------------------|-----------|---------------------------------------------------------------------------------------|
-| `nonce`                  | `bytes[32]` | Unique identifier of the transaction assigned by the L1 contract                                                                    |
-| `max_gas`                | `uint64`   | The maximum amount of gas allowed to use on Fuel Blockchain |
-| `serialized_transaction` | `byte[]`   | The serialized transaction bytes                                                      |
-| `da_height`              | `uint64`   | The height of the L1 blockchain when this transaction event was emitted               |
+| name                     | type      | description                                                                                                                                                    |
+|--------------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `nonce`                  | `bytes[32]` | Unique identifier of the transaction assigned by the L1                                                                          contract                                                                    |
+| `max_gas`                | `uint64`   | The maximum amount of gas allowed to use on  Fuel Blockchain                                                                          |
+| `serialized_transaction` | `byte[]`   | The serialized transaction bytes following canonical serialization. Only supports `Create` and `Script` [transaction](../tx-format/transaction.md), not `Mint` |
 
 ### Ordering
 
