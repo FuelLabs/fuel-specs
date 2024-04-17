@@ -41,7 +41,7 @@ to the Fuel blockchain or send other arbitrary information to the Fuel blockchai
 
 These are transactions that are submitted on the L1 that must be executed on the Fuel blockchain.
 This "Forced Transaction Inclusion" is a security feature that allows participants of the Fuel Blockchain to access
-there funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious.
+their funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious.
 
 | name                     | type      | description                                                                           |
 |--------------------------|-----------|---------------------------------------------------------------------------------------|
