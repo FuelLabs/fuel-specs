@@ -46,7 +46,7 @@ their funds in the (unlikely) event that the Fuel blockchain block production is
 | name                     | type      | description                                                                           |
 |--------------------------|-----------|---------------------------------------------------------------------------------------|
 | `nonce`                  | `bytes[32]` | Unique identifier of the transaction assigned by the L1 contract                                                                    |
-| `max_gas`                | `uint64`   | The maximum amount of gas executing this transaction will cost on the Fuel Blockchain |
+| `max_gas`                | `uint64`   | The maximum amount of gas allowed to use on Fuel Blockchain |
 | `serialized_transaction` | `byte[]`   | The serialized transaction bytes                                                      |
 | `da_height`              | `uint64`   | The height of the L1 blockchain when this transaction event was emitted               |
 
