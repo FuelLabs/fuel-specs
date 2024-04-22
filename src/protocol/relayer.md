@@ -40,13 +40,18 @@ to the Fuel blockchain or send other arbitrary information to the Fuel blockchai
 
 These are transactions that are submitted on the L1 that must be executed on the Fuel blockchain.
 This "Forced Transaction Inclusion" is a security feature that allows participants of the Fuel Blockchain to access
-their funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious.
+their funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious, e.g. the
+block producer is censoring transactions.
 
-| name                     | type      | description                                                                                                                                                    |
-|--------------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `nonce`                  | `bytes[32]` | Unique identifier of the transaction assigned by the L1                                                                          contract                                                                    |
-| `max_gas`                | `uint64`   | The maximum amount of gas allowed to use on  Fuel Blockchain                                                                          |
-| `serialized_transaction` | `byte[]`   | The serialized transaction bytes following canonical serialization. Only supports `Create` and `Script` [transaction](../tx-format/transaction.md), not `Mint` |
+| name                     | type      | description                                                                                                                               |
+|--------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| `nonce`                  | `bytes[32]` | Unique identifier of the transaction assigned by the L1                                                                          contract |
+| `max_gas`                | `uint64`   | The maximum amount of gas allowed to use on  Fuel Blockchain                                                                              |
+| `serialized_transaction` | `byte[]`   | The serialized transaction bytes following canonical serialization                                                                        |
+
+The `serialized_transaction` can be any [transaction variant](../tx-format/transaction.md) except the `Mint` transaction, which
+is only ever created by the block producer. `Mint` transactions will be rejected by the Fuel blockchain if they are relayed
+from the L1.
 
 ### Ordering
 
