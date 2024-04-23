@@ -261,7 +261,7 @@ Calling `bar` with `MySumType::Z` yields:
 
 ABI calls containing vectors are encoded in the following way:
 
-- First, figure out the the length `l` of the vector. Its length will also be its capacity.
+- First, figure out the length `l` of the vector. Its length will also be its capacity.
 - Encode the content of the vector according to the spec of its type, e.g. for a `Vec<bool>`,
   encode each `bool` element according to the `bool` specs. This gives out data that is stored
   on the heap, and we encode only the pointer to this data
