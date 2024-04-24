@@ -2330,7 +2330,7 @@ If there is an error in verification, `$err` is set to `1`, otherwise `$err` is 
 | Operation   | ```bls_12381_verify(MEM[$rA, 48 * NUM_MESSAGES], MEM[$rB, 32 * NUM_MESSAGES], MEM[$rC, 64], $rD);```                                                                                         |
 | Syntax      | `ed19 $rA, $rB, $rC, #rD`                                                                                                                                |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                                                   |
-| Notes       | If `$rD` is set to a value of `0`, verification will happen over an unaggregated signature, `1` specifies verifying over an aggregate signature set by the transaction user in memory, `3` specifies the block producer will set the `NUM_MESSAGES` and enforce verification under the condition a single public key at `$rA`, a single message at `$rB` are included in a valid aggregated BLS12-381 signature verification within the current block or that a single valid signature be present at `$rC`.  |
+| Notes       | If `$rD` is set to a value of `0`, verification will happen over an unaggregated signature, `1` specifies verifying over an aggregate signature set by the transaction user in memory, a single message at `$rB` are included in a valid aggregated BLS12-381 signature verification within the current block or that a single valid signature be present at `$rC`.  |
 
 Panic if:
 
