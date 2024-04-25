@@ -2,7 +2,7 @@
 
 ## Coin ID
 
-Is represented as an _outpoint_: a pair of [transaction ID](./transaction-id.md) as `byte[32]` and output index as a `uint8`.
+Is represented as an _outpoint_: a pair of [transaction ID](./transaction-id.md) as `byte[32]` and output index as a `uint16`.
 
 ## Message ID
 

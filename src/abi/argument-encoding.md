@@ -1,8 +1,12 @@
 # Argument Encoding
 
+## Version 0
+
+> :warning: This version is being deprecated for Version 1 (see below).
+
 When crafting transaction script data, you must encode the arguments you wish to pass to the script.
 
-## Types
+### Types
 
 These are the available types that can be encoded in the ABI:
 
@@ -25,7 +29,7 @@ These are the available types that can be encoded in the ABI:
 
 These types are encoded in-place. Here's how to encode them. We define `enc(X)` the encoding of the type `X`.
 
-## Unsigned Integers
+### Unsigned Integers
 
 `u<M>` where `M` is either 8, 16, 32, 64, 128 or 256 bits.
 
@@ -40,9 +44,9 @@ These types are encoded in-place. Here's how to encode them. We define `enc(X)` 
 **Example:**
 
 Encoding `42` yields: `0x000000000000002a`, which is the hexadecimal representation of the decimal number `42`, right-aligned to 8 bytes.
-Encoding `u128::MAX - 1` yields: `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE`, it's right-alined to 16 bytes
+Encoding `u128::MAX - 1` yields: `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE`, it's right-aligned to 16 bytes
 
-## Boolean
+### `Boolean`
 
 `enc(X)` is `0` if `X` is false or `1` if `X` is true, left-padded with zero-bytes. Total length must be 8 bytes. Similar to the `u8` encoding.
 
@@ -54,7 +58,7 @@ Encoding `true` yields:
 0x0000000000000001
 ```
 
-## B256
+### `B256`
 
 `b256` is a fixed size bit array of length 256. Used for 256-bit hash digests and other 256-bit types. It is encoded as-is.
 
@@ -66,7 +70,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 ```
 
-## Address
+### `Address`
 
 A 256-bit (32-byte) address, encoded in the same way as a `b256` argument: encoded as-is.
 
@@ -78,7 +82,7 @@ Encoding `0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745` yi
 0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745
 ```
 
-## Array
+### Array
 
 An array of a certain type `T`, `[T; n]`, where `n` is the length of the array.
 
@@ -100,7 +104,7 @@ The resulting encoded ABI will be:
 0x000000000000000100000000000000010000000000000002
 ```
 
-## Fixed-length Strings
+### Fixed-length Strings
 
 Strings have fixed length and are encoded in-place. `str[n]`, where `n` is the fixed-size of the string. Rather than padding the string, the encoding of the elements of the string is tightly packed. And unlike the other type encodings, the string encoding is left-aligned.
 
@@ -116,7 +120,7 @@ Encoding `"Hello, World"` as a `str[12]` **yields**:
 
 Note that we're padding with zeroes in order to keep it right-aligned to 8 bytes (FuelVM's word size).
 
-## Structs
+### Structs
 
 Encoding ABIs that contain custom types, such as structs, is similar to encoding a set of primitive types. The encoding will proceed in the order that the inner types of a custom type are declared and _recursively_ just like encoding any other type. This way you can encode structs with primitive types or structs with more complex types in them such as other structs, arrays, strings, and enums.
 
@@ -171,7 +175,7 @@ Calling `bar` with `InputStruct { field_1: true, field_2: [1, 2] }` yields:
 0000000000000002 // `2` encoded as u8
 ```
 
-## Enums (sum types)
+### Enums (sum types)
 
 ABI calls containing enums (sum types) are encoded similarly to structs: encode the discriminant first, then recursively encode the type of the enum variant being passed to the function being called.
 
@@ -253,7 +257,7 @@ Calling `bar` with `MySumType::Z` yields:
 0000000000000002 // The discriminant of the chosen enum, in this case `2`.
 ```
 
-## Vectors
+### Vectors
 
 ABI calls containing vectors are encoded in the following way:
 
@@ -294,7 +298,7 @@ At the pointer address, then the vector's content are encoded as such:
 0000000000000004 // 4u32
 ```
 
-## Tuples
+### Tuples
 
 ABI calls containing tuples are encoded as such:
 If `X` is a tuple with the type signature `(T_1, T_2, ..., T_n)`, with `T_1,...,T_n` being any type except for vector, then `enc(X)` is encoded as the concatenation of `enc(T_1)`, `enc(T_2)`,`enc (T_3)`, ..., `enc(T_n)`.
@@ -315,3 +319,106 @@ Calling `foo` with `(1u64, "fuel", true)` :
 6675656c00000000 // "fuel" encoded as per the specs
 0000000000000001 // true
 ```
+
+## Version 1
+
+This version was created to replace the older version 0 described above, and follows three philosophical tenets:
+
+- being self-sufficient: it must be possible to completely decode the original data only using the encoded bytes and the original type (there are no references to data outside the encoded bytes);
+- no overhead: only the bare minimum bytes are necessary to do the encoding. No metadata, headers, etc...;
+- no relation with runtime memory layout: no padding, no alignment, etc...
+
+### Primitive Types
+
+Primitive types will be encoded using the exact number of bits they need:
+
+- `u8`: 1 byte;
+- `u16`: 2 bytes;
+- `u32`: 4 bytes;
+- `u64`: 8 bytes;
+- `u256`: 32 bytes;
+- `b256`: 32 bytes;
+
+### Arrays
+
+Arrays are encoded without any padding or alignment, with one item after the other.
+
+- [T; 1] is encoded [encode(T)];
+- [T; 2] is encoded [encode(T), encode(T)]
+
+### Strings
+
+String arrays are encoded just like arrays, without any overhead.
+
+- `str[1]` = 1 byte
+- `str[2]` = 2 bytes
+- `str[n]` = `n` bytes
+
+String slices do contain their length as u64, and the string itself is encoded packed without alignment or padding.
+
+- `"abc"` = `[0, 0, 0, 0, 0, 0, 0, 3, "a", "b", "c"]`
+
+### Slices
+
+`raw_slice`, also being dynamic, contains their length as u64 and is treated as a "slice of bytes". Each byte is encoded as `u8` (1 byte) and is packed without alignment and padding.
+
+For example, a slice of three bytes like `[0u8, 1u8, 2u8]` will be encoded as bytes `[0, 0, 0, 0, 0, 0, 0, 3, 0, 1, 2]`
+
+### Tuple
+
+Tuples are encoded just like arrays, without any overhead like padding and alignment:
+
+- `(A, B, C)` = `[encode(A), encode(B), encode(C)]`
+
+### Structs (v1)
+
+Structs can be encoded in two ways:
+
+- first, with the automatic implementation;
+- second, with the custom implementation.
+
+Auto implementation follows the same rules as tuples. So we can imagine that
+
+```sway
+struct S {
+    a: A,
+    b: B,
+    c: C
+}
+```
+
+is encoded the same way as the tuple `(A, B, C)`.
+
+Custom implementation allows the developer to choose how a struct is encoded.
+
+A struct has auto-implemented encoding if no custom was found.
+
+### Enums
+
+`Enums` can also be encoded with the automatic or the custom implementation.
+
+The auto implementation first encoded the variant with a `u64` number starting from zero as the first variant and increments this value for each variant, following declaration order.
+
+```sway
+enum E {
+    VARIANT_A: A, // <- variant 0
+    VARIANT_B: B, // <- variant 1
+    VARIANT_C: C  // <- variant 2 
+}
+```
+
+will be encoded as `[encode(variant), encode(value)]`.
+
+The variant data will be encoded right after the variant tag, without any alignment or padding.
+
+An enum has auto-implemented encoding if no custom was found.
+
+### Data Structures
+
+Some common data structures also have well-defined encoding:
+
+- `Vec` will be encoded as `[encode(length), <encode each item>]`
+- `Bytes` will be encoded as `[encode(length), <bytes>]`
+- `String` will be encoded as `[encode (length), <data>]`
+
+All of them first contain the length and then their data right after, without any padding or alignment.

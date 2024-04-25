@@ -7,7 +7,7 @@
 - [Instruction Set](#instruction-set)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
-- [Predicate Estmation](#predicate-estimation)
+- [Predicate Estimation](#predicate-estimation)
 - [Predicate Verification](#predicate-verification)
 - [Script Execution](#script-execution)
 - [Call Frames](#call-frames)
@@ -22,9 +22,8 @@ This document provides the specification for the Fuel Virtual Machine (FuelVM). 
 | name                    | type     | value   | note                                    |
 |-------------------------|----------|---------|-----------------------------------------|
 | `CONTRACT_MAX_SIZE`     | `uint64` |         | Maximum contract size, in bytes.        |
-| `MEM_MAX_ACCESS_SIZE`   | `uint64` |         | Maximum memory access size, in bytes.   |
 | `VM_MAX_RAM`            | `uint64` | `2**26` | 64 MiB.                                 |
-| `MESSAGE_MAX_DATA_SIZE` | `uint16` |         | Maximum size of message data, in bytes. |
+| `MESSAGE_MAX_DATA_SIZE` | `uint64` |         | Maximum size of message data, in bytes. |
 
 ## Semantics
 
@@ -45,12 +44,12 @@ Of the 64 registers (6-bit register address space), the first `16` are reserved:
 | `0x04` | `$ssp`   | stack start pointer | Memory address of bottom of current writable stack area.                         |
 | `0x05` | `$sp`    | stack pointer       | Memory address on top of current writable stack area (points to free memory).    |
 | `0x06` | `$fp`    | frame pointer       | Memory address of beginning of current call frame.                               |
-| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to used/oob memory). |
+| `0x07` | `$hp`    | heap pointer        | Memory address below the current bottom of the heap (points to used/OOB memory). |
 | `0x08` | `$err`   | error               | Error codes for particular operations.                                           |
 | `0x09` | `$ggas`  | global gas          | Remaining gas globally.                                                          |
 | `0x0A` | `$cgas`  | context gas         | Remaining gas in the context.                                                    |
 | `0x0B` | `$bal`   | balance             | Received balance for this context.                                               |
-| `0x0C` | `$is`    | instrs start        | Pointer to the start of the currently-executing code.                            |
+| `0x0C` | `$is`    | instructions start        | Pointer to the start of the currently-executing code.                            |
 | `0x0D` | `$ret`   | return value        | Return value or pointer.                                                         |
 | `0x0E` | `$retl`  | return length       | Return value length in bytes.                                                    |
 | `0x0F` | `$flag`  | flags               | Flags register.                                                                  |
@@ -81,6 +80,7 @@ Every time the VM runs, a single monolithic memory of size `VM_MAX_RAM` bytes is
 To initialize the VM, the following is pushed on the stack sequentially:
 
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../identifiers/transaction-id.md).
+1. Base asset ID (`byte[32]`, word-aligned)
 1. [`MAX_INPUTS`](../tx-format/consensus_parameters.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
     1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
@@ -89,7 +89,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 
 Then the following registers are initialized (without explicit initialization, all registers are initialized to zero):
 
-1. `$ssp = 32 + MAX_INPUTS*(32+8) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
+1. `$ssp = 32 + 32 + MAX_INPUTS*(32+8) + size(tx))`: the writable stack area starts immediately after the serialized transaction in memory (see above).
 1. `$sp = $ssp`: writable stack area is empty to start.
 1. `$hp = VM_MAX_RAM`: the heap area begins at the top and is empty to start.
 
@@ -104,7 +104,7 @@ There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimati
 
 ## Predicate Estimation
 
-For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoin.it/wiki/P2SH) rather than a [P2PKH](https://en.bitcoin.it/P2PKH) output.
+For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [`P2SH`](https://en.bitcoin.it/wiki/P2SH) rather than a [`P2PKH`](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -125,7 +125,7 @@ After successful execution, `predicateGasUsed` is set to `MAX_GAS_PER_PREDICATE 
 
 ## Predicate Verification
 
-For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [P2SH](https://en.bitcoin.it/P2SH) rather than a [P2PKH](https://en.bitcoin.it/P2PKH) output.
+For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [`P2SH`](https://en.bitcoin.it/P2SH) rather than a [`P2PKH`](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
@@ -155,6 +155,8 @@ Following initialization, execution begins.
 
 For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction-set.md#rvrt-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
+After the script has been executed, `tx.receiptsRoot` is updated to contain the Merkle root of the receipts, [as described in the `TransactionScript` spec](../tx-format/transaction.md#`TransactionScript`).
+
 ## Call Frames
 
 Cross-contract calls push a _call frame_ onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that targets the FuelVM). The distinction is as follows:
@@ -179,7 +181,11 @@ A call frame consists of the following, word-aligned:
 |       |               |            | **Unwritable area ends.**                                                     |
 | *     |               |            | Call frame's stack.                                                           |
 
-## Ownership
+## Access rights
+
+Only memory that has been allocated is accessible. Attempting to read or write memory that has not been allocated will result in VM panic. Similarly reads or writes that cross from the stack to the heap will panic. Note stack remains readable even after stack frame has been shrunk. However, if heap is alter expanded to cover that area, the crossing read prohibition still remains. In other word, memory between highest-ever `$sp` value and current `$hp` is inaccessible.
+
+### Ownership
 
 Whenever memory is written to (i.e. with [`SB`](./instruction-set.md#sb-store-byte) or [`SW`](./instruction-set.md#sw-store-word)), or write access is granted (i.e. with [`CALL`](./instruction-set.md#call-call-contract)), ownership must be checked.
 
@@ -193,6 +199,6 @@ If the context is internal, the owned memory range for a call frame is:
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
 1. `[$hp, $fp->$hp)`: the heap area allocated by this call frame.
 
-## Executablity
+### Executablity
 
 Memory is only executable in range `[$is, $ssp)`. Attempting to execute instructions outside these boundaries will panic. This area never overlaps with writable registers, essentially providing [W^X](https://en.wikipedia.org/wiki/W%5EX) protection.

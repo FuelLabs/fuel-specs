@@ -10,28 +10,27 @@ enum InputType : uint8 {
 
 | name   | type                                                                                              | description    |
 |--------|---------------------------------------------------------------------------------------------------|----------------|
-| `type` | [InputType](#input)                                                                               | Type of input. |
-| `data` | One of [InputCoin](#inputcoin), [InputContract](#inputcontract), or [InputMessage](#inputmessage) | Input data.    |
+| `type` | [`InputType`](#input)                                                                               | Type of input. |
+| `data` | One of [`InputCoin`](#inputcoin), [`InputContract`](#inputcontract), or [`InputMessage`](#inputmessage) | Input data.    |
 
 Transaction is invalid if:
 
 - `type > InputType.Message`
 
-## InputCoin
+## `InputCoin`
 
 | name                  | type                         | description                                                            |
 |-----------------------|------------------------------|------------------------------------------------------------------------|
 | `txID`                | `byte[32]`                   | Hash of transaction.                                                   |
-| `outputIndex`         | `uint8`                      | Index of transaction output.                                           |
+| `outputIndex`         | `uint16`                      | Index of transaction output.                                           |
 | `owner`               | `byte[32]`                   | Owning address or predicate root.                                      |
 | `amount`              | `uint64`                     | Amount of coins.                                                       |
 | `asset_id`            | `byte[32]`                   | Asset ID of the coins.                                                 |
-| `txPointer`           | [TXPointer](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
-| `witnessIndex`        | `uint8`                      | Index of witness that authorizes spending the coin.                    |
-| `maturity`            | `uint32`                     | UTXO being spent must have been created at least this many blocks ago. |
+| `txPointer`           | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                          |
+| `witnessIndex`        | `uint16`                     | Index of witness that authorizes spending the coin.                    |
 | `predicateGasUsed`    | `uint64`                     | Gas used by predicate.                                                 |
-| `predicateLength`     | `uint16`                     | Length of predicate, in instructions.                                  |
-| `predicateDataLength` | `uint16`                     | Length of predicate input data, in bytes.                              |
+| `predicateLength`     | `uint64`                     | Length of predicate, in instructions.                                  |
+| `predicateDataLength` | `uint64`                     | Length of predicate input data, in bytes.                              |
 | `predicate`           | `byte[]`                     | Predicate bytecode.                                                    |
 | `predicateData`       | `byte[]`                     | Predicate input data (parameters).                                     |
 
@@ -47,25 +46,21 @@ Transaction is invalid if:
 - `predicateDataLength != len(predicateData)`
 - `predicateGasUsed > MAX_GAS_PER_PREDICATE`
 
-If `h` is the block height the UTXO being spent was created, transaction is invalid if `blockheight() < h + maturity`.
-
-> **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` is set to zero.
+> **Note:** when signing a transaction, `txPointer` and `predicateGasUsed` are set to zero.
 >
-> **Note:** when verifying and estimating a predicate, `txPointer` and `predicateGasUsed` is initialized to zero.
->
-> **Note:** when executing a script, `txPointer` is initialized to the TX whose output is being spent.
+> **Note:** when verifying and estimating a predicate or executing a script, `txPointer` and `predicateGasUsed` are initialized to zero.
 
 The predicate root is computed [here](../identifiers/predicate-id.md).
 
-## InputContract
+## `InputContract`
 
 | name          | type                         | description                                                             |
 |---------------|------------------------------|-------------------------------------------------------------------------|
 | `txID`        | `byte[32]`                   | Hash of transaction.                                                    |
-| `outputIndex` | `uint8`                      | Index of transaction output.                                            |
+| `outputIndex` | `uint16`                      | Index of transaction output.                                            |
 | `balanceRoot` | `byte[32]`                   | Root of amount of coins owned by contract before transaction execution. |
 | `stateRoot`   | `byte[32]`                   | State root of contract before transaction execution.                    |
-| `txPointer`   | [TXPointer](./tx-pointer.md) | Points to the TX whose output is being spent.                           |
+| `txPointer`   | [`TXPointer`](./tx-pointer.md) | Points to the TX whose output is being spent.                           |
 | `contractID`  | `byte[32]`                   | Contract ID.                                                            |
 
 Transaction is invalid if:
@@ -74,11 +69,9 @@ Transaction is invalid if:
 
 > **Note:** when signing a transaction, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are set to zero.
 >
-> **Note:** when verifying a predicate, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
->
-> **Note:** when executing a script, `txID`, `outputIndex`, `balanceRoot`, and `stateRoot` are initialized to the transaction ID, output index, amount, and state root of the contract with ID `contractID`, and `txPointer` is initialized to the TX whose output is being spent.
+> **Note:** when verifying a predicate or executing a script, `txID`, `outputIndex`, `balanceRoot`, `stateRoot`, and `txPointer` are initialized to zero.
 
-## InputMessage
+## `InputMessage`
 
 | name                  | type       | description                                             |
 |-----------------------|------------|---------------------------------------------------------|
@@ -86,11 +79,11 @@ Transaction is invalid if:
 | `recipient`           | `byte[32]` | The address or predicate root of the message recipient. |
 | `amount`              | `uint64`   | Amount of base asset coins sent with message.           |
 | `nonce`               | `byte[32]` | The message nonce.                                      |
-| `witnessIndex`        | `uint8`    | Index of witness that authorizes spending the coin.     |
+| `witnessIndex`        | `uint16`   | Index of witness that authorizes spending the coin.     |
 | `predicateGasUsed`    | `uint64`   | Gas used by predicate execution.                        |
-| `dataLength`          | `uint16`   | Length of message data, in bytes.                       |
-| `predicateLength`     | `uint16`   | Length of predicate, in instructions.                   |
-| `predicateDataLength` | `uint16`   | Length of predicate input data, in bytes.               |
+| `dataLength`          | `uint64`   | Length of message data, in bytes.                       |
+| `predicateLength`     | `uint64`   | Length of predicate, in instructions.                   |
+| `predicateDataLength` | `uint64`   | Length of predicate input data, in bytes.               |
 | `data`                | `byte[]`   | The message data.                                       |
 | `predicate`           | `byte[]`   | Predicate bytecode.                                     |
 | `predicateData`       | `byte[]`   | Predicate input data (parameters).                      |
