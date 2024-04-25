@@ -15,7 +15,7 @@ The message outbox is the set of messages sent to the L1 blockchain from the Fue
 
 The event inbox is the set of events received from the L1 blockchain by the Fuel blockchain.
 
-The block producer will receive the list of events from the L1 by some relayer, and then include both the count and the
+The block producer will receive the list of events from the L1 by some relayer, and then include the
 merkle root of the events in the block header.
 
 There are two types of events that can be received from the L1:
