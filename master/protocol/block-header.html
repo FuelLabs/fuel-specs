@@ -144,8 +144,8 @@
 <tr><td><code>da_height</code></td><td><code>uint64</code></td><td>Height of the data availability layer up to which (inclusive) input messages are processed.</td></tr>
 <tr><td><code>consensusParametersVersion</code></td><td><code>uint32</code></td><td>The version of the consensus parameters used to execute this block.</td></tr>
 <tr><td><code>stateTransitionBytecodeVersion</code></td><td><code>uint32</code></td><td>The version of the state transition bytecode used to execute this block.</td></tr>
-<tr><td><code>txCount</code></td><td><code>uint64</code></td><td>Number of <a href="../tx-format/transaction.html">transaction</a>s in this block.</td></tr>
-<tr><td><code>message_receipt_count</code></td><td><code>uint64</code></td><td>Number of <a href="../abi/receipts.html#messageout-receipt">output message</a>s in this block.</td></tr>
+<tr><td><code>txCount</code></td><td><code>uint16</code></td><td>Number of <a href="../tx-format/transaction.html">transaction</a>s in this block.</td></tr>
+<tr><td><code>message_receipt_count</code></td><td><code>uint32</code></td><td>Number of <a href="../abi/receipts.html#messageout-receipt">output message</a>s in this block.</td></tr>
 <tr><td><code>txRoot</code></td><td><code>byte[32]</code></td><td><a href="./cryptographic-primitives.html#binary-merkle-tree">Merkle root</a> of <a href="../tx-format/transaction.html">transaction</a>s in this block.</td></tr>
 <tr><td><code>message_outbox_root</code></td><td><code>byte[32]</code></td><td><a href="./cryptographic-primitives.html#binary-merkle-tree">Merkle root</a> of <a href="../abi/receipts.html#messageout-receipt">output message</a>s <a href="../identifiers/utxo-id.html#message-id"><code>messageId</code></a> in this block.</td></tr>
 <tr><td><code>event_inbox_root</code></td><td><code>byte[32]</code></td><td><a href="./cryptographic-primitives.html#binary-merkle-tree">Merkle root</a> of all <a href="./relayer.html">events</a> imported from L1 in this block. The order of the events added to the Merkle tree is the L1 block order, and the index of each event within each block</td></tr>
