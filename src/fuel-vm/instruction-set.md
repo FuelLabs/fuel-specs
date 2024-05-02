@@ -110,8 +110,7 @@
   - [`ECK1`: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [`ECR1`: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
   - [`ED19`: EdDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
-  - [`K256`: keccak-256](#k256-keccak-256)
-  - [`S256`: SHA-2-256](#s256-sha-2-256)
+  - [`HASH`: cryptographic hashing](#hash-cryptographic-hashing)
 - [Other Instructions](#other-instructions)
   - [`ECAL`: Call external function](#ecal-call-external-function)
   - [`FLAG`: Set flags](#flag-set-flags)
@@ -2333,33 +2332,20 @@ Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
-### `K256`: keccak-256
+### `HASH`: cryptographic hashing
 
 |             |                                                       |
 |-------------|-------------------------------------------------------|
-| Description | The keccak-256 hash of `$rC` bytes starting at `$rB`. |
-| Operation   | ```MEM[$rA, 32] = keccak256(MEM[$rB, $rC]);```        |
-| Syntax      | `k256 $rA, $rB, $rC`                                  |
-| Encoding    | `0x00 rA rB rC -`                                     |
+| Description | The hash of `$rC` bytes starting at `$rB` with hashing mode at `rD`. |
+| Operation   | ```MEM[$rA, 32] = hash(MEM[$rB, $rC], $rD);```        |
+| Syntax      | `hash $rA, $rB, $rC, $rD`                                  |
+| Encoding    | `0x00 rA rB rC rD`                                     |
 | Notes       |                                                       |
 
-Panic if:
+Available Hashing Modes:
 
-- `$rA + 32` overflows
-- `$rB + $rC` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
-- The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
-
-### `S256`: SHA-2-256
-
-|             |                                                      |
-|-------------|------------------------------------------------------|
-| Description | The SHA-2-256 hash of `$rC` bytes starting at `$rB`. |
-| Operation   | ```MEM[$rA, 32] = sha256(MEM[$rB, $rC]);```          |
-| Syntax      | `s256 $rA, $rB, $rC`                                 |
-| Encoding    | `0x00 rA rB rC -`                                    |
-| Notes       |                                                      |
+- `0`: sha-2-256
+- `1`: keccak-256
 
 Panic if:
 
