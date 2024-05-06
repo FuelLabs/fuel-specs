@@ -1,11 +1,18 @@
-# Transaction ID
+Here's a very short explanation of the Transaction ID calculation in points:
 
-The _transaction ID_ (also called _transaction hash_) of a transaction is computed as
-the [hash](../protocol/cryptographic-primitives.md#hashing) of `CHAIN_ID` and the
-[serialized transaction](../tx-format/transaction.md) with [fields zeroed out for signing](../tx-format/index.md)
-(see different inputs and outputs for which fields are set to zero), and without witness data. In other words, only
-all non-witness data is hashed.
+1. **Transaction ID** (also called Transaction Hash).
 
-```python
-sha256(CHAIN_ID ++ serialized_tx(tx))
-```
+2. **Components**:
+   - `CHAIN_ID`: Network identifier.
+   - Serialized transaction data, excluding witnesses.
+   - Specific fields zeroed out for signing.
+
+3. **Calculation**:
+   - Hash the concatenation of `CHAIN_ID` and the serialized transaction data (without witnesses and with fields zeroed out for signing).
+
+4. **Purpose**:
+   - Unique identifier for a transaction.
+   - Deterministic, based on transaction data and network.
+   - Excludes witnesses and zeroes out fields for signing.
+
+In essence, the Transaction ID is a hash of the blockchain network identifier and the non-witness transaction data, with certain fields zeroed out for signing purposes, providing a unique and deterministic identifier for each transaction.

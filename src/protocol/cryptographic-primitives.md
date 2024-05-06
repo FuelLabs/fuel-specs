@@ -1,11 +1,16 @@
 # Cryptographic Primitives
 
-- [Hashing](#hashing)
-- [Merkle Trees](#merkle-trees)
-  - [Binary Merkle Tree](#binary-merkle-tree)
-  - [Sparse Merkle Tree](#sparse-merkle-tree)
-- [EcDSA Public-Key Cryptography](#ecdsa-public-key-cryptography)
-- [EdDSA Public-Key Cryptography](#eddsa-public-key-cryptography)
+- [Cryptographic Primitives](#cryptographic-primitives)
+  - [Hashing](#hashing)
+  - [`HashDigest`](#hashdigest)
+  - [Merkle Trees](#merkle-trees)
+    - [Binary Merkle Tree](#binary-merkle-tree)
+      - [Binary Merkle Tree Inclusion Proofs](#binary-merkle-tree-inclusion-proofs)
+    - [Sparse Merkle Tree](#sparse-merkle-tree)
+      - [Insertion](#insertion)
+      - [Sparse Merkle Tree Inclusion Proofs](#sparse-merkle-tree-inclusion-proofs)
+  - [ECDSA Public-Key Cryptography](#ecdsa-public-key-cryptography)
+  - [EdDSA Public-Key Cryptography](#eddsa-public-key-cryptography)
 
 ## Hashing
 
@@ -133,16 +138,14 @@ The `includedSiblings` is ordered by most-significant-byte first, with each byte
 A specification describing a suite of test vectors and outputs of a Sparse Merkle Tree is [here](../tests/sparse-merkle-tree-tests.md).
 
 ## ECDSA Public-Key Cryptography
-
-Consensus-critical data is authenticated using [ECDSA](https://www.secg.org/sec1-v2.pdf), with the curve [secp256k1](https://en.bitcoin.it/wiki/Secp256k1). A highly-optimized library is available in [C](https://github.com/bitcoin-core/secp256k1), with wrappers in [Go](https://pkg.go.dev/github.com/ethereum/go-ethereum/crypto/secp256k1) and [Rust](https://docs.rs/crate/secp256k1).
-
-Public keys are encoded in uncompressed form, as the concatenation of the `x` and `y` values. No prefix is needed to distinguish between encoding schemes as this is the only encoding supported.
-
-Deterministic signatures ([RFC-6979](https://www.rfc-editor.org/rfc/rfc6979)) should be used when signing, but this is not enforced at the protocol level as it cannot be.
-
-Signatures are represented as the `r` and `s` (each 32 bytes), and `v` (1-bit) values of the signature. `r` and `s` take on their usual meaning (see: [SEC 1, 4.1.3 Signing Operation](https://www.secg.org/sec1-v2.pdf)), while `v` is used for recovering the public key from a signature more quickly (see: [SEC 1, 4.1.6 Public Key Recovery Operation](https://www.secg.org/sec1-v2.pdf)). Only low-`s` values in signatures are valid (i.e. `s <= secp256k1.n//2`); `s` can be replaced with `-s mod secp256k1.n` during the signing process if it is high. Given this, the first bit of `s` will always be `0`, and can be used to store the 1-bit `v` value.
-
-`v` represents the parity of the `Y` component of the point, `0` for even and `1` for odd. The `X` component of the point is assumed to always be low, since [the possibility of it being high is negligible](https://bitcoin.stackexchange.com/a/38909).
+- ECDSA Public-Key Cryptography is used to authenticate consensus-critical data.
+- The curve secp256k1 is utilized for this purpose.
+- A highly-optimized C library with wrappers in Go and Rust is available for ECDSA operations.
+- Public keys are encoded in uncompressed form, consisting of concatenated x and y values.
+- Deterministic signatures (RFC-6979) are recommended but not enforced at the protocol level.
+- Signatures consist of r and s values, with v representing the parity of the Y component of the point.
+- Only low-s values in signatures are valid, and the first bit of s is used to store the 1-bit v value.
+- The X component of the point is assumed to always be low.
 
 Putting it all together, the encoding for signatures is:
 
