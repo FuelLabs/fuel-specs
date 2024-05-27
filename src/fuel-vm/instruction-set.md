@@ -127,7 +127,7 @@ This page provides a description of all instructions for the FuelVM. Encoding is
 
 ### Panics
 
-Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on [context](./index.md#contexts):
+Some instructions may _panic_, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. Instructions with unspecified (reserved) part having a non-zero value will likewise panic.  How a panic is handled depends on [context](./index.md#contexts):
 
 - In a predicate context, cease VM execution and return `false`.
 - In other contexts, revert (described below).
