@@ -282,7 +282,7 @@
 <li>The syntax <code>STATE[x, y]</code> used in this page means the sequence of storage slots starting at key <code>x</code> and spanning <code>y</code> bytes.</li>
 </ul>
 <h3 id="panics"><a class="header" href="#panics">Panics</a></h3>
-<p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. How a panic is handled depends on <a href="./index.html#contexts">context</a>:</p>
+<p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. Instructions with unspecified (reserved) part having a non-zero value will likewise panic.  How a panic is handled depends on <a href="./index.html#contexts">context</a>:</p>
 <ul>
 <li>In a predicate context, cease VM execution and return <code>false</code>.</li>
 <li>In other contexts, revert (described below).</li>
