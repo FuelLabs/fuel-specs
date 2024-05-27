@@ -1835,7 +1835,7 @@ Panic if:
 
 Increment `$fp->codesize`, `$ssp` by `$rC` padded to word alignment. Then set `$sp` to `$ssp`.
 
-This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is unused (i.e. prior to being used).
+This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is zero-sized.
 
 ### `LOG`: Log event
 
