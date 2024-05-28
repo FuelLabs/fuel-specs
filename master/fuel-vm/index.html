@@ -278,7 +278,7 @@
 <tr><td>32</td><td><code>byte[32]</code></td><td><code>to</code></td><td>Contract ID for this call.</td></tr>
 <tr><td>32</td><td><code>byte[32]</code></td><td><code>asset_id</code></td><td>asset ID of forwarded coins.</td></tr>
 <tr><td>8*64</td><td><code>byte[8][64]</code></td><td><code>regs</code></td><td>Saved registers from previous context.</td></tr>
-<tr><td>8</td><td><code>uint64</code></td><td><code>codesize</code></td><td>Code size in bytes.</td></tr>
+<tr><td>8</td><td><code>uint64</code></td><td><code>codesize</code></td><td>Code size in bytes, padded to the next word boundary.</td></tr>
 <tr><td>8</td><td><code>byte[8]</code></td><td><code>param1</code></td><td>First parameter.</td></tr>
 <tr><td>8</td><td><code>byte[8]</code></td><td><code>param2</code></td><td>Second parameter.</td></tr>
 <tr><td>1*</td><td><code>byte[]</code></td><td><code>code</code></td><td>Zero-padded to 8-byte alignment, but individual instructions are not aligned.</td></tr>
