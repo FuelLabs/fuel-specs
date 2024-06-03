@@ -1,8 +1,9 @@
-[Link to related issue(s) here, if any]
+[[Link to related issue(s) here, if any](https://github.com/FuelLabs/fuel-specs/blob/master/src/protocol/relayer.md)]
 
-[Short description of the changes.]
+[Updating-the-Relayer.md-on-easier-understanding-for-newbies]
 
 ### Before requesting review
+
 - [ ] I have reviewed the code myself
 
 ### After merging, notify other teams
