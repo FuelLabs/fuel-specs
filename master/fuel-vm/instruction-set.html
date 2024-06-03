@@ -276,13 +276,13 @@
 </li>
 </ul>
 <h2 id="reading-guide"><a class="header" href="#reading-guide">Reading Guide</a></h2>
-<p>This page provides a description of all instructions for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single <code>i</code> indicates a 6-bit immediate value, <code>i i</code> indicates a 12-bit immediate value, <code>i i i</code> indicates an 18-bit immediate value, and <code>i i i i</code> indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers.</p>
+<p>This page provides a description of all instructions for the FuelVM. Encoding is read as a sequence of one 8-bit value (the opcode identifier) followed by four 6-bit values (the register identifiers or immediate value). A single <code>i</code> indicates a 6-bit immediate value, <code>i i</code> indicates a 12-bit immediate value, <code>i i i</code> indicates an 18-bit immediate value, and <code>i i i i</code> indicates a 24-bit immediate value. All immediate values are interpreted as big-endian unsigned integers. If the instruction would be shorter than the full 32 bits, the remaining part is reserved and must be zero.</p>
 <ul>
 <li>The syntax <code>MEM[x, y]</code> used in this page means the memory range starting at byte <code>x</code>, of length <code>y</code> bytes.</li>
 <li>The syntax <code>STATE[x, y]</code> used in this page means the sequence of storage slots starting at key <code>x</code> and spanning <code>y</code> bytes.</li>
 </ul>
 <h3 id="panics"><a class="header" href="#panics">Panics</a></h3>
-<p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. Instructions with unspecified (reserved) part having a non-zero value will likewise panic.  How a panic is handled depends on <a href="./index.html#contexts">context</a>:</p>
+<p>Some instructions may <em>panic</em>, i.e. enter an unrecoverable state. Additionally, attempting to execute an instruction not in this list causes a panic and consumes no gas. Instructions with reserved part having a non-zero value will likewise panic.  How a panic is handled depends on <a href="./index.html#contexts">context</a>:</p>
 <ul>
 <li>In a predicate context, cease VM execution and return <code>false</code>.</li>
 <li>In other contexts, revert (described below).</li>
