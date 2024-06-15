@@ -261,8 +261,8 @@ scalable
 Scalable
 Exponentiate
 exponentiate
-Executablity
-executablity
+Executability
+executability
 Unwritable
 unwritable
 untrusted
