@@ -1376,8 +1376,7 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
-- `$rB + imm + 1` overflows
-- `$rB + imm + 1 > VM_MAX_RAM`
+- `$rB + imm + 1` overflows or `> VM_MAX_RAM`
 
 ### `LW`: Load word
 
@@ -1392,8 +1391,7 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
-- `$rB + (imm * 8) + 8` overflows
-- `$rB + (imm * 8) + 8 > VM_MAX_RAM`
+- `$rB + (imm * 8) + 8` overflows or `> VM_MAX_RAM`
 
 ### `MCL`: Memory clear
 
@@ -1407,8 +1405,7 @@ Panic if:
 
 Panic if:
 
-- `$rA + $rB` overflows
-- `$rA + $rB > VM_MAX_RAM`
+- `$rA + $rB` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, $rB]`  does not pass [ownership check](./index.md#ownership)
 
 ### `MCLI`: Memory clear immediate
@@ -1423,8 +1420,7 @@ Panic if:
 
 Panic if:
 
-- `$rA + imm` overflows
-- `$rA + imm > VM_MAX_RAM`
+- `$rA + imm` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
 ### `MCP`: Memory copy
@@ -1439,10 +1435,8 @@ Panic if:
 
 Panic if:
 
-- `$rA + $rC` overflows
-- `$rB + $rC` overflows
-- `$rA + $rC > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
+- `$rA + $rC` overflows or `> VM_MAX_RAM`
+- `$rB + $rC` overflows or `> VM_MAX_RAM`
 - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
 - The memory range `MEM[$rA, $rC]`  does not pass [ownership check](./index.md#ownership)
 
@@ -1458,10 +1452,8 @@ Panic if:
 
 Panic if:
 
-- `$rA + imm` overflows
-- `$rB + imm` overflows
-- `$rA + imm > VM_MAX_RAM`
-- `$rB + imm > VM_MAX_RAM`
+- `$rA + imm` overflows or `> VM_MAX_RAM`
+- `$rB + imm` overflows or `> VM_MAX_RAM`
 - The memory ranges `MEM[$rA, imm]` and `MEM[$rB, imm]` overlap
 - The memory range `MEM[$rA, imm]`  does not pass [ownership check](./index.md#ownership)
 
@@ -1478,10 +1470,8 @@ Panic if:
 Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
-- `$rB + $rD` overflows
-- `$rC + $rD` overflows
-- `$rB + $rD > VM_MAX_RAM`
-- `$rC + $rD > VM_MAX_RAM`
+- `$rB + $rD` overflows or `> VM_MAX_RAM`
+- `$rC + $rD` overflows or `> VM_MAX_RAM`
 
 ### `PSHH`: Push a set of high registers to stack
 
@@ -1567,8 +1557,7 @@ Panic if:
 
 Panic if:
 
-- `$rA + imm + 1` overflows
-- `$rA + imm + 1 > VM_MAX_RAM`
+- `$rA + imm + 1` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./index.md#ownership)
 
 ### `SW`: Store word
@@ -1583,8 +1572,7 @@ Panic if:
 
 Panic if:
 
-- `$rA + (imm * 8) + 8` overflows
-- `$rA + (imm * 8) + 8 > VM_MAX_RAM`
+- `$rA + (imm * 8) + 8` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA + (imm * 8), 8]`  does not pass [ownership check](./index.md#ownership)
 
 ## Contract Instructions
@@ -1607,10 +1595,8 @@ Where helper `balance(asset_id: byte[32], contract_id: byte[32]) -> uint64` retu
 Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
-- `$rB + 32` overflows
-- `$rB + 32 > VM_MAX_RAM`
-- `$rC + 32` overflows
-- `$rC + 32 > VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 - Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
 
 ### `BHEI`: Block height
@@ -1639,8 +1625,7 @@ Panic if:
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
 Block header hashes for blocks with height greater than or equal to current block height are zero (```0x00**32```).
@@ -1659,7 +1644,7 @@ The asset ID is constructed using the asset ID construction method.
 
 Panic if:
 
-- `$rB + 32 > VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - Balance of asset ID from `constructAssetID(MEM[$fp, 32], MEM[$rB, 32])` of output with contract ID `MEM[$fp, 32]` minus `$rA` underflows
 - `$fp == 0` (in the script context)
 
@@ -1693,8 +1678,8 @@ There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns th
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rC + 32` overflows
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 - Reading past `MEM[VM_MAX_RAM - 1]`
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
@@ -1750,8 +1735,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
 ### `CCP`: Code copy
@@ -1769,10 +1753,8 @@ Use [`LDC`](#ldc-load-code-from-an-external-contract) to load code for executing
 
 Panic if:
 
-- `$rA + $rD` overflows
-- `$rB + 32` overflows
-- `$rA + $rD > VM_MAX_RAM`
-- `$rB + 32 > VM_MAX_RAM`
+- `$rA + $rD` overflows or `> VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, $rD]`  does not pass [ownership check](./index.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
@@ -1788,10 +1770,8 @@ Panic if:
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rB + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
@@ -1810,8 +1790,7 @@ Code root computation is defined [here](../identifiers/contract-id.md).
 Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
-- `$rB + 32` overflows
-- `$rB + 32 > VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
 ### `LDC`: Load code from an external contract
@@ -1826,10 +1805,8 @@ Panic if:
 
 Panic if:
 
-- `$ssp + $rC` overflows
-- `$rA + 32` overflows
-- `$ssp + $rC > VM_MAX_RAM`
-- `$rA + 32 > VM_MAX_RAM`
+- `$ssp + $rC` overflows or `> VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$ssp + $rC >= $hp`
 - `$rC > CONTRACT_MAX_SIZE`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
@@ -1889,8 +1866,7 @@ Logs the memory range `MEM[$rC, $rD]`.
 
 Panics if:
 
-- `$rC + $rD` overflows
-- `$rA + $rD > VM_MAX_RAM`
+- `$rC + $rD` overflows or `> VM_MAX_RAM`
 
 ### `MINT`: Mint new coins
 
@@ -1906,7 +1882,7 @@ The asset ID will be constructed using the asset ID construction method.
 
 Panic if:
 
-- `$rB + 32 > VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - Balance of asset ID `constructAssetID(MEM[$fp, 32], MEM[$rB])` of output with contract ID `MEM[$fp, 32]` plus `$rA` overflows
 - `$fp == 0` (in the script context)
 
@@ -1937,8 +1913,7 @@ Append a receipt to the list of receipts:
 
 Panic if:
 
-- `$rA + $rB` overflows
-- `$rA + $rB > VM_MAX_RAM`
+- `$rA + $rB` overflows or `> VM_MAX_RAM`
 
 Append a receipt to the list of receipts:
 
@@ -2025,10 +2000,8 @@ There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns th
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rB + $rC` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB + $rC` overflows or `> VM_MAX_RAM`
 - `$rC > MESSAGE_MAX_DATA_SIZE`
 - In an external context, if `$rD > MEM[balanceOfStart(0), 8]`
 - In an internal context, if `$rD` is greater than the balance of asset ID 0 of output with contract ID `MEM[$fp, 32]`
@@ -2059,8 +2032,7 @@ In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an int
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
@@ -2081,8 +2053,7 @@ Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
 - `$rB` is a [reserved register](./index.md#semantics)
-- `$rC + 32` overflows
-- `$rC + 32 > VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
 Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
@@ -2100,11 +2071,9 @@ Register `$rB` will be set to `false` if the requested slot is unset (default) a
 
 Panic if:
 
-- `$rA + 32 * rD` overflows
-- `$rA + 32 * rD > VM_MAX_RAM`
+- `$rA + 32 * rD` overflows or `> VM_MAX_RAM`
+- `$rC + 32 * rD` overflows or `> VM_MAX_RAM`
 - `$rB` is a [reserved register](./index.md#semantics)
-- `$rC + 32 * rD` overflows
-- `$rC + 32 * rD > VM_MAX_RAM`
 - The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
 - `$fp == 0` (in the script context)
 
@@ -2123,8 +2092,7 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$fp == 0` (in the script context)
 
@@ -2143,11 +2111,9 @@ The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will b
 
 Panic if:
 
-- `$rA + 32` overflows
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32 * $rD` overflows or `> VM_MAX_RAM`
 - `$rB` is a [reserved register](./index.md#semantics)
-- `$rC + 32 * $rD` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rC + 32 * $rD > VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
 Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
@@ -2184,10 +2150,8 @@ There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns th
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rC + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rC + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 - Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
 - In an external context, if `$rB > MEM[balanceOfStart(MEM[$rC, 32]), 8]`
 - In an internal context, if `$rB` is greater than the balance of asset ID `MEM[$rC, 32]` of output with contract ID `MEM[$fp, 32]`
@@ -2224,10 +2188,8 @@ There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns th
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rD + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rD + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rD + 32` overflows or `> VM_MAX_RAM`
 - `$rB > tx.outputsCount`
 - In an external context, if `$rC > MEM[balanceOfStart(MEM[$rD, 32]), 8]`
 - In an internal context, if `$rC` is greater than the balance of asset ID `MEM[$rD, 32]` of output with contract ID `MEM[$fp, 32]`
@@ -2271,12 +2233,9 @@ All these instructions advance the program counter `$pc` by `4` after performing
 
 Panic if:
 
-- `$rA + 64` overflows
-- `$rB + 64` overflows
-- `$rC + 32` overflows
-- `$rA + 64 > VM_MAX_RAM`
-- `$rB + 64 > VM_MAX_RAM`
-- `$rC + 32 > VM_MAX_RAM`
+- `$rA + 64` overflows or `> VM_MAX_RAM`
+- `$rB + 64` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
 Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
@@ -2297,12 +2256,9 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 
 Panic if:
 
-- `$rA + 64` overflows
-- `$rB + 64` overflows
-- `$rC + 32` overflows
-- `$rA + 64 > VM_MAX_RAM`
-- `$rB + 64 > VM_MAX_RAM`
-- `$rC + 32 > VM_MAX_RAM`
+- `$rA + 64` overflows or `> VM_MAX_RAM`
+- `$rB + 64` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 64]` does not pass [ownership check](./index.md#ownership)
 
 Signatures and signature verification are specified [here](../protocol/cryptographic-primitives.md#ecdsa-public-key-cryptography).
@@ -2323,12 +2279,9 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rB + 64` overflows
-- `$rC + 32` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + 64 > VM_MAX_RAM`
-- `$rC + 32 > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB + 64` overflows or `> VM_MAX_RAM`
+- `$rC + 32` overflows or `> VM_MAX_RAM`
 
 Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
 
@@ -2346,10 +2299,8 @@ If there is an error in verification, `$err` is set to `1`, otherwise `$err` is 
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rB + $rC` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB + $rC` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
 ### `S256`: SHA-2-256
@@ -2364,10 +2315,8 @@ Panic if:
 
 Panic if:
 
-- `$rA + 32` overflows
-- `$rB + $rC` overflows
-- `$rA + 32 > VM_MAX_RAM`
-- `$rB + $rC > VM_MAX_RAM`
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB + $rC` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
 ## Other Instructions
