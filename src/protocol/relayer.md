@@ -1,7 +1,7 @@
 # Layer 1 Relayer/Bridge Protocol
 
 The Fuel relayer/bridge protocol is a set of rules that govern the interaction between the Fuel blockchain and the
-Layer 1 (L1) blockchain (e.g. Ethereum).  
+Layer 1 (L1) blockchain (e.g. Ethereum).
 
 The Fuel blockchain can emit messages that will be processed by the smart contract on the L1 blockchain. The smart
 contract on the L1 can also emit events that will be processed by the Fuel blockchain.
@@ -28,13 +28,13 @@ There are two types of events that can be received from the L1:
 An arbitrary message sent from the L1 to the Fuel blockchain. This can be used to move assets from the L1
 to the Fuel blockchain or send other arbitrary information to the Fuel blockchain.
 
-| name        | type    | description                                                         |
-|-------------|---------|---------------------------------------------------------------------|
-| `sender`    | `bytes[32]` | The identity of the sender of the message on the L1                 |
-| `recipient` | `bytes[32]` | The recipient of the message on the Fuel Blockchain                 |
-| `nonce`     | `bytes[32]` | Unique identifier of the message assigned by the L1 contract                                 |
-| `amount`    | `uint64`  | The amount of the base asset transfer                              |
-| `data`      | `byte[]`  | Arbitrary message data                                              |
+| name        | type        | description                                                            |
+| ----------- | ----------- | ---------------------------------------------------------------------- |
+| `sender`    | `bytes[32]` | The sender's identity on the L1 blockchain.                            |
+| `recipient` | `bytes[32]` | The recipient on the Fuel blockchain.                                  |
+| `nonce`     | `bytes[32]` | Unique identifier assigned by the L1 contract to the message. contract |
+| `amount`    | `uint64`    | Amount of the base asset being transferred.                            |
+| `data`      | `byte[]`    | Arbitrary message data.                                                |
 
 ### Transactions
 
@@ -43,22 +43,16 @@ This "Forced Transaction Inclusion" is a security feature that allows participan
 their funds in the (unlikely) event that the Fuel blockchain block production is compromised or malicious, e.g. the
 block producer is censoring transactions.
 
-| name                     | type      | description                                                                                                                               |
-|--------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| `nonce`                  | `bytes[32]` | Unique identifier of the transaction assigned by the L1                                                                          contract |
-| `max_gas`                | `uint64`   | The maximum amount of gas allowed to use on  Fuel Blockchain                                                                              |
-| `serialized_transaction` | `byte[]`   | The serialized transaction bytes following canonical serialization                                                                        |
+| name                     | type        | description                                                       |
+| ------------------------ | ----------- | ----------------------------------------------------------------- |
+| `nonce`                  | `bytes[32]` | Unique identifier assigned by the L1 contract to the transaction. |
+| `max_gas`                | `uint64`    | Maxium gas allowed on the Fuel blockchain                         |
+| `serialized_transaction` | `byte[]`    | Serialized transaction bytes following canonical serialization.   |
 
-The `serialized_transaction` can be any [transaction variant](../tx-format/transaction.md) except the `Mint` transaction, which
-is only ever created by the block producer. `Mint` transactions will be rejected by the Fuel blockchain if they are relayed
-from the L1.
+The serialized_transaction can be any transaction variant except for the Mint transaction, which is exclusively created by the block producer. Mint transactions relayed from the L1 will be rejected by the Fuel blockchain.
 
 ### Ordering
 
-It is important that the L1 events are ordered correctly when they are relayed to the Fuel blockchain. The events will
-be ordered by the L1 block height and then by the index of the event within the block.
+Correct ordering of L1 events during relay to the Fuel blockchain is crucial. Events are ordered first by L1 block height and then by event index within the block.
 
-The order is important because a merkle root will be generated each time events from L1 are included in a Fuel block.
-This merkle root can later be used to prove that an arbitrary event was included on that block without having to store
-every event on the block header explicitly. Just the merkle root will be on the [block header](./block-header.md).
-The order of the events affects the value of the merkle root.
+The ordering is significant because each time L1 events are included in a Fuel block, a merkle root is generated. This merkle root can later be used to verify the inclusion of an arbitrary event in that block without storing every event explicitly in the block header. Only the merkle root will be included in the block header, with the order of events directly influencing its value
