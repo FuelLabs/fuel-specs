@@ -234,7 +234,6 @@ Transaction is invalid if:
 - `subsectionsNumber > MAX_BYTECODE_SUBSECTIONS`
 - The [Binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) root calculated from `(witnesses[witnessIndex], subsectionIndex, subsectionsNumber, proofSet)` is not equal to the `root`. Root calculation is affected by all fields, so modification of one of them invalidates the proof.
 
-
 ## `TransactionBlob`
 
 The `Blob` inserts a simple binary blob in the chain. It's raw immutable data that can be cheaply loaded by the VM and used as instructions or just data. Unlike `Create`, it doesn't hold any state or balances.

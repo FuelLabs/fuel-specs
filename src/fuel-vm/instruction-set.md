@@ -108,8 +108,8 @@
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
-  - [`BLDC`: Load code from a blob](#blcd-load-code-from-a-blob)
-  - [`BLDD`: Load data from a blob](#blcd-load-data-from-a-blob)
+  - [`BLDC`: Load code from a blob](#bldc-load-code-from-a-blob)
+  - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
 - [Cryptographic Instructions](#cryptographic-instructions)
   - [`ECK1`: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [`ECR1`: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
@@ -2293,6 +2293,7 @@ Panic if:
 - `$ra != 0`
 - `$sp + $rD` overflows or `> VM_MAX_RAM` or `> $hp`
 - `$rB + 32` overflows or `> VM_MAX_RAM`
+- Blob ID `MEM[$rB, 32]` is not found
 
 Increment `$fp->codesize` and `$sp` by `$rD` padded to word alignment. Then set `$sp` to `$ssp`.
 
@@ -2311,6 +2312,7 @@ Panic if:
 
 - `$rA + $rD` overflows or `> VM_MAX_RAM` or `> $hp`
 - `$rB + 32` overflows or `> VM_MAX_RAM`
+- Blob ID `MEM[$rB, 32]` is not found
 
 ## Cryptographic Instructions
 
