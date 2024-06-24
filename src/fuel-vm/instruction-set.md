@@ -2295,7 +2295,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - Blob ID `MEM[$rB, 32]` is not found
 
-Increment `$fp->codesize` and `$sp` by `$rD` padded to word alignment. Then set `$sp` to `$ssp`.
+Increment `$fp->codesize` and `$sp` by `$rD` padded to word alignment. Then set `$ssp` to `$sp`.
 
 This instruction can be used to extend current script or contract from a blob. Previous stack contents are frozen, and will be treated as code by the VM.
 
