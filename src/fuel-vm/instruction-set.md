@@ -2282,8 +2282,8 @@ Panic if:
 ### `BLDC`: Load code from a blob
 
 |-------------|-------------------------------------------------------------------------------------------------------------|
-| Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sp`. Set `$ssp=$sp=$sp+$rC`. |
-| Operation   | `assert($rA == 0); MEM[$sp, $rD] = blob($rB)[$rC, $rD];`                                                    |
+| Description | Copy `$rD` bytes at offset `$rC` from blob with 32-byte id at `$rB` into memory just after the stack.       |
+| Operation   | `assert($rA == 0); MEM[$sp, $rD] = blob(MEM[$rB, 32])[$rC, $rD]; $sp=$sp+$rC; $ssp=$sp;`                    |
 | Syntax      | `bldc $rA, $rB, rC, $rD`                                                                                    |
 | Encoding    | `0x00 rA rB rC rD`                                                                                          |
 | Notes       | If `$rC >` blob size, zero bytes are filled in. `$rA` is reserved for future use, and must be zero.         |
@@ -2297,13 +2297,13 @@ Panic if:
 
 Increment `$fp->codesize` and `$sp` by `$rD` padded to word alignment. Then set `$sp` to `$ssp`.
 
-This instruction can be used to extend current script or contract from a blob.
+This instruction can be used to extend current script or contract from a blob. Previous stack contents are frozen, and will be treated as code by the VM.
 
 ### `BLDD`: Load data from a blob
 
 |-------------|-------------------------------------------------------------------------------------------------------------|
 | Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sA`.                         |
-| Operation   | `0; MEM[$rA, $rD] = blob($rB)[$rC, $rD];`                                                                   |
+| Operation   | `MEM[$rA, $rD] = blob(MEM[$rB, 32])[$rC, $rD];`                                                             |
 | Syntax      | `bldd $rA, $rB, rC, $rD`                                                                                    |
 | Encoding    | `0x00 rA rB rC rD`                                                                                          |
 | Notes       | If `$rC >` blob size, zero bytes are filled in.                                                             |
