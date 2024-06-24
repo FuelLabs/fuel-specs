@@ -198,7 +198,3 @@ If the context is internal, the owned memory range for a call frame is:
 
 1. `[$ssp, $sp)`: the writable stack area of the call frame.
 1. `[$hp, $fp->$hp)`: the heap area allocated by this call frame.
-
-### Executablity
-
-Memory is only executable in range `[$is, $ssp)`. Attempting to execute instructions outside these boundaries will cause a panic. This area never overlaps with writable memory, essentially providing [W^X](https://en.wikipedia.org/wiki/W%5EX) protection.

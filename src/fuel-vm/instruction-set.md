@@ -108,7 +108,6 @@
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
-  - [`BLDC`: Load code from a blob](#bldc-load-code-from-a-blob)
   - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
 - [Cryptographic Instructions](#cryptographic-instructions)
   - [`ECK1`: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
@@ -2268,7 +2267,7 @@ All these instructions advance the program counter `$pc` by `4` after performing
 |             |                                                                                                           |
 |-------------|-----------------------------------------------------------------------------------------------------------|
 | Description | Set `$rA` to the size of the blob with ID equal to the 32 bytes in memory starting at `$rB`.              |
-| Operation   | ```$rA = blobsize(MEM[$rB, 32]);```                                                                       |
+| Operation   | `$rA = len(blob(MEM[$rB, 32]));`                                                                          |
 | Syntax      | `bsiz $rA, $rB`                                                                                           |
 | Encoding    | `0x00 rA rB - -`                                                                                          |
 | Notes       |                                                                                                           |
@@ -2278,26 +2277,6 @@ Panic if:
 - `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - Blob ID `MEM[$rB, 32]` is not found
-
-### `BLDC`: Load code from a blob
-
-|-------------|-------------------------------------------------------------------------------------------------------------|
-| Description | Copy `$rD` bytes at offset `$rC` from blob with 32-byte id at `$rB` into memory just after the stack.       |
-| Operation   | `assert($rA == 0); MEM[$sp, $rD] = blob(MEM[$rB, 32])[$rC, $rD]; $sp=$sp+$rC; $ssp=$sp;`                    |
-| Syntax      | `bldc $rA, $rB, rC, $rD`                                                                                    |
-| Encoding    | `0x00 rA rB rC rD`                                                                                          |
-| Notes       | If `$rC >` blob size, zero bytes are filled in. `$rA` is reserved for future use, and must be zero.         |
-
-Panic if:
-
-- `$ra != 0`
-- `$sp + $rD` overflows or `> VM_MAX_RAM` or `> $hp`
-- `$rB + 32` overflows or `> VM_MAX_RAM`
-- Blob ID `MEM[$rB, 32]` is not found
-
-Increment `$fp->codesize` and `$sp` by `$rD` padded to word alignment. Then set `$ssp` to `$sp`.
-
-This instruction can be used to extend current script or contract from a blob. Previous stack contents are frozen, and will be treated as code by the VM.
 
 ### `BLDD`: Load data from a blob
 
