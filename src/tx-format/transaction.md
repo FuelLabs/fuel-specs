@@ -7,6 +7,7 @@ enum TransactionType : uint8 {
     Mint = 2,
     Upgrade = 3,
     Upload = 4,
+    Blob = 5,
 }
 ```
 
@@ -232,3 +233,30 @@ Transaction is invalid if:
 - `subsectionIndex` >= `subsectionsNumber`
 - `subsectionsNumber > MAX_BYTECODE_SUBSECTIONS`
 - The [Binary Merkle tree](../protocol/cryptographic-primitives.md#binary-merkle-tree) root calculated from `(witnesses[witnessIndex], subsectionIndex, subsectionsNumber, proofSet)` is not equal to the `root`. Root calculation is affected by all fields, so modification of one of them invalidates the proof.
+
+
+## `TransactionBlob`
+
+The `Blob` inserts a simple binary blob in the chain. It's raw immutable data that can be cheaply loaded by the VM and used as instructions or just data. Unlike `Create`, it doesn't hold any state or balances.
+
+`Blob`s are content-addressed, i.e. the they are uniquely identified by hash of the data field. Programs running on the VM can load an already-posted blob just by the hash, without having to specify it in contract inputs.
+
+| name                | type                        | description                      |
+|---------------------|-----------------------------|----------------------------------|
+| `dataLength`        | `uint64`                    | Size of the blob, in bytes.      |
+| `policyTypes`       | `uint32`                    | Bitfield of used policy types.   |
+| `inputsCount`       | `uint16`                    | Number of inputs.                |
+| `outputsCount`      | `uint16`                    | Number of outputs.               |
+| `witnessesCount`    | `uint16`                    | Number of witnesses.             |
+| `data`              | `byte[]`                    | The data to post.                |
+| `policies`          | [Policy](./policy.md)`[]`   | List of policies.                |
+| `inputs`            | [Input](./input.md)`[]`     | List of inputs.                  |
+| `outputs`           | [Output](./output.md)`[]`   | List of outputs.                 |
+| `witnesses`         | [Witness](./witness.md)`[]` | List of witnesses.               |
+
+Transaction is invalid if:
+
+- Any input is of type `InputType.Contract` or `InputType.Message` where `input.dataLength > 0`
+- Any input uses non-base asset.
+- Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message` or `OutputType.ContractCreated`
+- Any output is of type `OutputType.Change` with non-base `asset_id`

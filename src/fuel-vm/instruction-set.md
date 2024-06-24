@@ -106,6 +106,10 @@
   - [`TIME`: Timestamp at height](#time-timestamp-at-height)
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
+- [Blob Instructions](#blob-instructions)
+  - [`BSIZ`: Blob size](#bsiz-blob-size)
+  - [`BLDC`: Load code from a blob](#blcd-load-code-from-a-blob)
+  - [`BLDD`: Load data from a blob](#blcd-load-data-from-a-blob)
 - [Cryptographic Instructions](#cryptographic-instructions)
   - [`ECK1`: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [`ECR1`: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
@@ -2254,6 +2258,59 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].asset_id = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
+
+## Blob Instructions
+
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
+
+### `BSIZ`: Blob size
+
+|             |                                                                                                           |
+|-------------|-----------------------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the size of the blob with ID equal to the 32 bytes in memory starting at `$rB`.              |
+| Operation   | ```$rA = blobsize(MEM[$rB, 32]);```                                                                       |
+| Syntax      | `bsiz $rA, $rB`                                                                                           |
+| Encoding    | `0x00 rA rB - -`                                                                                          |
+| Notes       |                                                                                                           |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- Blob ID `MEM[$rB, 32]` is not found
+
+### `BLDC`: Load code from a blob
+
+|-------------|-------------------------------------------------------------------------------------------------------------|
+| Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sp`. Set `$ssp=$sp=$sp+$rC`. |
+| Operation   | `assert($rA == 0); MEM[$sp, $rD] = blob($rB)[$rC, $rD];`                                                    |
+| Syntax      | `bldc $rA, $rB, rC, $rD`                                                                                    |
+| Encoding    | `0x00 rA rB rC rD`                                                                                          |
+| Notes       | If `$rC >` blob size, zero bytes are filled in. `$rA` is reserved for future use, and must be zero.         |
+
+Panic if:
+
+- `$ra != 0`
+- `$sp + $rD` overflows or `> VM_MAX_RAM` or `> $hp`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+
+Increment `$fp->codesize` and `$sp` by `$rD` padded to word alignment. Then set `$sp` to `$ssp`.
+
+This instruction can be used to extend current script or contract from a blob.
+
+### `BLDD`: Load data from a blob
+
+|-------------|-------------------------------------------------------------------------------------------------------------|
+| Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sA`.                         |
+| Operation   | `0; MEM[$rA, $rD] = blob($rB)[$rC, $rD];`                                                                   |
+| Syntax      | `bldd $rA, $rB, rC, $rD`                                                                                    |
+| Encoding    | `0x00 rA rB rC rD`                                                                                          |
+| Notes       | If `$rC >` blob size, zero bytes are filled in.                                                             |
+
+Panic if:
+
+- `$rA + $rD` overflows or `> VM_MAX_RAM` or `> $hp`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 
 ## Cryptographic Instructions
 
