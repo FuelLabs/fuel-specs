@@ -242,12 +242,12 @@ The `Blob` inserts a simple binary blob in the chain. It's raw immutable data th
 
 | name                | type                        | description                      |
 |---------------------|-----------------------------|----------------------------------|
-| `dataLength`        | `uint64`                    | Size of the blob, in bytes.      |
+| `id`                | `byte[32]`                  | Blob id, i.e. hash of the data.  |
+| `witnessIndex`      | `uint16`                    | The witness index of the data.   |
 | `policyTypes`       | `uint32`                    | Bitfield of used policy types.   |
 | `inputsCount`       | `uint16`                    | Number of inputs.                |
 | `outputsCount`      | `uint16`                    | Number of outputs.               |
 | `witnessesCount`    | `uint16`                    | Number of witnesses.             |
-| `data`              | `byte[]`                    | The data to post.                |
 | `policies`          | [Policy](./policy.md)`[]`   | List of policies.                |
 | `inputs`            | [Input](./input.md)`[]`     | List of inputs.                  |
 | `outputs`           | [Output](./output.md)`[]`   | List of outputs.                 |
@@ -259,3 +259,5 @@ Transaction is invalid if:
 - Any input uses non-base asset.
 - Any output is of type `OutputType.Contract` or `OutputType.Variable` or `OutputType.Message` or `OutputType.ContractCreated`
 - Any output is of type `OutputType.Change` with non-base `asset_id`
+- `witnessIndex >= tx.witnessesCount`
+- `sha256(witnesses[witnessIndex]) != id`
