@@ -184,7 +184,7 @@ A call frame consists of the following, word-aligned:
 ## Access rights
 
 Only memory that has been allocated is accessible. 
-In other word, memory between highest-ever `$sp` value and current `$hp` 
+In other words, memory between highest-ever `$sp` value and current `$hp` 
 is inaccessible. Attempting to read or write 
 memory that has not been allocated will result in VM panic. 
 Similarly reads or writes that cross from the stack to the heap 
