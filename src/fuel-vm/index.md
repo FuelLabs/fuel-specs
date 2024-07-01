@@ -183,13 +183,13 @@ A call frame consists of the following, word-aligned:
 
 ## Access rights
 
-Only memory that has been allocated is accessible. 
-In other words, memory between highest-ever `$sp` value and current `$hp` 
-is inaccessible. Attempting to read or write 
-memory that has not been allocated will result in VM panic. 
-Similarly reads or writes that cross from the stack to the heap 
-will panic. Note that stack remains readable even after stack 
-frame has been shrunk. However, if the heap is afterwards expanded 
+Only memory that has been allocated is accessible.
+In other words, memory between highest-ever `$sp` value and current `$hp`
+is inaccessible. Attempting to read or write
+memory that has not been allocated will result in VM panic.
+Similarly reads or writes that cross from the stack to the heap
+will panic. Note that stack remains readable even after stack
+frame has been shrunk. However, if the heap is afterwards expanded
 to cover that area, the crossing read prohibition still remains,
 while all memory is accessible.
 
