@@ -4269,8 +4269,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>Panic if:</p>
 <ul>
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rB + imm + 1</code> overflows</li>
-<li><code>$rB + imm + 1 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + imm + 1</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <h3 id="lw-load-word"><a class="header" href="#lw-load-word"><code>LW</code>: Load word</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -4284,8 +4283,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>Panic if:</p>
 <ul>
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rB + (imm * 8) + 8</code> overflows</li>
-<li><code>$rB + (imm * 8) + 8 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + (imm * 8) + 8</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <h3 id="mcl-memory-clear"><a class="header" href="#mcl-memory-clear"><code>MCL</code>: Memory clear</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -4298,8 +4296,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + $rB</code> overflows</li>
-<li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + $rB</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, $rB]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="mcli-memory-clear-immediate"><a class="header" href="#mcli-memory-clear-immediate"><code>MCLI</code>: Memory clear immediate</a></h3>
@@ -4313,8 +4310,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + imm</code> overflows</li>
-<li><code>$rA + imm &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + imm</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, imm]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="mcp-memory-copy"><a class="header" href="#mcp-memory-copy"><code>MCP</code>: Memory copy</a></h3>
@@ -4328,10 +4324,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + $rC</code> overflows</li>
-<li><code>$rB + $rC</code> overflows</li>
-<li><code>$rA + $rC &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory ranges <code>MEM[$rA, $rC]</code> and <code>MEM[$rB, $rC]</code> overlap</li>
 <li>The memory range <code>MEM[$rA, $rC]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
@@ -4346,10 +4340,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + imm</code> overflows</li>
-<li><code>$rB + imm</code> overflows</li>
-<li><code>$rA + imm &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + imm &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + imm</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + imm</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory ranges <code>MEM[$rA, imm]</code> and <code>MEM[$rB, imm]</code> overlap</li>
 <li>The memory range <code>MEM[$rA, imm]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
@@ -4365,10 +4357,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>Panic if:</p>
 <ul>
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rB + $rD</code> overflows</li>
-<li><code>$rC + $rD</code> overflows</li>
-<li><code>$rB + $rD &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + $rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <h3 id="pshh-push-a-set-of-high-registers-to-stack"><a class="header" href="#pshh-push-a-set-of-high-registers-to-stack"><code>PSHH</code>: Push a set of high registers to stack</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -4443,8 +4433,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + imm + 1</code> overflows</li>
-<li><code>$rA + imm + 1 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + imm + 1</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA + imm, 1]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="sw-store-word"><a class="header" href="#sw-store-word"><code>SW</code>: Store word</a></h3>
@@ -4458,8 +4447,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + (imm * 8) + 8</code> overflows</li>
-<li><code>$rA + (imm * 8) + 8 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + (imm * 8) + 8</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA + (imm * 8), 8]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h2 id="contract-instructions"><a class="header" href="#contract-instructions">Contract Instructions</a></h2>
@@ -4478,10 +4466,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>Panic if:</p>
 <ul>
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rB + 32</code> overflows</li>
-<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32</code> overflows</li>
-<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Contract with ID <code>MEM[$rC, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
 <h3 id="bhei-block-height"><a class="header" href="#bhei-block-height"><code>BHEI</code>: Block height</a></h3>
@@ -4508,8 +4494,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <p>Block header hashes for blocks with height greater than or equal to current block height are zero (<code>0x00**32</code>).</p>
@@ -4525,7 +4510,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>The asset ID is constructed using the asset ID construction method.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Balance of asset ID from <code>constructAssetID(MEM[$fp, 32], MEM[$rB, 32])</code> of output with contract ID <code>MEM[$fp, 32]</code> minus <code>$rA</code> underflows</li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
@@ -4554,8 +4539,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>There is a <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> helper that returns the memory address of the remaining free balance of <code>asset_id</code>. If <code>asset_id</code> has no free balance remaining, the helper panics.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rC + 32</code> overflows</li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
 <li>Reading past <code>MEM[VM_MAX_RAM - 1]</code></li>
 <li>In an external context, if <code>$rB &gt; MEM[balanceOfStart(MEM[$rC, 32]), 8]</code></li>
@@ -4605,8 +4590,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="ccp-code-copy"><a class="header" href="#ccp-code-copy"><code>CCP</code>: Code copy</a></h3>
@@ -4622,10 +4606,8 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contract"><code>LDC</code></a> to load code for executing.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + $rD</code> overflows</li>
-<li><code>$rB + 32</code> overflows</li>
-<li><code>$rA + $rD &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, $rD]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 <li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
@@ -4640,10 +4622,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rB + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 <li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
@@ -4660,8 +4640,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>Panic if:</p>
 <ul>
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rB + 32</code> overflows</li>
-<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
 <h3 id="ldc-load-code-from-an-external-contract"><a class="header" href="#ldc-load-code-from-an-external-contract"><code>LDC</code>: Load code from an external contract</a></h3>
@@ -4675,10 +4654,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$ssp + $rC</code> overflows</li>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$ssp + $rC &gt; VM_MAX_RAM</code></li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$ssp + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$ssp + $rC &gt;= $hp</code></li>
 <li><code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
@@ -4731,8 +4708,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>Logs the memory range <code>MEM[$rC, $rD]</code>.</p>
 <p>Panics if:</p>
 <ul>
-<li><code>$rC + $rD</code> overflows</li>
-<li><code>$rA + $rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <h3 id="mint-mint-new-coins"><a class="header" href="#mint-mint-new-coins"><code>MINT</code>: Mint new coins</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
@@ -4746,7 +4722,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>The asset ID will be constructed using the asset ID construction method.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rB + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Balance of asset ID <code>constructAssetID(MEM[$fp, 32], MEM[$rB])</code> of output with contract ID <code>MEM[$fp, 32]</code> plus <code>$rA</code> overflows</li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
@@ -4773,8 +4749,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + $rB</code> overflows</li>
-<li><code>$rA + $rB &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + $rB</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <p>Append a receipt to the list of receipts:</p>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
@@ -4852,10 +4827,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>There is a <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> helper that returns the memory address of the remaining free balance of <code>asset_id</code>. If <code>asset_id</code> has no free balance remaining, the helper panics.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rB + $rC</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rC &gt; MESSAGE_MAX_DATA_SIZE</code></li>
 <li>In an external context, if <code>$rD &gt; MEM[balanceOfStart(0), 8]</code></li>
 <li>In an internal context, if <code>$rD</code> is greater than the balance of asset ID 0 of output with contract ID <code>MEM[$fp, 32]</code></li>
@@ -4883,8 +4856,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
@@ -4903,8 +4875,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <ul>
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
 <li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rC + 32</code> overflows</li>
-<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
 <p>Register <code>$rB</code> will be set to <code>false</code> if the requested slot is unset (default) and <code>true</code> if it's set.</p>
@@ -4920,11 +4891,9 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32 * rD</code> overflows</li>
-<li><code>$rA + 32 * rD &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32 * rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 * rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rC + 32 * rD</code> overflows</li>
-<li><code>$rC + 32 * rD &gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32 * rD]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
@@ -4941,8 +4910,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
@@ -4959,11 +4927,9 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 * $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rC + 32 * $rD</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 * $rD &gt; VM_MAX_RAM</code></li>
 <li><code>$fp == 0</code> (in the script context)</li>
 </ul>
 <p>Register <code>$rB</code> will be set to the number of storage slots that were previously unset, and were set by this operation.</p>
@@ -4995,10 +4961,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>There is a <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> helper that returns the memory address of the remaining free balance of <code>asset_id</code>. If <code>asset_id</code> has no free balance remaining, the helper panics.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rC + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
 <li>In an external context, if <code>$rB &gt; MEM[balanceOfStart(MEM[$rC, 32]), 8]</code></li>
 <li>In an internal context, if <code>$rB</code> is greater than the balance of asset ID <code>MEM[$rC, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
@@ -5030,10 +4994,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>There is a <code>balanceOfStart(asset_id: byte[32]) -&gt; uint32</code> helper that returns the memory address of the remaining free balance of <code>asset_id</code>. If <code>asset_id</code> has no free balance remaining, the helper panics.</p>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rD + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rD + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rD + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB &gt; tx.outputsCount</code></li>
 <li>In an external context, if <code>$rC &gt; MEM[balanceOfStart(MEM[$rD, 32]), 8]</code></li>
 <li>In an internal context, if <code>$rC</code> is greater than the balance of asset ID <code>MEM[$rD, 32]</code> of output with contract ID <code>MEM[$fp, 32]</code></li>
@@ -5072,12 +5034,9 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 64</code> overflows</li>
-<li><code>$rB + 64</code> overflows</li>
-<li><code>$rC + 32</code> overflows</li>
-<li><code>$rA + 64 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + 64 &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 64</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 64</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 64]</code> does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <p>Signatures and signature verification are specified <a href="fuel-vm/../protocol/cryptographic-primitives.html#ecdsa-public-key-cryptography">here</a>.</p>
@@ -5094,12 +5053,9 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 64</code> overflows</li>
-<li><code>$rB + 64</code> overflows</li>
-<li><code>$rC + 32</code> overflows</li>
-<li><code>$rA + 64 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + 64 &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 64</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 64</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 64]</code> does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <p>Signatures and signature verification are specified <a href="fuel-vm/../protocol/cryptographic-primitives.html#ecdsa-public-key-cryptography">here</a>.</p>
@@ -5116,12 +5072,9 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rB + 64</code> overflows</li>
-<li><code>$rC + 32</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + 64 &gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + 64</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <p>Verification are specified <a href="fuel-vm/../protocol/cryptographic-primitives.html#eddsa-public-key-cryptography">here</a>.</p>
 <p>If there is an error in verification, <code>$err</code> is set to <code>1</code>, otherwise <code>$err</code> is cleared.</p>
@@ -5136,10 +5089,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rB + $rC</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="s256-sha-2-256"><a class="header" href="#s256-sha-2-256"><code>S256</code>: SHA-2-256</a></h3>
@@ -5153,10 +5104,8 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </div>
 <p>Panic if:</p>
 <ul>
-<li><code>$rA + 32</code> overflows</li>
-<li><code>$rB + $rC</code> overflows</li>
-<li><code>$rA + 32 &gt; VM_MAX_RAM</code></li>
-<li><code>$rB + $rC &gt; VM_MAX_RAM</code></li>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h2 id="other-instructions"><a class="header" href="#other-instructions">Other Instructions</a></h2>
