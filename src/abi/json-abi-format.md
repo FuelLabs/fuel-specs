@@ -4,7 +4,7 @@ The JSON of an ABI is the human-readable representation of the interface of a Sw
 
 ## Spec Version
 
-Current `specVersion` is `1.0.0`
+Current `specVersion` is `1.0`
 
 The version above should be updated each time this spec changes and the ABI generator should be updated with the new changes along with an increment in the spec version.
 
