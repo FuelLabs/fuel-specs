@@ -78,7 +78,7 @@ dropdown
 enum
 enums
 env
-forc
+force
 frontend
 fuelup
 fullstack
