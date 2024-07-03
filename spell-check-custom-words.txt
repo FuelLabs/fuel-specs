@@ -23,7 +23,7 @@ workspaces
 Workspaces
 neovim
 EVM
-EVM's
+EVMs
 EOA
 ERC
 Ethereum
@@ -80,9 +80,8 @@ enums
 env
 forc
 frontend
-fuelup
+FuelUp
 fullstack
-graphQL
 graphql
 http
 https
@@ -159,7 +158,7 @@ TypeChain
 inlines
 inlining
 MiB
-FuelVM's
+FuelVMs
 deterministically
 CLI
 VS
@@ -192,7 +191,6 @@ PRs
 codebase
 PostgreSQL
 Postgres
-MacOS
 macOS
 backends
 hoc
@@ -212,7 +210,7 @@ Schemas
 schemas
 AssemblyScript
 indexable
-Macbook
+MacBook
 Dockerized
 TLDR
 IaaS
