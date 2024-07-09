@@ -32,8 +32,9 @@ we define the following expressions:
 
 The ABI of a contract is represented as a JSON object containing the following properties:
 
-- `"specVersion"`: a string representing the version pointing to this document versioning. When `specVersion` is incremented, it will usually incur an increment in `abiVersion` too.
-- `"abiVersion"`: a string representing the version of the implementation of this document `abiVersion` may be incremented while `specVersion` is not.
+- `"specVersion"`: a string representing the version pointing to this document versioning. `specVersion` enables the reader of the JSON ABI to find the correct specification for that file, this can be done by comparing it to value in [spec version](#spec-version). `specVersion` may change without a change in `abiVersion` for instance if the hash based ids computation is altered.
+- `"abiVersion"`: a string representing the version of the implementation of this document, `abiVersion` exists to be used by the SDKs so they can parse a JSON ABI based on its `abiVersion`.
+- `"encoding"`: a string representing the version of the `ABIEncode` and `ABIDecode` used in this program.
 - `"programType"`: a string that can be `"script"`, `"contract"`, `"predicate"`, `"library"`. This is used by the SDK to generate types without having to manually specify the program type.
 - `"types"`: an array describing all the _type declarations_ used (or transitively used) in the ABI. Each _type declaration_ is a JSON object that contains the following properties:
   - `"typeId"`: a unique string hash based ID. Generated as specified in [Hash Based Ids](./hash-based-ids.md).
