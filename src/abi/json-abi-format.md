@@ -46,9 +46,9 @@ The ABI of a contract is represented as a JSON object containing the following p
   - `"metadataTypeId"`: a unique integer ID.
   - `"components"`: an array of the components of a given type, if any, otherwise non existent. Each component is a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the component.
-    - `"typeId"`: the _type metadata declaration_ ID or _type concrete declaration_ hash based ID of the type of the component.
+    - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, otherwise non existent. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
-      - `"typeId"`: the _type metadata declaration_ ID or _type concrete declaration_ hash based ID of the type of the component.
+      - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, otherwise non existent. The format of the elements of this array recursively follows the rules described in this section.
   - `"typeParameters"`: an array of _type metadata declaration_ ID of the _type parameters_ of the type, if the type is generic, otherwise non existent. Each _type parameter_ is a type declaration and is represented as described in [Generic Type Parameter](#generic-type-parameter).
 - `"functions`": an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
@@ -57,15 +57,18 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"name"`: the name of the input.
     - `"concreteTypeId"`: the _type concrete declaration_ hash based ID of the type of the input.
   - `"output"`: the _type concrete declaration_ hash based ID of the type being returned by the function.
+  - `"attributes"`: an optional array of _attributes_. Each _attribute_ is explained in the [dedicated section](#attributes-semantics) and is represented as a JSON object that contains the following properties:
+    - `"name"`: the name of the attribute.
+    - `"arguments"`: an array of attribute arguments.
 - `"loggedTypes"`: an array describing all instances of [`log`](../fuel-vm/instruction-set.md#log-log-event) or [`logd`](../fuel-vm/instruction-set.md#logd-log-data-event) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"logId"`: a string containing the 64bit hash based decimal ID calculated from the first 8 bytes of the `sha256` of a string that represents the type logged as defined in [Hash Based Ids](./hash-based-ids.md). The [`log`](../fuel-vm/instruction-set.md#log-log-event) and [`logd`](../fuel-vm/instruction-set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
-  - `"loggedType"`: the _type concrete declaration_ hash based ID of the value being logged.
+  - `"concreteTypeId"`: the _type concrete declaration_ hash based ID of the value being logged.
 - `"messagesTypes"`: an array describing all instances of [`smo`](../fuel-vm/instruction-set.md#smo-send-message-to-output) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
   - `"message_id"`: a unique string ID.
-  - `"messageDataType"`: the _type concrete declaration_ hash based ID of the message data being sent.
+  - `"concreteTypeId"`: the _type concrete declaration_ hash based ID of the message data being sent.
 - `"configurables"`: an array describing all `configurable` variables used in the contract. Each `configurable` variable is represented as a JSON object that contains the following properties:
   - `"name"`: the name of the `configurable` variable.
-  - `"configurableType"`: the _type concrete declaration_ hash based ID of the type of the `configurable` variable.
+  - `"concreteTypeId"`: the _type concrete declaration_ hash based ID of the type of the `configurable` variable.
   - `"offset"`: the specific offset within the contract's bytecode, in bytes, to the data section entry for the `configurable` variable.
 
 > **Note**: This JSON should be both human-readable and parsable by the tooling around the FuelVM and the Sway programming language. There is a detailed specification for the binary encoding backing this readable descriptor. The [Function Selector Encoding](./fn-selector-encoding.md) section specifies the encoding for the function being selected to be executed and each of the argument types.
@@ -401,7 +404,7 @@ its JSON representation would look like:
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": "2",
+          "typeId": 2,
         },
         {
           "name": "__tuple_element",
@@ -447,7 +450,7 @@ its JSON representation would look like:
         },
         {
           "name": "bam",
-          "typeId": "3",
+          "typeId": 3,
         }
       ]
     },
@@ -534,11 +537,11 @@ its JSON representation would look like:
       "components": [
         {
           "name": "Foo",
-          "type": 2,
+          "typeId": 2,
         },
         {
           "name": "Bar",
-          "type": 3,
+          "typeId": 3,
         }
       ],
       "typeParameters": [2, 3]
@@ -561,13 +564,13 @@ its JSON representation would look like:
       "components": [
         {
           "name": "bam",
-          "type": 1,
+          "typeId": 1,
           "typeArguments": [
             {
-              "typeId": "4",
+              "typeId": 4,
             },
             {
-              "typeId": "4",
+              "typeId": 4,
             }
           ]
         }
@@ -653,7 +656,7 @@ its JSON representation would look like:
       "components": [
         {
           "name": "x",
-          "typeId": "2",
+          "typeId": 2,
           "typeArguments": null
         }
       ],
@@ -674,11 +677,11 @@ its JSON representation would look like:
   "loggedTypes": [
     {
       "logId": "12896678128313068780",
-      "loggedType": "b2fa346d9ca66ceca61951a27dba2977b2a82b8aa8600670604f286a1393dffe"
+      "concreteTypeId": "b2fa346d9ca66ceca61951a27dba2977b2a82b8aa8600670604f286a1393dffe"
     },
     {
       "logId": "16383228984366451899",
-      "loggedType": "eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389"
+      "concreteTypeId": "eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389"
     }
   ]
 }
