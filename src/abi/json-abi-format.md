@@ -366,12 +366,6 @@ its JSON representation would look like:
       "metadataTypeId": 1,
     },
     {
-      "type": "[str[5]; 3]",
-      "concreteTypeId": "40c357685306e593eb4c4154377425853a7387ac5a6962d1d9198081a011d64a",
-      "metadataTypeId": 2,
-    },
-    ,
-    {
       "type": "str[5]",
       "concreteTypeId": "84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7",
     },
