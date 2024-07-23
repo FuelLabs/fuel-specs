@@ -41,7 +41,7 @@ The ABI of a contract is represented as a JSON object containing the following p
   - `"concreteTypeId"`: a unique string hash based ID. Generated as specified in [Hash Based Ids](./hash-based-ids.md).
   - `"metadataTypeId"`: the the _type metadata declaration_ ID of this type, if the type metadata has components or is generic, otherwise non existent.
   - `"typeArguments"`: an array of _type concrete declarations_ hash based IDs of the type parameters of the type, if the type is generic, otherwise non existent.
-- `"typesMetadata"`: an array describing all the _type metadata declarations_ used (or transitively used) in the ABI. Each _type metadata declaration_ is a JSON object that contains the following properties:
+- `"metadataTypes"`: an array describing all the _type metadata declarations_ used (or transitively used) in the ABI. Each _type metadata declaration_ is a JSON object that contains the following properties:
   - `"type"`: a string representation of the _type metadata declaration_. The section [JSON ABI Format for Each Possible Metadata Type Declaration](#json-abi-format-for-each-possible-metadata-type-declaration) specifies the format for each possible type.
   - `"metadataTypeId"`: a unique integer ID.
   - `"components"`: an array of the components of a given type, if any, otherwise non existent. Each component is a _type application_ represented as a JSON object that contains the following properties:
@@ -117,7 +117,7 @@ the JSON representation of this ABI looks like:
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
     }
   ],
-  "typesMetadata": [],
+  "metadataTypes": [],
   "functions": [
     {
       "inputs": [
@@ -391,7 +391,7 @@ its JSON representation would look like:
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
     }
   ],
-  "typesMetadata": [
+  "metadataTypes": [
     {
       "metadataTypeId": 1,
       "type": "(_, _, _)",
@@ -524,7 +524,7 @@ its JSON representation would look like:
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
     }
   ],
-  "typesMetadata": [
+  "metadataTypes": [
     {
       "metadataTypeId": 1,
       "type": "enum MyEnum",
@@ -643,7 +643,7 @@ its JSON representation would look like:
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
     }
   ],
-  "typesMetadata": [
+  "metadataTypes": [
     {
       "metadataTypeId": 1,
       "type": "struct MyStruct",
