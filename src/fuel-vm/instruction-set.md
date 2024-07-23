@@ -2269,21 +2269,24 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 
 ### `ED19`: EdDSA curve25519 verification
 
-|             |                                                                                                                                                     |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Description | Verification recovered from 32-byte public key starting at `$rA` and 64-byte signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
-| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);```                                                                                         |
-| Syntax      | `ed19 $rA, $rB, $rC`                                                                                                                                |
-| Encoding    | `0x00 rA rB rC -`                                                                                                                                   |
-| Notes       |                                                                                                                                                     |
+|             |                                                                                                                                                                 |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Description | Verification recovered from 32-byte public key starting at `$rA`, 64-byte signature starting at `$rB`, message starting byte `$rC` and message byte size `$rD`. |
+| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, $rD]);```                                                                                                    |
+| Syntax      | `ed19 $rA, $rB, $rC, $rD`                                                                                                                                       |
+| Encoding    | `0x00 rA rB rC rD`                                                                                                                                              |
+| Notes       |                                                                                                                                                                 |
 
 Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rB + 64` overflows or `> VM_MAX_RAM`
-- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rC + $rD` overflows or `> VM_MAX_RAM`
+- `$rD > 1024`.
 
 Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
+
+If register `$rD` is provided with `0` or not provided. It will be set to default `32`.
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
