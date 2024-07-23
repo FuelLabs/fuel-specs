@@ -39,18 +39,18 @@ The ABI of a contract is represented as a JSON object containing the following p
 - `"concreteTypes"`: an array describing all the _type concrete declarations_ used (or transitively used) in the ABI. Each _type concrete declaration_ is a JSON object that contains the following properties:
   - `"type"`: a string representing the type, the `sha256` of this string generates the `concreteTypeId`.
   - `"concreteTypeId"`: a unique string hash based ID. Generated as specified in [Hash Based Ids](./hash-based-ids.md).
-  - `"metadataTypeId"`: the the _type metadata declaration_ ID of this type, if the type metadata has components or is generic, otherwise non existent.
-  - `"typeArguments"`: an array of _type concrete declarations_ hash based IDs of the type parameters of the type, if the type is generic, otherwise non existent.
+  - `"metadataTypeId"`: the _type metadata declaration_ ID of this type, if the type metadata has components or is generic, otherwise nonexistent.
+  - `"typeArguments"`: an array of _type concrete declarations_ hash based IDs of the type parameters of the type, if the type is generic, otherwise nonexistent.
 - `"metadataTypes"`: an array describing all the _type metadata declarations_ used (or transitively used) in the ABI. Each _type metadata declaration_ is a JSON object that contains the following properties:
   - `"type"`: a string representation of the _type metadata declaration_. The section [JSON ABI Format for Each Possible Metadata Type Declaration](#json-abi-format-for-each-possible-metadata-type-declaration) specifies the format for each possible type.
   - `"metadataTypeId"`: a unique integer ID.
-  - `"components"`: an array of the components of a given type, if any, otherwise non existent. Each component is a _type application_ represented as a JSON object that contains the following properties:
+  - `"components"`: an array of the components of a given type, if any, otherwise nonexistent. Each component is a _type application_ represented as a JSON object that contains the following properties:
     - `"name"`: the name of the component.
     - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
-    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, otherwise non existent. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+    - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, otherwise nonexistent. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
       - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
-      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, otherwise non existent. The format of the elements of this array recursively follows the rules described in this section.
-  - `"typeParameters"`: an array of _type metadata declaration_ ID of the _type parameters_ of the type, if the type is generic, otherwise non existent. Each _type parameter_ is a type declaration and is represented as described in [Generic Type Parameter](#generic-type-parameter).
+      - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, otherwise nonexistent. The format of the elements of this array recursively follows the rules described in this section.
+  - `"typeParameters"`: an array of _type metadata declaration_ ID of the _type parameters_ of the type, if the type is generic, otherwise nonexistent. Each _type parameter_ is a type declaration and is represented as described in [Generic Type Parameter](#generic-type-parameter).
 - `"functions`": an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
   - `"name"`: the name of the function
   - `"inputs"`: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a _type application_ represented as a JSON object that contains the following properties:
