@@ -1361,7 +1361,8 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </span></code></pre></pre>
 <p>we define the following expressions:</p>
 <ul>
-<li><em>type declaration</em>: the declaration or definition of a type which can be generic. <code>struct Foo { .. }</code> and <code>struct Bar&lt;T&gt; { .. }</code> in the example above are both type declarations.</li>
+<li><em>type concrete declaration</em>: the declaration or definition of a type which can be generic. <code>struct Foo { .. }</code> and <code>struct Bar&lt;T&gt; { .. }</code> in the example above are both type declarations. Note that generic types may have multiple <em>type concrete declaration</em>.</li>
+<li><em>type metadata declaration</em>: the declaration or definition of a type which can be generic. <code>struct Foo { .. }</code> and <code>struct Bar&lt;T&gt; { .. }</code> in the example above are both type declarations. The metadata declaration contains component details about the type. And a single <em>type metadata declaration</em> is generated per type, even for generic types.</li>
 <li><em>type application</em>: the application or use of a type. <code>Foo</code> and <code>Bar&lt;u64&gt;</code> in <code>fn baz(input1: Foo, input2: Bar&lt;u64&gt;);</code> in the example above are both applications of the type declarations <code>struct Foo { .. }</code> and <code>struct Bar&lt;T&gt; { .. }</code> respectively.</li>
 <li><em>type parameter</em>: a generic parameter used in a type declaration. <code>T</code> in <code>struct Bar&lt;T&gt;</code> in the example above is a type parameter.</li>
 <li><em>type argument</em>: an application of a type parameter used in a type application. <code>u64</code> in <code>input2: Bar&lt;u64&gt;</code> in the example above is a type argument.</li>
@@ -1372,23 +1373,31 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 <li><code>&quot;specVersion&quot;</code>: a string representing the version pointing to this document versioning. <code>specVersion</code> enables the reader of the JSON ABI to find the correct specification for that file, this can be done by comparing it to value in <a href="abi/json-abi-format.html#spec-version">spec version</a>.</li>
 <li><code>&quot;encodingVersion&quot;</code>: a string representing the version of the <code>ABIEncode</code> and <code>ABIDecode</code> used in this program.</li>
 <li><code>&quot;programType&quot;</code>: a string that can be <code>&quot;script&quot;</code>, <code>&quot;contract&quot;</code>, <code>&quot;predicate&quot;</code>, <code>&quot;library&quot;</code>. This is used by the SDK to generate types without having to manually specify the program type.</li>
-<li><code>&quot;types&quot;</code>: an array describing all the <em>type declarations</em> used (or transitively used) in the ABI. Each <em>type declaration</em> is a JSON object that contains the following properties:
+<li><code>&quot;concreteTypes&quot;</code>: an array describing all the <em>type concrete declarations</em> used (or transitively used) in the ABI. Each <em>type concrete declaration</em> is a JSON object that contains the following properties:
 <ul>
-<li><code>&quot;typeId&quot;</code>: a unique string hash based ID. Generated as specified in <a href="abi/./hash-based-ids.html">Hash Based Ids</a>.</li>
-<li><code>&quot;type&quot;</code>: a string representation of the <em>type declaration</em>. The section <a href="abi/json-abi-format.html#json-abi-format-for-each-possible-type-declaration">JSON ABI Format for Each Possible Type Declaration</a> specifies the format for each possible type.</li>
-<li><code>&quot;components&quot;</code>: an array of the components of a given type, if any, and <code>null</code> otherwise. Each component is a <em>type application</em> represented as a JSON object that contains the following properties:
+<li><code>&quot;type&quot;</code>: a string representing the type, the <code>sha256</code> of this string generates the <code>concreteTypeId</code>.</li>
+<li><code>&quot;concreteTypeId&quot;</code>: a unique string hash based ID. Generated as specified in <a href="abi/./hash-based-ids.html">Hash Based Ids</a>.</li>
+<li><code>&quot;metadataTypeId&quot;</code>: the <em>type metadata declaration</em> ID of this type, if the type metadata has components or is generic, otherwise nonexistent.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of <em>type concrete declarations</em> hash based IDs of the type parameters of the type, if the type is generic, otherwise nonexistent.</li>
+</ul>
+</li>
+<li><code>&quot;metadataTypes&quot;</code>: an array describing all the <em>type metadata declarations</em> used (or transitively used) in the ABI. Each <em>type metadata declaration</em> is a JSON object that contains the following properties:
+<ul>
+<li><code>&quot;type&quot;</code>: a string representation of the <em>type metadata declaration</em>. The section <a href="abi/json-abi-format.html#json-abi-format-for-each-possible-metadata-type-declaration">JSON ABI Format for Each Possible Metadata Type Declaration</a> specifies the format for each possible type.</li>
+<li><code>&quot;metadataTypeId&quot;</code>: a unique integer ID.</li>
+<li><code>&quot;components&quot;</code>: an array of the components of a given type, if any, otherwise nonexistent. Each component is a <em>type application</em> represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;name&quot;</code>: the name of the component.</li>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the component.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the component, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
+<li><code>&quot;typeId&quot;</code>: the <em>type metadata declaration</em> ID (number) or <em>type concrete declaration</em> hash based ID (string) of the type of the component.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the component, if the type is generic, otherwise nonexistent. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
 <ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <em>type argument</em>.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+<li><code>&quot;typeId&quot;</code>: the <em>type metadata declaration</em> ID (number) or <em>type concrete declaration</em> hash based ID (string) of the type of the component.</li>
+<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, otherwise nonexistent. The format of the elements of this array recursively follows the rules described in this section.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code>&quot;typeParameters&quot;</code>: an array of type hash based IDs of the <em>type parameters</em> of the type, if the type is generic, and <code>null</code> otherwise. Each <em>type parameter</em> is a type declaration and is represented as described in <a href="abi/json-abi-format.html#generic-type-parameter">Generic Type Parameter</a>.</li>
+<li><code>&quot;typeParameters&quot;</code>: an array of <em>type metadata declaration</em> ID of the <em>type parameters</em> of the type, if the type is generic, otherwise nonexistent. Each <em>type parameter</em> is a type declaration and is represented as described in <a href="abi/json-abi-format.html#generic-type-parameter">Generic Type Parameter</a>.</li>
 </ul>
 </li>
 <li><code>&quot;functions</code>&quot;: an array describing all the functions in the ABI. Each function is a JSON object that contains the following properties:
@@ -1397,26 +1406,10 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 <li><code>&quot;inputs&quot;</code>: an array of objects that represents the inputs to the function (i.e. its parameters). Each input is a <em>type application</em> represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;name&quot;</code>: the name of the input.</li>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the input.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the input, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <em>type argument</em>.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
+<li><code>&quot;concreteTypeId&quot;</code>: the <em>type concrete declaration</em> hash based ID of the type of the input.</li>
 </ul>
 </li>
-</ul>
-</li>
-<li><code>&quot;output&quot;</code>: an object representing the output of the function (i.e. its return value). The output is a <em>type application</em>, which is a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the output.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the output, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <em>type argument</em>.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><code>&quot;output&quot;</code>: the <em>type concrete declaration</em> hash based ID of the type being returned by the function.</li>
 <li><code>&quot;attributes&quot;</code>: an optional array of <em>attributes</em>. Each <em>attribute</em> is explained in the <a href="abi/json-abi-format.html#attributes-semantics">dedicated section</a> and is represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;name&quot;</code>: the name of the attribute.</li>
@@ -1428,48 +1421,19 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 <li><code>&quot;loggedTypes&quot;</code>: an array describing all instances of <a href="abi/../fuel-vm/instruction-set.html#log-log-event"><code>log</code></a> or <a href="abi/../fuel-vm/instruction-set.html#logd-log-data-event"><code>logd</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;logId&quot;</code>: a string containing the 64bit hash based decimal ID calculated from the first 8 bytes of the <code>sha256</code> of a string that represents the type logged as defined in <a href="abi/./hash-based-ids.html">Hash Based Ids</a>. The <a href="abi/../fuel-vm/instruction-set.html#log-log-event"><code>log</code></a> and <a href="abi/../fuel-vm/instruction-set.html#logd-log-data-event"><code>logd</code></a> instructions must set their <code>$rB</code> register to that ID.</li>
-<li><code>&quot;loggedType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the value being logged.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the value being logged, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <em>type argument</em>.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><code>&quot;concreteTypeId&quot;</code>: the <em>type concrete declaration</em> hash based ID of the value being logged.</li>
 </ul>
 </li>
 <li><code>&quot;messagesTypes&quot;</code>: an array describing all instances of <a href="abi/../fuel-vm/instruction-set.html#smo-send-message-to-output"><code>smo</code></a> in the contract's bytecode. Each instance is a JSON object that contains the following properties:
 <ul>
-<li><code>&quot;messageDataType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the message data being sent.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the message data being sent, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <em>type argument</em>.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><code>&quot;message_id&quot;</code>: a unique string ID.</li>
+<li><code>&quot;concreteTypeId&quot;</code>: the <em>type concrete declaration</em> hash based ID of the message data being sent.</li>
 </ul>
 </li>
 <li><code>&quot;configurables&quot;</code>: an array describing all <code>configurable</code> variables used in the contract. Each <code>configurable</code> variable is represented as a JSON object that contains the following properties:
 <ul>
 <li><code>&quot;name&quot;</code>: the name of the <code>configurable</code> variable.</li>
-<li><code>&quot;configurableType&quot;</code>: a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <code>configurable</code> variable.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <code>configurable</code> variable, if the type is generic, and <code>null</code> otherwise. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
-<ul>
-<li><code>&quot;type&quot;</code>: the <em>type declaration</em> hash based ID of the type of the <em>type argument</em>.</li>
-<li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, and <code>null</code> otherwise. The format of the elements of this array recursively follows the rules described in this section.</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><code>&quot;concreteTypeId&quot;</code>: the <em>type concrete declaration</em> hash based ID of the type of the <code>configurable</code> variable.</li>
 <li><code>&quot;offset&quot;</code>: the specific offset within the contract's bytecode, in bytes, to the data section entry for the <code>configurable</code> variable.</li>
 </ul>
 </li>
@@ -1499,138 +1463,67 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </span></code></pre></pre>
 <p>the JSON representation of this ABI looks like:</p>
 <pre><code class="language-json">{
-  &quot;types&quot;: [
+  &quot;concreteTypes&quot;: [
     {
-      &quot;typeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-      &quot;type&quot;: &quot;()&quot;,
-      &quot;components&quot;: [],
-      &quot;typeParameters&quot;: null
-    },
-    {
-      &quot;typeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
-      &quot;type&quot;: &quot;b256&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    },
-    {
-      &quot;typeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-      &quot;type&quot;: &quot;bool&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    },
-    {
-      &quot;typeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
       &quot;type&quot;: &quot;u64&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
+      &quot;concreteTypeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;
+    },
+    {
+      &quot;type&quot;: &quot;b256&quot;,
+      &quot;concreteTypeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;
+    },
+    {
+      &quot;type&quot;: &quot;bool&quot;,
+      &quot;concreteTypeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;
+    },
+    {
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;concreteTypeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;
     }
   ],
+  &quot;metadataTypes&quot;: [],
   &quot;functions&quot;: [
     {
       &quot;inputs&quot;: [
         {
           &quot;name&quot;: &quot;arg&quot;,
-          &quot;type&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;concreteTypeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;
         }
       ],
       &quot;name&quot;: &quot;first_function&quot;,
-      &quot;output&quot;: {
-        &quot;type&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-        &quot;typeArguments&quot;: null
-      }
+      &quot;output&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;
     },
     {
       &quot;inputs&quot;: [
         {
           &quot;name&quot;: &quot;arg&quot;,
-          &quot;type&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;concreteTypeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;
         }
       ],
       &quot;name&quot;: &quot;second_function&quot;,
-      &quot;output&quot;: {
-        &quot;type&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-        &quot;typeArguments&quot;: null
-      }
+      &quot;output&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;
     }
   ],
   &quot;loggedTypes&quot;: []
 }
 </code></pre>
-<h2 id="json-abi-format-for-each-possible-type-declaration"><a class="header" href="#json-abi-format-for-each-possible-type-declaration">JSON ABI Format for Each Possible Type Declaration</a></h2>
-<p>Below is a list of the JSON ABI formats for each possible type declaration:</p>
-<h3 id=""><a class="header" href="#"><code>()</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-  &quot;type&quot;: &quot;()&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<h3 id="bool"><a class="header" href="#bool"><code>bool</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-  &quot;type&quot;: &quot;bool&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<h3 id="u8"><a class="header" href="#u8"><code>u8</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b&quot;,
-  &quot;type&quot;: &quot;u8&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<h3 id="u16"><a class="header" href="#u16"><code>u16</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;29881aad8730c5ab11d275376323d8e4ff4179aae8ccb6c13fe4902137e162ef&quot;,
-  &quot;type&quot;: &quot;u16&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<h3 id="u32"><a class="header" href="#u32"><code>u32</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;d7649d428b9ff33d188ecbf38a7e4d8fd167fa01b2e10fe9a8f9308e52f1d7cc&quot;,
-  &quot;type&quot;: &quot;u32&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<h3 id="u64"><a class="header" href="#u64"><code>u64</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-  &quot;type&quot;: &quot;u64&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<h3 id="b256"><a class="header" href="#b256"><code>b256</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
-  &quot;type&quot;: &quot;b256&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
+<h2 id="json-abi-format-for-each-possible-metadata-type-declaration"><a class="header" href="#json-abi-format-for-each-possible-metadata-type-declaration">JSON ABI Format for Each Possible Metadata Type Declaration</a></h2>
+<p>Below is a list of the JSON ABI formats for each possible metadata type declaration:</p>
 <h3 id="struct"><a class="header" href="#struct"><code>struct</code></a></h3>
 <pre><code class="language-json">{
-  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;metadataTypeId&quot;: &lt;id&gt;,
   &quot;type&quot;: &quot;struct &lt;struct_name&gt;&quot;,
   &quot;components&quot;: [
     {
       &quot;name&quot;: &quot;&lt;field1_name&gt;&quot;,
-      &quot;type&quot;: &lt;field1_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;field1_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
@@ -1638,14 +1531,14 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
     },
     {
       &quot;name&quot;: &quot;&lt;field2_name&gt;&quot;,
-      &quot;type&quot;: &lt;field2_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;field2_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
@@ -1662,19 +1555,19 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </code></pre>
 <h3 id="enum"><a class="header" href="#enum"><code>enum</code></a></h3>
 <pre><code class="language-json">{
-  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;metadataTypeId&quot;: &lt;id&gt;,
   &quot;type&quot;: &quot;enum &lt;enum_name&gt;&quot;,
   &quot;components&quot;: [
     {
       &quot;name&quot;: &quot;&lt;variant1_name&gt;&quot;,
-      &quot;type&quot;: &lt;variant1_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;variant1_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
@@ -1682,14 +1575,14 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
     },
     {
       &quot;name&quot;: &quot;&lt;variant2_name&gt;&quot;,
-      &quot;type&quot;: &lt;variant2_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;variant2_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
@@ -1704,43 +1597,32 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
   ]
 }
 </code></pre>
-<h3 id="strn"><a class="header" href="#strn"><code>str[&lt;n&gt;]</code></a></h3>
-<pre><code class="language-json">{
-  &quot;typeId&quot;: &lt;id&gt;,
-  &quot;type&quot;: &quot;str[&lt;n&gt;]&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
-}
-</code></pre>
-<p><code>&lt;n&gt;</code> is the length of the string.</p>
 <h3 id="array"><a class="header" href="#array"><code>array</code></a></h3>
 <pre><code class="language-json">{
-  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;metadataTypeId&quot;: &lt;id&gt;,
   &quot;type&quot;: &quot;[_; &lt;n&gt;]&quot;,
   &quot;components&quot;: [
     {
       &quot;name&quot;: &quot;__array_element&quot;,
-      &quot;type&quot;: &quot;&lt;element_type&gt;&quot;,
+      &quot;typeId&quot;: &quot;&lt;element_type&gt;&quot;,
       &quot;typeArguments&quot;: ...
     }
     {
       &quot;name&quot;: &quot;__array_element&quot;,
-      &quot;type&quot;: &lt;element_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;element_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
       ]
     },
-
-  ],
-  &quot;typeParameters&quot;: null
+  ]
 }
 </code></pre>
 <ul>
@@ -1748,19 +1630,19 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 </ul>
 <h3 id="tuple"><a class="header" href="#tuple"><code>tuple</code></a></h3>
 <pre><code class="language-json">{
-  &quot;typeId&quot;: &lt;id&gt;,
+  &quot;metadataTypeId&quot;: &lt;id&gt;,
   &quot;type&quot;: &quot;(_, _, ...)&quot;,
   &quot;components&quot;: [
     {
       &quot;name&quot;: &quot;__tuple_element&quot;,
-      &quot;type&quot;: &lt;field1_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;field1_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
@@ -1768,30 +1650,27 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
     },
     {
       &quot;name&quot;: &quot;__tuple_element&quot;,
-      &quot;type&quot;: &lt;field2_type_id&gt;,
+      &quot;typeId&quot;: &quot;&lt;field2_type_id&gt;&quot;,
       &quot;typeArguments&quot;: [
         {
-          &quot;type&quot;: &lt;type_arg1_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg1_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         {
-          &quot;type&quot;: &lt;type_arg2_type_id&gt;,
+          &quot;typeId&quot;: &quot;&lt;type_arg2_type_id&gt;&quot;,
           &quot;typeArguments&quot;: ...
         },
         ...
       ]
     },
     ...
-  ],
-  &quot;typeParameters&quot;: null
+  ]
 }
 </code></pre>
 <h3 id="generic-type-parameter"><a class="header" href="#generic-type-parameter">Generic Type Parameter</a></h3>
 <pre><code class="language-json">{
-  &quot;typeId&quot;: &lt;id&gt;,
-  &quot;type&quot;: &quot;generic &lt;name&gt;&quot;,
-  &quot;components&quot;: null,
-  &quot;typeParameters&quot;: null
+  &quot;metadataTypeId&quot;: &lt;id&gt;,
+  &quot;type&quot;: &quot;generic &lt;name&gt;&quot;
 }
 </code></pre>
 <p><code>&lt;name&gt;</code> is the name of the generic parameter as specified in the struct or enum declaration that uses it.</p>
@@ -1822,125 +1701,110 @@ abi MyContract {
 </span></code></pre></pre>
 <p>its JSON representation would look like:</p>
 <pre><code class="language-json">{
-  &quot;types&quot;: [
+  &quot;concreteTypes&quot;: [
     {
-      &quot;typeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-      &quot;type&quot;: &quot;()&quot;,
-      &quot;components&quot;: [],
-      &quot;typeParameters&quot;: null
+      &quot;type&quot;: &quot;([str[5]; 3], bool, b256)&quot;,
+      &quot;concreteTypeId&quot;: &quot;625531542be70834dd127e771101ac1014111718451bfae996d97abe700c66a5&quot;,
+      &quot;metadataTypeId&quot;: 1,
     },
     {
-      &quot;typeId&quot;: &quot;625531542be70834dd127e771101ac1014111718451bfae996d97abe700c66a5&quot;,
+      &quot;type&quot;: &quot;str[5]&quot;,
+      &quot;concreteTypeId&quot;: &quot;84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7&quot;,
+    },
+    {
+      &quot;type&quot;: &quot;struct MyStruct&quot;,
+      &quot;concreteTypeId&quot;: &quot;392d58c694d2d91f3025f2bccfadacf2a105936f5da881b0899185d49f264522&quot;,
+      &quot;metadataTypeId&quot;: 4,
+    },
+    {
+      &quot;type&quot;: &quot;u64&quot;,
+      &quot;concreteTypeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;
+    },
+    {
+      &quot;type&quot;: &quot;b256&quot;,
+      &quot;concreteTypeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;
+    },
+    {
+      &quot;type&quot;: &quot;bool&quot;,
+      &quot;concreteTypeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;
+    },
+    {
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;concreteTypeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;
+    }
+  ],
+  &quot;metadataTypes&quot;: [
+    {
+      &quot;metadataTypeId&quot;: 1,
       &quot;type&quot;: &quot;(_, _, _)&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;__tuple_element&quot;,
-          &quot;type&quot;: &quot;40c357685306e593eb4c4154377425853a7387ac5a6962d1d9198081a011d64a&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: 2,
         },
         {
           &quot;name&quot;: &quot;__tuple_element&quot;,
-          &quot;type&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
         },
         {
           &quot;name&quot;: &quot;__tuple_element&quot;,
-          &quot;type&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
         }
-      ],
-      &quot;typeParameters&quot;: null
+      ]
     },
     {
-      &quot;typeId&quot;: &quot;40c357685306e593eb4c4154377425853a7387ac5a6962d1d9198081a011d64a&quot;,
+      &quot;metadataTypeId&quot;: 2,
       &quot;type&quot;: &quot;[_; 3]&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;__array_element&quot;,
-          &quot;type&quot;: &quot;84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: &quot;84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7&quot;,
         }
-      ],
-      &quot;typeParameters&quot;: null
+      ]
     },
     {
-      &quot;typeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
-      &quot;type&quot;: &quot;b256&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    },
-    {
-      &quot;typeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-      &quot;type&quot;: &quot;bool&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    },
-    {
-      &quot;typeId&quot;: &quot;83ffcfb3310e26adc9af12bd7f86d89f473ec49f37e929ef07d8b2b99cc39b30&quot;,
+      &quot;metadataTypeId&quot;: 3,
       &quot;type&quot;: &quot;enum MyEnum&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;Foo&quot;,
-          &quot;type&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
         },
         {
           &quot;name&quot;: &quot;Bar&quot;,
-          &quot;type&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
         }
-      ],
-      &quot;typeParameters&quot;: null
+      ]
     },
     {
-      &quot;typeId&quot;: &quot;84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7&quot;,
-      &quot;type&quot;: &quot;str[5]&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    },
-    {
-      &quot;typeId&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
+      &quot;metadataTypeId&quot;: 4,
       &quot;type&quot;: &quot;struct MyStruct&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;bim&quot;,
-          &quot;type&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
         },
         {
           &quot;name&quot;: &quot;bam&quot;,
-          &quot;type&quot;: &quot;83ffcfb3310e26adc9af12bd7f86d89f473ec49f37e929ef07d8b2b99cc39b30&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: 3,
         }
-      ],
-      &quot;typeParameters&quot;: null
+      ]
     },
-    {
-      &quot;typeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-      &quot;type&quot;: &quot;u64&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    }
   ],
   &quot;functions&quot;: [
     {
       &quot;inputs&quot;: [
         {
           &quot;name&quot;: &quot;arg1&quot;,
-          &quot;type&quot;: &quot;625531542be70834dd127e771101ac1014111718451bfae996d97abe700c66a5&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;concreteTypeId&quot;: &quot;625531542be70834dd127e771101ac1014111718451bfae996d97abe700c66a5&quot;,
         },
         {
           &quot;name&quot;: &quot;arg2&quot;,
-          &quot;type&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;concreteTypeId&quot;: &quot;392d58c694d2d91f3025f2bccfadacf2a105936f5da881b0899185d49f264522&quot;
         }
       ],
       &quot;name&quot;: &quot;complex_function&quot;,
-      &quot;output&quot;: {
-        &quot;type&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-        &quot;typeArguments&quot;: null
-      },
+      &quot;output&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
       &quot;attributes&quot;: [
         {
           &quot;name&quot;: &quot;doc-comment&quot;,
@@ -1980,74 +1844,70 @@ abi MyContract {
 </span></code></pre></pre>
 <p>its JSON representation would look like:</p>
 <pre><code class="language-json">{
-  &quot;types&quot;: [
+  &quot;concreteTypes&quot;: [
     {
-      &quot;typeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-      &quot;type&quot;: &quot;()&quot;,
-      &quot;components&quot;: [],
-      &quot;typeParameters&quot;: null
+      &quot;type&quot;: &quot;struct MyStruct&lt;b256&gt;&quot;,
+      &quot;concreteTypeId&quot;: &quot;3ddd5c1768dd7869663dc2f868ea8a8ce68bd6064244dbc4286e2c921c8ce962&quot;,
+      &quot;metadataTypeId&quot;: 5,
+      &quot;typeArguments&quot;: [
+        &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;
+      ]
     },
     {
-      &quot;typeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
       &quot;type&quot;: &quot;b256&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
+      &quot;concreteTypeId&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
     },
     {
-      &quot;typeId&quot;: &quot;83ffcfb3310e26adc9af12bd7f86d89f473ec49f37e929ef07d8b2b99cc39b30&quot;,
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;concreteTypeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
+    }
+  ],
+  &quot;metadataTypes&quot;: [
+    {
+      &quot;metadataTypeId&quot;: 1,
       &quot;type&quot;: &quot;enum MyEnum&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;Foo&quot;,
-          &quot;type&quot;: &quot;8b8c08c464656c9a4b876c13199929c5ceb37ff6c927eaeefd756c12278e98c5&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: 2,
         },
         {
           &quot;name&quot;: &quot;Bar&quot;,
-          &quot;type&quot;: &quot;037c28680d4d1fe36b9eea25fdf0b1b158fc70d022e376a17fd2cf045b416525&quot;,
-          &quot;typeArguments&quot;: null
+          &quot;typeId&quot;: 3,
         }
       ],
-      &quot;typeParameters&quot;: [&quot;8b8c08c464656c9a4b876c13199929c5ceb37ff6c927eaeefd756c12278e98c5&quot;, &quot;037c28680d4d1fe36b9eea25fdf0b1b158fc70d022e376a17fd2cf045b416525&quot;]
+      &quot;typeParameters&quot;: [2, 3]
     },
     {
-      &quot;typeId&quot;: &quot;8b8c08c464656c9a4b876c13199929c5ceb37ff6c927eaeefd756c12278e98c5&quot;,
+      &quot;metadataTypeId&quot;: 2,
       &quot;type&quot;: &quot;generic T&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
     },
     {
-      &quot;typeId&quot;: &quot;037c28680d4d1fe36b9eea25fdf0b1b158fc70d022e376a17fd2cf045b416525&quot;,
+      &quot;metadataTypeId&quot;: 3,
       &quot;type&quot;: &quot;generic U&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
     },
     {
-      &quot;typeId&quot;: &quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;,
+      &quot;metadataTypeId&quot;: 4,
       &quot;type&quot;: &quot;generic W&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
     },
     {
-      &quot;typeId&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
+      &quot;metadataTypeId&quot;: 5,
       &quot;type&quot;: &quot;struct MyStruct&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;bam&quot;,
-          &quot;type&quot;: &quot;83ffcfb3310e26adc9af12bd7f86d89f473ec49f37e929ef07d8b2b99cc39b30&quot;,
+          &quot;typeId&quot;: 1,
           &quot;typeArguments&quot;: [
             {
-              &quot;type&quot;: &quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;,
-              &quot;typeArguments&quot;: null
+              &quot;typeId&quot;: 4,
             },
             {
-              &quot;type&quot;: &quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;,
-              &quot;typeArguments&quot;: null
+              &quot;typeId&quot;: 4,
             }
           ]
         }
       ],
-      &quot;typeParameters&quot;: [&quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;]
+      &quot;typeParameters&quot;: [4]
     }
   ],
   &quot;functions&quot;: [
@@ -2055,20 +1915,11 @@ abi MyContract {
       &quot;inputs&quot;: [
         {
           &quot;name&quot;: &quot;arg1&quot;,
-          &quot;type&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
-          &quot;typeArguments&quot;: [
-            {
-              &quot;type&quot;: &quot;7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b&quot;,
-              &quot;typeArguments&quot;: null
-            }
-          ]
+          &quot;concreteTypeId&quot;: &quot;3ddd5c1768dd7869663dc2f868ea8a8ce68bd6064244dbc4286e2c921c8ce962&quot;
         }
       ],
       &quot;name&quot;: &quot;complex_function&quot;,
-      &quot;output&quot;: {
-        &quot;type&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d &quot;,
-        &quot;typeArguments&quot;: null
-      }
+      &quot;output&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;
     }
   ],
   &quot;loggedTypes&quot;: []
@@ -2096,86 +1947,77 @@ fn logging() {
 </span></code></pre></pre>
 <p>its JSON representation would look like:</p>
 <pre><code class="language-json">{
-  &quot;types&quot;: [
-    {
-      &quot;typeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-      &quot;type&quot;: &quot;()&quot;,
-      &quot;components&quot;: [],
-      &quot;typeParameters&quot;: null
+  &quot;concreteTypes&quot;: [
+    {      
+      &quot;type&quot;: &quot;struct MyStruct&lt;bool&gt;&quot;,
+      &quot;concreteTypeId&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
+      &quot;metadataTypeId&quot;: 1,
+      &quot;typeArguments&quot;: [
+        &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;
+      ]
     },
-    {
-      &quot;typeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
+    {      
+      &quot;type&quot;: &quot;struct MyStruct&lt;u64&gt;&quot;,
+      &quot;concreteTypeId&quot;: &quot;b2fa346d9ca66ceca61951a27dba2977b2a82b8aa8600670604f286a1393dffe&quot;,
+      &quot;metadataTypeId&quot;: 1,
+      &quot;typeArguments&quot;: [
+        &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;
+      ]
+    },
+    {      
       &quot;type&quot;: &quot;bool&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
+      &quot;concreteTypeId&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
+    },
+    {      
+      &quot;type&quot;: &quot;u64&quot;,
+      &quot;concreteTypeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
     },
     {
-      &quot;typeId&quot;: &quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;,
-      &quot;type&quot;: &quot;generic W&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    },
+      &quot;type&quot;: &quot;()&quot;,
+      &quot;concreteTypeId&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
+    }
+  ],
+  &quot;metadataTypes&quot;: [
     {
-      &quot;typeId&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
+      &quot;metadataTypeId&quot;: 1,
       &quot;type&quot;: &quot;struct MyStruct&quot;,
       &quot;components&quot;: [
         {
           &quot;name&quot;: &quot;x&quot;,
-          &quot;type&quot;: &quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;,
+          &quot;typeId&quot;: 2,
           &quot;typeArguments&quot;: null
         }
       ],
-      &quot;typeParameters&quot;: [&quot;8481c239b53404729cdfbc37227da838ccb68c90cfa0412aeecd0552b73ef5d2&quot;]
+      &quot;typeParameters&quot;: [2]
     },
     {
-      &quot;typeId&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-      &quot;type&quot;: &quot;u64&quot;,
-      &quot;components&quot;: null,
-      &quot;typeParameters&quot;: null
-    }
+      &quot;metadataTypeId&quot;: 2,
+      &quot;type&quot;: &quot;generic W&quot;,
+    },
   ],
   &quot;functions&quot;: [
     {
       &quot;inputs&quot;: [],
       &quot;name&quot;: &quot;logging&quot;,
-      &quot;output&quot;: {
-        &quot;type&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;,
-        &quot;typeArguments&quot;: null
-      }
+      &quot;output&quot;: &quot;2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d&quot;
     }
   ],
   &quot;loggedTypes&quot;: [
     {
       &quot;logId&quot;: &quot;12896678128313068780&quot;,
-      &quot;loggedType&quot;: {
-        &quot;type&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
-        &quot;typeArguments&quot;: [
-          {
-            &quot;type&quot;: &quot;1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0&quot;,
-            &quot;typeArguments&quot;: null
-          }
-        ]
-      }
+      &quot;concreteTypeId&quot;: &quot;b2fa346d9ca66ceca61951a27dba2977b2a82b8aa8600670604f286a1393dffe&quot;
     },
     {
       &quot;logId&quot;: &quot;16383228984366451899&quot;,
-      &quot;loggedType&quot;: {
-        &quot;type&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;,
-        &quot;typeArguments&quot;: [
-          {
-            &quot;type&quot;: &quot;b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903&quot;,
-            &quot;typeArguments&quot;: null
-          }
-        ]
-      }
+      &quot;concreteTypeId&quot;: &quot;eca2a040ce95fc19b7cd5f75bac530d052484d0b1a49267a2eb07a7a1b00c389&quot;
     }
   ]
 }
 </code></pre>
-<p>The <code>logId</code>s are calculated from:</p>
+<p>The <code>logIds</code> are calculated from:</p>
 <ul>
-<li>First 8 bytes of <code>sha256(&quot;struct MyStruct&lt;u64&gt;&quot;)</code> =&gt; <code>&quot;12896678128313068780&quot;</code></li>
-<li>First 8 bytes of <code>sha256(&quot;struct MyStruct&lt;bool&gt;&quot;)</code> =&gt; <code>&quot;16383228984366451899&quot;</code></li>
+<li>First 8 bytes of <code>sha256(&quot;struct MyStruct&lt;u64&gt;&quot;)</code> =&gt; &quot;12896678128313068780&quot;</li>
+<li>First 8 bytes of <code>sha256(&quot;struct MyStruct&lt;bool&gt;&quot;)</code> =&gt; &quot;16383228984366451899&quot;</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="receipts"><a class="header" href="#receipts">Receipts</a></h1>
 <p>Upon execution of ABI calls, i.e scripts being executed, a JSON object representing a list of receipts will be returned to the caller. Below is the JSON specification of the possible receipt types. The root will be <code>receipts_root</code> which will include an array of <code>receipts</code>.</p>
@@ -2601,7 +2443,7 @@ Encoding <code>u128::MAX - 1</code> yields: <code>0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 <p>Encoding <code>true</code> yields:</p>
 <pre><code class="language-text">0x0000000000000001
 </code></pre>
-<h3 id="b256-1"><a class="header" href="#b256-1"><code>B256</code></a></h3>
+<h3 id="b256"><a class="header" href="#b256"><code>B256</code></a></h3>
 <p><code>b256</code> is a fixed size bit array of length 256. Used for 256-bit hash digests and other 256-bit types. It is encoded as-is.</p>
 <p><strong>Example:</strong></p>
 <p>Encoding <code>0xc7fd1d987ada439fc085cfa3c49416cf2b504ac50151e3c2335d60595cb90745</code> yields:</p>
