@@ -2286,7 +2286,7 @@ Panic if:
 
 Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
 
-If register `$rD` is provided with `0` or not provided. It will be set to default `32`.
+If register `$rD` is provided with `0`. It will be set to default `32`.
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
