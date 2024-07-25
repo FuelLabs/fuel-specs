@@ -1309,7 +1309,7 @@ Panic if:
 |-------------|----------------------------------------|
 | Description | Extend the current call frame's stack. |
 | Operation   | ```$sp = $sp + $rA```                  |
-| Syntax      | `cfei $rA`                             |
+| Syntax      | `cfe $rA`                             |
 | Encoding    | `0x00 rA - - -`                        |
 | Notes       | Does not initialize memory.            |
 
