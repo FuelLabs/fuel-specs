@@ -6,3 +6,4 @@ This document describes and specifies the ABI (Application Binary Interface) of 
 - [Receipts](./receipts.md)
 - [Function Selector Encoding](./fn-selector-encoding.md)
 - [Argument Encoding](./argument-encoding.md)
+- [Hash Based Ids](./hash-based-ids.md)

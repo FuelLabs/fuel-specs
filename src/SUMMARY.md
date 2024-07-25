@@ -29,6 +29,7 @@
   - [Receipts](./abi/receipts.md)
   - [Function Selector Encoding](./abi/fn-selector-encoding.md)
   - [Argument Encoding](./abi/argument-encoding.md)
+  - [Hash Based Ids](./abi/hash-based-ids.md)
 - [FuelVM](./fuel-vm/index.md)
   - [Instruction Set](./fuel-vm/instruction-set.md)
 - [Networks](./networks/index.md)
