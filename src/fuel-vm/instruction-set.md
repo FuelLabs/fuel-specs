@@ -2275,7 +2275,7 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 | Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, $rD]);```                                                                |
 | Syntax      | `ed19 $rA, $rB, $rC, $rD`                                                                                                   |
 | Encoding    | `0x00 rA rB rC rD`                                                                                                          |
-| Notes       | Takes message instead of hash. **For backwards compatibility reasons, if `$rD == 0`, it will be set treated as `32`.**      |
+| Notes       | Takes message instead of hash. **For backwards compatibility reasons, if `$rD == 0`, it will be treated as `32`.**          |
 
 Panic if:
 
