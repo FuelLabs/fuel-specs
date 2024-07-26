@@ -2229,7 +2229,7 @@ All these instructions advance the program counter `$pc` by `4` after performing
 | Operation   | ```MEM[$rA, 64] = ecrecover_k1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
 | Syntax      | `eck1 $rA, $rB, $rC`                                                                                                        |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
-| Notes       |                                                                                                                             |
+| Notes       | Takes message hash as an input. You can use `S256` to hash the message if needed.                                           |
 
 Panic if:
 
@@ -2252,7 +2252,7 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 | Operation   | ```MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);```                                                              |
 | Syntax      | `ecr1 $rA, $rB, $rC`                                                                                                        |
 | Encoding    | `0x00 rA rB rC -`                                                                                                           |
-| Notes       |                                                                                                                             |
+| Notes       | Takes message hash as an input. You can use `S256` to hash the message if needed.                                           |
 
 Panic if:
 
@@ -2269,24 +2269,23 @@ To get the address from the public key, hash the public key with [SHA-2-256](../
 
 ### `ED19`: EdDSA curve25519 verification
 
-|             |                                                                                                                                                                 |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Description | Verification recovered from 32-byte public key starting at `$rA`, 64-byte signature starting at `$rB`, message starting byte `$rC` and message byte size `$rD`. |
-| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, $rD]);```                                                                                                    |
-| Syntax      | `ed19 $rA, $rB, $rC, $rD`                                                                                                                                       |
-| Encoding    | `0x00 rA rB rC rD`                                                                                                                                              |
-| Notes       |                                                                                                                                                                 |
+|             |                                                                                                                             |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Description | Verification 64-byte signature at `$rB` with 32-byte public key at `$rA` for a message starting at `$rC` with length `$rD`. |
+| Operation   | ```ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, $rD]);```                                                                |
+| Syntax      | `ed19 $rA, $rB, $rC, $rD`                                                                                                   |
+| Encoding    | `0x00 rA rB rC rD`                                                                                                          |
+| Notes       | Takes message instead of hash. **For backwards compatibility reasons, if `$rD == 0`, it will be set treated as `32`.**      |
 
 Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rB + 64` overflows or `> VM_MAX_RAM`
 - `$rC + $rD` overflows or `> VM_MAX_RAM`
-- `$rD > 1024`.
 
 Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
 
-If register `$rD` is provided with `0`. It will be set to default `32`.
+
 
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
