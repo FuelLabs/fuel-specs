@@ -2285,8 +2285,6 @@ Panic if:
 
 Verification are specified [here](../protocol/cryptographic-primitives.md#eddsa-public-key-cryptography).
 
-
-
 If there is an error in verification, `$err` is set to `1`, otherwise `$err` is cleared.
 
 ### `K256`: keccak-256
