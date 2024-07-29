@@ -4931,7 +4931,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover_k1(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
 <tr><td>Syntax</td><td><code>eck1 $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td>Takes message hash as an input. You can use <code>S256</code> to hash the message if needed.</td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
@@ -4950,7 +4950,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td>Operation</td><td><code>MEM[$rA, 64] = ecrecover_r1(MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
 <tr><td>Syntax</td><td><code>ecr1 $rA, $rB, $rC</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td>Takes message hash as an input. You can use <code>S256</code> to hash the message if needed.</td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
@@ -4965,18 +4965,18 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <p>To get the address from the public key, hash the public key with <a href="fuel-vm/../protocol/cryptographic-primitives.html#hashing">SHA-2-256</a>.</p>
 <h3 id="ed19-eddsa-curve25519-verification"><a class="header" href="#ed19-eddsa-curve25519-verification"><code>ED19</code>: EdDSA curve25519 verification</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Verification recovered from 32-byte public key starting at <code>$rA</code> and 64-byte signature starting at <code>$rB</code> on 32-byte message hash starting at <code>$rC</code>.</td></tr>
-<tr><td>Operation</td><td><code>ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, 32]);</code></td></tr>
-<tr><td>Syntax</td><td><code>ed19 $rA, $rB, $rC</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Description</td><td>Verification 64-byte signature at <code>$rB</code> with 32-byte public key at <code>$rA</code> for a message starting at <code>$rC</code> with length <code>$rD</code>.</td></tr>
+<tr><td>Operation</td><td><code>ed19verify(MEM[$rA, 32], MEM[$rB, 64], MEM[$rC, $rD]);</code></td></tr>
+<tr><td>Syntax</td><td><code>ed19 $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>Takes message instead of hash. <strong>For backwards compatibility reasons, if <code>$rD == 0</code>, it will be treated as <code>32</code>.</strong></td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
 <ul>
 <li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB + 64</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
 <p>Verification are specified <a href="fuel-vm/../protocol/cryptographic-primitives.html#eddsa-public-key-cryptography">here</a>.</p>
 <p>If there is an error in verification, <code>$err</code> is set to <code>1</code>, otherwise <code>$err</code> is cleared.</p>
