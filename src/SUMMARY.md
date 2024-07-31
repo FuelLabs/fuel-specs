@@ -13,6 +13,7 @@
   - [Transaction Pointer](./tx-format/tx-pointer.md)
 - [Computing Identifiers](./identifiers/index.md)
   - [Asset ID](./identifiers/asset.md)
+  - [Blob ID](./identifiers/blob-id.md)
   - [Contract ID](./identifiers/contract-id.md)
   - [Predicate ID](./identifiers/predicate-id.md)
   - [Transaction ID](./identifiers/transaction-id.md)

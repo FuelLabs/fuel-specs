@@ -91,7 +91,7 @@
   - [`CCP`: Code copy](#ccp-code-copy)
   - [`CROO`: Code Merkle root](#croo-code-merkle-root)
   - [`CSIZ`: Code size](#csiz-code-size)
-  - [`LDC`: Load code from an external contract](#ldc-load-code-from-an-external-contract)
+  - [`LDC`: Load code from an external contract](#ldc-load-code-from-an-external-contract-or-blob)
   - [`LOG`: Log event](#log-log-event)
   - [`LOGD`: Log data event](#logd-log-data-event)
   - [`MINT`: Mint new coins](#mint-mint-new-coins)
@@ -106,6 +106,9 @@
   - [`TIME`: Timestamp at height](#time-timestamp-at-height)
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
+- [Blob Instructions](#blob-instructions)
+  - [`BSIZ`: Blob size](#bsiz-blob-size)
+  - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
 - [Cryptographic Instructions](#cryptographic-instructions)
   - [`ECK1`: Secp251k1 signature recovery](#eck1-secp256k1-signature-recovery)
   - [`ECR1`: Secp256r1 signature recovery](#ecr1-secp256r1-signature-recovery)
@@ -1749,7 +1752,7 @@ Panic if:
 | Notes       | If `$rD` is greater than the code size, zero bytes are filled in.                                                                                |
 
 This is used only for reading and inspecting code of other contracts.
-Use [`LDC`](#ldc-load-code-from-an-external-contract) to load code for executing.
+Use [`LDC`](#ldc-load-code-from-an-external-contract-or-blob) to load code for executing.
 
 Panic if:
 
@@ -1793,27 +1796,37 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### `LDC`: Load code from an external contract
+### `LDC`: Load code from an external contract or blob
 
 |             |                                                                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| Description | Copy `$rC` bytes of code starting at `$rB` for contract with ID equal to the 32 bytes in memory starting at `$rA` into memory starting at `$ssp`. |
-| Operation   | ```MEM[$ssp, $rC] = code($rA, $rB, $rC);```                                                                                                       |
-| Syntax      | `ldc $rA, $rB, $rC`                                                                                                                               |
-| Encoding    | `0x00 rA rB rC -`                                                                                                                                 |
+| Description | Copy `$rC` bytes of code at offset `$rB` from object with 32 byte id starting at `$rA` into memory starting at `$ssp`. Object type is in `imm`.   |
+| Operation   | `id = mem[$rA,32]; code = match imm { 0 => contract_code($id), 1 => blob_payload($id) }; MEM[$ssp, $rC] = code[$rB, $rC];`                        |
+| Syntax      | `ldc $rA, $rB, $rC, imm`                                                                                                                          |
+| Encoding    | `0x00 rA rB rC imm`                                                                                                                               |
 | Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                                                                 |
+
+Object type from `imm` determined the source for loading as follows:
+
+| `imm` | Object type   |
+|-------|---------------|
+| `0`   | Contract code |
+| `1`   | Blob payload  |
+| other | _reserved_    |
 
 Panic if:
 
 - `$ssp + $rC` overflows or `> VM_MAX_RAM`
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$ssp + $rC >= $hp`
-- `$rC > CONTRACT_MAX_SIZE`
-- Contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
+- `imm == 0` and `$rC > CONTRACT_MAX_SIZE`
+- `imm == 0` and contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
+- `imm == 1` and contract with ID `MEM[$rA, 32]` is not found in the chain state
+- `imm >= 2` (reserved value)
 
 Increment `$fp->codesize`, `$ssp` by `$rC` padded to word alignment. Then set `$sp` to `$ssp`.
 
-This instruction can be used to concatenate the code of multiple contracts together. It can only be used when the stack area of the call frame is zero-sized.
+This instruction can be used to concatenate the code of multiple contracts or blobs together. It can only be used when the stack area of the call frame is zero-sized.
 
 ### `LOG`: Log event
 
@@ -2216,6 +2229,41 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].asset_id = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
+
+## Blob Instructions
+
+All these instructions advance the program counter `$pc` by `4` after performing their operation.
+
+### `BSIZ`: Blob size
+
+|             |                                                                                                           |
+|-------------|-----------------------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to the size of the blob with ID equal to the 32 bytes in memory starting at `$rB`.              |
+| Operation   | `$rA = len(blob(MEM[$rB, 32]));`                                                                          |
+| Syntax      | `bsiz $rA, $rB`                                                                                           |
+| Encoding    | `0x00 rA rB - -`                                                                                          |
+| Notes       |                                                                                                           |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- Blob ID `MEM[$rB, 32]` is not found
+
+### `BLDD`: Load data from a blob
+
+|-------------|-------------------------------------------------------------------------------------------------------------|
+| Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sA`.                         |
+| Operation   | `MEM[$rA, $rD] = blob(MEM[$rB, 32])[$rC, $rD];`                                                             |
+| Syntax      | `bldd $rA, $rB, rC, $rD`                                                                                    |
+| Encoding    | `0x00 rA rB rC rD`                                                                                          |
+| Notes       | If `$rC >` blob size, zero bytes are filled in.                                                             |
+
+Panic if:
+
+- `$rA + $rD` overflows or `> VM_MAX_RAM` or `> $hp`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- Blob ID `MEM[$rB, 32]` is not found
 
 ## Cryptographic Instructions
 

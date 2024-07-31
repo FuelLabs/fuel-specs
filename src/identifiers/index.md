@@ -3,6 +3,7 @@
 This chapter defines how to compute unique identifiers.
 
 - [Asset ID](./asset.md)
+- [Blob ID](./blob-id.md)
 - [Contract ID](./contract-id.md)
 - [Predicate ID](./predicate-id.md)
 - [Transaction ID](./transaction-id.md)
