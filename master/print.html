@@ -3811,7 +3811,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Combined multiply-divide of 128-bit integers with arbitrary precision.</td></tr>
 <tr><td>Operation</td><td><code>b=mem[$rB,16];</code><br><code>c=mem[$rC,16];</code><br><code>d=mem[$rD,16];</code><br><code>mem[$rA,16]=(b * c) / d;</code></td></tr>
-<tr><td>Syntax</td><td><code>wddv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Syntax</td><td><code>wdmd $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
 <tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 128</code> instead.</td></tr>
 </tbody></table>
@@ -3830,7 +3830,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Combined multiply-divide of 256-bit integers with arbitrary precision.</td></tr>
 <tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32]=(b * c) / d;</code></td></tr>
-<tr><td>Syntax</td><td><code>wqdv $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Syntax</td><td><code>wqmd $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
 <tr><td>Notes</td><td>Division by zero is treated as division by <code>1 &lt;&lt; 256</code> instead.</td></tr>
 </tbody></table>
@@ -3867,13 +3867,13 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Add two 256-bit integers and compute modulo remainder with arbitrary precision.</td></tr>
 <tr><td>Operation</td><td><code>b=mem[$rB,32];</code><br><code>c=mem[$rC,32];</code><br><code>d=mem[$rD,32];</code><br><code>mem[$rA,32] = (b+c)%d;</code></td></tr>
-<tr><td>Syntax</td><td><code>wdam $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Syntax</td><td><code>wqam $rA, $rB, $rC, $rD</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
 <tr><td>Notes</td><td></td></tr>
 </tbody></table>
 </div>
 <p><code>$of</code> is cleared.</p>
-<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 32]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
 <p>Panic if:</p>
 <ul>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
@@ -3909,7 +3909,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </tbody></table>
 </div>
 <p><code>$of</code> is cleared.</p>
-<p>If the rhs operand is zero, <code>MEM[$rA, 16]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
+<p>If the rhs operand is zero, <code>MEM[$rA, 32]</code> is cleared and <code>$err</code> is set to <code>true</code>. Otherwise, <code>$err</code> is cleared.</p>
 <p>Panic if:</p>
 <ul>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
