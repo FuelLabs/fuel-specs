@@ -930,7 +930,7 @@ Panic if:
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Combined multiply-divide of 128-bit integers with arbitrary precision.                 |
 | Operation   | `b=mem[$rB,16];`<br>`c=mem[$rC,16];`<br>`d=mem[$rD,16];`<br>`mem[$rA,16]=(b * c) / d;` |
-| Syntax      | `wddv $rA, $rB, $rC, $rD`                                                              |
+| Syntax      | `wdmd $rA, $rB, $rC, $rD`                                                              |
 | Encoding    | `0x00 rA rB rC rD`                                                                     |
 | Notes       | Division by zero is treated as division by `1 << 128` instead.                         |
 
@@ -953,7 +953,7 @@ Panic if:
 |-------------|----------------------------------------------------------------------------------------|
 | Description | Combined multiply-divide of 256-bit integers with arbitrary precision.                 |
 | Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32]=(b * c) / d;` |
-| Syntax      | `wqdv $rA, $rB, $rC, $rD`                                                              |
+| Syntax      | `wqmd $rA, $rB, $rC, $rD`                                                              |
 | Encoding    | `0x00 rA rB rC rD`                                                                     |
 | Notes       | Division by zero is treated as division by `1 << 256` instead.                         |
 
@@ -997,13 +997,13 @@ Panic if:
 |-------------|--------------------------------------------------------------------------------------|
 | Description | Add two 256-bit integers and compute modulo remainder with arbitrary precision.      |
 | Operation   | `b=mem[$rB,32];`<br>`c=mem[$rC,32];`<br>`d=mem[$rD,32];`<br>`mem[$rA,32] = (b+c)%d;` |
-| Syntax      | `wdam $rA, $rB, $rC, $rD`                                                            |
+| Syntax      | `wqam $rA, $rB, $rC, $rD`                                                            |
 | Encoding    | `0x00 rA rB rC rD`                                                                   |
 | Notes       |                                                                                      |
 
 `$of` is cleared.
 
-If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
+If the rhs operand is zero, `MEM[$rA, 32]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
 
 Panic if:
 
@@ -1045,7 +1045,7 @@ Panic if:
 
 `$of` is cleared.
 
-If the rhs operand is zero, `MEM[$rA, 16]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
+If the rhs operand is zero, `MEM[$rA, 32]` is cleared and `$err` is set to `true`. Otherwise, `$err` is cleared.
 
 Panic if:
 
