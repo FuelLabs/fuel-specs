@@ -32,4 +32,4 @@ mdbook serve
 Markdown files must conform to [GitHub Flavored Markdown](https://github.github.com/gfm/). Markdown must be formatted with:
 
 - [markdownlint](https://github.com/DavidAnson/markdownlint)
-- [Markdown Table Prettifier](https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt)
+- [Markdown Table Prettify](https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt)
