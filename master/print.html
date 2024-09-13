@@ -2093,7 +2093,8 @@ fn logging() {
 <ul>
 <li><code>type</code>: <code>Panic</code>.</li>
 <li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
-<li><code>reason</code>: Decimal string representation of an 8-bit unsigned integer; panic reason.</li>
+<li><code>reason</code>: Optional decimal string representation of an 8-bit unsigned integer; panic reason.
+Not included in canonical receipt form.</li>
 <li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
 <li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
 <li><code>contractId</code>: Optional hexadecimal string representation of the 256-bit (32-byte) contract ID if applicable. <code>null</code> otherwise.
