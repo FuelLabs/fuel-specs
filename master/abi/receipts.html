@@ -210,7 +210,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <h2 id="call-receipt"><a class="header" href="#call-receipt"><code>Call</code> Receipt</a></h2>
 <ul>
 <li><code>type</code>: <code>Call</code>.</li>
-<li><code>from</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; <code>null</code> otherwise.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; <code>null</code> otherwise.</li>
 <li><code>to</code>: Hexadecimal representation of the 256-bit (32-byte) contract ID of the callee.</li>
 <li><code>amount</code>: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.</li>
 <li><code>asset_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.</li>
@@ -222,7 +222,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;Call&quot;,
-  &quot;from&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
   &quot;to&quot;: &quot;0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d&quot;,
   &quot;amount&quot;: &quot;10000&quot;,
   &quot;asset_id&quot;: &quot;0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61&quot;,
@@ -237,20 +237,20 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <ul>
 <li><code>type</code>: <code>Log</code>.</li>
 <li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
-<li><code>val0</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
-<li><code>val1</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code>.</li>
-<li><code>val2</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rC</code>.</li>
-<li><code>val3</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
+<li><code>ra</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code>.</li>
+<li><code>rb</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code>.</li>
+<li><code>rc</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rC</code>.</li>
+<li><code>rd</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
 <li><code>pc</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$pc</code>.</li>
 <li><code>is</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$is</code>.</li>
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;Log&quot;,
   &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
-  &quot;val0&quot;: &quot;1844674407370&quot;,
-  &quot;val1&quot;: &quot;1844674407371&quot;,
-  &quot;val2&quot;: &quot;1844674407372&quot;,
-  &quot;val3&quot;: &quot;1844674407373&quot;,
+  &quot;ra&quot;: &quot;1844674407370&quot;,
+  &quot;rb&quot;: &quot;1844674407371&quot;,
+  &quot;rc&quot;: &quot;1844674407372&quot;,
+  &quot;rd&quot;: &quot;1844674407373&quot;,
   &quot;pc&quot;: &quot;0xffffffffffffffff&quot;,
   &quot;is&quot;: &quot;0xfffffffffffffffe&quot;
 }
@@ -295,8 +295,8 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <ul>
 <li><code>type</code>: <code>LogData</code>.</li>
 <li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
-<li><code>val0</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code></li>
-<li><code>val1</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code></li>
+<li><code>ra</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rA</code></li>
+<li><code>rb</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rB</code></li>
 <li><code>ptr</code>: Hexadecimal string representation of a 64-bit unsigned integer; value of register <code>$rC</code>.</li>
 <li><code>len</code>: Decimal string representation of a 64-bit unsigned integer; value of register <code>$rD</code>.</li>
 <li><code>digest</code>: Hexadecimal string representation of the 256-bit (32-byte) hash of <code>MEM[$rC, $rD]</code>.</li>
@@ -307,8 +307,8 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;LogData&quot;,
   &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
-  &quot;val0&quot;: &quot;1844674407370&quot;,
-  &quot;val1&quot;: &quot;1844674407371&quot;,
+  &quot;ra&quot;: &quot;1844674407370&quot;,
+  &quot;rb&quot;: &quot;1844674407371&quot;,
   &quot;ptr&quot;: &quot;0x1ad7f29abcc&quot;,
   &quot;len&quot;: &quot;66544&quot;,
   &quot;digest&quot;: &quot;0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa&quot;,
@@ -358,7 +358,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <h2 id="transfer-receipt"><a class="header" href="#transfer-receipt"><code>Transfer</code> Receipt</a></h2>
 <ul>
 <li><code>type</code>: <code>Transfer</code>.</li>
-<li><code>from</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
 <li><code>to</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the recipient contract.</li>
 <li><code>amount</code>: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.</li>
 <li><code>asset_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.</li>
@@ -367,7 +367,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;Transfer&quot;,
-  &quot;from&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
   &quot;to&quot;: &quot;0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d&quot;,
   &quot;amount&quot;: &quot;10000&quot;,
   &quot;asset_id&quot;: &quot;0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61&quot;,
@@ -378,7 +378,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 <h2 id="transferout-receipt"><a class="header" href="#transferout-receipt"><code>TransferOut</code> Receipt</a></h2>
 <ul>
 <li><code>type</code>: <code>TransferOut</code>.</li>
-<li><code>from</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
+<li><code>id</code>: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. <code>null</code> otherwise.</li>
 <li><code>to</code>: Hexadecimal string representation of the 256-bit (32-byte) <em>address</em> to transfer coins to.</li>
 <li><code>amount</code>: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.</li>
 <li><code>asset_id</code>: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.</li>
@@ -387,7 +387,7 @@ Not included in canonical receipt form. Primary use is for access-list estimatio
 </ul>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;TransferOut&quot;,
-  &quot;from&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
+  &quot;id&quot;: &quot;0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051&quot;,
   &quot;to&quot;: &quot;0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d&quot;,
   &quot;amount&quot;: &quot;10000&quot;,
   &quot;asset_id&quot;: &quot;0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61&quot;,
