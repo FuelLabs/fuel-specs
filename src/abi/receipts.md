@@ -78,7 +78,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ## `Call` Receipt
 
 - `type`: `Call`.
-- `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context; `null` otherwise.
 - `to`: Hexadecimal representation of the 256-bit (32-byte) contract ID of the callee.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
 - `asset_id`: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.
@@ -91,7 +91,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ```json
 {
   "type": "Call",
-  "from": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
   "to": "0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
   "amount": "10000",
   "asset_id": "0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
@@ -107,10 +107,10 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 - `type`: `Log`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
-- `val0`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
-- `val1`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`.
-- `val2`: Decimal string representation of a 64-bit unsigned integer; value of register `$rC`.
-- `val3`: Decimal string representation of a 64-bit unsigned integer; value of register `$rD`.
+- `ra`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`.
+- `rb`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`.
+- `rc`: Decimal string representation of a 64-bit unsigned integer; value of register `$rC`.
+- `rd`: Decimal string representation of a 64-bit unsigned integer; value of register `$rD`.
 - `pc`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$pc`.
 - `is`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$is`.
 
@@ -118,10 +118,10 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 {
   "type": "Log",
   "id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-  "val0": "1844674407370",
-  "val1": "1844674407371",
-  "val2": "1844674407372",
-  "val3": "1844674407373",
+  "ra": "1844674407370",
+  "rb": "1844674407371",
+  "rc": "1844674407372",
+  "rd": "1844674407373",
   "pc": "0xffffffffffffffff",
   "is": "0xfffffffffffffffe"
 }
@@ -171,8 +171,8 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 
 - `type`: `LogData`.
 - `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
-- `val0`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`
-- `val1`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`
+- `ra`: Decimal string representation of a 64-bit unsigned integer; value of register `$rA`
+- `rb`: Decimal string representation of a 64-bit unsigned integer; value of register `$rB`
 - `ptr`: Hexadecimal string representation of a 64-bit unsigned integer; value of register `$rC`.
 - `len`: Decimal string representation of a 64-bit unsigned integer; value of register `$rD`.
 - `digest`: Hexadecimal string representation of the 256-bit (32-byte) hash of `MEM[$rC, $rD]`.
@@ -184,8 +184,8 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 {
   "type": "LogData",
   "id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
-  "val0": "1844674407370",
-  "val1": "1844674407371",
+  "ra": "1844674407370",
+  "rb": "1844674407371",
   "ptr": "0x1ad7f29abcc",
   "len": "66544",
   "digest": "0xd28b78894e493c98a196aa51b432b674e4813253257ed9331054ee8d6813b3aa",
@@ -240,7 +240,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ## `Transfer` Receipt
 
 - `type`: `Transfer`.
-- `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `to`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the recipient contract.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
 - `asset_id`: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.
@@ -250,7 +250,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ```json
 {
   "type": "Transfer",
-  "from": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
   "to": "0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
   "amount": "10000",
   "asset_id": "0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
@@ -262,7 +262,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ## `TransferOut` Receipt
 
 - `type`: `TransferOut`.
-- `from`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
+- `id`: Hexadecimal string representation of the 256-bit (32-byte) contract ID of the current context if in an internal context. `null` otherwise.
 - `to`: Hexadecimal string representation of the 256-bit (32-byte) _address_ to transfer coins to.
 - `amount`: Decimal string representation of a 64-bit unsigned integer; amount of coins to forward.
 - `asset_id`: Hexadecimal string representation of the 256-bit (32-byte) asset ID of coins to forward.
@@ -272,7 +272,7 @@ _Important note:_ For the JSON representation of receipts, we represent 64-bit u
 ```json
 {
   "type": "TransferOut",
-  "from": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
+  "id": "0x39150017c9e38e5e280432d546fae345d6ce6d8fe4710162c2e3a95a6faff051",
   "to": "0x1c98ff5d121a6d5afc8135821acb3983e460ef0590919266d620bfc7b9b6f24d",
   "amount": "10000",
   "asset_id": "0xa5149ac6064222922eaa226526b0d853e7871e28c368f6afbcfd60a6ef8d6e61",
