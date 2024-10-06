@@ -91,7 +91,7 @@
   - [`CCP`: Code copy](#ccp-code-copy)
   - [`CROO`: Code Merkle root](#croo-code-merkle-root)
   - [`CSIZ`: Code size](#csiz-code-size)
-  - [`LDC`: Load code from an external contract](#ldc-load-code-from-an-external-contract-or-blob)
+  - [`LDC`: Load code from an external contract, blob or memory](#ldc-load-code-from-an-external-contract-blob-or-memory)
   - [`LOG`: Log event](#log-log-event)
   - [`LOGD`: Log data event](#logd-log-data-event)
   - [`MINT`: Mint new coins](#mint-mint-new-coins)
@@ -1796,33 +1796,35 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
 
-### `LDC`: Load code from an external contract or blob
+### `LDC`: Load code from an external contract, blob or memory
 
 |             |                                                                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| Description | Copy `$rC` bytes of code at offset `$rB` from object with 32 byte id starting at `$rA` into memory starting at `$ssp`. Object type is in `imm`.   |
-| Operation   | `id = mem[$rA,32]; code = match imm { 0 => contract_code($id), 1 => blob_payload($id) }; MEM[$ssp, $rC] = code[$rB, $rC];`                        |
+| Description | Copy `$rC` bytes of code at offset `$rB` from object identified with `$rA` into memory starting at `$ssp`. Object type is in `imm`.               |
+| Operation   | `code = match imm { 0 => contract_code(mem[$rA,32]), 1 => blob_payload(mem[$rA,32]), 2 => mem[$ra, ..] }; MEM[$ssp, $rC] = code[$rB, $rC];`       |
 | Syntax      | `ldc $rA, $rB, $rC, imm`                                                                                                                          |
 | Encoding    | `0x00 rA rB rC imm`                                                                                                                               |
 | Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                                                                 |
 
-Object type from `imm` determined the source for loading as follows:
+Object type from `imm` determines the source for loading as follows:
 
 | `imm` | Object type   |
 |-------|---------------|
 | `0`   | Contract code |
 | `1`   | Blob payload  |
+| `2`   | VM memory     |
 | other | _reserved_    |
 
 Panic if:
 
 - `$ssp + $rC` overflows or `> VM_MAX_RAM`
-- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `imm <= 1` and `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$ssp + $rC >= $hp`
 - `imm == 0` and `$rC > CONTRACT_MAX_SIZE`
 - `imm == 0` and contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
-- `imm == 1` and contract with ID `MEM[$rA, 32]` is not found in the chain state
-- `imm >= 2` (reserved value)
+- `imm == 1` and blob with ID `MEM[$rA, 32]` is not found in the chain state
+- `imm == 2` and `$rA + $rB + $rC` overflows or `> VM_MAX_RAM`
+- `imm >= 3` (reserved value)
 
 Increment `$fp->codesize`, `$ssp` by `$rC` padded to word alignment. Then set `$sp` to `$ssp`.
 
