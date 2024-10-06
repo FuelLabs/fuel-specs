@@ -7,9 +7,9 @@
 - [Instruction Set](#instruction-set)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
-- [Predicate Estimation](#predicate-estimation)
-- [Predicate Verification](#predicate-verification)
-- [Script Execution](#script-execution)
+  - [Predicate Estimation and Verification](#predicate-estimation-and-verification)
+  - [Script Execution](#script-execution)
+  - [Call](#call)
 - [Call Frames](#call-frames)
 - [Ownership](#ownership)
 
