@@ -82,7 +82,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../identifiers/transaction-id.md).
 1. Base asset ID (`byte[32]`, word-aligned)
 1. [`MAX_INPUTS`](../tx-format/consensus_parameters.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
-    1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
+    1. For [predicate estimation and verification](#predicate-estimation-and-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
 1. The [transaction, serialized](../tx-format/index.md).
@@ -105,6 +105,7 @@ There are 4 _contexts_ in the FuelVM: [predicate estimation and verification](#p
 ### Predicate Estimation and Verification
 
 There are two ways to run predicates on the VM:
+
 1. Estimation: runs the predicate and updates the amount of gas used
 1. Verification: runs the predicate and verifies the amount of gas used matches the input
 
@@ -142,7 +143,7 @@ After the script has been executed, `tx.receiptsRoot` is updated to contain the 
 
 ### Call
 
-Call context is entered via [`CALL` instruction](./instruction-set.md#call-call-contract). It's also called *internal context*, or *contract context*. Call context is used to access state of a contract.
+Call context is entered via [`CALL` instruction](./instruction-set.md#call-call-contract). It's also called _internal context_, or _contract context_. Call context is used to access state of a contract.
 
 ## Call Frames
 
