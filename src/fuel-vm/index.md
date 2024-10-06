@@ -123,6 +123,7 @@ During predicate mode, hitting any [contract instruction](./instruction-set.md#c
 A predicate that halts without returning Boolean `true` would not pass verification, making the entire transaction invalid. Note that predicate return value is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
 After successful execution, the run mode is determines the final step:
+
 1. Estimation: `predicateGasUsed` is set to `MAX_GAS_PER_PREDICATE - $ggas`.
 1. Verification: if `$ggas` is non-zero, predicate verification fails.
 
