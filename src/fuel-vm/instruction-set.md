@@ -1804,7 +1804,7 @@ Panic if:
 | Operation   | `code = match imm { 0 => contract_code(mem[$rA,32]), 1 => blob_payload(mem[$rA,32]), 2 => mem[$ra, ..] }; MEM[$ssp, $rC] = code[$rB, $rC];`       |
 | Syntax      | `ldc $rA, $rB, $rC, imm`                                                                                                                          |
 | Encoding    | `0x00 rA rB rC imm`                                                                                                                               |
-| Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                                                                 |
+| Notes       | If `$rC` is greater than the code size, zero bytes are filled in. Length final is always padded to word boundary.                                 |
 
 Object type from `imm` determines the source for loading as follows:
 
