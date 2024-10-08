@@ -1822,6 +1822,7 @@ Panic if:
 - `$ssp + $rC >= $hp`
 - `imm == 0` and `$rC > CONTRACT_MAX_SIZE`
 - `imm == 0` and contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
+- `imm == 0` and context is a predicate
 - `imm == 1` and blob with ID `MEM[$rA, 32]` is not found in the chain state
 - `imm == 2` and `$rA + $rB + $rC` overflows or `> VM_MAX_RAM`
 - `imm >= 3` (reserved value)
