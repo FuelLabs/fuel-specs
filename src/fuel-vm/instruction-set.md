@@ -1804,7 +1804,7 @@ Panic if:
 | Operation   | `code = match imm { 0 => contract_code(mem[$rA,32]), 1 => blob_payload(mem[$rA,32]), 2 => mem[$ra, ..] }; MEM[$ssp, $rC] = code[$rB, $rC];`       |
 | Syntax      | `ldc $rA, $rB, $rC, imm`                                                                                                                          |
 | Encoding    | `0x00 rA rB rC imm`                                                                                                                               |
-| Notes       | If `$rC` is greater than the code size, zero bytes are filled in.                                                                                 |
+| Notes       | If `$rC` is greater than the code size, zero bytes are filled in. Final length is always padded to word boundary.                                 |
 
 Object type from `imm` determines the source for loading as follows:
 
@@ -1822,6 +1822,7 @@ Panic if:
 - `$ssp + $rC >= $hp`
 - `imm == 0` and `$rC > CONTRACT_MAX_SIZE`
 - `imm == 0` and contract with ID `MEM[$rA, 32]` is not in `tx.inputs`
+- `imm == 0` and context is a predicate
 - `imm == 1` and blob with ID `MEM[$rA, 32]` is not found in the chain state
 - `imm == 2` and `$rA + $rB + $rC` overflows or `> VM_MAX_RAM`
 - `imm >= 3` (reserved value)
