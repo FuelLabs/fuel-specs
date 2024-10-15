@@ -240,7 +240,7 @@
 <li><a href="#ccp-code-copy"><code>CCP</code>: Code copy</a></li>
 <li><a href="#croo-code-merkle-root"><code>CROO</code>: Code Merkle root</a></li>
 <li><a href="#csiz-code-size"><code>CSIZ</code>: Code size</a></li>
-<li><a href="#ldc-load-code-from-an-external-contract-or-blob"><code>LDC</code>: Load code from an external contract</a></li>
+<li><a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC</code>: Load code from an external contract, blob or memory</a></li>
 <li><a href="#log-log-event"><code>LOG</code>: Log event</a></li>
 <li><a href="#logd-log-data-event"><code>LOGD</code>: Log data event</a></li>
 <li><a href="#mint-mint-new-coins"><code>MINT</code>: Mint new coins</a></li>
@@ -1699,7 +1699,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 </tbody></table>
 </div>
 <p>This is used only for reading and inspecting code of other contracts.
-Use <a href="#ldc-load-code-from-an-external-contract-or-blob"><code>LDC</code></a> to load code for executing.</p>
+Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC</code></a> to load code for executing.</p>
 <p>Panic if:</p>
 <ul>
 <li><code>$rA + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
@@ -1739,31 +1739,34 @@ Use <a href="#ldc-load-code-from-an-external-contract-or-blob"><code>LDC</code><
 <li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>Contract with ID <code>MEM[$rB, 32]</code> is not in <code>tx.inputs</code></li>
 </ul>
-<h3 id="ldc-load-code-from-an-external-contract-or-blob"><a class="header" href="#ldc-load-code-from-an-external-contract-or-blob"><code>LDC</code>: Load code from an external contract or blob</a></h3>
+<h3 id="ldc-load-code-from-an-external-contract-blob-or-memory"><a class="header" href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC</code>: Load code from an external contract, blob or memory</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>Copy <code>$rC</code> bytes of code at offset <code>$rB</code> from object with 32 byte id starting at <code>$rA</code> into memory starting at <code>$ssp</code>. Object type is in <code>imm</code>.</td></tr>
-<tr><td>Operation</td><td><code>id = mem[$rA,32]; code = match imm { 0 =&gt; contract_code($id), 1 =&gt; blob_payload($id) }; MEM[$ssp, $rC] = code[$rB, $rC];</code></td></tr>
+<tr><td>Description</td><td>Copy <code>$rC</code> bytes of code at offset <code>$rB</code> from object identified with <code>$rA</code> into memory starting at <code>$ssp</code>. Object type is in <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>code = match imm { 0 =&gt; contract_code(mem[$rA,32]), 1 =&gt; blob_payload(mem[$rA,32]), 2 =&gt; mem[$ra, ..] }; MEM[$ssp, $rC] = code[$rB, $rC];</code></td></tr>
 <tr><td>Syntax</td><td><code>ldc $rA, $rB, $rC, imm</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB rC imm</code></td></tr>
-<tr><td>Notes</td><td>If <code>$rC</code> is greater than the code size, zero bytes are filled in.</td></tr>
+<tr><td>Notes</td><td>If <code>$rC</code> is greater than the code size, zero bytes are filled in. Final length is always padded to word boundary.</td></tr>
 </tbody></table>
 </div>
-<p>Object type from <code>imm</code> determined the source for loading as follows:</p>
+<p>Object type from <code>imm</code> determines the source for loading as follows:</p>
 <div class="table-wrapper"><table><thead><tr><th><code>imm</code></th><th>Object type</th></tr></thead><tbody>
 <tr><td><code>0</code></td><td>Contract code</td></tr>
 <tr><td><code>1</code></td><td>Blob payload</td></tr>
+<tr><td><code>2</code></td><td>VM memory</td></tr>
 <tr><td>other</td><td><em>reserved</em></td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
 <ul>
 <li><code>$ssp + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>imm &lt;= 1</code> and <code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$ssp + $rC &gt;= $hp</code></li>
 <li><code>imm == 0</code> and <code>$rC &gt; CONTRACT_MAX_SIZE</code></li>
 <li><code>imm == 0</code> and contract with ID <code>MEM[$rA, 32]</code> is not in <code>tx.inputs</code></li>
-<li><code>imm == 1</code> and contract with ID <code>MEM[$rA, 32]</code> is not found in the chain state</li>
-<li><code>imm &gt;= 2</code> (reserved value)</li>
+<li><code>imm == 0</code> and context is a predicate</li>
+<li><code>imm == 1</code> and blob with ID <code>MEM[$rA, 32]</code> is not found in the chain state</li>
+<li><code>imm == 2</code> and <code>$rA + $rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>imm &gt;= 3</code> (reserved value)</li>
 </ul>
 <p>Increment <code>$fp-&gt;codesize</code>, <code>$ssp</code> by <code>$rC</code> padded to word alignment. Then set <code>$sp</code> to <code>$ssp</code>.</p>
 <p>This instruction can be used to concatenate the code of multiple contracts or blobs together. It can only be used when the stack area of the call frame is zero-sized.</p>
