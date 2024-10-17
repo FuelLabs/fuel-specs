@@ -669,7 +669,7 @@ Panic if:
 | Operation   | ```$rA = $rB - $rC;```                           |
 | Syntax      | `sub $rA, $rB, $rC`                              |
 | Encoding    | `0x00 rA rB rC -`                                |
-| Notes       | `$of` is assigned the overflow of the operation. |
+| Notes       |                                                  |
 
 Panic if:
 
@@ -687,7 +687,7 @@ Panic if:
 | Operation   | ```$rA = $rB - imm;```                           |
 | Syntax      | `subi $rA, $rB, imm`                             |
 | Encoding    | `0x00 rA rB i i`                                 |
-| Notes       | `$of` is assigned the overflow of the operation. |
+| Notes       |                                                  |
 
 Panic if:
 
