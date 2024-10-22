@@ -19,7 +19,7 @@ These are the available types that can be encoded in the ABI:
   - `u256`, 256 bits.
 - Boolean: `bool`, either `0` or `1` encoded identically to `u8`.
 - B256: `b256`, arbitrary 256-bits value.
-- Address : `address`, a 256-bit (32-byte) address.
+- Address: `address`, a 256-bit (32-byte) address.
 - Fixed size string
 - Array
 - Enums (sum types)
@@ -261,7 +261,7 @@ Calling `bar` with `MySumType::Z` yields:
 
 ABI calls containing vectors are encoded in the following way:
 
-- First, figure out the the length `l` of the vector. Its length will also be its capacity.
+- First, figure out the length `l` of the vector. Its length will also be its capacity.
 - Encode the content of the vector according to the spec of its type, e.g. for a `Vec<bool>`,
   encode each `bool` element according to the `bool` specs. This gives out data that is stored
   on the heap, and we encode only the pointer to this data
@@ -301,7 +301,7 @@ At the pointer address, then the vector's content are encoded as such:
 ### Tuples
 
 ABI calls containing tuples are encoded as such:
-If `X` is a tuple with the type signature `(T_1, T_2, ..., T_n)`, with `T_1,...,T_n` being any type except for vector, then `enc(X)` is encoded as the concatenation of `enc(T_1)`, `enc(T_2)`,`enc (T_3)`, ..., `enc(T_n)`.
+If `X` is a tuple with the type signature `(T_1, T_2, ..., T_n)`, with `T_1,..., T_n` being any type except for vector, then `enc(X)` is encoded as the concatenation of `enc(T_1)`, `enc(T_2)`,`enc (T_3)`, ..., `enc(T_n)`.
 
 ```rust
 abi MyContract {
