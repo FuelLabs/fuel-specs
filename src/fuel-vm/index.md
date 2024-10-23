@@ -7,9 +7,9 @@
 - [Instruction Set](#instruction-set)
 - [VM Initialization](#vm-initialization)
 - [Contexts](#contexts)
-- [Predicate Estimation](#predicate-estimation)
-- [Predicate Verification](#predicate-verification)
-- [Script Execution](#script-execution)
+  - [Predicate Estimation and Verification](#predicate-estimation-and-verification)
+  - [Script Execution](#script-execution)
+  - [Call](#call)
 - [Call Frames](#call-frames)
 - [Ownership](#ownership)
 
@@ -82,7 +82,7 @@ To initialize the VM, the following is pushed on the stack sequentially:
 1. Transaction hash (`byte[32]`, word-aligned), computed as defined [here](../identifiers/transaction-id.md).
 1. Base asset ID (`byte[32]`, word-aligned)
 1. [`MAX_INPUTS`](../tx-format/consensus_parameters.md) pairs of `(asset_id: byte[32], balance: uint64)`, of:
-    1. For [predicate estimation](#predicate-estimation) and [predicate verification](#predicate-verification), zeroes.
+    1. For [predicate estimation and verification](#predicate-estimation-and-verification), zeroes.
     1. For [script execution](#script-execution), the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than `MAX_INPUTS` asset IDs, the pair has a value of zero.
 1. Transaction length, in bytes (`uint64`, word-aligned).
 1. The [transaction, serialized](../tx-format/index.md).
@@ -95,54 +95,39 @@ Then the following registers are initialized (without explicit initialization, a
 
 ## Contexts
 
-There are 4 _contexts_ in the FuelVM: [predicate estimation](#predicate-estimation), [predicate verification](#predicate-verification), [scripts](#script-execution), and [calls](./instruction-set.md#call-call-contract). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
+There are 4 _contexts_ in the FuelVM: [predicate estimation and verification](#predicate-estimation-and-verification), [scripts](#script-execution), and [calls](#call). A context is an isolated execution environment with defined [memory ownership](#ownership) and can be _external_ or _internal_:
 
 - External: predicate and script. `$fp` will be zero.
 - Internal: call. `$fp` will be non-zero.
 
 [Returning](./instruction-set.md#return-return-from-call) from a context behaves differently depending on whether the context is external or internal.
 
-## Predicate Estimation
+### Predicate Estimation and Verification
 
-For any input of type [`InputType.Coin`](../tx-format/index.md) or [`InputType.Message`](../tx-format/index.md), a non-zero `predicateLength` field means the UTXO being spent is a [`P2SH`](https://en.bitcoin.it/wiki/P2SH) rather than a [`P2PKH`](https://en.bitcoin.it/P2PKH) output.
+There are two ways to run predicates on the VM:
 
-For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
-
-1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to `MAX_GAS_PER_PREDICATE`.
-
-Predicate estimation will fail if gas is exhausted during execution.
-
-During predicate mode, hitting any of the following instructions causes predicate estimation to halt, returning Boolean `false`:
-
-1. Any [contract instruction](./instruction-set.md#contract-instructions).
-
-In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate estimation halts returning Boolean `false`.
-
-A predicate that halts without returning Boolean `true` would not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
-
-After successful execution, `predicateGasUsed` is set to `MAX_GAS_PER_PREDICATE - $ggas`.
-
-## Predicate Verification
+1. Estimation: runs the predicate and updates the amount of gas used
+1. Verification: runs the predicate and verifies the amount of gas used matches the input
 
 For any input of type [`InputType.Coin`](../tx-format/input.md#inputcoin) or [`InputType.Message`](../tx-format/input.md#inputmessage), a non-zero `predicateLength` field means the UTXO being spent is a [`P2SH`](https://en.bitcoin.it/P2SH) rather than a [`P2PKH`](https://en.bitcoin.it/P2PKH) output.
 
 For each such input in the transaction, the VM is [initialized](#vm-initialization), then:
 
 1. `$pc` and `$is` are set to the start of the input's `predicate` field.
-1. `$ggas` and `$cgas` are set to `predicateGasUsed`.
+1. `$ggas` and `$cgas` are set to `MAX_GAS_PER_PREDICATE` for estimation, and `predicateGasUsed` for verification.
 
-Predicate verification will fail if gas is exhausted during execution.
+Predicate execution will fail if gas is exhausted during execution.
 
-During predicate mode, hitting any [contract instruction](./instruction-set.md#contract-instructions) causes predicate verification to halt, returning Boolean `false`.
+During predicate mode, hitting any [contract instruction](./instruction-set.md#contract-instructions) (except `ldc` with non-contract target) causes predicate verification to halt, returning Boolean `false`.
 
-In addition, during predicate mode if `$pc` is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean `false`.
+A predicate that halts without returning Boolean `true` would not pass verification, making the entire transaction invalid. Note that predicate return value is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
 
-A predicate that halts without returning Boolean `true` does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to `true` then it will always evaluate to `true` in the future).
+After successful execution, the run mode is determines the final step:
 
-After execution, if `$ggas` is non-zero, predicate verification fails.
+1. Estimation: `predicateGasUsed` is set to `MAX_GAS_PER_PREDICATE - $ggas`.
+1. Verification: if `$ggas` is non-zero, predicate verification fails.
 
-## Script Execution
+### Script Execution
 
 If script bytecode is present, transaction validation requires execution.
 
@@ -156,6 +141,10 @@ Following initialization, execution begins.
 For each instruction, its gas cost `gc` is first computed. If `gc > $cgas`, deduct `$cgas` from `$ggas` and `$cgas` (i.e. spend all of `$cgas` and no more), then [revert](./instruction-set.md#rvrt-revert) immediately without actually executing the instruction. Otherwise, deduct `gc` from `$ggas` and `$cgas`.
 
 After the script has been executed, `tx.receiptsRoot` is updated to contain the Merkle root of the receipts, [as described in the `TransactionScript` spec](../tx-format/transaction.md#`TransactionScript`).
+
+### Call
+
+Call context is entered via [`CALL` instruction](./instruction-set.md#call-call-contract). It's also called _internal context_, or _contract context_. Call context is used to access state of a contract.
 
 ## Call Frames
 
