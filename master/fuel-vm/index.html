@@ -145,10 +145,13 @@
 <li><a href="#flags">Flags</a></li>
 <li><a href="#instruction-set">Instruction Set</a></li>
 <li><a href="#vm-initialization">VM Initialization</a></li>
-<li><a href="#contexts">Contexts</a></li>
-<li><a href="#predicate-estimation">Predicate Estimation</a></li>
-<li><a href="#predicate-verification">Predicate Verification</a></li>
+<li><a href="#contexts">Contexts</a>
+<ul>
+<li><a href="#predicate-estimation-and-verification">Predicate Estimation and Verification</a></li>
 <li><a href="#script-execution">Script Execution</a></li>
+<li><a href="#call">Call</a></li>
+</ul>
+</li>
 <li><a href="#call-frames">Call Frames</a></li>
 <li><a href="#ownership">Ownership</a></li>
 </ul>
@@ -208,7 +211,7 @@
 <li>Base asset ID (<code>byte[32]</code>, word-aligned)</li>
 <li><a href="../tx-format/consensus_parameters.html"><code>MAX_INPUTS</code></a> pairs of <code>(asset_id: byte[32], balance: uint64)</code>, of:
 <ol>
-<li>For <a href="#predicate-estimation">predicate estimation</a> and <a href="#predicate-verification">predicate verification</a>, zeroes.</li>
+<li>For <a href="#predicate-estimation-and-verification">predicate estimation and verification</a>, zeroes.</li>
 <li>For <a href="#script-execution">script execution</a>, the free balance for each asset ID seen in the transaction's inputs, ordered in ascending order. If there are fewer than <code>MAX_INPUTS</code> asset IDs, the pair has a value of zero.</li>
 </ol>
 </li>
@@ -222,40 +225,33 @@
 <li><code>$hp = VM_MAX_RAM</code>: the heap area begins at the top and is empty to start.</li>
 </ol>
 <h2 id="contexts"><a class="header" href="#contexts">Contexts</a></h2>
-<p>There are 4 <em>contexts</em> in the FuelVM: <a href="#predicate-estimation">predicate estimation</a>, <a href="#predicate-verification">predicate verification</a>, <a href="#script-execution">scripts</a>, and <a href="./instruction-set.html#call-call-contract">calls</a>. A context is an isolated execution environment with defined <a href="#ownership">memory ownership</a> and can be <em>external</em> or <em>internal</em>:</p>
+<p>There are 4 <em>contexts</em> in the FuelVM: <a href="#predicate-estimation-and-verification">predicate estimation and verification</a>, <a href="#script-execution">scripts</a>, and <a href="#call">calls</a>. A context is an isolated execution environment with defined <a href="#ownership">memory ownership</a> and can be <em>external</em> or <em>internal</em>:</p>
 <ul>
 <li>External: predicate and script. <code>$fp</code> will be zero.</li>
 <li>Internal: call. <code>$fp</code> will be non-zero.</li>
 </ul>
 <p><a href="./instruction-set.html#return-return-from-call">Returning</a> from a context behaves differently depending on whether the context is external or internal.</p>
-<h2 id="predicate-estimation"><a class="header" href="#predicate-estimation">Predicate Estimation</a></h2>
-<p>For any input of type <a href="../tx-format/index.html"><code>InputType.Coin</code></a> or <a href="../tx-format/index.html"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoin.it/wiki/P2SH"><code>P2SH</code></a> rather than a <a href="https://en.bitcoin.it/P2PKH"><code>P2PKH</code></a> output.</p>
-<p>For each such input in the transaction, the VM is <a href="#vm-initialization">initialized</a>, then:</p>
+<h3 id="predicate-estimation-and-verification"><a class="header" href="#predicate-estimation-and-verification">Predicate Estimation and Verification</a></h3>
+<p>There are two ways to run predicates on the VM:</p>
 <ol>
-<li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
-<li><code>$ggas</code> and <code>$cgas</code> are set to <code>MAX_GAS_PER_PREDICATE</code>.</li>
+<li>Estimation: runs the predicate and updates the amount of gas used</li>
+<li>Verification: runs the predicate and verifies the amount of gas used matches the input</li>
 </ol>
-<p>Predicate estimation will fail if gas is exhausted during execution.</p>
-<p>During predicate mode, hitting any of the following instructions causes predicate estimation to halt, returning Boolean <code>false</code>:</p>
-<ol>
-<li>Any <a href="./instruction-set.html#contract-instructions">contract instruction</a>.</li>
-</ol>
-<p>In addition, during predicate mode if <code>$pc</code> is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate estimation halts returning Boolean <code>false</code>.</p>
-<p>A predicate that halts without returning Boolean <code>true</code> would not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>
-<p>After successful execution, <code>predicateGasUsed</code> is set to <code>MAX_GAS_PER_PREDICATE - $ggas</code>.</p>
-<h2 id="predicate-verification"><a class="header" href="#predicate-verification">Predicate Verification</a></h2>
 <p>For any input of type <a href="../tx-format/input.html#inputcoin"><code>InputType.Coin</code></a> or <a href="../tx-format/input.html#inputmessage"><code>InputType.Message</code></a>, a non-zero <code>predicateLength</code> field means the UTXO being spent is a <a href="https://en.bitcoin.it/P2SH"><code>P2SH</code></a> rather than a <a href="https://en.bitcoin.it/P2PKH"><code>P2PKH</code></a> output.</p>
 <p>For each such input in the transaction, the VM is <a href="#vm-initialization">initialized</a>, then:</p>
 <ol>
 <li><code>$pc</code> and <code>$is</code> are set to the start of the input's <code>predicate</code> field.</li>
-<li><code>$ggas</code> and <code>$cgas</code> are set to <code>predicateGasUsed</code>.</li>
+<li><code>$ggas</code> and <code>$cgas</code> are set to <code>MAX_GAS_PER_PREDICATE</code> for estimation, and <code>predicateGasUsed</code> for verification.</li>
 </ol>
-<p>Predicate verification will fail if gas is exhausted during execution.</p>
-<p>During predicate mode, hitting any <a href="./instruction-set.html#contract-instructions">contract instruction</a> causes predicate verification to halt, returning Boolean <code>false</code>.</p>
-<p>In addition, during predicate mode if <code>$pc</code> is set to a value greater than the end of predicate bytecode (this would allow bytecode outside the actual predicate), predicate verification halts returning Boolean <code>false</code>.</p>
-<p>A predicate that halts without returning Boolean <code>true</code> does not pass verification, making the entire transaction invalid. Note that predicate validity is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>
-<p>After execution, if <code>$ggas</code> is non-zero, predicate verification fails.</p>
-<h2 id="script-execution"><a class="header" href="#script-execution">Script Execution</a></h2>
+<p>Predicate execution will fail if gas is exhausted during execution.</p>
+<p>During predicate mode, hitting any <a href="./instruction-set.html#contract-instructions">contract instruction</a> (except <code>ldc</code> with non-contract target) causes predicate verification to halt, returning Boolean <code>false</code>.</p>
+<p>A predicate that halts without returning Boolean <code>true</code> would not pass verification, making the entire transaction invalid. Note that predicate return value is monotonic with respect to time (i.e. if a predicate evaluates to <code>true</code> then it will always evaluate to <code>true</code> in the future).</p>
+<p>After successful execution, the run mode is determines the final step:</p>
+<ol>
+<li>Estimation: <code>predicateGasUsed</code> is set to <code>MAX_GAS_PER_PREDICATE - $ggas</code>.</li>
+<li>Verification: if <code>$ggas</code> is non-zero, predicate verification fails.</li>
+</ol>
+<h3 id="script-execution"><a class="header" href="#script-execution">Script Execution</a></h3>
 <p>If script bytecode is present, transaction validation requires execution.</p>
 <p>The VM is <a href="#vm-initialization">initialized</a>, then:</p>
 <ol>
@@ -265,6 +261,8 @@
 <p>Following initialization, execution begins.</p>
 <p>For each instruction, its gas cost <code>gc</code> is first computed. If <code>gc &gt; $cgas</code>, deduct <code>$cgas</code> from <code>$ggas</code> and <code>$cgas</code> (i.e. spend all of <code>$cgas</code> and no more), then <a href="./instruction-set.html#rvrt-revert">revert</a> immediately without actually executing the instruction. Otherwise, deduct <code>gc</code> from <code>$ggas</code> and <code>$cgas</code>.</p>
 <p>After the script has been executed, <code>tx.receiptsRoot</code> is updated to contain the Merkle root of the receipts, <a href="../tx-format/transaction.html#%60TransactionScript%60">as described in the <code>TransactionScript</code> spec</a>.</p>
+<h3 id="call"><a class="header" href="#call">Call</a></h3>
+<p>Call context is entered via <a href="./instruction-set.html#call-call-contract"><code>CALL</code> instruction</a>. It's also called <em>internal context</em>, or <em>contract context</em>. Call context is used to access state of a contract.</p>
 <h2 id="call-frames"><a class="header" href="#call-frames">Call Frames</a></h2>
 <p>Cross-contract calls push a <em>call frame</em> onto the stack, similar to a stack frame used in regular languages for function calls (which may be used by a high-level language that targets the FuelVM). The distinction is as follows:</p>
 <ol>
