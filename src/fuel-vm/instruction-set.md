@@ -2383,12 +2383,10 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted                 |
 
-<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Curve ID `$rB` possible values
 
 - `0`: `alt_bn128` elliptic curve.
 
-<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Encoding of points and results by curve ID
 
 | Curve ID | `$rA` format | `$rC` format | `$rD` format |
@@ -2427,10 +2425,12 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted. Detailed explanations on the behavior : <https://eips.ethereum.org/EIPS/eip-197>             |
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Curve ID `$rB` possible values
 
 - `0`: `alt_bn128` elliptic curve.
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Encoding of points and results by curve ID
 
 | Curve ID | `$rA` format | `$rC` format | `$rD` format |
