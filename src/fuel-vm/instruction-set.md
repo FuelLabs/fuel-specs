@@ -2383,10 +2383,12 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted                 |
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Curve ID `$rB` possible values
 
 - `0`: `alt_bn128` elliptic curve.
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Encoding of points and results by curve ID
 
 | Curve ID | `$rA` format | `$rC` format | `$rD` format |
@@ -2403,10 +2405,12 @@ Panic if:
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted                 |
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Curve ID `$rB` possible values
 
 - `0`: `alt_bn128` elliptic curve.
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Encoding of points and results by curve ID
 
 | Curve ID | `$rA` format | `$rC` format | `$rD` format |
@@ -2420,8 +2424,8 @@ Panic if:
 | Description | Perform pairing check on a batch of groups of points on `$rB` curve. `$rC` define the number of elements and `$rD` where the bytes of the groups of points start. `$rA` contains either `0` or `1` as the result of the pairing. The encoding and decoding depends on the curve (`$rB`) chosen (details below).                                                    |
 | Operation   | ```$rA = epar($rC(MEM[$rD, Z]));```                 |
 | Syntax      | `eadd $rA, $rB, $rC, $rD`                           |
-| Encoding    | `0x00 rA rB rC rD `                                 |
-| Notes       | For now, only `$rB` = 0 is accepted. Detailed explanations on the behavior : https://eips.ethereum.org/EIPS/eip-197               |
+| Encoding    | `0x00 rA rB rC rD`                                  |
+| Notes       | For now, only `$rB` = 0 is accepted. Detailed explanations on the behavior : <https://eips.ethereum.org/EIPS/eip-197>             |
 
 #### Curve ID `$rB` possible values
 
