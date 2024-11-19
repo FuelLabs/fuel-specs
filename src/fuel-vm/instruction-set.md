@@ -115,6 +115,9 @@
   - [`ED19`: EdDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
   - [`K256`: keccak-256](#k256-keccak-256)
   - [`S256`: SHA-2-256](#s256-sha-2-256)
+  - [`EADD`: Elliptic curve point addition](#eadd-elliptic-curve-point-addition)
+  - [`EMUL`: Elliptic curve point scalar multiplication](#emul-elliptic-curve-point-scalar-multiplication)
+  - [`EPAR`: Elliptic curve point pairing check](#epar-elliptic-curve-point-pairing-check)
 - [Other Instructions](#other-instructions)
   - [`ECAL`: Call external function](#ecal-call-external-function)
   - [`FLAG`: Set flags](#flag-set-flags)
@@ -2369,6 +2372,66 @@ Panic if:
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rB + $rC` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+
+### `EADD`: Elliptic curve point addition
+
+|             |                                                      |
+|-------------|------------------------------------------------------|
+| Description | The addition of two points (first point bytes starts at `$rC` and second point bytes starts at `$rD`) on `$rB` curve. `$rA` points to the start of the bytes of the addition result. The encoding and decoding depends on the curve (`$rB`) chosen (details below).                         |
+| Operation   | ```MEM[$rA, X] = eadd(MEM[$rC, Y], MEM[$rD, Z]);```  |
+| Syntax      | `eadd $rA, $rB, $rC, $rD`                            |
+| Encoding    | `0x00 rA rB rC rD `                                  |
+| Notes       | For now, only `$rB` = 0 is accepted                  |
+
+#### Curve ID `$rB` possible values : 
+
+- `0`: `alt_bn128` elliptic curve.
+
+#### Encoding of points and results by curve ID : 
+
+| Curve ID | `$rA` format | `$rC` format | `$rD` format |
+|----------|--------------|--------------|--------------|
+|    `0`   | `MEM[$rA, 64]`(P(X[32 bytes],Y[32 bytes])) | `MEM[$rC, 64]`(P(X[32 bytes],Y[32 bytes])) | `MEM[$rD, 64]`(P(X[32 bytes],Y[32 bytes])) |
+
+### `EMUL`: Elliptic curve point scalar multiplication
+
+|             |                                                      |
+|-------------|------------------------------------------------------|
+| Description | The multiplication of a point and a scalar (point bytes starts at `$rC` and scalar bytes starts at `$rD`) on `$rB` curve. `$rA` points to the start of the bytes of the multiplication result. The encoding and decoding depends on the curve (`$rB`) chosen (details below).                         |
+| Operation   | ```MEM[$rA, X] = emul(MEM[$rC, Y], MEM[$rD, Z]);```  |
+| Syntax      | `eadd $rA, $rB, $rC, $rD`                            |
+| Encoding    | `0x00 rA rB rC rD `                                  |
+| Notes       | For now, only `$rB` = 0 is accepted                  |
+
+#### Curve ID `$rB` possible values : 
+
+- `0`: `alt_bn128` elliptic curve.
+
+#### Encoding of points and results by curve ID : 
+
+| Curve ID | `$rA` format | `$rC` format | `$rD` format |
+|----------|--------------|--------------|--------------|
+|    `0`   | `MEM[$rA, 64]`(P(X[32 bytes],Y[32 bytes])) | `MEM[$rC, 64]`(P(X[32 bytes],Y[32 bytes])) | `MEM[$rD, 32]`(S[32 bytes]) |
+
+### `EPAR`: Elliptic curve point pairing check
+
+|             |                                                      |
+|-------------|------------------------------------------------------|
+| Description | Perform pairing check on a batch of groups of points on `$rB` curve. `$rC` define the number of elements and `$rD` where the bytes of the groups of points start. `$rA` contains either `0` or `1` as the result of the pairing. The encoding and decoding depends on the curve (`$rB`) chosen (details below).                         |
+| Operation   | ```$rA = epar($rC(MEM[$rD, Z]));```  |
+| Syntax      | `eadd $rA, $rB, $rC, $rD`                            |
+| Encoding    | `0x00 rA rB rC rD `                                  |
+| Notes       | For now, only `$rB` = 0 is accepted. Detailed exaplantions on the behavior : https://eips.ethereum.org/EIPS/eip-197                  |
+
+#### Curve ID `$rB` possible values : 
+
+- `0`: `alt_bn128` elliptic curve.
+
+#### Encoding of points and results by curve ID : 
+
+| Curve ID | `$rA` format | `$rC` format | `$rD` format |
+|----------|--------------|--------------|--------------|
+|    `0`   | `0` or `1` | `X` (a value) | `$rC(MEM[$rC, 64 + 128]`(P(X[32 bytes],Y[32 bytes]), G( P( X[32 bytes],Y[32 bytes] ), P( X[32 bytes],Y[32 bytes] ) )) |
 
 ## Other Instructions
 
