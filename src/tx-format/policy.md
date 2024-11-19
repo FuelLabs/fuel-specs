@@ -8,12 +8,13 @@ enum PolicyType : uint32 {
     Maturity = 4,
     MaxFee = 8,
     Expiration = 16,
+    Owner = 32,
 }
 ```
 
 | name   | type                                                                              | description  |
 |--------|-----------------------------------------------------------------------------------|--------------|
-| `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), [`Maturity`](#maturity) or [`Expiration`](#expiration) | Policy data. |
+| `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), [`Maturity`](#maturity), [`Expiration`](#expiration) or [`Owner`](#owner) | Policy data. |
 
 ## `Tip`
 
@@ -63,3 +64,13 @@ Transaction is invalid if:
 
 - `max_fee > sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)`
 - `max_fee < max_fee(tx, BASE_ASSET_ID, gas_price)`
+
+## `Owner`
+
+| name    | type     | description                                              |
+|---------|----------|----------------------------------------------------------|
+| `owner` | `uint64` | Index of the transaction input that we nominate as owner |
+
+Transaction is invalid if:
+
+- `owner >= inputs.len()`
