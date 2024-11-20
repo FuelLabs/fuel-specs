@@ -115,7 +115,7 @@
   - [`ED19`: EdDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
   - [`K256`: keccak-256](#k256-keccak-256)
   - [`S256`: SHA-2-256](#s256-sha-2-256)
-  - [`ECOP`: Elliptic curve operation](#ecop-elliptic-curve-operation)
+  - [`ECOP`: Elliptic curve operation](#ecop-elliptic-curve-point-operation)
   - [`EPAR`: Elliptic curve point pairing check](#epar-elliptic-curve-point-pairing-check)
 - [Other Instructions](#other-instructions)
   - [`ECAL`: Call external function](#ecal-call-external-function)
