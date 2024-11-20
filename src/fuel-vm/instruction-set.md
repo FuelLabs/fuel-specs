@@ -2425,7 +2425,7 @@ Panic if:
 
 | `$rB` Curve ID | `$rC` Pairing type   | `$rD` format               |
 |----------------|----------------------|----------------------------|
-|    `0`         | `0`                  | `MEM[$rD, 32 + (64 + 64 + 64) * X]` Read the length of the elements in 32 bytes and name it `X`. Then each element is `1P1P1P` (three points coordinates) (192 bytes)   |
+|    `0`         | `0`                  | `MEM[$rD, 8 + (64 + 64 + 64) * X]` Read the length of the elements in 8 bytes and name it `X`. Then each element is `1P1P1P` (three points coordinates) (192 bytes)   |
 
 ## Other Instructions
 
