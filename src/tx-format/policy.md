@@ -74,3 +74,4 @@ Transaction is invalid if:
 Transaction is invalid if:
 
 - `owner >= inputs.len()`
+- `inputs[owner] != InputType::Message && inputs[owner] != InputType::Coin` (owner need to points to an input which has an owner field)
