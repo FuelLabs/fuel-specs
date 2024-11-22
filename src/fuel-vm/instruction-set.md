@@ -2404,28 +2404,24 @@ Panic if:
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
-| Description | Perform pairing type `$rC` on a batch of groups of points on `$rB` curve. `$rD` define where the bytes of the groups of points start. `$rA` contains either `0` or `1` as the result of the pairing. |
-| Operation   | ```$rA = epar(MEM[$rD, Z]);```                 |
+| Description | Perform a specific pairing type within a specific curve both identified by `$rB`. `$rC` defines the number of batch of groups. `$rD` define where the bytes of the groups of points start. `$rA` contains either `0` or `1` as the result of the pairing. |
+| Operation   | ```$rA = epar(MEM[$rD, X * $rC]);```                 |
 | Syntax      | `eadd $rA, $rB, $rC, $rD`                           |
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted.                |
 
 <!-- markdownlint-disable-next-line no-duplicate-header -->
-#### Curve ID `$rB` possible values
+#### Curve/Pairing ID `$rB` possible values
 
-- `0`: `alt_bn128` elliptic curve.
-
-### Check type `$rC` supported
-
-- `0`: optimal ate pairing
+- `0`: optimal ate pairing on `alt_bn128` elliptic curve.
 
 #### Encoding of points by curve ID and check type
 
 - 1P = one point = (X, Y) = ([32 bytes], [32 bytes])
 
-| `$rB` Curve ID | `$rC` Pairing type   | `$rD` format               |
-|----------------|----------------------|----------------------------|
-|    `0`         | `0`                  | `MEM[$rD, 8 + (64 + 64 + 64) * X]` Read the length of the elements in 8 bytes and name it `X`. Then each element is `1P1P1P` (three points coordinates) (192 bytes)   |
+| `$rB` Curve / Pairing ID  | `$rD` format               |
+|---------------------------|----------------------------|
+|    `0`                    | `MEM[$rD, (64 + 64 + 64) * $rC]` Each element is `1P1P1P` (three points coordinates) (192 bytes)   |
 
 ## Other Instructions
 
