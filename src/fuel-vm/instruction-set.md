@@ -2399,14 +2399,15 @@ Panic if:
 | `$rB` Curve ID | `$rC` Operation type | `$rA` format         | `$rD` format               |
 |----------------|----------------------|----------------------|----------------------------|
 |    `0`         | `0`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rC, 128]` `1P1P`     |
+|    `0`         | `1`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rC, 96]` `1P1S`      |
 
 ### `EPAR`: Elliptic curve point pairing check
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
 | Description | Perform a specific pairing type within a specific curve both identified by `$rB`. `$rC` defines the number of batch of groups. `$rD` define where the bytes of the groups of points start. `$rA` contains either `0` or `1` as the result of the pairing. |
-| Operation   | ```$rA = epar(MEM[$rD, X * $rC]);```                 |
-| Syntax      | `eadd $rA, $rB, $rC, $rD`                           |
+| Operation   | ```$rA = epar(MEM[$rD, X * $rC]);```                |
+| Syntax      | `epar $rA, $rB, $rC, $rD`                           |
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted.                |
 
