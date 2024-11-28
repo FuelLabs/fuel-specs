@@ -7,12 +7,13 @@ enum PolicyType : uint32 {
     WitnessLimit = 2,
     Maturity = 4,
     MaxFee = 8,
+    Expiration = 16,
 }
 ```
 
 | name   | type                                                                              | description  |
 |--------|-----------------------------------------------------------------------------------|--------------|
-| `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), or [`Maturity`](#maturity) | Policy data. |
+| `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), [`Maturity`](#maturity) or [`Expiration`](#expiration) | Policy data. |
 
 ## `Tip`
 
@@ -41,6 +42,16 @@ Transaction is invalid if:
 Transaction is invalid if:
 
 - `blockheight() < maturity`
+
+## `Expiration`
+
+| name         | type     | description                              |
+|--------------|----------|------------------------------------------|
+| `expiration` | `uint32` | Block after which the transaction cannot be included. |
+
+Transaction is invalid if:
+
+- `blockheight() > expiration`
 
 ## `MaxFee`
 
