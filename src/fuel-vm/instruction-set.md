@@ -2376,7 +2376,7 @@ Panic if:
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
-| Description | This opcode regroups all arithmetic operations that can be performed on elliptic curve points. `$rB` defines the curve used. `$rC` defines the type of operation to perform. `$rD` points to the start of the bytes of the operation inputs in memory. `$rA` points to the start of the bytes of the result in memory.                                                   |
+| Description | Perform arithmetic operation `$rC` on points of the elliptic curve `$rB`. Arguments are read from memory at `$rD`, and is result written to the memory at `$rA`, as per the table below.                                                   |
 | Operation   | ```MEM[$rA, X] = ecop(MEM[$rD, Y]);```              |
 | Syntax      | `ecop $rA, $rB, $rC, $rD`                           |
 | Encoding    | `0x00 rA rB rC rD`                                  |
@@ -2405,7 +2405,7 @@ Panic if:
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
-| Description | Perform a specific pairing type within a specific curve both identified by `$rB`. `$rC` defines the number of batch of groups. `$rD` define where the bytes of the groups of points start. `$rA` contains either `0` or `1` as the result of the pairing. |
+| Description | Check if `$rC` groups of points at `$rD` all form valid pairings in (curve, pairing type) identified by `$rB`. Set `$rA` to the result of the pairing, either `0` or `1`. |
 | Operation   | ```$rA = epar(MEM[$rD, X * $rC]);```                |
 | Syntax      | `epar $rA, $rB, $rC, $rD`                           |
 | Encoding    | `0x00 rA rB rC rD`                                  |
