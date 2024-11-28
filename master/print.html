@@ -496,10 +496,11 @@ enum PolicyType : uint32 {
     WitnessLimit = 2,
     Maturity = 4,
     MaxFee = 8,
+    Expiration = 16,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>data</code></td><td>One of <a href="tx-format/policy.html#tip"><code>Tip</code></a>, <a href="tx-format/policy.html#witnesslimit"><code>WitnessLimit</code></a>, or <a href="tx-format/policy.html#maturity"><code>Maturity</code></a></td><td>Policy data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="tx-format/policy.html#tip"><code>Tip</code></a>, <a href="tx-format/policy.html#witnesslimit"><code>WitnessLimit</code></a>, <a href="tx-format/policy.html#maturity"><code>Maturity</code></a> or <a href="tx-format/policy.html#expiration"><code>Expiration</code></a></td><td>Policy data.</td></tr>
 </tbody></table>
 </div>
 <h2 id="tip"><a class="header" href="#tip"><code>Tip</code></a></h2>
@@ -525,6 +526,15 @@ enum PolicyType : uint32 {
 <p>Transaction is invalid if:</p>
 <ul>
 <li><code>blockheight() &lt; maturity</code></li>
+</ul>
+<h2 id="expiration"><a class="header" href="#expiration"><code>Expiration</code></a></h2>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>expiration</code></td><td><code>uint32</code></td><td>Block after which the transaction cannot be included.</td></tr>
+</tbody></table>
+</div>
+<p>Transaction is invalid if:</p>
+<ul>
+<li><code>blockheight() &gt; expiration</code></li>
 </ul>
 <h2 id="maxfee"><a class="header" href="#maxfee"><code>MaxFee</code></a></h2>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
