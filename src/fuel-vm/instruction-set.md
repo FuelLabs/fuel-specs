@@ -2432,6 +2432,7 @@ Panic if:
 |---------------------------|----------------------------|
 |    `0`                    | `MEM[$rD, (64 + 64 + 64) * $rC]` Each element is `1P1P1P` (three points coordinates) (192 bytes)   |
 
+<!-- markdownlint-disable-next-line no-duplicate-header -->
 #### Panic cases
 
 - Curve ID/Pairing is not supported (`$rB`)
