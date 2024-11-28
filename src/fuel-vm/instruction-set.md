@@ -2398,8 +2398,16 @@ Panic if:
 
 | `$rB` Curve ID | `$rC` Operation type | `$rA` format         | `$rD` format               |
 |----------------|----------------------|----------------------|----------------------------|
-|    `0`         | `0`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rC, 128]` `1P1P`     |
-|    `0`         | `1`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rC, 96]` `1P1S`      |
+|    `0`         | `0`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rD, 128]` `1P1P`     |
+|    `0`         | `1`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rD, 96]` `1P1S`      |
+
+#### Panic cases
+
+- Curve ID is not supported (`$rB`)
+- Operation type is not supported (`$rC`)
+- `$rD` + (size depending on the table above) overflows or `> VM_MAX_RAM`
+- Decoding of `$rD` memory doesn't match the expected format described above for each case.
+- The memory range at `$rA` (size depending on the curve/operation types) does not pass [ownership check](./index.md#ownership)
 
 ### `EPAR`: Elliptic curve point pairing check
 
@@ -2423,6 +2431,14 @@ Panic if:
 | `$rB` Curve / Pairing ID  | `$rD` format               |
 |---------------------------|----------------------------|
 |    `0`                    | `MEM[$rD, (64 + 64 + 64) * $rC]` Each element is `1P1P1P` (three points coordinates) (192 bytes)   |
+
+#### Panic cases
+
+- Curve ID/Pairing is not supported (`$rB`)
+- `$rD` has elements than described in `$rC`
+- `$rD` + (size depending on the table above) overflows or `> VM_MAX_RAM`
+- Decoding of `$rD` memory doesn't match the expected format described above for each case.
+- The memory range at `$rA` (size depending on the curve/operation types) does not pass [ownership check](./index.md#ownership)
 
 ## Other Instructions
 
