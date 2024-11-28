@@ -2378,7 +2378,7 @@ Panic if:
 |-------------|-----------------------------------------------------|
 | Description | This opcode regroups all arithmetic operations that can be perform on elliptic curve points. `$rB` defines the curve used. `$rC` defines the type of operation to perform. `$rD` points to the start of the bytes of the operation inputs in memory. `$rA` points to the start of the bytes of the result in memory.                                                   |
 | Operation   | ```MEM[$rA, X] = ecop(MEM[$rD, Y]);```              |
-| Syntax      | `eadd $rA, $rB, $rC, $rD`                           |
+| Syntax      | `ecop $rA, $rB, $rC, $rD`                           |
 | Encoding    | `0x00 rA rB rC rD`                                  |
 | Notes       | For now, only `$rB` = 0 is accepted                 |
 
