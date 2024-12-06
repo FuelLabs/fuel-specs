@@ -185,6 +185,7 @@ fn baz(input1: Foo, input2: Bar&lt;u64&gt;); // an ABI function
 <li><code>&quot;typeId&quot;</code>: the <em>type metadata declaration</em> ID (number) or <em>type concrete declaration</em> hash based ID (string) of the type of the component.</li>
 <li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the component, if the type is generic, otherwise nonexistent. Each <em>type argument</em> is a <em>type application</em> represented as a JSON object that contains the following properties:
 <ul>
+<li><code>&quot;name&quot;</code>: the name of the <em>type argument</em>.</li>
 <li><code>&quot;typeId&quot;</code>: the <em>type metadata declaration</em> ID (number) or <em>type concrete declaration</em> hash based ID (string) of the type of the component.</li>
 <li><code>&quot;typeArguments&quot;</code>: an array of the <em>type arguments</em> used when applying the type of the <em>type argument</em>, if the type is generic, otherwise nonexistent. The format of the elements of this array recursively follows the rules described in this section.</li>
 </ul>
