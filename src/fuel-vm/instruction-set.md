@@ -2376,7 +2376,7 @@ Panic if:
 
 |             |                                                     |
 |-------------|-----------------------------------------------------|
-| Description | Perform arithmetic operation `$rC` on points of the elliptic curve `$rB`. Arguments are read from memory at `$rD`, and is result written to the memory at `$rA`, as per the table below.                                                   |
+| Description | Perform arithmetic operation `$rC` on points of the elliptic curve `$rB`. Arguments are read from memory at `$rD`, and result is written to the memory at `$rA`, as per the table below.                                                   |
 | Operation   | ```MEM[$rA, X] = ecop(MEM[$rD, Y]);```              |
 | Syntax      | `ecop $rA, $rB, $rC, $rD`                           |
 | Encoding    | `0x00 rA rB rC rD`                                  |
