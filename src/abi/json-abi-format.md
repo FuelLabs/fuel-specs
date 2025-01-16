@@ -48,6 +48,7 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"name"`: the name of the component.
     - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, otherwise nonexistent. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"name"`: the name of the _type argument_.
       - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, otherwise nonexistent. The format of the elements of this array recursively follows the rules described in this section.
   - `"typeParameters"`: an array of _type metadata declaration_ ID of the _type parameters_ of the type, if the type is generic, otherwise nonexistent. Each _type parameter_ is a type declaration and is represented as described in [Generic Type Parameter](#generic-type-parameter).
