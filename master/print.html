@@ -3128,6 +3128,8 @@ while all memory is accessible.</p>
 <li><a href="fuel-vm/instruction-set.html#ed19-eddsa-curve25519-verification"><code>ED19</code>: EdDSA curve25519 verification</a></li>
 <li><a href="fuel-vm/instruction-set.html#k256-keccak-256"><code>K256</code>: keccak-256</a></li>
 <li><a href="fuel-vm/instruction-set.html#s256-sha-2-256"><code>S256</code>: SHA-2-256</a></li>
+<li><a href="fuel-vm/instruction-set.html#ecop-elliptic-curve-point-operation"><code>ECOP</code>: Elliptic curve operation</a></li>
+<li><a href="fuel-vm/instruction-set.html#epar-elliptic-curve-point-pairing-check"><code>EPAR</code>: Elliptic curve point pairing check</a></li>
 </ul>
 </li>
 <li><a href="fuel-vm/instruction-set.html#other-instructions">Other Instructions</a>
@@ -5103,6 +5105,71 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li><code>$rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA, 32]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="ecop-elliptic-curve-point-operation"><a class="header" href="#ecop-elliptic-curve-point-operation"><code>ECOP</code>: Elliptic curve point operation</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform arithmetic operation <code>$rC</code> on points of the elliptic curve <code>$rB</code>. Arguments are read from memory at <code>$rD</code>, and result is written to the memory at <code>$rA</code>, as per the table below.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, X] = ecop(MEM[$rD, Y]);</code></td></tr>
+<tr><td>Syntax</td><td><code>ecop $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>For now, only <code>$rB</code> = 0 is accepted</td></tr>
+</tbody></table>
+</div>
+<h4 id="curve-id-rb-possible-values"><a class="header" href="#curve-id-rb-possible-values">Curve ID <code>$rB</code> possible values</a></h4>
+<ul>
+<li><code>0</code>: <code>alt_bn128</code> elliptic curve.</li>
+</ul>
+<h4 id="operation-type-rc-supported"><a class="header" href="#operation-type-rc-supported">Operation type <code>$rC</code> supported</a></h4>
+<ul>
+<li><code>0</code>: two points addition</li>
+<li><code>1</code>: one point and one scalar multiplication</li>
+</ul>
+<h4 id="encoding-of-points-and-results-by-curve-id-and-operation-type"><a class="header" href="#encoding-of-points-and-results-by-curve-id-and-operation-type">Encoding of points and results by curve ID and operation type</a></h4>
+<ul>
+<li>1P = one point = (X, Y) = ([32 bytes], [32 bytes])</li>
+<li>1S = one scalar = X = [32 bytes]</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th><code>$rB</code> Curve ID</th><th><code>$rC</code> Operation type</th><th><code>$rA</code> format</th><th><code>$rD</code> format</th></tr></thead><tbody>
+<tr><td><code>0</code></td><td><code>0</code></td><td><code>MEM[$rA, 64]</code> <code>1P</code></td><td><code>MEM[$rD, 128]</code> <code>1P1P</code></td></tr>
+<tr><td><code>0</code></td><td><code>1</code></td><td><code>MEM[$rA, 64]</code> <code>1P</code></td><td><code>MEM[$rD, 96]</code> <code>1P1S</code></td></tr>
+</tbody></table>
+</div>
+<h4 id="panic-cases"><a class="header" href="#panic-cases">Panic cases</a></h4>
+<ul>
+<li>Curve ID is not supported (<code>$rB</code>)</li>
+<li>Operation type is not supported (<code>$rC</code>)</li>
+<li><code>$rD</code> + (size depending on the table above) overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li>Decoding of <code>$rD</code> memory doesn't match the expected format described above for each case.</li>
+<li>The memory range at <code>$rA</code> (size depending on the curve/operation types) does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="epar-elliptic-curve-point-pairing-check"><a class="header" href="#epar-elliptic-curve-point-pairing-check"><code>EPAR</code>: Elliptic curve point pairing check</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Check if <code>$rC</code> groups of points at <code>$rD</code> all form valid pairings in (curve, pairing type) identified by <code>$rB</code>. Set <code>$rA</code> to the result of the pairing, either <code>0</code> or <code>1</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = epar(MEM[$rD, X * $rC]);</code></td></tr>
+<tr><td>Syntax</td><td><code>epar $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>For now, only <code>$rB</code> = 0 is accepted.</td></tr>
+</tbody></table>
+</div><!-- markdownlint-disable-next-line no-duplicate-header -->
+<h4 id="curvepairing-id-rb-possible-values"><a class="header" href="#curvepairing-id-rb-possible-values">Curve/Pairing ID <code>$rB</code> possible values</a></h4>
+<ul>
+<li><code>0</code>: optimal ate pairing on <code>alt_bn128</code> elliptic curve.</li>
+</ul>
+<h4 id="encoding-of-points-by-curve-id-and-check-type"><a class="header" href="#encoding-of-points-by-curve-id-and-check-type">Encoding of points by curve ID and check type</a></h4>
+<ul>
+<li>1P = one point = (X, Y) = ([32 bytes], [32 bytes])</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th><code>$rB</code> Curve / Pairing ID</th><th><code>$rD</code> format</th></tr></thead><tbody>
+<tr><td><code>0</code></td><td><code>MEM[$rD, (64 + 64 + 64) * $rC]</code> Each element is <code>1P1P1P</code> (three points coordinates) (192 bytes)</td></tr>
+</tbody></table>
+</div><!-- markdownlint-disable-next-line no-duplicate-header -->
+<h4 id="panic-cases-1"><a class="header" href="#panic-cases-1">Panic cases</a></h4>
+<ul>
+<li>Curve ID/Pairing is not supported (<code>$rB</code>)</li>
+<li><code>$rD</code> has elements than described in <code>$rC</code></li>
+<li><code>$rD</code> + (size depending on the table above) overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li>Decoding of <code>$rD</code> memory doesn't match the expected format described above for each case.</li>
+<li>The memory range at <code>$rA</code> (size depending on the curve/operation types) does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h2 id="other-instructions"><a class="header" href="#other-instructions">Other Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
