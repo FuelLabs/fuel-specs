@@ -115,6 +115,8 @@
   - [`ED19`: EdDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
   - [`K256`: keccak-256](#k256-keccak-256)
   - [`S256`: SHA-2-256](#s256-sha-2-256)
+  - [`ECOP`: Elliptic curve operation](#ecop-elliptic-curve-point-operation)
+  - [`EPAR`: Elliptic curve point pairing check](#epar-elliptic-curve-point-pairing-check)
 - [Other Instructions](#other-instructions)
   - [`ECAL`: Call external function](#ecal-call-external-function)
   - [`FLAG`: Set flags](#flag-set-flags)
@@ -2369,6 +2371,75 @@ Panic if:
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rB + $rC` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
+
+### `ECOP`: Elliptic curve point operation
+
+|             |                                                     |
+|-------------|-----------------------------------------------------|
+| Description | Perform arithmetic operation `$rC` on points of the elliptic curve `$rB`. Arguments are read from memory at `$rD`, and result is written to the memory at `$rA`, as per the table below.                                                   |
+| Operation   | ```MEM[$rA, X] = ecop(MEM[$rD, Y]);```              |
+| Syntax      | `ecop $rA, $rB, $rC, $rD`                           |
+| Encoding    | `0x00 rA rB rC rD`                                  |
+| Notes       | For now, only `$rB` = 0 is accepted                 |
+
+#### Curve ID `$rB` possible values
+
+- `0`: `alt_bn128` elliptic curve.
+
+#### Operation type `$rC` supported
+
+- `0`: two points addition
+- `1`: one point and one scalar multiplication
+
+#### Encoding of points and results by curve ID and operation type
+
+- 1P = one point = (X, Y) = ([32 bytes], [32 bytes])
+- 1S = one scalar = X = [32 bytes]
+
+| `$rB` Curve ID | `$rC` Operation type | `$rA` format         | `$rD` format               |
+|----------------|----------------------|----------------------|----------------------------|
+|    `0`         | `0`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rD, 128]` `1P1P`     |
+|    `0`         | `1`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rD, 96]` `1P1S`      |
+
+#### Panic cases
+
+- Curve ID is not supported (`$rB`)
+- Operation type is not supported (`$rC`)
+- `$rD` + (size depending on the table above) overflows or `> VM_MAX_RAM`
+- Decoding of `$rD` memory doesn't match the expected format described above for each case.
+- The memory range at `$rA` (size depending on the curve/operation types) does not pass [ownership check](./index.md#ownership)
+
+### `EPAR`: Elliptic curve point pairing check
+
+|             |                                                     |
+|-------------|-----------------------------------------------------|
+| Description | Check if `$rC` groups of points at `$rD` all form valid pairings in (curve, pairing type) identified by `$rB`. Set `$rA` to the result of the pairing, either `0` or `1`. |
+| Operation   | ```$rA = epar(MEM[$rD, X * $rC]);```                |
+| Syntax      | `epar $rA, $rB, $rC, $rD`                           |
+| Encoding    | `0x00 rA rB rC rD`                                  |
+| Notes       | For now, only `$rB` = 0 is accepted.                |
+
+<!-- markdownlint-disable-next-line no-duplicate-header -->
+#### Curve/Pairing ID `$rB` possible values
+
+- `0`: optimal ate pairing on `alt_bn128` elliptic curve.
+
+#### Encoding of points by curve ID and check type
+
+- 1P = one point = (X, Y) = ([32 bytes], [32 bytes])
+
+| `$rB` Curve / Pairing ID  | `$rD` format               |
+|---------------------------|----------------------------|
+|    `0`                    | `MEM[$rD, (64 + 64 + 64) * $rC]` Each element is `1P1P1P` (three points coordinates) (192 bytes)   |
+
+<!-- markdownlint-disable-next-line no-duplicate-header -->
+#### Panic cases
+
+- Curve ID/Pairing is not supported (`$rB`)
+- `$rD` has elements than described in `$rC`
+- `$rD` + (size depending on the table above) overflows or `> VM_MAX_RAM`
+- Decoding of `$rD` memory doesn't match the expected format described above for each case.
+- The memory range at `$rA` (size depending on the curve/operation types) does not pass [ownership check](./index.md#ownership)
 
 ## Other Instructions
 
