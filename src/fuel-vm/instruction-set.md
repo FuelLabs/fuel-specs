@@ -1252,7 +1252,7 @@ Panic if:
 | Operation   | ```return($rA);```                                            |
 | Syntax      | `ret $rA`                                                     |
 | Encoding    | `0x00 rA - - -`                                               |
-| Notes       |                                                               |
+| Notes       | `$ret` is set to the return value from `$rA`.                 |
 
 Append a receipt to the list of receipts:
 
@@ -1927,7 +1927,7 @@ Append a receipt to the list of receipts:
 | Operation   | ```returndata($rA, $rB);```                                             |
 | Syntax      | `retd $rA, $rB`                                                         |
 | Encoding    | `0x00 rA rB - -`                                                        |
-| Notes       |                                                                         |
+| Notes       | `$ret` is set to the pointer `$rA`, and `$retl` to length `$rB`.        |
 
 Panic if:
 
@@ -2523,13 +2523,13 @@ Set `$rA` to the index of the currently-verifying predicate.
 
 ### `GTF`: Get transaction fields
 
-|             |                         |
-|-------------|-------------------------|
-| Description | Get transaction fields. |
-| Operation   | Varies (see below).     |
-| Syntax      | `gtf $rA, $rB, imm`     |
-| Encoding    | `0x00 rA rB i i`        |
-| Notes       |                         |
+|             |                                         |
+|-------------|-----------------------------------------|
+| Description | Get transaction fields.                 |
+| Operation   | Set `$rA` according to the table below. |
+| Syntax      | `gtf $rA, $rB, imm`                     |
+| Encoding    | `0x00 rA rB i i`                        |
+| Notes       | `$rB` is ignored for many variants.     |
 
 Get [fields from the transaction](../tx-format/transaction.md).
 
