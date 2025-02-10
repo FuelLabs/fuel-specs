@@ -4107,7 +4107,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <tr><td>Operation</td><td><code>return($rA);</code></td></tr>
 <tr><td>Syntax</td><td><code>ret $rA</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA - - -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td><code>$ret</code> is set to the return value from <code>$rA</code>.</td></tr>
 </tbody></table>
 </div>
 <p>Append a receipt to the list of receipts:</p>
@@ -4712,7 +4712,7 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <tr><td>Operation</td><td><code>returndata($rA, $rB);</code></td></tr>
 <tr><td>Syntax</td><td><code>retd $rA, $rB</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td><code>$ret</code> is set to the pointer <code>$rA</code>, and <code>$retl</code> to length <code>$rB</code>.</td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
@@ -5241,10 +5241,10 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <h3 id="gtf-get-transaction-fields"><a class="header" href="#gtf-get-transaction-fields"><code>GTF</code>: Get transaction fields</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Get transaction fields.</td></tr>
-<tr><td>Operation</td><td>Varies (see below).</td></tr>
+<tr><td>Operation</td><td>Set <code>$rA</code> according to the table below.</td></tr>
 <tr><td>Syntax</td><td><code>gtf $rA, $rB, imm</code></td></tr>
 <tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
+<tr><td>Notes</td><td><code>$rB</code> is ignored for many variants.</td></tr>
 </tbody></table>
 </div>
 <p>Get <a href="fuel-vm/../tx-format/transaction.html">fields from the transaction</a>.</p>
