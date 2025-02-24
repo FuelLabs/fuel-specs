@@ -2257,6 +2257,7 @@ Panic if:
 
 ### `BLDD`: Load data from a blob
 
+|             |                                                                                                             |
 |-------------|-------------------------------------------------------------------------------------------------------------|
 | Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sA`.                         |
 | Operation   | `MEM[$rA, $rD] = blob(MEM[$rB, 32])[$rC, $rD];`                                                             |
