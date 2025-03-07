@@ -276,3 +276,5 @@ EIPS
 eip
 eips
 ethereum
+xnor
+XNOR
