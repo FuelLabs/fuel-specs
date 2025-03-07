@@ -22,6 +22,7 @@
   - [`MUL`: Multiply](#mul-multiply)
   - [`MULI`: Multiply immediate](#muli-multiply-immediate)
   - [`MLDV`: Fused multiply-divide](#mldv-fused-multiply-divide)
+  - [`NIOP`: Narrow integer operation](#niop-narrow-integer-operation)
   - [`NOOP`: No operation](#noop-no-operation)
   - [`NOT`: Invert](#not-invert)
   - [`OR`: OR](#or-or)
@@ -31,7 +32,6 @@
   - [`SRL`: Shift right logical](#srl-shift-right-logical)
   - [`SRLI`: Shift right logical immediate](#srli-shift-right-logical-immediate)
   - [`SUB`: Subtract](#sub-subtract)
-  - [`SUBI`: Subtract immediate](#subi-subtract-immediate)
   - [`SUBI`: Subtract immediate](#subi-subtract-immediate)
   - [`WDCM`: 128-bit integer comparison](#wdcm-128-bit-integer-comparison)
   - [`WQCM`: 256-bit integer comparison](#wqcm-256-bit-integer-comparison)
@@ -69,6 +69,8 @@
   - [`CFS`: Shrink call frame](#cfs-shrink-call-frame)
   - [`CFSI`: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [`LB`: Load byte](#lb-load-byte)
+  - [`LQW`: Load quarter word](#lqw-load-quarter-word)
+  - [`LHW`: Load half word](#lhw-load-half-word)
   - [`LW`: Load word](#lw-load-word)
   - [`MCL`: Memory clear](#mcl-memory-clear)
   - [`MCLI`: Memory clear immediate](#mcli-memory-clear-immediate)
@@ -80,6 +82,8 @@
   - [`PSHH`: Push a set of high registers to stack](#pshh-push-a-set-of-high-registers-to-stack)
   - [`PSHL`: Push a set of low registers to stack](#pshl-push-a-set-of-low-registers-to-stack)
   - [`SB`: Store byte](#sb-store-byte)
+  - [`SQW`: Store quarter word](#sqw-store-quarter-word)
+  - [`SHW`: Store half word](#shw-store-half-word)
   - [`SW`: Store word](#sw-store-word)
 - [Contract Instructions](#contract-instructions)
   - [`BAL`: Balance of contract ID](#bal-balance-of-contract-id)
@@ -536,6 +540,55 @@ If the divisor (`$rD`) is zero, then instead the value is divided by `1 << 64`. 
 If the result of after the division doesn't fit into a register, `$of` is assigned the overflow of the operation. Otherwise, `$of` is cleared.
 
 `$err` is cleared.
+
+### `NIOP`: Narrow integer operation
+
+|             |                                                                                     |
+|-------------|-------------------------------------------------------------------------------------|
+| Description | Perform an ALU operation with overflow handing for 8, 16 or 32 bit integers         |
+| Operation   | `$rA = op($rB,$rC);`                                                                |
+| Syntax      | `niop $rA, $rB, $rC, imm`                                                           |
+| Encoding    | `0x00 rA rB rC i`                                                                   |
+| Notes       | Operations that would be identical with their 64-bit counterparts are not available |
+
+The six-bit immediate value is used to select operating mode, as follows:
+
+Bits     | Short name | Description
+---------|------------|-------------------------------------
+`..XXXX` | `op`       | Operation selection, see below
+`XX....` | `width`    | Operation width, see below
+
+Then the actual operation that's performed:
+
+`op` | Name | Description
+-----|-------|---------------------------
+0    | `add` | Add (`a = b + c`)
+1    | `mul` | Multiply (`a = b * c`)
+2    | `exp` | Exponentiate (`a = b ** c`)
+3    | `sll` | Bit shift left (logical) (`a = b << c`)
+4    | `xnor`| Bitwise xnor (`a = b ^ (!c)`).
+other| -     | *reserved* 
+
+And operation width:
+
+`width`| Bits
+-------|------
+0      | 8
+1      | 16
+2      | 32
+3      | *reserved* 
+
+All operations first truncate their operands to the given bit width,
+then perform the operation with overflow checking on that size. The
+result always fits within the bit width of the operation.
+
+Operations set `$of` and `$err` similarly to their 64-bit counterparts.
+`XNOR` has no counterpart, and it always clears both `$of` and `$err`.
+
+Panic if:
+
+- Reserved bits of the immediate are set
+- `$rA` is a [reserved register](./index.md#semantics)
 
 ### `NOOP`: No operation
 
@@ -1383,6 +1436,36 @@ Panic if:
 - `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + imm + 1` overflows or `> VM_MAX_RAM`
 
+### `LQW`: Load quarter word
+
+|             |                                                                      |
+|-------------|----------------------------------------------------------------------|
+| Description | A quarter word is loaded from the specified address offset by `imm`. |
+| Operation   | ```$rA = MEM[$rB + (imm * 2), 2];```                                 |
+| Syntax      | `lqw $rA, $rB, imm`                                                  |
+| Encoding    | `0x00 rA rB i i`                                                     |
+| Notes       |                                                                      |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + (imm * 2) + 2` overflows or `> VM_MAX_RAM`
+
+### `LHW`: Load half word
+
+|             |                                                                      |
+|-------------|----------------------------------------------------------------------|
+| Description | A half word is loaded from the specified address offset by `imm`.    |
+| Operation   | ```$rA = MEM[$rB + (imm * 4), 4];```                                 |
+| Syntax      | `lhw $rA, $rB, imm`                                                  |
+| Encoding    | `0x00 rA rB i i`                                                     |
+| Notes       |                                                                      |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + (imm * 4) + 4` overflows or `> VM_MAX_RAM`
+
 ### `LW`: Load word
 
 |             |                                                              |
@@ -1564,6 +1647,31 @@ Panic if:
 
 - `$rA + imm + 1` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./index.md#ownership)
+
+### `SQW`: Store quarter word
+
+|             |                                                                                               |
+|-------------|-----------------------------------------------------------------------------------------------|
+| Description | The two least significant bytes of  of `$rB` is stored at the address `$rA` offset by `imm`.  |
+| Operation   | ```MEM[$rA + (imm * 2), 2] = $rB;```                                                          |
+| Syntax      | `sqw $rA, $rB, imm`                                                                           |
+| Encoding    | `0x00 rA rB i i`                                                                              |
+| Notes       |                                                                                               |
+
+### `SHW`: Store half word
+
+|             |                                                                                               |
+|-------------|-----------------------------------------------------------------------------------------------|
+| Description | The four least significant bytes of  of `$rB` is stored at the address `$rA` offset by `imm`. |
+| Operation   | ```MEM[$rA + (imm * 4), 4] = $rB;```                                                          |
+| Syntax      | `shw $rA, $rB, imm`                                                                           |
+| Encoding    | `0x00 rA rB i i`                                                                              |
+| Notes       |                                                                                               |
+
+Panic if:
+
+- `$rA + (imm * 4) + 4` overflows or `> VM_MAX_RAM`
+- The memory range `MEM[$rA + (imm * 4), 4]`  does not pass [ownership check](./index.md#ownership)
 
 ### `SW`: Store word
 
