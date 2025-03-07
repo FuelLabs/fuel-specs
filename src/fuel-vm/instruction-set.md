@@ -567,7 +567,7 @@ Then the actual operation that's performed:
 2    | `exp` | Exponentiate (`a = b ** c`)
 3    | `sll` | Bit shift left (logical) (`a = b << c`)
 4    | `xnor`| Bitwise xnor (`a = b ^ (!c)`).
-other| -     | *reserved* 
+other| -     | Reserved and must not be used
 
 And operation width:
 
@@ -576,7 +576,7 @@ And operation width:
 0      | 8
 1      | 16
 2      | 32
-3      | *reserved* 
+3      | Reserved and must not be used
 
 All operations first truncate their operands to the given bit width,
 then perform the operation with overflow checking on that size. The
