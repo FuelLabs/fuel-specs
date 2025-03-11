@@ -3020,6 +3020,7 @@ while all memory is accessible.</p>
 <li><a href="fuel-vm/instruction-set.html#mul-multiply"><code>MUL</code>: Multiply</a></li>
 <li><a href="fuel-vm/instruction-set.html#muli-multiply-immediate"><code>MULI</code>: Multiply immediate</a></li>
 <li><a href="fuel-vm/instruction-set.html#mldv-fused-multiply-divide"><code>MLDV</code>: Fused multiply-divide</a></li>
+<li><a href="fuel-vm/instruction-set.html#niop-narrow-integer-operation"><code>NIOP</code>: Narrow integer operation</a></li>
 <li><a href="fuel-vm/instruction-set.html#noop-no-operation"><code>NOOP</code>: No operation</a></li>
 <li><a href="fuel-vm/instruction-set.html#not-invert"><code>NOT</code>: Invert</a></li>
 <li><a href="fuel-vm/instruction-set.html#or-or"><code>OR</code>: OR</a></li>
@@ -3029,7 +3030,6 @@ while all memory is accessible.</p>
 <li><a href="fuel-vm/instruction-set.html#srl-shift-right-logical"><code>SRL</code>: Shift right logical</a></li>
 <li><a href="fuel-vm/instruction-set.html#srli-shift-right-logical-immediate"><code>SRLI</code>: Shift right logical immediate</a></li>
 <li><a href="fuel-vm/instruction-set.html#sub-subtract"><code>SUB</code>: Subtract</a></li>
-<li><a href="fuel-vm/instruction-set.html#subi-subtract-immediate"><code>SUBI</code>: Subtract immediate</a></li>
 <li><a href="fuel-vm/instruction-set.html#subi-subtract-immediate"><code>SUBI</code>: Subtract immediate</a></li>
 <li><a href="fuel-vm/instruction-set.html#wdcm-128-bit-integer-comparison"><code>WDCM</code>: 128-bit integer comparison</a></li>
 <li><a href="fuel-vm/instruction-set.html#wqcm-256-bit-integer-comparison"><code>WQCM</code>: 256-bit integer comparison</a></li>
@@ -3073,6 +3073,8 @@ while all memory is accessible.</p>
 <li><a href="fuel-vm/instruction-set.html#cfs-shrink-call-frame"><code>CFS</code>: Shrink call frame</a></li>
 <li><a href="fuel-vm/instruction-set.html#cfsi-shrink-call-frame-immediate"><code>CFSI</code>: Shrink call frame immediate</a></li>
 <li><a href="fuel-vm/instruction-set.html#lb-load-byte"><code>LB</code>: Load byte</a></li>
+<li><a href="fuel-vm/instruction-set.html#lqw-load-quarter-word"><code>LQW</code>: Load quarter word</a></li>
+<li><a href="fuel-vm/instruction-set.html#lhw-load-half-word"><code>LHW</code>: Load half word</a></li>
 <li><a href="fuel-vm/instruction-set.html#lw-load-word"><code>LW</code>: Load word</a></li>
 <li><a href="fuel-vm/instruction-set.html#mcl-memory-clear"><code>MCL</code>: Memory clear</a></li>
 <li><a href="fuel-vm/instruction-set.html#mcli-memory-clear-immediate"><code>MCLI</code>: Memory clear immediate</a></li>
@@ -3084,6 +3086,8 @@ while all memory is accessible.</p>
 <li><a href="fuel-vm/instruction-set.html#pshh-push-a-set-of-high-registers-to-stack"><code>PSHH</code>: Push a set of high registers to stack</a></li>
 <li><a href="fuel-vm/instruction-set.html#pshl-push-a-set-of-low-registers-to-stack"><code>PSHL</code>: Push a set of low registers to stack</a></li>
 <li><a href="fuel-vm/instruction-set.html#sb-store-byte"><code>SB</code>: Store byte</a></li>
+<li><a href="fuel-vm/instruction-set.html#sqw-store-quarter-word"><code>SQW</code>: Store quarter word</a></li>
+<li><a href="fuel-vm/instruction-set.html#shw-store-half-word"><code>SHW</code>: Store half word</a></li>
 <li><a href="fuel-vm/instruction-set.html#sw-store-word"><code>SW</code>: Store word</a></li>
 </ul>
 </li>
@@ -3484,6 +3488,49 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>If the divisor (<code>$rD</code>) is zero, then instead the value is divided by <code>1 &lt;&lt; 64</code>. This returns the higher half of the 128-bit multiplication result. This operation never overflows.</p>
 <p>If the result of after the division doesn't fit into a register, <code>$of</code> is assigned the overflow of the operation. Otherwise, <code>$of</code> is cleared.</p>
 <p><code>$err</code> is cleared.</p>
+<h3 id="niop-narrow-integer-operation"><a class="header" href="#niop-narrow-integer-operation"><code>NIOP</code>: Narrow integer operation</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Perform an ALU operation with overflow handing for 8, 16 or 32 bit integers</td></tr>
+<tr><td>Operation</td><td><code>$rA = op($rB,$rC);</code></td></tr>
+<tr><td>Syntax</td><td><code>niop $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC i</code></td></tr>
+<tr><td>Notes</td><td>Operations that would be identical with their 64-bit counterparts are not available</td></tr>
+</tbody></table>
+</div>
+<p>The six-bit immediate value is used to select operating mode, as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Bits</th><th>Short name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>..XXXX</code></td><td><code>op</code></td><td>Operation selection, see below</td></tr>
+<tr><td><code>XX....</code></td><td><code>width</code></td><td>Operation width, see below</td></tr>
+</tbody></table>
+</div>
+<p>Then the actual operation that's performed:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>op</code></th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>0</td><td><code>add</code></td><td>Add (<code>a = b + c</code>)</td></tr>
+<tr><td>1</td><td><code>mul</code></td><td>Multiply (<code>a = b * c</code>)</td></tr>
+<tr><td>2</td><td><code>exp</code></td><td>Exponentiate (<code>a = b ** c</code>)</td></tr>
+<tr><td>3</td><td><code>sll</code></td><td>Bit shift left (logical) (<code>a = b &lt;&lt; c</code>)</td></tr>
+<tr><td>4</td><td><code>xnor</code></td><td>Bitwise xnor (<code>a = b ^ (!c)</code>).</td></tr>
+<tr><td>other</td><td>-</td><td>Reserved and must not be used</td></tr>
+</tbody></table>
+</div>
+<p>And operation width:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>width</code></th><th>Bits</th></tr></thead><tbody>
+<tr><td>0</td><td>8</td></tr>
+<tr><td>1</td><td>16</td></tr>
+<tr><td>2</td><td>32</td></tr>
+<tr><td>3</td><td>Reserved and must not be used</td></tr>
+</tbody></table>
+</div>
+<p>All operations first truncate their operands to the given bit width,
+then perform the operation with overflow checking on that size. The
+result always fits within the bit width of the operation.</p>
+<p>Operations set <code>$of</code> and <code>$err</code> similarly to their 64-bit counterparts.
+<code>XNOR</code> has no counterpart, and it always clears both <code>$of</code> and <code>$err</code>.</p>
+<p>Panic if:</p>
+<ul>
+<li>Reserved bits of the immediate are set</li>
+<li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+</ul>
 <h3 id="noop-no-operation"><a class="header" href="#noop-no-operation"><code>NOOP</code>: No operation</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Performs no operation.</td></tr>
@@ -4227,6 +4274,34 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
 <li><code>$rB + imm + 1</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 </ul>
+<h3 id="lqw-load-quarter-word"><a class="header" href="#lqw-load-quarter-word"><code>LQW</code>: Load quarter word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A quarter word is loaded from the specified address offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = MEM[$rB + (imm * 2), 2];</code></td></tr>
+<tr><td>Syntax</td><td><code>lqw $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$rB + (imm * 2) + 2</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
+<h3 id="lhw-load-half-word"><a class="header" href="#lhw-load-half-word"><code>LHW</code>: Load half word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A half word is loaded from the specified address offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>$rA = MEM[$rB + (imm * 4), 4];</code></td></tr>
+<tr><td>Syntax</td><td><code>lhw $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$rB + (imm * 4) + 4</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+</ul>
 <h3 id="lw-load-word"><a class="header" href="#lw-load-word"><code>LW</code>: Load word</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>A word is loaded from the specified address offset by <code>imm</code>.</td></tr>
@@ -4391,6 +4466,29 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <ul>
 <li><code>$rA + imm + 1</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
 <li>The memory range <code>MEM[$rA + imm, 1]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
+</ul>
+<h3 id="sqw-store-quarter-word"><a class="header" href="#sqw-store-quarter-word"><code>SQW</code>: Store quarter word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The two least significant bytes of  of <code>$rB</code> is stored at the address <code>$rA</code> offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA + (imm * 2), 2] = $rB;</code></td></tr>
+<tr><td>Syntax</td><td><code>sqw $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="shw-store-half-word"><a class="header" href="#shw-store-half-word"><code>SHW</code>: Store half word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>The four least significant bytes of  of <code>$rB</code> is stored at the address <code>$rA</code> offset by <code>imm</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA + (imm * 4), 4] = $rB;</code></td></tr>
+<tr><td>Syntax</td><td><code>shw $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + (imm * 4) + 4</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA + (imm * 4), 4]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
 </ul>
 <h3 id="sw-store-word"><a class="header" href="#sw-store-word"><code>SW</code>: Store word</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
