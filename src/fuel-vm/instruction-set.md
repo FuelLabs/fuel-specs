@@ -61,6 +61,7 @@
   - [`JNZF`: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
   - [`JNEB`: Jump if not equal relative backwards](#jneb-jump-if-not-equal-relative-backwards)
   - [`JNEF`: Jump if not equal relative forwards](#jnef-jump-if-not-equal-relative-forwards)
+  - [`JAL`: Jump and link](#jal-jump-and-link)
   - [`RET`: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [`ALOC`: Allocate memory](#aloc-allocate-memory)
@@ -1296,6 +1297,21 @@ Panic if:
 Panic if:
 
 - `$pc + ($rC + imm + 1) * 4 > VM_MAX_RAM - 1`
+
+### `JAL`: Jump and link
+
+|             |                                                                                           |
+|-------------|-------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to address of the next instruction. Jump to instruction at address `$rB + imm`. |
+| Operation   | `if $rA is not $zero { $rA = $pc + 4 }` <br> `$pc = $rB + imm + 4`                        |
+| Syntax      | `jal $rA $rB imm`                                                                         |
+| Encoding    | `0x00 rA rB i i`                                                                          |
+| Notes       | If `$rA` is `$zero`, the return address discarded.                                        |
+
+Panic if:
+
+- `$rA` is a reserved register other than `$zero`
+- `$rB + imm * 4 >= VM_MAX_RAM`
 
 ### `RET`: Return from context
 
