@@ -5105,12 +5105,14 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <li>Blob ID <code>MEM[$rB, 32]</code> is not found</li>
 </ul>
 <h3 id="bldd-load-data-from-a-blob"><a class="header" href="#bldd-load-data-from-a-blob"><code>BLDD</code>: Load data from a blob</a></h3>
-<p>|-------------|-------------------------------------------------------------------------------------------------------------|
-| Description | Load 32-byte blob id at <code>$rB</code>, and copy <code>$rD</code> bytes starting from <code>$rC</code> into <code>$sA</code>.                         |
-| Operation   | <code>MEM[$rA, $rD] = blob(MEM[$rB, 32])[$rC, $rD];</code>                                                             |
-| Syntax      | <code>bldd $rA, $rB, rC, $rD</code>                                                                                    |
-| Encoding    | <code>0x00 rA rB rC rD</code>                                                                                          |
-| Notes       | If <code>$rC &gt;</code> blob size, zero bytes are filled in.                                                             |</p>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Load 32-byte blob id at <code>$rB</code>, and copy <code>$rD</code> bytes starting from <code>$rC</code> into <code>$sA</code>.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, $rD] = blob(MEM[$rB, 32])[$rC, $rD];</code></td></tr>
+<tr><td>Syntax</td><td><code>bldd $rA, $rB, rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Notes</td><td>If <code>$rC &gt;</code> blob size, zero bytes are filled in.</td></tr>
+</tbody></table>
+</div>
 <p>Panic if:</p>
 <ul>
 <li><code>$rA + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code> or <code>&gt; $hp</code></li>
