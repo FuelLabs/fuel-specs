@@ -1300,13 +1300,13 @@ Panic if:
 
 ### `JAL`: Jump and link
 
-|             |                                                                                           |
-|-------------|-------------------------------------------------------------------------------------------|
-| Description | Set `$rA` to address of the next instruction. Jump to instruction at address `$rB + imm`. |
-| Operation   | `if $rA is not $zero { $rA = $pc + 4 }` <br> `$pc = $rB + imm + 4`                        |
-| Syntax      | `jal $rA $rB imm`                                                                         |
-| Encoding    | `0x00 rA rB i i`                                                                          |
-| Notes       | If `$rA` is `$zero`, the return address discarded.                                        |
+|             |                                                                                               |
+|-------------|-----------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to address of the next instruction. Jump to instruction at address `$rB + imm * 4`. |
+| Operation   | `if $rA is not $zero { $rA = $pc + 4 }` <br> `$pc = $rB + imm * 4`                            |
+| Syntax      | `jal $rA $rB imm`                                                                             |
+| Encoding    | `0x00 rA rB i i`                                                                              |
+| Notes       | If `$rA` is `$zero`, the return address discarded.                                            |
 
 Panic if:
 
