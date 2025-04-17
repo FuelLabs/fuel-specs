@@ -2555,6 +2555,21 @@ Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC<
 <tr><td><code>GTF_POLICY_WITNESS_LIMIT</code></td><td><code>0x502</code></td><td><code>tx.policies[count_ones(0b11 &amp; tx.policyTypes) - 1].witnessLimit</code></td></tr>
 <tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x503</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
 <tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>
+<tr><td><code>GTF_UPLOAD_ROOT</code></td><td><code>0x600</code></td><td>Memory address of <code>tx.root</code></td></tr>
+<tr><td><code>GTF_UPLOAD_WITNESS_INDEX</code></td><td><code>0x601</code></td><td>Set <code>$rA</code> to <code>tx.witnessIndex</code></td></tr>
+<tr><td><code>GTF_UPLOAD_SUBSECTION_INDEX</code></td><td><code>0x602</code></td><td>Set <code>$rA</code> to <code>tx.subsectionIndex</code></td></tr>
+<tr><td><code>GTF_UPLOAD_SUBSECTIONS_COUNT</code></td><td><code>0x603</code></td><td>Set <code>$rA</code> to <code>tx.subsectionsNumber</code></td></tr>
+<tr><td><code>GTF_UPLOAD_PROOF_SET_COUNT</code></td><td><code>0x604</code></td><td>Set <code>$rA</code> to <code>tx.proofSetCount</code></td></tr>
+<tr><td><code>GTF_UPLOAD_PROOF_SET_AT_INDEX</code></td><td><code>0x605</code></td><td>Set <code>$rA</code> to <code>Memory address of tx.proofSet[$rB]</code></td></tr>
+<tr><td><code>GTF_BLOB_ID</code></td><td><code>0x700</code></td><td>Set <code>$rA</code> to <code>Memory address of tx.id</code></td></tr>
+<tr><td><code>GTF_BLOB_WITNESS_INDEX</code></td><td><code>0x701</code></td><td>Set <code>$rA</code> to the blob <code>tx.witnessIndex</code></td></tr>
+<tr><td><code>GTF_UPGRADE_PURPOSE</code></td><td><code>0x800</code></td><td>Set <code>$rA</code> to <code>Memory address of tx.purpose</code></td></tr>
+<tr><td><code>GTF_TX_INPUTS_COUNT</code></td><td><code>0x900</code></td><td>Set <code>$rA</code> to <code>tx.inputsCount</code></td></tr>
+<tr><td><code>GTF_TX_OUTPUTS_COUNT</code></td><td><code>0x901</code></td><td>Set <code>$rA</code> to <code>tx.outputsCount</code></td></tr>
+<tr><td><code>GTF_TX_WITNESSES_COUNT</code></td><td><code>0x902</code></td><td>Set <code>$rA</code> to <code>tx.witnessesCount</code></td></tr>
+<tr><td><code>GTF_TX_INPUT_AT_INDEX</code></td><td><code>0x903</code></td><td>Set <code>$rA</code> to <code>Memory address of tx.inputs[$rB]</code></td></tr>
+<tr><td><code>GTF_TX_OUTPUT_AT_INDEX</code></td><td><code>0x904</code></td><td>Set <code>$rA</code> to <code>Memory address of t.outputs[$rB]</code></td></tr>
+<tr><td><code>GTF_TX_WITNESS_AT_INDEX</code></td><td><code>0x905</code></td><td>Set <code>$rA</code> to <code>Memory address of tx.witnesses[$rB]</code></td></tr>
 </tbody></table>
 </div>
 <p>Panic if:</p>
