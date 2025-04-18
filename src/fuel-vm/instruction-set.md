@@ -2741,3 +2741,5 @@ Panic if:
 - The value of `$rB` results in an out of bounds access for variable-length fields
 - The input or output type does not match (`OutputChange` and `OutputVariable` count as `OutputCoin`)
 - The requested policy type is not set for this transaction.
+
+For fixed-length fields, the value of `$rB` is ignored.
