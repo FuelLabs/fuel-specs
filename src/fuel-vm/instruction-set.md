@@ -2604,6 +2604,7 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`      |
 | `GM_TX_START`                | `0x00005` | Transaction start memory address |
 | `GM_BASE_ASSET_ID`           | `0x00006` | Base asset ID                    |
+| `GM_GET_GAS_PRICE`           | `0x00007` | Get the gas price of the block.  |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
@@ -2629,6 +2630,14 @@ Panic if:
 - not in a predicate context
 
 Set `$rA` to the index of the currently-verifying predicate.
+
+If `imm == GM_GET_GAS_PRICE`:
+
+Panic if:
+
+- in a predicate context
+
+Set `$rA` to the gas price of the block.
 
 ### `GTF`: Get transaction fields
 
