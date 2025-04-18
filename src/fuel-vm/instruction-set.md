@@ -2709,6 +2709,21 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_POLICY_MATURITY`                     | `0x503` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
 | `GTF_POLICY_MAX_FEE`                      | `0x504` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
 | `GTF_POLICY_EXPIRATION`                   | `0x505` | `tx.policies[count_ones(0b11111 & tx.policyTypes) - 1].expiration`|
+| `GTF_UPLOAD_ROOT`                         | `0x600` | Memory address of `tx.root`                                       |
+| `GTF_UPLOAD_WITNESS_INDEX`                | `0x601` | Set `$rA` to `tx.witnessIndex`                                    |
+| `GTF_UPLOAD_SUBSECTION_INDEX`             | `0x602` | Set `$rA` to `tx.subsectionIndex`                                 |
+| `GTF_UPLOAD_SUBSECTIONS_COUNT`            | `0x603` | Set `$rA` to `tx.subsectionsNumber`                               |
+| `GTF_UPLOAD_PROOF_SET_COUNT`              | `0x604` | Set `$rA` to `tx.proofSetCount`                                   |
+| `GTF_UPLOAD_PROOF_SET_AT_INDEX`           | `0x605` | Set `$rA` to `Memory address of tx.proofSet[$rB]`                 |
+| `GTF_BLOB_ID`                             | `0x700` | Set `$rA` to `Memory address of tx.id`                            |
+| `GTF_BLOB_WITNESS_INDEX`                  | `0x701` | Set `$rA` to the blob `tx.witnessIndex`                           |
+| `GTF_UPGRADE_PURPOSE`                     | `0x800` | Set `$rA` to `Memory address of tx.purpose`                       |
+| `GTF_TX_INPUTS_COUNT`                     | `0x900` | Set `$rA` to `tx.inputsCount`                                     |
+| `GTF_TX_OUTPUTS_COUNT`                    | `0x901` | Set `$rA` to `tx.outputsCount`                                    |
+| `GTF_TX_WITNESSES_COUNT`                  | `0x902` | Set `$rA` to `tx.witnessesCount`                                  |
+| `GTF_TX_INPUT_AT_INDEX`                   | `0x903` | Set `$rA` to `Memory address of tx.inputs[$rB]`                   |
+| `GTF_TX_OUTPUT_AT_INDEX`                  | `0x904` | Set `$rA` to `Memory address of t.outputs[$rB]`                   |
+| `GTF_TX_WITNESS_AT_INDEX`                 | `0x905` | Set `$rA` to `Memory address of tx.witnesses[$rB]`                |
 
 Panic if:
 
