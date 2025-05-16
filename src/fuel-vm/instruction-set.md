@@ -563,10 +563,11 @@ Then the actual operation that's performed:
 `op` | Name | Description
 -----|-------|---------------------------
 0    | `add` | Add (`a = b + c`)
-1    | `mul` | Multiply (`a = b * c`)
-2    | `exp` | Exponentiate (`a = b ** c`)
-3    | `sll` | Bit shift left (logical) (`a = b << c`)
-4    | `xnor`| Bitwise xnor (`a = b ^ (!c)`).
+1    | `sub` | Subtract (`a = b - c`)
+2    | `mul` | Multiply (`a = b * c`)
+3    | `exp` | Exponentiate (`a = b ** c`)
+4    | `sll` | Bit shift left (logical) (`a = b << c`)
+5    | `xnor`| Bitwise xnor (`a = b ^ (!c)`).
 other| -     | Reserved and must not be used
 
 And operation width:
@@ -583,6 +584,7 @@ then perform the operation with overflow checking on that size. The
 result always fits within the bit width of the operation.
 
 Operations set `$of` and `$err` similarly to their 64-bit counterparts.
+For subtraction specifically, this means that an overflowing operation sets `$of` to all ones (`2**64-1`).
 `XNOR` has no counterpart, and it always clears both `$of` and `$err`.
 
 Panic if:
