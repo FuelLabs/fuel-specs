@@ -648,10 +648,11 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 <p>Then the actual operation that's performed:</p>
 <div class="table-wrapper"><table><thead><tr><th><code>op</code></th><th>Name</th><th>Description</th></tr></thead><tbody>
 <tr><td>0</td><td><code>add</code></td><td>Add (<code>a = b + c</code>)</td></tr>
-<tr><td>1</td><td><code>mul</code></td><td>Multiply (<code>a = b * c</code>)</td></tr>
-<tr><td>2</td><td><code>exp</code></td><td>Exponentiate (<code>a = b ** c</code>)</td></tr>
-<tr><td>3</td><td><code>sll</code></td><td>Bit shift left (logical) (<code>a = b &lt;&lt; c</code>)</td></tr>
-<tr><td>4</td><td><code>xnor</code></td><td>Bitwise xnor (<code>a = b ^ (!c)</code>).</td></tr>
+<tr><td>1</td><td><code>sub</code></td><td>Subtract (<code>a = b - c</code>)</td></tr>
+<tr><td>2</td><td><code>mul</code></td><td>Multiply (<code>a = b * c</code>)</td></tr>
+<tr><td>3</td><td><code>exp</code></td><td>Exponentiate (<code>a = b ** c</code>)</td></tr>
+<tr><td>4</td><td><code>sll</code></td><td>Bit shift left (logical) (<code>a = b &lt;&lt; c</code>)</td></tr>
+<tr><td>5</td><td><code>xnor</code></td><td>Bitwise xnor (<code>a = b ^ (!c)</code>).</td></tr>
 <tr><td>other</td><td>-</td><td>Reserved and must not be used</td></tr>
 </tbody></table>
 </div>
@@ -667,6 +668,7 @@ instead <code>$of</code> is set to <code>true</code> or the overflowing part of 
 then perform the operation with overflow checking on that size. The
 result always fits within the bit width of the operation.</p>
 <p>Operations set <code>$of</code> and <code>$err</code> similarly to their 64-bit counterparts.
+For subtraction specifically, this means that an overflowing operation sets <code>$of</code> to all ones (<code>2**64-1</code>).
 <code>XNOR</code> has no counterpart, and it always clears both <code>$of</code> and <code>$err</code>.</p>
 <p>Panic if:</p>
 <ul>
