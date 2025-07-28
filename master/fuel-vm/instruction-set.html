@@ -204,6 +204,7 @@
 <li><a href="#jnzf-jump-if-not-zero-relative-forwards"><code>JNZF</code>: Jump if not zero relative forwards</a></li>
 <li><a href="#jneb-jump-if-not-equal-relative-backwards"><code>JNEB</code>: Jump if not equal relative backwards</a></li>
 <li><a href="#jnef-jump-if-not-equal-relative-forwards"><code>JNEF</code>: Jump if not equal relative forwards</a></li>
+<li><a href="#jal-jump-and-link"><code>JAL</code>: Jump and link</a></li>
 <li><a href="#ret-return-from-context"><code>RET</code>: Return from context</a></li>
 </ul>
 </li>
@@ -1291,6 +1292,20 @@ For subtraction specifically, this means that an overflowing operation sets <cod
 <p>Panic if:</p>
 <ul>
 <li><code>$pc + ($rC + imm + 1) * 4 &gt; VM_MAX_RAM - 1</code></li>
+</ul>
+<h3 id="jal-jump-and-link"><a class="header" href="#jal-jump-and-link"><code>JAL</code>: Jump and link</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Set <code>$rA</code> to address of the next instruction. Jump to instruction at address <code>$rB + imm * 4</code>.</td></tr>
+<tr><td>Operation</td><td><code>if $rA is not $zero { $rA = $pc + 4 }</code> <br> <code>$pc = $rB + imm * 4</code></td></tr>
+<tr><td>Syntax</td><td><code>jal $rA $rB imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Notes</td><td>If <code>$rA</code> is <code>$zero</code>, the return address discarded.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a reserved register other than <code>$zero</code></li>
+<li><code>$rB + imm * 4 &gt;= VM_MAX_RAM</code></li>
 </ul>
 <h3 id="ret-return-from-context"><a class="header" href="#ret-return-from-context"><code>RET</code>: Return from context</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
