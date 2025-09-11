@@ -2648,6 +2648,14 @@ Panic if:
 
 Set `$rA` to the index of the currently-verifying predicate.
 
+If `imm == GM_GET_GAS_PRICE`:
+
+Panic if:
+
+- in a predicate context
+
+Set `$rA` to the gas price of the block.
+
 ### `GTF`: Get transaction fields
 
 |             |                                         |
