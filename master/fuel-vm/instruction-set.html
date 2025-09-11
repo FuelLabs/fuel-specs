@@ -2476,6 +2476,7 @@ Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC<
 <tr><td><code>GM_GET_CHAIN_ID</code></td><td><code>0x00004</code></td><td>Get the value of <code>CHAIN_ID</code></td></tr>
 <tr><td><code>GM_TX_START</code></td><td><code>0x00005</code></td><td>Transaction start memory address</td></tr>
 <tr><td><code>GM_BASE_ASSET_ID</code></td><td><code>0x00006</code></td><td>Base asset ID</td></tr>
+<tr><td><code>GM_GET_GAS_PRICE</code></td><td><code>0x00007</code></td><td>Get the gas price of the block.</td></tr>
 </tbody></table>
 </div>
 <p>If <code>imm == GM_IS_CALLER_EXTERNAL</code>:</p>
@@ -2497,6 +2498,12 @@ Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC<
 <li>not in a predicate context</li>
 </ul>
 <p>Set <code>$rA</code> to the index of the currently-verifying predicate.</p>
+<p>If <code>imm == GM_GET_GAS_PRICE</code>:</p>
+<p>Panic if:</p>
+<ul>
+<li>in a predicate context</li>
+</ul>
+<p>Set <code>$rA</code> to the gas price of the block.</p>
 <h3 id="gtf-get-transaction-fields"><a class="header" href="#gtf-get-transaction-fields"><code>GTF</code>: Get transaction fields</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Get transaction fields.</td></tr>
