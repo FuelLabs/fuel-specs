@@ -2325,7 +2325,7 @@ For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$r
 | Syntax      | `tre $rA, $rB`                                                                                     |
 | Encoding    | `0x00 rA rB - -`                                                                                   |
 | Effects     | Balance tree read, balance tree write                                                              |
-| Notes       | Not valid in predicates. Requires an existing [`OutputChange`](../tx-format/output.md#outputchange) with the same `asset_id` on the tx. Increases the external context free balance; the change output is only credited at the end of execution per [VM postconditions](../protocol/tx-validity.md#correct-change). |
+| Notes       | Not valid in predicates. Requires an existing [`OutputChange`](../tx-format/output.md#outputchange) with the same `asset_id` on the transaction. Increases the external context free balance; the change output is only credited at the end of execution per [VM postconditions](../protocol/tx-validity.md#correct-change). |
 
 Panic if:
 
