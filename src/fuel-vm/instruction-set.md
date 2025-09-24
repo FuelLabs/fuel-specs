@@ -2679,7 +2679,6 @@ Panic if:
 - Owner policy is not set and there are no owner-containing inputs (no inputs of type `InputType.Coin` or `InputType.Message`)
 - Owner policy is not set and owner-containing inputs have different owner values
 
-
 ### `GTF`: Get transaction fields
 
 |             |                                         |

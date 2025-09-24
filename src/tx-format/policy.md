@@ -16,7 +16,6 @@ enum PolicyType : uint32 {
 |--------|-----------------------------------------------------------------------------------|--------------|
 | `data` | One of [`Tip`](#tip), [`WitnessLimit`](#witnesslimit), [`Maturity`](#maturity), [`Expiration`](#expiration) or [`Owner`](#owner) | Policy data. |
 
-
 ## `Tip`
 
 | name       | type     | description                                                                                   |
