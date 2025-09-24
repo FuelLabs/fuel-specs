@@ -2736,6 +2736,7 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_POLICY_MATURITY`                     | `0x503` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
 | `GTF_POLICY_MAX_FEE`                      | `0x504` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
 | `GTF_POLICY_EXPIRATION`                   | `0x505` | `tx.policies[count_ones(0b11111 & tx.policyTypes) - 1].expiration`|
+| `GTF_POLICY_OWNER`                        | `0x506` | `tx.policies[count_ones(0b111111 & tx.policyTypes) - 1].owner`    |
 | `GTF_UPLOAD_ROOT`                         | `0x600` | Memory address of `tx.root`                                       |
 | `GTF_UPLOAD_WITNESS_INDEX`                | `0x601` | Set `$rA` to `tx.witnessIndex`                                    |
 | `GTF_UPLOAD_SUBSECTION_INDEX`             | `0x602` | Set `$rA` to `tx.subsectionIndex`                                 |
