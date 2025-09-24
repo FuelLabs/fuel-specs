@@ -2623,6 +2623,7 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_TX_START`                | `0x00005` | Transaction start memory address |
 | `GM_BASE_ASSET_ID`           | `0x00006` | Base asset ID                    |
 | `GM_GET_GAS_PRICE`           | `0x00007` | Get the gas price of the block.  |
+| `GM_GET_MSG_SENDER`          | `0x00008` | `msg_sender` in current context. |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
@@ -2656,6 +2657,37 @@ Panic if:
 - in a predicate context
 
 Set `$rA` to the gas price of the block.
+
+if `imm == GM_GET_MSG_SENDER`:
+
+Set `$rA` to either the owner EOA (if context or parent context are external) or calling contract id (if context and parent context are internal).
+
+Determine the owner EOA if context or parent context are external (`$fp==0` || `$fp->$fp==0`):
+
+1. If the Owner policy is set (`tx.policyTypes & 0x20 != 0`):
+   - If `tx.inputs[tx.policies[owner_policy_index].owner].type == InputType.Coin`: Set `$rA` to memory address of `tx.inputs[tx.policies[owner_policy_index].owner].owner`
+   - If `tx.inputs[tx.policies[owner_policy_index].owner].type == InputType.Message`: Set `$rA` to memory address of `tx.inputs[tx.policies[owner_policy_index].owner].recipient`
+
+2. If the Owner policy is not set (`tx.policyTypes & 0x20 == 0`):
+   - Collect all owner-containing inputs (inputs of type `InputType.Coin` and `InputType.Message`)
+   - If all owner-containing inputs have the same owner value:
+     - For `InputType.Coin`: use the `owner` field
+     - For `InputType.Message`: use the `recipient` field
+     - Set `$rA` to memory address of this common owner value
+   - If owner-containing inputs have different owner values: **panic**
+   - If there are no owner-containing inputs: **panic**
+
+Otherwise use calling contract ID if context and parent context are internal:
+- Set `$rA` to `$fp->$fp` (calling contract ID)
+
+Panic if:
+
+- Owner policy is set and `tx.inputs[tx.policies[owner_policy_index].owner].type` is not `InputType.Coin` or `InputType.Message`
+- Owner policy is not set and there are no owner-containing inputs (no inputs of type `InputType.Coin` or `InputType.Message`)
+- Owner policy is not set and owner-containing inputs have different owner values
+
+
+
 
 ### `GTF`: Get transaction fields
 
