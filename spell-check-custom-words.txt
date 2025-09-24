@@ -272,3 +272,9 @@ unspendable
 priori
 padding
 incentivize
+EIPS
+eip
+eips
+ethereum
+xnor
+XNOR

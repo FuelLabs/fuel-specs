@@ -48,6 +48,7 @@ The ABI of a contract is represented as a JSON object containing the following p
     - `"name"`: the name of the component.
     - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
     - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the component, if the type is generic, otherwise nonexistent. Each _type argument_ is a _type application_ represented as a JSON object that contains the following properties:
+      - `"name"`: the name of the _type argument_.
       - `"typeId"`: the _type metadata declaration_ ID (number) or _type concrete declaration_ hash based ID (string) of the type of the component.
       - `"typeArguments"`: an array of the _type arguments_ used when applying the type of the _type argument_, if the type is generic, otherwise nonexistent. The format of the elements of this array recursively follows the rules described in this section.
   - `"typeParameters"`: an array of _type metadata declaration_ ID of the _type parameters_ of the type, if the type is generic, otherwise nonexistent. Each _type parameter_ is a type declaration and is represented as described in [Generic Type Parameter](#generic-type-parameter).
@@ -64,7 +65,7 @@ The ABI of a contract is represented as a JSON object containing the following p
   - `"logId"`: a string containing the 64bit hash based decimal ID calculated from the first 8 bytes of the `sha256` of a string that represents the type logged as defined in [Hash Based Ids](./hash-based-ids.md). The [`log`](../fuel-vm/instruction-set.md#log-log-event) and [`logd`](../fuel-vm/instruction-set.md#logd-log-data-event) instructions must set their `$rB` register to that ID.
   - `"concreteTypeId"`: the _type concrete declaration_ hash based ID of the value being logged.
 - `"messagesTypes"`: an array describing all instances of [`smo`](../fuel-vm/instruction-set.md#smo-send-message-to-output) in the contract's bytecode. Each instance is a JSON object that contains the following properties:
-  - `"message_id"`: a unique string ID.
+  - `"messageId"`: a unique string ID.
   - `"concreteTypeId"`: the _type concrete declaration_ hash based ID of the message data being sent.
 - `"configurables"`: an array describing all `configurable` variables used in the contract. Each `configurable` variable is represented as a JSON object that contains the following properties:
   - `"name"`: the name of the `configurable` variable.

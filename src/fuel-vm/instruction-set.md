@@ -22,6 +22,7 @@
   - [`MUL`: Multiply](#mul-multiply)
   - [`MULI`: Multiply immediate](#muli-multiply-immediate)
   - [`MLDV`: Fused multiply-divide](#mldv-fused-multiply-divide)
+  - [`NIOP`: Narrow integer operation](#niop-narrow-integer-operation)
   - [`NOOP`: No operation](#noop-no-operation)
   - [`NOT`: Invert](#not-invert)
   - [`OR`: OR](#or-or)
@@ -31,7 +32,6 @@
   - [`SRL`: Shift right logical](#srl-shift-right-logical)
   - [`SRLI`: Shift right logical immediate](#srli-shift-right-logical-immediate)
   - [`SUB`: Subtract](#sub-subtract)
-  - [`SUBI`: Subtract immediate](#subi-subtract-immediate)
   - [`SUBI`: Subtract immediate](#subi-subtract-immediate)
   - [`WDCM`: 128-bit integer comparison](#wdcm-128-bit-integer-comparison)
   - [`WQCM`: 256-bit integer comparison](#wqcm-256-bit-integer-comparison)
@@ -61,6 +61,7 @@
   - [`JNZF`: Jump if not zero relative forwards](#jnzf-jump-if-not-zero-relative-forwards)
   - [`JNEB`: Jump if not equal relative backwards](#jneb-jump-if-not-equal-relative-backwards)
   - [`JNEF`: Jump if not equal relative forwards](#jnef-jump-if-not-equal-relative-forwards)
+  - [`JAL`: Jump and link](#jal-jump-and-link)
   - [`RET`: Return from context](#ret-return-from-context)
 - [Memory Instructions](#memory-instructions)
   - [`ALOC`: Allocate memory](#aloc-allocate-memory)
@@ -69,6 +70,8 @@
   - [`CFS`: Shrink call frame](#cfs-shrink-call-frame)
   - [`CFSI`: Shrink call frame immediate](#cfsi-shrink-call-frame-immediate)
   - [`LB`: Load byte](#lb-load-byte)
+  - [`LQW`: Load quarter word](#lqw-load-quarter-word)
+  - [`LHW`: Load half word](#lhw-load-half-word)
   - [`LW`: Load word](#lw-load-word)
   - [`MCL`: Memory clear](#mcl-memory-clear)
   - [`MCLI`: Memory clear immediate](#mcli-memory-clear-immediate)
@@ -80,6 +83,8 @@
   - [`PSHH`: Push a set of high registers to stack](#pshh-push-a-set-of-high-registers-to-stack)
   - [`PSHL`: Push a set of low registers to stack](#pshl-push-a-set-of-low-registers-to-stack)
   - [`SB`: Store byte](#sb-store-byte)
+  - [`SQW`: Store quarter word](#sqw-store-quarter-word)
+  - [`SHW`: Store half word](#shw-store-half-word)
   - [`SW`: Store word](#sw-store-word)
 - [Contract Instructions](#contract-instructions)
   - [`BAL`: Balance of contract ID](#bal-balance-of-contract-id)
@@ -115,6 +120,8 @@
   - [`ED19`: EdDSA curve25519 verification](#ed19-eddsa-curve25519-verification)
   - [`K256`: keccak-256](#k256-keccak-256)
   - [`S256`: SHA-2-256](#s256-sha-2-256)
+  - [`ECOP`: Elliptic curve operation](#ecop-elliptic-curve-point-operation)
+  - [`EPAR`: Elliptic curve point pairing check](#epar-elliptic-curve-point-pairing-check)
 - [Other Instructions](#other-instructions)
   - [`ECAL`: Call external function](#ecal-call-external-function)
   - [`FLAG`: Set flags](#flag-set-flags)
@@ -534,6 +541,57 @@ If the divisor (`$rD`) is zero, then instead the value is divided by `1 << 64`. 
 If the result of after the division doesn't fit into a register, `$of` is assigned the overflow of the operation. Otherwise, `$of` is cleared.
 
 `$err` is cleared.
+
+### `NIOP`: Narrow integer operation
+
+|             |                                                                                     |
+|-------------|-------------------------------------------------------------------------------------|
+| Description | Perform an ALU operation with overflow handing for 8, 16 or 32 bit integers         |
+| Operation   | `$rA = op($rB,$rC);`                                                                |
+| Syntax      | `niop $rA, $rB, $rC, imm`                                                           |
+| Encoding    | `0x00 rA rB rC i`                                                                   |
+| Notes       | Operations that would be identical with their 64-bit counterparts are not available |
+
+The six-bit immediate value is used to select operating mode, as follows:
+
+Bits     | Short name | Description
+---------|------------|-------------------------------------
+`..XXXX` | `op`       | Operation selection, see below
+`XX....` | `width`    | Operation width, see below
+
+Then the actual operation that's performed:
+
+`op` | Name | Description
+-----|-------|---------------------------
+0    | `add` | Add (`a = b + c`)
+1    | `sub` | Subtract (`a = b - c`)
+2    | `mul` | Multiply (`a = b * c`)
+3    | `exp` | Exponentiate (`a = b ** c`)
+4    | `sll` | Bit shift left (logical) (`a = b << c`)
+5    | `xnor`| Bitwise xnor (`a = b ^ (!c)`).
+other| -     | Reserved and must not be used
+
+And operation width:
+
+`width`| Bits
+-------|------
+0      | 8
+1      | 16
+2      | 32
+3      | Reserved and must not be used
+
+All operations first truncate their operands to the given bit width,
+then perform the operation with overflow checking on that size. The
+result always fits within the bit width of the operation.
+
+Operations set `$of` and `$err` similarly to their 64-bit counterparts.
+For subtraction specifically, this means that an overflowing operation sets `$of` to all ones (`2**64-1`).
+`XNOR` has no counterpart, and it always clears both `$of` and `$err`.
+
+Panic if:
+
+- Reserved bits of the immediate are set
+- `$rA` is a [reserved register](./index.md#semantics)
 
 ### `NOOP`: No operation
 
@@ -1242,6 +1300,21 @@ Panic if:
 
 - `$pc + ($rC + imm + 1) * 4 > VM_MAX_RAM - 1`
 
+### `JAL`: Jump and link
+
+|             |                                                                                               |
+|-------------|-----------------------------------------------------------------------------------------------|
+| Description | Set `$rA` to address of the next instruction. Jump to instruction at address `$rB + imm * 4`. |
+| Operation   | `if $rA is not $zero { $rA = $pc + 4 }` <br> `$pc = $rB + imm * 4`                            |
+| Syntax      | `jal $rA $rB imm`                                                                             |
+| Encoding    | `0x00 rA rB i i`                                                                              |
+| Notes       | If `$rA` is `$zero`, the return address discarded.                                            |
+
+Panic if:
+
+- `$rA` is a reserved register other than `$zero`
+- `$rB + imm * 4 >= VM_MAX_RAM`
+
 ### `RET`: Return from context
 
 |             |                                                               |
@@ -1250,7 +1323,7 @@ Panic if:
 | Operation   | ```return($rA);```                                            |
 | Syntax      | `ret $rA`                                                     |
 | Encoding    | `0x00 rA - - -`                                               |
-| Notes       |                                                               |
+| Notes       | `$ret` is set to the return value from `$rA`.                 |
 
 Append a receipt to the list of receipts:
 
@@ -1380,6 +1453,36 @@ Panic if:
 
 - `$rA` is a [reserved register](./index.md#semantics)
 - `$rB + imm + 1` overflows or `> VM_MAX_RAM`
+
+### `LQW`: Load quarter word
+
+|             |                                                                      |
+|-------------|----------------------------------------------------------------------|
+| Description | A quarter word is loaded from the specified address offset by `imm`. |
+| Operation   | ```$rA = MEM[$rB + (imm * 2), 2];```                                 |
+| Syntax      | `lqw $rA, $rB, imm`                                                  |
+| Encoding    | `0x00 rA rB i i`                                                     |
+| Notes       |                                                                      |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + (imm * 2) + 2` overflows or `> VM_MAX_RAM`
+
+### `LHW`: Load half word
+
+|             |                                                                      |
+|-------------|----------------------------------------------------------------------|
+| Description | A half word is loaded from the specified address offset by `imm`.    |
+| Operation   | ```$rA = MEM[$rB + (imm * 4), 4];```                                 |
+| Syntax      | `lhw $rA, $rB, imm`                                                  |
+| Encoding    | `0x00 rA rB i i`                                                     |
+| Notes       |                                                                      |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB + (imm * 4) + 4` overflows or `> VM_MAX_RAM`
 
 ### `LW`: Load word
 
@@ -1562,6 +1665,31 @@ Panic if:
 
 - `$rA + imm + 1` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA + imm, 1]`  does not pass [ownership check](./index.md#ownership)
+
+### `SQW`: Store quarter word
+
+|             |                                                                                               |
+|-------------|-----------------------------------------------------------------------------------------------|
+| Description | The two least significant bytes of  of `$rB` is stored at the address `$rA` offset by `imm`.  |
+| Operation   | ```MEM[$rA + (imm * 2), 2] = $rB;```                                                          |
+| Syntax      | `sqw $rA, $rB, imm`                                                                           |
+| Encoding    | `0x00 rA rB i i`                                                                              |
+| Notes       |                                                                                               |
+
+### `SHW`: Store half word
+
+|             |                                                                                               |
+|-------------|-----------------------------------------------------------------------------------------------|
+| Description | The four least significant bytes of  of `$rB` is stored at the address `$rA` offset by `imm`. |
+| Operation   | ```MEM[$rA + (imm * 4), 4] = $rB;```                                                          |
+| Syntax      | `shw $rA, $rB, imm`                                                                           |
+| Encoding    | `0x00 rA rB i i`                                                                              |
+| Notes       |                                                                                               |
+
+Panic if:
+
+- `$rA + (imm * 4) + 4` overflows or `> VM_MAX_RAM`
+- The memory range `MEM[$rA + (imm * 4), 4]`  does not pass [ownership check](./index.md#ownership)
 
 ### `SW`: Store word
 
@@ -1925,7 +2053,7 @@ Append a receipt to the list of receipts:
 | Operation   | ```returndata($rA, $rB);```                                             |
 | Syntax      | `retd $rA, $rB`                                                         |
 | Encoding    | `0x00 rA rB - -`                                                        |
-| Notes       |                                                                         |
+| Notes       | `$ret` is set to the pointer `$rA`, and `$retl` to length `$rB`.        |
 
 Panic if:
 
@@ -2255,6 +2383,7 @@ Panic if:
 
 ### `BLDD`: Load data from a blob
 
+|             |                                                                                                             |
 |-------------|-------------------------------------------------------------------------------------------------------------|
 | Description | Load 32-byte blob id at `$rB`, and copy `$rD` bytes starting from `$rC` into `$sA`.                         |
 | Operation   | `MEM[$rA, $rD] = blob(MEM[$rB, 32])[$rC, $rD];`                                                             |
@@ -2370,6 +2499,75 @@ Panic if:
 - `$rB + $rC` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, 32]`  does not pass [ownership check](./index.md#ownership)
 
+### `ECOP`: Elliptic curve point operation
+
+|             |                                                     |
+|-------------|-----------------------------------------------------|
+| Description | Perform arithmetic operation `$rC` on points of the elliptic curve `$rB`. Arguments are read from memory at `$rD`, and result is written to the memory at `$rA`, as per the table below.                                                   |
+| Operation   | ```MEM[$rA, X] = ecop(MEM[$rD, Y]);```              |
+| Syntax      | `ecop $rA, $rB, $rC, $rD`                           |
+| Encoding    | `0x00 rA rB rC rD`                                  |
+| Notes       | For now, only `$rB` = 0 is accepted                 |
+
+#### Curve ID `$rB` possible values
+
+- `0`: `alt_bn128` elliptic curve.
+
+#### Operation type `$rC` supported
+
+- `0`: two points addition
+- `1`: one point and one scalar multiplication
+
+#### Encoding of points and results by curve ID and operation type
+
+- 1P = one point = (X, Y) = ([32 bytes], [32 bytes])
+- 1S = one scalar = X = [32 bytes]
+
+| `$rB` Curve ID | `$rC` Operation type | `$rA` format         | `$rD` format               |
+|----------------|----------------------|----------------------|----------------------------|
+|    `0`         | `0`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rD, 128]` `1P1P`     |
+|    `0`         | `1`                  | `MEM[$rA, 64]` `1P`  | `MEM[$rD, 96]` `1P1S`      |
+
+#### Panic cases
+
+- Curve ID is not supported (`$rB`)
+- Operation type is not supported (`$rC`)
+- `$rD` + (size depending on the table above) overflows or `> VM_MAX_RAM`
+- Decoding of `$rD` memory doesn't match the expected format described above for each case.
+- The memory range at `$rA` (size depending on the curve/operation types) does not pass [ownership check](./index.md#ownership)
+
+### `EPAR`: Elliptic curve point pairing check
+
+|             |                                                     |
+|-------------|-----------------------------------------------------|
+| Description | Check if `$rC` groups of points at `$rD` all form valid pairings in (curve, pairing type) identified by `$rB`. Set `$rA` to the result of the pairing, either `0` or `1`. |
+| Operation   | ```$rA = epar(MEM[$rD, X * $rC]);```                |
+| Syntax      | `epar $rA, $rB, $rC, $rD`                           |
+| Encoding    | `0x00 rA rB rC rD`                                  |
+| Notes       | For now, only `$rB` = 0 is accepted.                |
+
+<!-- markdownlint-disable-next-line no-duplicate-header -->
+#### Curve/Pairing ID `$rB` possible values
+
+- `0`: optimal ate pairing on `alt_bn128` elliptic curve.
+
+#### Encoding of points by curve ID and check type
+
+- 1P = one point = (X, Y) = ([32 bytes], [32 bytes])
+
+| `$rB` Curve / Pairing ID  | `$rD` format               |
+|---------------------------|----------------------------|
+|    `0`                    | `MEM[$rD, (64 + 64 + 64) * $rC]` Each element is `1P1P1P` (three points coordinates) (192 bytes)   |
+
+<!-- markdownlint-disable-next-line no-duplicate-header -->
+#### Panic cases
+
+- Curve ID/Pairing is not supported (`$rB`)
+- `$rD` has elements than described in `$rC`
+- `$rD` + (size depending on the table above) overflows or `> VM_MAX_RAM`
+- Decoding of `$rD` memory doesn't match the expected format described above for each case.
+- The memory range at `$rA` (size depending on the curve/operation types) does not pass [ownership check](./index.md#ownership)
+
 ## Other Instructions
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
@@ -2424,6 +2622,7 @@ Read metadata from memory. A convenience instruction to avoid manually extractin
 | `GM_GET_CHAIN_ID`            | `0x00004` | Get the value of `CHAIN_ID`      |
 | `GM_TX_START`                | `0x00005` | Transaction start memory address |
 | `GM_BASE_ASSET_ID`           | `0x00006` | Base asset ID                    |
+| `GM_GET_GAS_PRICE`           | `0x00007` | Get the gas price of the block.  |
 
 If `imm == GM_IS_CALLER_EXTERNAL`:
 
@@ -2450,15 +2649,23 @@ Panic if:
 
 Set `$rA` to the index of the currently-verifying predicate.
 
+If `imm == GM_GET_GAS_PRICE`:
+
+Panic if:
+
+- in a predicate context
+
+Set `$rA` to the gas price of the block.
+
 ### `GTF`: Get transaction fields
 
-|             |                         |
-|-------------|-------------------------|
-| Description | Get transaction fields. |
-| Operation   | Varies (see below).     |
-| Syntax      | `gtf $rA, $rB, imm`     |
-| Encoding    | `0x00 rA rB i i`        |
-| Notes       |                         |
+|             |                                         |
+|-------------|-----------------------------------------|
+| Description | Get transaction fields.                 |
+| Operation   | Set `$rA` according to the table below. |
+| Syntax      | `gtf $rA, $rB, imm`                     |
+| Encoding    | `0x00 rA rB i i`                        |
+| Notes       | `$rB` is ignored for many variants.     |
 
 Get [fields from the transaction](../tx-format/transaction.md).
 
@@ -2528,6 +2735,22 @@ Get [fields from the transaction](../tx-format/transaction.md).
 | `GTF_POLICY_WITNESS_LIMIT`                | `0x502` | `tx.policies[count_ones(0b11 & tx.policyTypes) - 1].witnessLimit` |
 | `GTF_POLICY_MATURITY`                     | `0x503` | `tx.policies[count_ones(0b111 & tx.policyTypes) - 1].maturity`    |
 | `GTF_POLICY_MAX_FEE`                      | `0x504` | `tx.policies[count_ones(0b1111 & tx.policyTypes) - 1].maxFee`     |
+| `GTF_POLICY_EXPIRATION`                   | `0x505` | `tx.policies[count_ones(0b11111 & tx.policyTypes) - 1].expiration`|
+| `GTF_UPLOAD_ROOT`                         | `0x600` | Memory address of `tx.root`                                       |
+| `GTF_UPLOAD_WITNESS_INDEX`                | `0x601` | Set `$rA` to `tx.witnessIndex`                                    |
+| `GTF_UPLOAD_SUBSECTION_INDEX`             | `0x602` | Set `$rA` to `tx.subsectionIndex`                                 |
+| `GTF_UPLOAD_SUBSECTIONS_COUNT`            | `0x603` | Set `$rA` to `tx.subsectionsNumber`                               |
+| `GTF_UPLOAD_PROOF_SET_COUNT`              | `0x604` | Set `$rA` to `tx.proofSetCount`                                   |
+| `GTF_UPLOAD_PROOF_SET_AT_INDEX`           | `0x605` | Set `$rA` to `Memory address of tx.proofSet[$rB]`                 |
+| `GTF_BLOB_ID`                             | `0x700` | Set `$rA` to `Memory address of tx.id`                            |
+| `GTF_BLOB_WITNESS_INDEX`                  | `0x701` | Set `$rA` to the blob `tx.witnessIndex`                           |
+| `GTF_UPGRADE_PURPOSE`                     | `0x800` | Set `$rA` to `Memory address of tx.purpose`                       |
+| `GTF_TX_INPUTS_COUNT`                     | `0x900` | Set `$rA` to `tx.inputsCount`                                     |
+| `GTF_TX_OUTPUTS_COUNT`                    | `0x901` | Set `$rA` to `tx.outputsCount`                                    |
+| `GTF_TX_WITNESSES_COUNT`                  | `0x902` | Set `$rA` to `tx.witnessesCount`                                  |
+| `GTF_TX_INPUT_AT_INDEX`                   | `0x903` | Set `$rA` to `Memory address of tx.inputs[$rB]`                   |
+| `GTF_TX_OUTPUT_AT_INDEX`                  | `0x904` | Set `$rA` to `Memory address of t.outputs[$rB]`                   |
+| `GTF_TX_WITNESS_AT_INDEX`                 | `0x905` | Set `$rA` to `Memory address of tx.witnesses[$rB]`                |
 
 Panic if:
 
