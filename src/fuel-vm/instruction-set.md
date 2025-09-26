@@ -110,6 +110,7 @@
   - [`SWWQ`: State write sequential 32 byte slots](#swwq-state-write-sequential-32-byte-slots)
   - [`TIME`: Timestamp at height](#time-timestamp-at-height)
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
+  - [`TRE`: Transfer coins to external context](#tre-transfer-coins-to-external-context)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
@@ -2314,6 +2315,44 @@ Append a receipt to the list of receipts:
 | `is`       | `uint64`      | Value of register `$is`.                                                  |
 
 For output with contract ID `MEM[$rA, 32]`, increase balance of asset ID `MEM[$rC, 32]` by `$rB`. In an external context, decrease `MEM[balanceOfStart(MEM[$rC, 32]), 8]` by `$rB`. In an internal context, decrease asset ID `MEM[$rC, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rB`.
+
+### `TRE`: Transfer coins to external context
+
+|             |                                                                                                    |
+|-------------|----------------------------------------------------------------------------------------------------|
+| Description | Transfer `$rA` coins with asset ID at `$rB` from the current internal context to the outer external context (script). |
+| Operation   | ```transferexternal($rA, MEM[$rB, 32]);```                                                           |
+| Syntax      | `tre $rA, $rB`                                                                                     |
+| Encoding    | `0x00 rA rB - -`                                                                                   |
+| Effects     | Balance tree read, balance tree write                                                              |
+| Notes       | Not valid in predicates. Requires an existing [`OutputChange`](../tx-format/output.md#outputchange) with the same `asset_id` on the transaction. Increases the external context free balance; the change output is only credited at the end of execution per [VM postconditions](../protocol/tx-validity.md#correct-change). |
+
+Panic if:
+
+- `$rB + 32` overflows or `> VM_MAX_RAM`
+- `$rA == 0`
+- Current context is a predicate
+- No `OutputChange` exists in `tx.outputs` with `asset_id == MEM[$rB, 32]`
+- In an external context, if `$rA > MEM[balanceOfStart(MEM[$rB, 32]), 8]`
+- In an internal context, if `$rA` is greater than the balance of asset ID `MEM[$rB, 32]` of output with contract ID `MEM[$fp, 32]`
+
+Append a receipt to the list of receipts:
+
+| name       | type          | description                                                               |
+|------------|---------------|---------------------------------------------------------------------------|
+| `type`     | `ReceiptType` | `ReceiptType.Transfer`                                                    |
+| `from`     | `byte[32]`    | Contract ID of current context if in an internal context, zero otherwise. |
+| `to`       | `byte[32]`    | Zero (external context/script).                                           |
+| `amount`   | `uint64`      | Amount of coins transferred.                                              |
+| `asset_id` | `byte[32]`    | Asset ID of coins transferred.                                            |
+| `pc`       | `uint64`      | Value of register `$pc`.                                                  |
+| `is`       | `uint64`      | Value of register `$is`.                                                  |
+
+State changes:
+
+- There is a `balanceOfStart(asset_id: byte[32]) -> uint32` helper that returns the memory address of the remaining free balance of `asset_id` in the external context.
+- Decrease asset ID `MEM[$rB, 32]` balance of output with contract ID `MEM[$fp, 32]` by `$rA`.
+- Increase `MEM[balanceOfStart(MEM[$rB, 32]), 8]` by `$rA` (external context free balance).
 
 This modifies the `balanceRoot` field of the appropriate output(s).
 
