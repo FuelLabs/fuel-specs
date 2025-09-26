@@ -145,10 +145,11 @@ enum PolicyType : uint32 {
     Maturity = 4,
     MaxFee = 8,
     Expiration = 16,
+    Owner = 32,
 }
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><code>data</code></td><td>One of <a href="#tip"><code>Tip</code></a>, <a href="#witnesslimit"><code>WitnessLimit</code></a>, <a href="#maturity"><code>Maturity</code></a> or <a href="#expiration"><code>Expiration</code></a></td><td>Policy data.</td></tr>
+<tr><td><code>data</code></td><td>One of <a href="#tip"><code>Tip</code></a>, <a href="#witnesslimit"><code>WitnessLimit</code></a>, <a href="#maturity"><code>Maturity</code></a>, <a href="#expiration"><code>Expiration</code></a> or <a href="#owner"><code>Owner</code></a></td><td>Policy data.</td></tr>
 </tbody></table>
 </div>
 <h2 id="tip"><a class="header" href="#tip"><code>Tip</code></a></h2>
@@ -193,6 +194,16 @@ enum PolicyType : uint32 {
 <ul>
 <li><code>max_fee &gt; sum_inputs(tx, BASE_ASSET_ID) - sum_outputs(tx, BASE_ASSET_ID)</code></li>
 <li><code>max_fee &lt; max_fee(tx, BASE_ASSET_ID, gas_price)</code></li>
+</ul>
+<h2 id="owner"><a class="header" href="#owner"><code>Owner</code></a></h2>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><code>owner</code></td><td><code>uint64</code></td><td>Index of the transaction input that we nominate as owner</td></tr>
+</tbody></table>
+</div>
+<p>Transaction is invalid if:</p>
+<ul>
+<li><code>owner &gt;= inputs.len()</code></li>
+<li><code>inputs[owner] != InputType::Message &amp;&amp; inputs[owner] != InputType::Coin</code> (must point to an input type that supports ownership)</li>
 </ul>
 
                     </main>

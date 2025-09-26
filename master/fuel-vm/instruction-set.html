@@ -2477,6 +2477,7 @@ Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC<
 <tr><td><code>GM_TX_START</code></td><td><code>0x00005</code></td><td>Transaction start memory address</td></tr>
 <tr><td><code>GM_BASE_ASSET_ID</code></td><td><code>0x00006</code></td><td>Base asset ID</td></tr>
 <tr><td><code>GM_GET_GAS_PRICE</code></td><td><code>0x00007</code></td><td>Get the gas price of the block.</td></tr>
+<tr><td><code>GM_GET_OWNER</code></td><td><code>0x00008</code></td><td>Get the owner of the transaction</td></tr>
 </tbody></table>
 </div>
 <p>If <code>imm == GM_IS_CALLER_EXTERNAL</code>:</p>
@@ -2504,6 +2505,36 @@ Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC<
 <li>in a predicate context</li>
 </ul>
 <p>Set <code>$rA</code> to the gas price of the block.</p>
+<p>if <code>imm == GM_GET_OWNER</code>:</p>
+<p>Set <code>$rA</code> to the transaction owner.</p>
+<ol>
+<li>
+<p>If the Owner policy is set (<code>tx.policyTypes &amp; 0x20 != 0</code>):</p>
+<ul>
+<li>If <code>tx.inputs[tx.policies[owner_policy_index].owner].type == InputType.Coin</code>: Set <code>$rA</code> to memory address of <code>tx.inputs[tx.policies[owner_policy_index].owner].owner</code></li>
+<li>If <code>tx.inputs[tx.policies[owner_policy_index].owner].type == InputType.Message</code>: Set <code>$rA</code> to memory address of <code>tx.inputs[tx.policies[owner_policy_index].owner].recipient</code></li>
+</ul>
+</li>
+<li>
+<p>If the Owner policy is not set (<code>tx.policyTypes &amp; 0x20 == 0</code>):</p>
+<ul>
+<li>Collect all owner-containing inputs (inputs of type <code>InputType.Coin</code> and <code>InputType.Message</code>)</li>
+<li>If all owner-containing inputs have the same owner value:
+<ul>
+<li>For <code>InputType.Coin</code>: use the <code>owner</code> field</li>
+<li>For <code>InputType.Message</code>: use the <code>recipient</code> field</li>
+<li>Set <code>$rA</code> to memory address of this common owner value</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>Panic if:</p>
+<ul>
+<li>Owner policy is set and <code>tx.inputs[tx.policies[owner_policy_index].owner].type</code> is not <code>InputType.Coin</code> or <code>InputType.Message</code></li>
+<li>Owner policy is not set and there are no owner-containing inputs (no inputs of type <code>InputType.Coin</code> or <code>InputType.Message</code>)</li>
+<li>Owner policy is not set and owner-containing inputs have different owner values</li>
+</ul>
 <h3 id="gtf-get-transaction-fields"><a class="header" href="#gtf-get-transaction-fields"><code>GTF</code>: Get transaction fields</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Get transaction fields.</td></tr>
@@ -2580,6 +2611,7 @@ Use <a href="#ldc-load-code-from-an-external-contract-blob-or-memory"><code>LDC<
 <tr><td><code>GTF_POLICY_MATURITY</code></td><td><code>0x503</code></td><td><code>tx.policies[count_ones(0b111 &amp; tx.policyTypes) - 1].maturity</code></td></tr>
 <tr><td><code>GTF_POLICY_MAX_FEE</code></td><td><code>0x504</code></td><td><code>tx.policies[count_ones(0b1111 &amp; tx.policyTypes) - 1].maxFee</code></td></tr>
 <tr><td><code>GTF_POLICY_EXPIRATION</code></td><td><code>0x505</code></td><td><code>tx.policies[count_ones(0b11111 &amp; tx.policyTypes) - 1].expiration</code></td></tr>
+<tr><td><code>GTF_POLICY_OWNER</code></td><td><code>0x506</code></td><td><code>tx.policies[count_ones(0b111111 &amp; tx.policyTypes) - 1].owner</code></td></tr>
 <tr><td><code>GTF_UPLOAD_ROOT</code></td><td><code>0x600</code></td><td>Memory address of <code>tx.root</code></td></tr>
 <tr><td><code>GTF_UPLOAD_WITNESS_INDEX</code></td><td><code>0x601</code></td><td>Set <code>$rA</code> to <code>tx.witnessIndex</code></td></tr>
 <tr><td><code>GTF_UPLOAD_SUBSECTION_INDEX</code></td><td><code>0x602</code></td><td>Set <code>$rA</code> to <code>tx.subsectionIndex</code></td></tr>
