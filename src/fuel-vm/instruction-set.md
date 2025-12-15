@@ -103,14 +103,22 @@
   - [`RETD`: Return from context with data](#retd-return-from-context-with-data)
   - [`RVRT`: Revert](#rvrt-revert)
   - [`SMO`: Send message to output](#smo-send-message-out)
-  - [`SCWQ`: State clear sequential 32 byte slots](#scwq-state-clear-sequential-32-byte-slots)
-  - [`SRW`: State read word](#srw-state-read-word)
-  - [`SRWQ`: State read sequential 32 byte slots](#srwq-state-read-sequential-32-byte-slots)
-  - [`SWW`: State write word](#sww-state-write-word)
-  - [`SWWQ`: State write sequential 32 byte slots](#swwq-state-write-sequential-32-byte-slots)
   - [`TIME`: Timestamp at height](#time-timestamp-at-height)
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
+  - [Contract State Instructions](#contract-state-instructions)
+    - [`SCWQ`: State clear sequential slots](#scwq-state-clear-sequential-32-byte-slots)
+    - [`SRW`: State read word](#srw-state-read-word)
+    - [`SRWQ`: DEPRECATED State read sequential 32 byte slots](#srwq-deprecated-state-read-sequential-32-byte-slots)
+    - [`SWW`: State write word](#sww-state-write-word)
+    - [`SWWQ`: DEPRECATED State write sequential 32 byte slots](#swwq-deprecated-state-write-sequential-32-byte-slots)
+    - [`SRDD`: Read storage slot](#srdd-read-storage-slot)
+    - [`SRDI`: Read storage slot immediate](#srdi-read-storage-slot-immediate)
+    - [`SWRD`: Write storage slot](#swrd-write-storage-slot)
+    - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
+    - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-(partial-write))
+    - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-(partial-write)-immediate)
+    - [`SLEN`: Storage slot length](#slen-storage-slot-length)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
   - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
@@ -2164,104 +2172,6 @@ Append a receipt to the list of receipts:
 
 In an external context, decrease `MEM[balanceOfStart(0), 8]` by `$rD`. In an internal context, decrease asset ID 0 balance of output with contract ID `MEM[$fp, 32]` by `$rD`. This modifies the `balanceRoot` field of the appropriate contract that had its' funds deducted.
 
-### `SCWQ`: State clear sequential 32 byte slots
-
-|             |                                                                               |
-|-------------|-------------------------------------------------------------------------------|
-| Description | A sequential series of 32 bytes is cleared from the current contract's state. |
-| Operation   | ```STATE[MEM[$rA, 32], 32 * $rC] = None;```                                   |
-| Syntax      | `scwq $rA, $rB, $rC`                                                          |
-| Encoding    | `0x00 rA rB rC -`                                                             |
-| Notes       |                                                                               |
-
-Panic if:
-
-- `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rB` is a [reserved register](./index.md#semantics)
-- `$fp == 0` (in the script context)
-
-Register `$rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
-
-### `SRW`: State read word
-
-|             |                                                   |
-|-------------|---------------------------------------------------|
-| Description | A word is read from the current contract's state. |
-| Operation   | ```$rA = STATE[MEM[$rC, 32]][0, 8];```            |
-| Syntax      | `srw $rA, $rB, $rC`                               |
-| Encoding    | `0x00 rA rB rC -`                                 |
-| Effects     | Storage read                                      |
-| Notes       | Returns zero if the state element does not exist. |
-
-Panic if:
-
-- `$rA` is a [reserved register](./index.md#semantics)
-- `$rB` is a [reserved register](./index.md#semantics)
-- `$rC + 32` overflows or `> VM_MAX_RAM`
-- `$fp == 0` (in the script context)
-
-Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
-
-### `SRWQ`: State read sequential 32 byte slots
-
-|             |                                                                            |
-|-------------|----------------------------------------------------------------------------|
-| Description | A sequential series of 32 bytes is read from the current contract's state. |
-| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];```                    |
-| Syntax      | `srwq $rA, $rB, $rC, $rD`                                                  |
-| Encoding    | `0x00 rA rB rC rD`                                                         |
-| Effects     | Storage read                                                               |
-| Notes       | Returns zero if the state element does not exist.                          |
-
-Panic if:
-
-- `$rA + 32 * rD` overflows or `> VM_MAX_RAM`
-- `$rC + 32 * rD` overflows or `> VM_MAX_RAM`
-- `$rB` is a [reserved register](./index.md#semantics)
-- The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
-- `$fp == 0` (in the script context)
-
-Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots are set.
-
-### `SWW`: State write word
-
-|             |                                                                                 |
-|-------------|---------------------------------------------------------------------------------|
-| Description | A word is written to the current contract's state.                              |
-| Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rC;```<br>```STATE[MEM[$rA, 32]][8, 24] = 0;``` |
-| Syntax      | `sww $rA $rB $rC`                                                               |
-| Encoding    | `0x00 rA rB rC -`                                                               |
-| Effects     | Storage write                                                                   |
-| Notes       | Additional gas is charged when a new storage slot is created.                   |
-
-Panic if:
-
-- `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rB` is a [reserved register](./index.md#semantics)
-- `$fp == 0` (in the script context)
-
-The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to the number of new slots written, i.e. `1` if the slot was previously unset, and `0` if it already contained a value.
-
-### `SWWQ`: State write sequential 32 byte slots
-
-|             |                                                                             |
-|-------------|-----------------------------------------------------------------------------|
-| Description | A sequential series of 32 bytes is written to the current contract's state. |
-| Operation   | ```STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];```                   |
-| Syntax      | `swwq $rA, $rB, $rC, $rD`                                                   |
-| Encoding    | `0x00 rA rB rC rD`                                                          |
-| Effects     | Storage write                                                               |
-| Notes       | Additional gas is charged when for each new storage slot created.           |
-
-Panic if:
-
-- `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rC + 32 * $rD` overflows or `> VM_MAX_RAM`
-- `$rB` is a [reserved register](./index.md#semantics)
-- `$fp == 0` (in the script context)
-
-Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
-
 ### `TIME`: Timestamp at height
 
 |             |                                         |
@@ -2360,6 +2270,257 @@ In an external context, decrease `MEM[balanceOfStart(MEM[$rD, 32]), 8]` by `$rC`
 - `tx.outputs[$rB].asset_id = MEM[$rD, 32]`
 
 This modifies the `balanceRoot` field of the appropriate output(s).
+
+## Contract State Instructions
+
+### `SCWQ`: State clear sequential slots
+
+|             |                                                                               |
+|-------------|-------------------------------------------------------------------------------|
+| Description | A sequential series of slots cleared from the current contract's state.       |
+| Operation   | ```STATE[MEM[$rA, 32], $rC] = None;```                                        |
+| Syntax      | `scwq $rA, $rB, $rC`                                                          |
+| Encoding    | `0x00 rA rB rC -`                                                             |
+| Notes       |                                                                               |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB` is a [reserved register](./index.md#semantics)
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `false` if any storage slot in the requested range was already unset (default) and `true` if all the slots were set.
+
+### `SRW`: State read word
+
+|             |                                                   |
+|-------------|---------------------------------------------------|
+| Description | A word is read from the current contract's state. |
+| Operation   | ```$rA = STATE[MEM[$rC, 32]][0, 8];```            |
+| Syntax      | `srw $rA, $rB, $rC`                               |
+| Encoding    | `0x00 rA rB rC -`                                 |
+| Effects     | Storage read                                      |
+| Notes       | Returns zero if the state element does not exist. |
+
+Panic if:
+
+- `$rA` is a [reserved register](./index.md#semantics)
+- `$rB` is a [reserved register](./index.md#semantics)
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$fp == 0` (in the script context)
+- `len(STATE[MEM[$rC, 32]]) < 8` (the storage slot doens't have enough data)
+
+Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
+
+### `SRWQ`: DEPRECATED State read sequential 32 byte slots
+
+|             |                                                                                      |
+|-------------|--------------------------------------------------------------------------------------|
+| Description | A sequential series of 32 byte slots is read from the current contract's state.      |
+| Operation   | ```MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], rD];```                                   |
+| Syntax      | `srwq $rA, $rB, $rC, $rD`                                                            |
+| Encoding    | `0x00 rA rB rC rD`                                                                   |
+| Effects     | Storage read                                                                         |
+| Notes       | Legacy operation, unusable with variable-sized slots. Nonexistent slots read zeroes. |
+
+Panic if:
+
+- `$rA + 32 * rD` overflows or `> VM_MAX_RAM`
+- `$rC + 32 * rD` overflows or `> VM_MAX_RAM`
+- `$rB` is a [reserved register](./index.md#semantics)
+- The memory range `MEM[$rA, 32 * rD]`  does not pass [ownership check](./index.md#ownership)
+- `$fp == 0` (in the script context)
+- Any accessed storage slots has length other than 32 bytes.
+
+Register `$rB` will be set to `false` if any storage slot in the requested range is unset (default) and `true` if all the slots are set.
+
+### `SWW`: State write word
+
+|             |                                                                                                            |
+|-------------|------------------------------------------------------------------------------------------------------------|
+| Description | A word is written to the current contract's state.                                                         |
+| Operation   | ```STATE[MEM[$rA, 32]][0, 8] = $rC;```<br>```STATE[MEM[$rA, 32]][8, 24] = 0;```                            |
+| Syntax      | `sww $rA $rB $rC`                                                                                          |
+| Encoding    | `0x00 rA rB rC -`                                                                                          |
+| Effects     | Storage write                                                                                              |
+| Notes       | The resulting slot is zero-padded to 32 bytes. Additional gas is charged if a new storage slot is created. |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rB` is a [reserved register](./index.md#semantics)
+- `$fp == 0` (in the script context)
+
+The last 24 bytes of `STATE[MEM[$rA, 32]]` are set to `0`. Register `$rB` will be set to the number of new slots written, i.e. `1` if the slot was previously unset, and `0` if it already contained a value.
+
+### `SWWQ`: DEPRECATED State write sequential 32 byte slots
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | A sequential series of 32 byte slots is written to the current contract's state.                       |
+| Operation   | ```STATE[MEM[$rA, 32], $rD] = MEM[$rC, 32 * $rD];```                                                   |
+| Syntax      | `swwq $rA, $rB, $rC, $rD`                                                                              |
+| Encoding    | `0x00 rA rB rC rD`                                                                                     |
+| Effects     | Storage write                                                                                          |
+| Notes       | Legacy operation, produces 32 byte slots. Additional gas is charged for each new storage slot created. |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + 32 * $rD` overflows or `> VM_MAX_RAM`
+- `$rB` is a [reserved register](./index.md#semantics)
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
+
+### `SRDD`: Read storage slot
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Read storage slot contents to memory. Allows partial reads as well.                                    |
+| Operation   | `MEM[$rA, $rD] = STATE[MEM[$rC, 32]][$rB, $rD]; $rB = status`                                          |
+| Syntax      | `srdd $rA, $rB, $rC, $rD`                                                                              |
+| Encoding    | `0x00 rA rB rC rD`                                                                                     |
+| Effects     | Storage read                                                                                           |
+| Notes       | Gas is always charged for a full slot read. `$rB` is used to pass value in and out.                    |
+Panic if:
+
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rA + $rD` overflows or `> VM_MAX_RAM`
+- `$rB + $rD` overflows or `> len(STATE[MEM[$rC, 32]])`
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `1` is the slot did exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
+
+
+### `SRDI`: Read storage slot immediate
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Read storage slot contents to memory. Allows partial reads as well.                                    |
+| Operation   | `MEM[$rA, imm] = STATE[MEM[$rC, 32]][$rB, imm]; $rB = status`                                          |
+| Syntax      | `srdi $rA, $rB, $rC, imm`                                                                              |
+| Encoding    | `0x00 rA rB rC imm`                                                                                    |
+| Effects     | Storage read                                                                                           |
+| Notes       | Gas is always charged for a full slot read. `$rB` is used to pass value in and out.                    |
+
+Panic if:
+
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rA + imm` overflows or `> VM_MAX_RAM`
+- `$rB + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `1` is the slot did exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
+
+
+### `SWRD`: Write storage slot
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Write storage slot from a memory buffer.                                                               |
+| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, $rD]; $rB = status`                                                    |
+| Syntax      | `swrd $rA, $rB, $rC, $rD`                                                                              |
+| Encoding    | `0x00 rA rB rC $rD`                                                                                    |
+| Effects     | Storage write                                                                                          |
+| Notes       |                                                                                                        |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + $rD` overflows or `> VM_MAX_RAM`
+- `$rD > MAX_STORAGE_SLOT_SIZE`
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
+
+### `SWRI`: Write storage slot immediate
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Write storage slot from a memory buffer.                                                               |
+| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, imm]; $rB = status`                                                    |
+| Syntax      | `swri $rA, $rB, $rC, imm`                                                                              |
+| Encoding    | `0x00 rA rB rC imm`                                                                                    |
+| Effects     | Storage write                                                                                          |
+| Notes       |                                                                                                        |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + imm` overflows or `> VM_MAX_RAM`
+- `imm > MAX_STORAGE_SLOT_SIZE`
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
+
+### `SUPD`: Update storage slot (partial write)
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Read storage slot, modify it, and write the modified value back.                                       |
+| Operation   | `key = MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB, $rD] = MEM[$rC, $rD]; STATE[key] = tmp; $rB = status`  |
+| Syntax      | `supd $rA, $rB, $rC, $rD`                                                                              |
+| Encoding    | `0x00 rA rB rC rD`                                                                                     |
+| Effects     | Storage read and write                                                                                 |
+| Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + $rD` overflows or `> VM_MAX_RAM`
+- `$rB + $rD` overflows or `> MAX_STORAGE_SLOT_SIZE`
+- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])`
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
+
+### `SUPI`: Update storage slot (partial write) immediate
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Read storage slot, modify it, and write the modified value back.                                       |
+| Operation   | `key = MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB, imm] = MEM[$rC, imm]; STATE[key] = tmp; $rB = status`  |
+| Syntax      | `supi $rA, $rB, $rC, imm`                                                                              |
+| Encoding    | `0x00 rA rB rC imm`                                                                                    |
+| Effects     | Storage read and write                                                                                 |
+| Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$rC + imm` overflows or `> VM_MAX_RAM`
+- `$rB + imm` overflows or `> MAX_STORAGE_SLOT_SIZE`
+- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])`
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
+
+### `SLEN`: Storage slot length
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Get the length of a storage slot.                                                                      |
+| Operation   | `$rA = len(STATE[MEM[$rC, 32]]); $rB = status`                                                         |
+| Syntax      | `slen $rA, $rB, $rC`                                                                                   |
+| Encoding    | `0x00 rA rB rC -`                                                                                      |
+| Effects     | Storage read                                                                                           |
+| Notes       | Charges gas for a full read.                                                                           |
+
+Panic if:
+
+- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rA` is a [reserved register](./index.md#semantics).
+- `$rB` is a [reserved register](./index.md#semantics).
+- `$fp == 0` (in the script context)
+
+If the slot doesn't exist, both `$rA` and `$rB` will be set to `0`. Otherwise `$rA` is set to the length of the slot, and `$rB` to `1`.
 
 ## Blob Instructions
 
