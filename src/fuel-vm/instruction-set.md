@@ -107,7 +107,7 @@
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
   - [Contract State Instructions](#contract-state-instructions)
-    - [`SCWQ`: State clear sequential slots](#scwq-state-clear-sequential-32-byte-slots)
+    - [`SCWQ`: State clear sequential slots](#scwq-state-clear-sequential-slots)
     - [`SRW`: State read word](#srw-state-read-word)
     - [`SRWQ`: DEPRECATED State read sequential 32 byte slots](#srwq-deprecated-state-read-sequential-32-byte-slots)
     - [`SWW`: State write word](#sww-state-write-word)
@@ -116,8 +116,8 @@
     - [`SRDI`: Read storage slot immediate](#srdi-read-storage-slot-immediate)
     - [`SWRD`: Write storage slot](#swrd-write-storage-slot)
     - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
-    - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-(partial-write))
-    - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-(partial-write)-immediate)
+    - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
+    - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
     - [`SLEN`: Storage slot length](#slen-storage-slot-length)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
@@ -2308,7 +2308,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$fp == 0` (in the script context)
-- `len(STATE[MEM[$rC, 32]]) < 8` (the storage slot doens't have enough data)
+- `len(STATE[MEM[$rC, 32]]) < 8` (the storage slot doesn't have enough data)
 
 Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
 
@@ -2393,7 +2393,6 @@ Panic if:
 
 Register `$rB` will be set to `1` is the slot did exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
 
-
 ### `SRDI`: Read storage slot immediate
 
 |             |                                                                                                        |
@@ -2414,7 +2413,6 @@ Panic if:
 - `$fp == 0` (in the script context)
 
 Register `$rB` will be set to `1` is the slot did exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
-
 
 ### `SWRD`: Write storage slot
 
