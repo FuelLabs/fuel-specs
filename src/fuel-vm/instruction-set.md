@@ -2405,7 +2405,6 @@ Panic if:
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$rA + $rD` overflows or `> VM_MAX_RAM`
 - `$rB + $rD` overflows or `> len(STATE[MEM[$rC, 32]])`
-- `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
@@ -2426,7 +2425,6 @@ Panic if:
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$rA + imm` overflows or `> VM_MAX_RAM`
 - `$rB + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
-- `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
@@ -2447,7 +2445,6 @@ Panic if:
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rC + $rD` overflows or `> VM_MAX_RAM`
 - `$rD > MAX_STORAGE_SLOT_SIZE`
-- `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
 ### `SWRI`: Write storage slot immediate
@@ -2466,7 +2463,6 @@ Panic if:
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rC + imm` overflows or `> VM_MAX_RAM`
 - `imm > MAX_STORAGE_SLOT_SIZE`
-- `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
 ### `SUPD`: Update storage slot (partial write)
@@ -2486,9 +2482,8 @@ Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rC + $rD` overflows or `> VM_MAX_RAM`
-- `$rB + $rD` overflows or `> MAX_STORAGE_SLOT_SIZE`
-- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])`
-- `$rB` is a [reserved register](./index.md#semantics).
+- `$rB + $rD` overflows or `> MAX_STORAGE_SLOT_SIZE` (if `$rB == u64::MAX`, read `$rB` as `len(STATE[MEM[$rA, 32]])` instead)
+- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rB == u64::MAX`)
 - `$fp == 0` (in the script context)
 
 ### `SUPI`: Update storage slot (partial write) immediate
@@ -2508,9 +2503,8 @@ Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$rC + imm` overflows or `> VM_MAX_RAM`
-- `$rB + imm` overflows or `> MAX_STORAGE_SLOT_SIZE`
-- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])`
-- `$rB` is a [reserved register](./index.md#semantics).
+- `$rB + imm` overflows or `> MAX_STORAGE_SLOT_SIZE` (if `$rB == u64::MAX`, read `$rB` as `len(STATE[MEM[$rA, 32]])` instead)
+- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rB == u64::MAX`)
 - `$fp == 0` (in the script context)
 
 ### `SPLD`: Storage preload
