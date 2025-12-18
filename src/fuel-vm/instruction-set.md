@@ -107,18 +107,19 @@
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
   - [Contract State Instructions](#contract-state-instructions)
-    - [`SCWQ`: State clear sequential slots](#scwq-state-clear-sequential-slots)
+    - [`SCWQ`: DEPRECATED State clear sequential slots](#scwq-deprecated-state-clear-sequential-slots)
     - [`SRW`: State read word](#srw-state-read-word)
     - [`SRWQ`: DEPRECATED State read sequential 32 byte slots](#srwq-deprecated-state-read-sequential-32-byte-slots)
     - [`SWW`: State write word](#sww-state-write-word)
     - [`SWWQ`: DEPRECATED State write sequential 32 byte slots](#swwq-deprecated-state-write-sequential-32-byte-slots)
+    - [`SCLR`: State clear sequential slots](#sclr-state-clear-sequential-slots)
     - [`SRDD`: Read storage slot](#srdd-read-storage-slot)
     - [`SRDI`: Read storage slot immediate](#srdi-read-storage-slot-immediate)
     - [`SWRD`: Write storage slot](#swrd-write-storage-slot)
     - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
     - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
     - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
-    - [`SLEN`: Storage slot length](#slen-storage-slot-length)
+    - [`SPRL`: Storage preload](#sprl-storage-preload)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
   - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
@@ -2273,15 +2274,15 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 ## Contract State Instructions
 
-### `SCWQ`: State clear sequential slots
+### `SCWQ`: DEPRECATED State clear sequential slots
 
-|             |                                                                               |
-|-------------|-------------------------------------------------------------------------------|
-| Description | A sequential series of slots cleared from the current contract's state.       |
-| Operation   | ```STATE[MEM[$rA, 32], $rC] = None;```                                        |
-| Syntax      | `scwq $rA, $rB, $rC`                                                          |
-| Encoding    | `0x00 rA rB rC -`                                                             |
-| Notes       |                                                                               |
+|             |                                                                                    |
+|-------------|------------------------------------------------------------------------------------|
+| Description | A sequential series of slots cleared from the current contract's state.            |
+| Operation   | ```STATE[MEM[$rA, 32], $rC] = None;```                                             |
+| Syntax      | `scwq $rA, $rB, $rC`                                                               |
+| Encoding    | `0x00 rA rB rC -`                                                                  |
+| Notes       | Deprecated in favor of `SCLR`, which doesn't report status making it much cheaper. |
 
 Panic if:
 
@@ -2296,9 +2297,9 @@ Register `$rB` will be set to `false` if any storage slot in the requested range
 |             |                                                   |
 |-------------|---------------------------------------------------|
 | Description | A word is read from the current contract's state. |
-| Operation   | ```$rA = STATE[MEM[$rC, 32]][0, 8];```            |
-| Syntax      | `srw $rA, $rB, $rC`                               |
-| Encoding    | `0x00 rA rB rC -`                                 |
+| Operation   | ```$rA = STATE[MEM[$rC, 32]][imm * 8, 8];```      |
+| Syntax      | `srw $rA, $rB, $rC, imm`                          |
+| Encoding    | `0x00 rA rB rC imm`                               |
 | Effects     | Storage read                                      |
 | Notes       | Returns zero if the state element does not exist. |
 
@@ -2308,7 +2309,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$fp == 0` (in the script context)
-- `len(STATE[MEM[$rC, 32]]) < 8` (the storage slot doesn't have enough data)
+- `len(STATE[MEM[$rC, 32]]) < imm * 8 + 8` (the storage slot doesn't have enough data)
 
 Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
 
@@ -2373,12 +2374,27 @@ Panic if:
 
 Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
 
+### `SCWQ`: State clear sequential slots
+
+|             |                                                                                    |
+|-------------|------------------------------------------------------------------------------------|
+| Description | A sequential series of slots cleared from the current contract's state.            |
+| Operation   | ```STATE[MEM[$rA, 32], $rB] = None;```                                             |
+| Syntax      | `scwq $rA, $rC`                                                                    |
+| Encoding    | `0x00 rA rB - -`                                                                   |
+| Notes       |                                                                                    |
+
+Panic if:
+
+- `$rA + 32` overflows or `> VM_MAX_RAM`
+- `$fp == 0` (in the script context)
+
 ### `SRDD`: Read storage slot
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Read storage slot contents to memory. Allows partial reads as well.                                    |
-| Operation   | `MEM[$rA, $rD] = STATE[MEM[$rC, 32]][$rB, $rD]; $rB = status`                                          |
+| Operation   | `MEM[$rA, $rD] = STATE[MEM[$rC, 32]][$rB, $rD]`                                          |
 | Syntax      | `srdd $rA, $rB, $rC, $rD`                                                                              |
 | Encoding    | `0x00 rA rB rC rD`                                                                                     |
 | Effects     | Storage read                                                                                           |
@@ -2391,7 +2407,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `1` is the slot did exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
+Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
 
 ### `SRDI`: Read storage slot immediate
 
@@ -2412,14 +2428,14 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `1` is the slot did exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
+Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
 
 ### `SWRD`: Write storage slot
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Write storage slot from a memory buffer.                                                               |
-| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, $rD]; $rB = status`                                                    |
+| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, $rD]`                                                                  |
 | Syntax      | `swrd $rA, $rB, $rC, $rD`                                                                              |
 | Encoding    | `0x00 rA rB rC $rD`                                                                                    |
 | Effects     | Storage write                                                                                          |
@@ -2433,14 +2449,12 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
-
 ### `SWRI`: Write storage slot immediate
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Write storage slot from a memory buffer.                                                               |
-| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, imm]; $rB = status`                                                    |
+| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, imm]`                                                                  |
 | Syntax      | `swri $rA, $rB, $rC, imm`                                                                              |
 | Encoding    | `0x00 rA rB rC imm`                                                                                    |
 | Effects     | Storage write                                                                                          |
@@ -2454,18 +2468,18 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
-
 ### `SUPD`: Update storage slot (partial write)
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
-| Description | Read storage slot, modify it, and write the modified value back.                                       |
-| Operation   | `key = MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB, $rD] = MEM[$rC, $rD]; STATE[key] = tmp; $rB = status`  |
+| Description | Read storage slot, modify or extend it, and write the modified value back.                             |
+| Operation   | `key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB==MAX?len(tmp):$rB, $rD] = MEM[$rC, $rD]; STATE[key] = tmp`|
 | Syntax      | `supd $rA, $rB, $rC, $rD`                                                                              |
 | Encoding    | `0x00 rA rB rC rD`                                                                                     |
 | Effects     | Storage read and write                                                                                 |
 | Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
+
+Passing in `u64::MAX` in `$rB` will cause the write to happen at the end of the slot, without needing to read the slot length first.
 
 Panic if:
 
@@ -2476,18 +2490,18 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
-
 ### `SUPI`: Update storage slot (partial write) immediate
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
-| Description | Read storage slot, modify it, and write the modified value back.                                       |
-| Operation   | `key = MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB, imm] = MEM[$rC, imm]; STATE[key] = tmp; $rB = status`  |
+| Description | Read storage slot, modify or extend it, and write the modified value back.                             |
+| Operation   | `key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB==MAX?len(tmp):$rB, imm] = MEM[$rC, imm]; STATE[key] = tmp`|
 | Syntax      | `supi $rA, $rB, $rC, imm`                                                                              |
 | Encoding    | `0x00 rA rB rC imm`                                                                                    |
 | Effects     | Storage read and write                                                                                 |
 | Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
+
+Passing in `u64::MAX` in `$rB` will cause the write to happen at the end of the slot, without needing to read the slot length first.
 
 Panic if:
 
@@ -2498,27 +2512,41 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-Register `$rB` will be set to `1` is the slot didn't exist and was created, and `0` otherwise.
-
-### `SLEN`: Storage slot length
+### `SPLD`: Storage preload
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
-| Description | Get the length of a storage slot.                                                                      |
-| Operation   | `$rA = len(STATE[MEM[$rC, 32]]); $rB = status`                                                         |
-| Syntax      | `slen $rA, $rB, $rC`                                                                                   |
-| Encoding    | `0x00 rA rB rC -`                                                                                      |
+| Description | Preload a storage slot to a staging area, returning its length.                                        |
+| Operation   | `STAGING = STATE[MEM[$rB, 32]]; $rA = len(STAGING)`                                                    |
+| Syntax      | `spld $rA, $rB`                                                                                        |
+| Encoding    | `0x00 rA rB - -`                                                                                       |
 | Effects     | Storage read                                                                                           |
 | Notes       | Charges gas for a full read.                                                                           |
 
 Panic if:
 
-- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA` is a [reserved register](./index.md#semantics).
-- `$rB` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-If the slot doesn't exist, both `$rA` and `$rB` will be set to `0`. Otherwise `$rA` is set to the length of the slot, and `$rB` to `1`.
+If the slot doesn't exist, sets `$rA = 0` and `$err = 1`. Otherwise `$rA` is set to the length of the slot, and `$err` to `0`.
+
+### `SPCP`: Copy from preloaded storage slot
+
+|             |                                                                                                        |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Description | Copy memory from preloaded slot to main memory.                                                        |
+| Operation   | `MEM[$rA, $rC+imm] = STAGING[$rB, $rC+imm]                                                             |
+| Syntax      | `spcp $rA, $rB, $rC`                                                                                   |
+| Encoding    | `0x00 rA rB rC imm`                                                                                    |
+| Effects     | Storage read                                                                                           |
+| Notes       |                                                                                                        |
+
+Panic if:
+
+- `$rA + $rC + imm` overflows or `> VM_MAX_RAM`
+- `$rB + $rC + imm` overflows or `> len(STAGING)`
+- `$fp == 0` (in the script context)
 
 ## Blob Instructions
 

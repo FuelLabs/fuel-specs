@@ -170,6 +170,10 @@ A call frame consists of the following, word-aligned:
 |       |               |            | **Unwritable area ends.**                                                     |
 | *     |               |            | Call frame's stack.                                                           |
 
+### Storage preload staging area
+
+The storage preload instruction `PSLD` loads contents of a storage slot into a staging area. This is a special memory region only readable with `SPCP` instruction. The staging area is cleared every time a call or return occurs.
+
 ## Access rights
 
 Only memory that has been allocated is accessible.
