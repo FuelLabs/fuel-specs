@@ -119,7 +119,8 @@
     - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
     - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
     - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
-    - [`SPRL`: Storage preload](#sprl-storage-preload)
+    - [`SPLD`: Storage preload](#spld-storage-preload)
+    - [`SPCP`: Copy from preloaded storage slot](#spcp-copy-from-preloaded-storage-slot)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
   - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
@@ -2374,13 +2375,13 @@ Panic if:
 
 Register `$rB` will be set to the number of storage slots that were previously unset, and were set by this operation.
 
-### `SCWQ`: State clear sequential slots
+### `SCLR`: State clear sequential slots
 
 |             |                                                                                    |
 |-------------|------------------------------------------------------------------------------------|
 | Description | A sequential series of slots cleared from the current contract's state.            |
 | Operation   | ```STATE[MEM[$rA, 32], $rB] = None;```                                             |
-| Syntax      | `scwq $rA, $rC`                                                                    |
+| Syntax      | `sclr $rA, $rB`                                                                    |
 | Encoding    | `0x00 rA rB - -`                                                                   |
 | Notes       |                                                                                    |
 
