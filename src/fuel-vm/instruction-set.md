@@ -2395,16 +2395,16 @@ Panic if:
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Read storage slot contents to memory. Allows partial reads as well.                                    |
-| Operation   | `MEM[$rA, $rD] = STATE[MEM[$rC, 32]][$rB, $rD]`                                          |
+| Operation   | `MEM[$rA, $rD] = STATE[MEM[$rB, 32]][$rC, $rD]`                                                        |
 | Syntax      | `srdd $rA, $rB, $rC, $rD`                                                                              |
 | Encoding    | `0x00 rA rB rC rD`                                                                                     |
 | Effects     | Storage read                                                                                           |
-| Notes       | Gas is always charged for a full slot read. `$rB` is used to pass value in and out.                    |
+| Notes       | Gas is always charged for a full slot read.                                                            |
 Panic if:
 
-- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + $rD` overflows or `> VM_MAX_RAM`
-- `$rB + $rD` overflows or `> len(STATE[MEM[$rC, 32]])`
+- `$rC + $rD` overflows or `> len(STATE[MEM[$rB, 32]])`
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
@@ -2414,17 +2414,17 @@ Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise.
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Read storage slot contents to memory. Allows partial reads as well.                                    |
-| Operation   | `MEM[$rA, imm] = STATE[MEM[$rC, 32]][$rB, imm]; $rB = status`                                          |
+| Operation   | `MEM[$rA, imm] = STATE[MEM[$rB, 32]][$rC, imm]`                                                        |
 | Syntax      | `srdi $rA, $rB, $rC, imm`                                                                              |
 | Encoding    | `0x00 rA rB rC imm`                                                                                    |
 | Effects     | Storage read                                                                                           |
-| Notes       | Gas is always charged for a full slot read. `$rB` is used to pass value in and out.                    |
+| Notes       | Gas is always charged for a full slot read.                                                            |
 
 Panic if:
 
-- `$rC + 32` overflows or `> VM_MAX_RAM`
+- `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + imm` overflows or `> VM_MAX_RAM`
-- `$rB + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
+- `$rC + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
@@ -2434,17 +2434,17 @@ Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise.
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Write storage slot from a memory buffer.                                                               |
-| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, $rD]`                                                                  |
-| Syntax      | `swrd $rA, $rB, $rC, $rD`                                                                              |
-| Encoding    | `0x00 rA rB rC $rD`                                                                                    |
+| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rB, $rC]`                                                                  |
+| Syntax      | `swrd $rA, $rB, $rC`                                                                                   |
+| Encoding    | `0x00 rA rB rC -`                                                                                      |
 | Effects     | Storage write                                                                                          |
 | Notes       |                                                                                                        |
 
 Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rC + $rD` overflows or `> VM_MAX_RAM`
-- `$rD > MAX_STORAGE_SLOT_SIZE`
+- `$rB + $rC` overflows or `> VM_MAX_RAM`
+- `$rC > MAX_STORAGE_SLOT_SIZE`
 - `$fp == 0` (in the script context)
 
 ### `SWRI`: Write storage slot immediate
@@ -2452,16 +2452,16 @@ Panic if:
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Write storage slot from a memory buffer.                                                               |
-| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rC, imm]`                                                                  |
-| Syntax      | `swri $rA, $rB, $rC, imm`                                                                              |
-| Encoding    | `0x00 rA rB rC imm`                                                                                    |
+| Operation   | `STATE[MEM[$rA, 32]] = MEM[$rB, imm]`                                                                  |
+| Syntax      | `swri $rA, $rB, imm`                                                                                   |
+| Encoding    | `0x00 rA rB i i`                                                                                       |
 | Effects     | Storage write                                                                                          |
 | Notes       |                                                                                                        |
 
 Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rC + imm` overflows or `> VM_MAX_RAM`
+- `$rB + imm` overflows or `> VM_MAX_RAM`
 - `imm > MAX_STORAGE_SLOT_SIZE`
 - `$fp == 0` (in the script context)
 
@@ -2470,20 +2470,20 @@ Panic if:
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Read storage slot, modify or extend it, and write the modified value back.                             |
-| Operation   | `key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB==MAX?len(tmp):$rB, $rD] = MEM[$rC, $rD]; STATE[key] = tmp`|
+| Operation   | `key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rC==MAX?len(tmp):$rC, $rD] = MEM[$rB, $rD]; STATE[key] = tmp`|
 | Syntax      | `supd $rA, $rB, $rC, $rD`                                                                              |
 | Encoding    | `0x00 rA rB rC rD`                                                                                     |
 | Effects     | Storage read and write                                                                                 |
 | Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
 
-Passing in `u64::MAX` in `$rB` will cause the write to happen at the end of the slot, without needing to read the slot length first.
+Passing in `u64::MAX` in `$rC` will cause the write to happen at the end of the slot, without needing to read the slot length first.
 
 Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rC + $rD` overflows or `> VM_MAX_RAM`
-- `$rB + $rD` overflows or `> MAX_STORAGE_SLOT_SIZE` (if `$rB == u64::MAX`, read `$rB` as `len(STATE[MEM[$rA, 32]])` instead)
-- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rB == u64::MAX`)
+- `$rB + $rD` overflows or `> VM_MAX_RAM`
+- `$rC + $rD` overflows or `> MAX_STORAGE_SLOT_SIZE` (if `$rC == u64::MAX`, read `$rC` as `len(STATE[MEM[$rA, 32]])` instead)
+- `$rC` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rC == u64::MAX`)
 - `$fp == 0` (in the script context)
 
 ### `SUPI`: Update storage slot (partial write) immediate
@@ -2491,7 +2491,7 @@ Panic if:
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
 | Description | Read storage slot, modify or extend it, and write the modified value back.                             |
-| Operation   | `key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rB==MAX?len(tmp):$rB, imm] = MEM[$rC, imm]; STATE[key] = tmp`|
+| Operation   | `key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rC==MAX?len(tmp):$rC, imm] = MEM[$rB, imm]; STATE[key] = tmp`|
 | Syntax      | `supi $rA, $rB, $rC, imm`                                                                              |
 | Encoding    | `0x00 rA rB rC imm`                                                                                    |
 | Effects     | Storage read and write                                                                                 |
@@ -2502,9 +2502,9 @@ Passing in `u64::MAX` in `$rB` will cause the write to happen at the end of the 
 Panic if:
 
 - `$rA + 32` overflows or `> VM_MAX_RAM`
-- `$rC + imm` overflows or `> VM_MAX_RAM`
-- `$rB + imm` overflows or `> MAX_STORAGE_SLOT_SIZE` (if `$rB == u64::MAX`, read `$rB` as `len(STATE[MEM[$rA, 32]])` instead)
-- `$rB` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rB == u64::MAX`)
+- `$rB + imm` overflows or `> VM_MAX_RAM`
+- `$rC + imm` overflows or `> MAX_STORAGE_SLOT_SIZE` (if `$rC == u64::MAX`, read `$rC` as `len(STATE[MEM[$rA, 32]])` instead)
+- `$rC` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rC == u64::MAX`)
 - `$fp == 0` (in the script context)
 
 ### `SPLD`: Storage preload
@@ -2524,7 +2524,7 @@ Panic if:
 - `$rA` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-If the slot doesn't exist, sets `$rA = 0` and `$err = 1`. Otherwise `$rA` is set to the length of the slot, and `$err` to `0`.
+If the slot doesn't exist, sets `$rA = 0` and `$err = 1`, leaving the staging area unchanged. Otherwise `$rA` is set to the length of the slot, and `$err` to `0`.
 
 ### `SPCP`: Copy from preloaded storage slot
 
