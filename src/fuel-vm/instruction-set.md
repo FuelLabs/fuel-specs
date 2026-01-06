@@ -2476,7 +2476,7 @@ Panic if:
 | Effects     | Storage read and write                                                                                 |
 | Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
 
-Passing in `u64::MAX` in `$rC` will cause the write to happen at the end of the slot, without needing to read the slot length first.
+An unoccupied slot is treated as zero-length for the purposes of the read. Passing in `u64::MAX` in `$rC` will cause the write to happen at the end of the slot, without needing to read the slot length first.
 
 Panic if:
 
@@ -2497,7 +2497,7 @@ Panic if:
 | Effects     | Storage read and write                                                                                 |
 | Notes       | Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.  |
 
-Passing in `u64::MAX` in `$rB` will cause the write to happen at the end of the slot, without needing to read the slot length first.
+An unoccupied slot is treated as zero-length for the purposes of the read. Passing in `u64::MAX` in `$rC` will cause the write to happen at the end of the slot, without needing to read the slot length first.
 
 Panic if:
 
