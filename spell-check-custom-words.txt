@@ -280,3 +280,8 @@ eips
 ethereum
 xnor
 XNOR
+imm
+rA
+rB
+rC
+spcp
