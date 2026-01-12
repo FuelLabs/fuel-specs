@@ -2404,6 +2404,7 @@ Panic if:
 
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + $rD` overflows or `> VM_MAX_RAM`
+- The memory range `MEM[$rA, $rD]` does not pass [ownership check](./index.md#ownership)
 - `$rC + $rD` overflows or `> len(STATE[MEM[$rB, 32]])`
 - `$fp == 0` (in the script context)
 
@@ -2424,6 +2425,7 @@ Panic if:
 
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + imm` overflows or `> VM_MAX_RAM`
+- The memory range `MEM[$rA, imm]` does not pass [ownership check](./index.md#ownership)
 - `$rC + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
 - `$fp == 0` (in the script context)
 
@@ -2540,6 +2542,7 @@ If the slot doesn't exist, sets `$rA = 0` and `$err = 1`, leaving the staging ar
 Panic if:
 
 - `$rA + $rC + imm` overflows or `> VM_MAX_RAM`
+- The memory range `MEM[$rA, $rC + imm]` does not pass [ownership check](./index.md#ownership)
 - `$rB + $rC + imm` overflows or `> len(STAGING)`
 - `$fp == 0` (in the script context)
 
