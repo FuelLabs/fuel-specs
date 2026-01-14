@@ -172,7 +172,7 @@ A call frame consists of the following, word-aligned:
 
 ### Storage preload staging area
 
-The storage preload instruction `PSLD` loads contents of a storage slot into a staging area. This is a special memory region only readable with `SPCP` instruction. The staging area is cleared every time a call or return occurs.
+The storage preload instruction `SPLD` loads contents of a storage slot into a staging area. This is a special memory region only readable with `SPCP` instruction. The staging area is cleared every time a call or return occurs.
 
 ## Access rights
 
