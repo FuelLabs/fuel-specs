@@ -2525,7 +2525,7 @@ Panic if:
 - `$rA` is a [reserved register](./index.md#semantics).
 - `$fp == 0` (in the script context)
 
-If the slot doesn't exist, sets `$rA = 0` and `$err = 1`, leaving the staging area unchanged. Otherwise `$rA` is set to the length of the slot, and `$err` to `0`.
+If the slot doesn't exist, sets `$rA = 0` and `$err = 1`. Otherwise `$rA` is set to the length of the slot, and `$err` to `0`.
 
 ## Blob Instructions
 
