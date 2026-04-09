@@ -2409,7 +2409,7 @@ Panic if:
 
 Register `$err` will be set to `1` if the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
 
-### `SRDI`: Read storage slot immediate
+### `SRDI`: State read slot immediate
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
