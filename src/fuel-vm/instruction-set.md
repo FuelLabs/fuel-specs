@@ -116,7 +116,7 @@
     - [`SRDD`: State read slot](#srdd-state-read-slot)
     - [`SRDI`: State read slot immediate](#srdi-state-read-slot-immediate)
     - [`SWRD`: State write slot](#swrd-state-write-slot)
-    - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
+    - [`SWRI`: State write slot immediate](#swri-state-write-slot-immediate)
     - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
     - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
     - [`SPLD`: State preload slot](#spld-state-preload-slot)
