@@ -118,7 +118,7 @@
     - [`SWRD`: State write slot](#swrd-state-write-slot)
     - [`SWRI`: State write slot immediate](#swri-state-write-slot-immediate)
     - [`SUPD`: State update slot (partial write)](#supd-state-update-slot-partial-write)
-    - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
+    - [`SUPI`: State update slot (partial write) immediate](#supi-state-update-slot-partial-write-immediate)
     - [`SPLD`: State preload slot](#spld-state-preload-slot)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
