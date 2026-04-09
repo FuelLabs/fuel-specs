@@ -107,7 +107,7 @@
   - [`TR`: Transfer coins to contract](#tr-transfer-coins-to-contract)
   - [`TRO`: Transfer coins to output](#tro-transfer-coins-to-output)
   - [Contract State Instructions](#contract-state-instructions)
-    - [`SCWQ`: DEPRECATED State clear sequential slots](#scwq-deprecated-state-clear-sequential-slots)
+    - [`SCWQ`: DEPRECATED State clear sequential 32 bytes slots](#scwq-deprecated-state-clear-sequential-slots)
     - [`SRW`: State read word](#srw-state-read-word)
     - [`SRWQ`: DEPRECATED State read sequential 32 byte slots](#srwq-deprecated-state-read-sequential-32-byte-slots)
     - [`SWW`: State write word](#sww-state-write-word)
