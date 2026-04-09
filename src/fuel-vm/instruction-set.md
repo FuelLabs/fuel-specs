@@ -119,7 +119,7 @@
     - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
     - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
     - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
-    - [`SPLD`: Storage preload](#spld-storage-preload)
+    - [`SPLD`: State preload slot](#spld-state-preload-slot)
 - [Blob Instructions](#blob-instructions)
   - [`BSIZ`: Blob size](#bsiz-blob-size)
   - [`BLDD`: Load data from a blob](#bldd-load-data-from-a-blob)
