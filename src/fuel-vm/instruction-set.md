@@ -2487,7 +2487,7 @@ Panic if:
 - `$rC` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rC == u64::MAX`)
 - `$fp == 0` (in the script context)
 
-### `SUPI`: Update storage slot (partial write) immediate
+### `SUPI`: State update slot (partial write) immediate
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
