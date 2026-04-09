@@ -2428,7 +2428,7 @@ Panic if:
 - `$rC + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
 - `$fp == 0` (in the script context)
 
-Register `$err` will be set to `1` is the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
+Register `$err` will be set to `1` if the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
 
 ### `SWRD`: Write storage slot
 
