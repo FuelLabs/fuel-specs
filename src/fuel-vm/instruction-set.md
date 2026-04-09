@@ -2508,7 +2508,7 @@ Panic if:
 - `$rC` overflows or `> len(STATE[MEM[$rA, 32]])` (except when `$rC == u64::MAX`)
 - `$fp == 0` (in the script context)
 
-### `SPLD`: Storage preload
+### `SPLD`: State preload slot
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
