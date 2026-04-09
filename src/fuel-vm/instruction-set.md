@@ -2430,7 +2430,7 @@ Panic if:
 
 Register `$err` will be set to `1` if the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
 
-### `SWRD`: Write storage slot
+### `SWRD`: State write slot
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
