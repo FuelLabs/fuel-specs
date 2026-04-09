@@ -2274,7 +2274,7 @@ This modifies the `balanceRoot` field of the appropriate output(s).
 
 ## Contract State Instructions
 
-### `SCWQ`: DEPRECATED State clear sequential slots
+### `SCWQ`: DEPRECATED State clear sequential 32 bytes slots
 
 |             |                                                                                    |
 |-------------|------------------------------------------------------------------------------------|
