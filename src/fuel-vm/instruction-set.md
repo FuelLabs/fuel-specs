@@ -114,7 +114,7 @@
     - [`SWWQ`: DEPRECATED State write sequential 32 byte slots](#swwq-deprecated-state-write-sequential-32-byte-slots)
     - [`SCLR`: State clear sequential slots](#sclr-state-clear-sequential-slots)
     - [`SRDD`: State read slot](#srdd-state-read-slot)
-    - [`SRDI`: Read storage slot immediate](#srdi-read-storage-slot-immediate)
+    - [`SRDI`: State read slot immediate](#srdi-state-read-slot-immediate)
     - [`SWRD`: Write storage slot](#swrd-write-storage-slot)
     - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
     - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
