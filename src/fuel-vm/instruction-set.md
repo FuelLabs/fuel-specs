@@ -2448,7 +2448,7 @@ Panic if:
 - `$rC > MAX_STORAGE_SLOT_SIZE`
 - `$fp == 0` (in the script context)
 
-### `SWRI`: Write storage slot immediate
+### `SWRI`: State write slot immediate
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
