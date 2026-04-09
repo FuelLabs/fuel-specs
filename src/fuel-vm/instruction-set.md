@@ -115,7 +115,7 @@
     - [`SCLR`: State clear sequential slots](#sclr-state-clear-sequential-slots)
     - [`SRDD`: State read slot](#srdd-state-read-slot)
     - [`SRDI`: State read slot immediate](#srdi-state-read-slot-immediate)
-    - [`SWRD`: Write storage slot](#swrd-write-storage-slot)
+    - [`SWRD`: State write slot](#swrd-state-write-slot)
     - [`SWRI`: Write storage slot immediate](#swri-write-storage-slot-immediate)
     - [`SUPD`: Update storage slot (partial write)](#supd-update-storage-slot-partial-write)
     - [`SUPI`: Update storage slot (partial write) immediate](#supi-update-storage-slot-partial-write-immediate)
