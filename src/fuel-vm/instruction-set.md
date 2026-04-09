@@ -2389,7 +2389,7 @@ Panic if:
 - `$rA + 32` overflows or `> VM_MAX_RAM`
 - `$fp == 0` (in the script context)
 
-### `SRDD`: Read storage slot
+### `SRDD`: State read slot
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
