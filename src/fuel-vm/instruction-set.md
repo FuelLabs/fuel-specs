@@ -2527,24 +2527,6 @@ Panic if:
 
 If the slot doesn't exist, sets `$rA = 0` and `$err = 1`, leaving the staging area unchanged. Otherwise `$rA` is set to the length of the slot, and `$err` to `0`.
 
-### `SPCP`: Copy from preloaded storage slot
-
-|             |                                                                                                        |
-|-------------|--------------------------------------------------------------------------------------------------------|
-| Description | Copy memory from preloaded slot to main memory.                                                        |
-| Operation   | `MEM[$rA, $rC+imm] = STAGING[$rB, $rC+imm]                                                             |
-| Syntax      | `spcp $rA, $rB, $rC`                                                                                   |
-| Encoding    | `0x00 rA rB rC imm`                                                                                    |
-| Effects     | Storage read                                                                                           |
-| Notes       |                                                                                                        |
-
-Panic if:
-
-- `$rA + $rC + imm` overflows or `> VM_MAX_RAM`
-- The memory range `MEM[$rA, $rC + imm]` does not pass [ownership check](./index.md#ownership)
-- `$rB + $rC + imm` overflows or `> len(STAGING)`
-- `$fp == 0` (in the script context)
-
 ## Blob Instructions
 
 All these instructions advance the program counter `$pc` by `4` after performing their operation.
