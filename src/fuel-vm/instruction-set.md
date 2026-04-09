@@ -2512,7 +2512,7 @@ Panic if:
 
 |             |                                                                                                        |
 |-------------|--------------------------------------------------------------------------------------------------------|
-| Description | Preload a storage slot to a staging area, returning its length.                                        |
+| Description | Preload a storage slot to hot storage, returning its length.                                        |
 | Operation   | `STAGING = STATE[MEM[$rB, 32]]; $rA = len(STAGING)`                                                    |
 | Syntax      | `spld $rA, $rB`                                                                                        |
 | Encoding    | `0x00 rA rB - -`                                                                                       |
