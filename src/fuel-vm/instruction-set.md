@@ -2425,7 +2425,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + imm` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, imm]` does not pass [ownership check](./index.md#ownership)
-- `$rC + imm` overflows or `> len(STATE[MEM[$rC, 32]])`
+- `$rC + imm` overflows or `> len(STATE[MEM[$B, 32]])`
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` if the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
