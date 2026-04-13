@@ -2309,7 +2309,7 @@ Panic if:
 - `$rB` is a [reserved register](./index.md#semantics)
 - `$rC + 32` overflows or `> VM_MAX_RAM`
 - `$fp == 0` (in the script context)
-- `len(STATE[MEM[$rC, 32]]) < imm * 8 + 8` (the storage slot doesn't have enough data)
+- `len(STATE[MEM[$rC, 32]]) < imm * 8 + 8` when the slot is set (the storage slot doesn't have enough data)
 
 Register `$rB` will be set to `false` if the requested slot is unset (default) and `true` if it's set.
 
@@ -2404,7 +2404,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + $rD` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, $rD]` does not pass [ownership check](./index.md#ownership)
-- `$rC + $rD` overflows or `> len(STATE[MEM[$rB, 32]])`
+- `$rC + $rD` overflows or `> len(STATE[MEM[$rB, 32]])` when the slot is set
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` if the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
@@ -2425,7 +2425,7 @@ Panic if:
 - `$rB + 32` overflows or `> VM_MAX_RAM`
 - `$rA + imm` overflows or `> VM_MAX_RAM`
 - The memory range `MEM[$rA, imm]` does not pass [ownership check](./index.md#ownership)
-- `$rC + imm` overflows or `> len(STATE[MEM[$B, 32]])`
+- `$rC + imm` overflows or `> len(STATE[MEM[$B, 32]])` when the slot is set
 - `$fp == 0` (in the script context)
 
 Register `$err` will be set to `1` if the slot did not exist, and `0` otherwise. If the slot didn't exist, memory is not modified.
