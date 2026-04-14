@@ -14,6 +14,7 @@
 | `MAX_SCRIPT_DATA_LENGTH`    | `uint64`  | Maximum length of script data, in bytes.                       |
 | `MAX_MESSAGE_DATA_LENGTH`   | `uint64`  | Maximum length of message data, in bytes.                      |
 | `MAX_STORAGE_SLOTS`         | `uint64`  | Maximum number of initial storage slots.                       |
+| `MAX_STORAGE_SLOT_LENGTH`   | `uint64`  | Maximum length of a storage slot data, in bytes.               |
 | `MAX_TRANSACTION_SIZE`      | `uint64`  | Maximum size of a transaction, in bytes.                       |
 | `MAX_WITNESSES`             | `uint64`  | Maximum number of witnesses.                                   |
 | `MAX_BYTECODE_SUBSECTIONS`  | `uint64`  | Maximum number of bytecode subsections.                        |

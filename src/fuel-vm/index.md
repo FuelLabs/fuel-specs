@@ -170,6 +170,10 @@ A call frame consists of the following, word-aligned:
 |       |               |            | **Unwritable area ends.**                                                     |
 | *     |               |            | Call frame's stack.                                                           |
 
+### Storage cache
+
+All storage values are cached on first access. Subsequent accesses to the same slot are much cheaper than the initial one. This principle holds for both reads and writes, since the first write needs to also know slot's contents to charge for possibly increased contract state size. The cache persists across contract call boundary.
+
 ## Access rights
 
 Only memory that has been allocated is accessible.

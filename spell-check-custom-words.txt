@@ -233,6 +233,8 @@ SMTs
 subtrees
 subtree
 prepended
+preload
+preloaded
 unhashed
 preimage
 FIPS
@@ -278,3 +280,8 @@ eips
 ethereum
 xnor
 XNOR
+imm
+rA
+rB
+rC
+rD
