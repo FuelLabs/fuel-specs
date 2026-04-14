@@ -215,6 +215,7 @@
 <tr><td><code>MAX_SCRIPT_DATA_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of script data, in bytes.</td></tr>
 <tr><td><code>MAX_MESSAGE_DATA_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of message data, in bytes.</td></tr>
 <tr><td><code>MAX_STORAGE_SLOTS</code></td><td><code>uint64</code></td><td>Maximum number of initial storage slots.</td></tr>
+<tr><td><code>MAX_STORAGE_SLOT_LENGTH</code></td><td><code>uint64</code></td><td>Maximum length of a storage slot data, in bytes.</td></tr>
 <tr><td><code>MAX_TRANSACTION_SIZE</code></td><td><code>uint64</code></td><td>Maximum size of a transaction, in bytes.</td></tr>
 <tr><td><code>MAX_WITNESSES</code></td><td><code>uint64</code></td><td>Maximum number of witnesses.</td></tr>
 <tr><td><code>MAX_BYTECODE_SUBSECTIONS</code></td><td><code>uint64</code></td><td>Maximum number of bytecode subsections.</td></tr>
@@ -2982,6 +2983,8 @@ Struct with tuple type parameter =&gt; <code>&quot;struct my_module::MyStruct&lt
 <tr><td>*</td><td></td><td></td><td>Call frame's stack.</td></tr>
 </tbody></table>
 </div>
+<h3 id="storage-cache"><a class="header" href="#storage-cache">Storage cache</a></h3>
+<p>All storage values are cached on first access. Subsequent accesses to the same slot are much cheaper than the initial one. This principle holds for both reads and writes, since the first write needs to also know slot's contents to charge for possibly increased contract state size. The cache persists across contract call boundary.</p>
 <h2 id="access-rights"><a class="header" href="#access-rights">Access rights</a></h2>
 <p>Only memory that has been allocated is accessible.
 In other words, memory between highest-ever <code>$sp</code> value and current <code>$hp</code>
@@ -3121,14 +3124,26 @@ while all memory is accessible.</p>
 <li><a href="fuel-vm/instruction-set.html#retd-return-from-context-with-data"><code>RETD</code>: Return from context with data</a></li>
 <li><a href="fuel-vm/instruction-set.html#rvrt-revert"><code>RVRT</code>: Revert</a></li>
 <li><a href="fuel-vm/instruction-set.html#smo-send-message-out"><code>SMO</code>: Send message to output</a></li>
-<li><a href="fuel-vm/instruction-set.html#scwq-state-clear-sequential-32-byte-slots"><code>SCWQ</code>: State clear sequential 32 byte slots</a></li>
-<li><a href="fuel-vm/instruction-set.html#srw-state-read-word"><code>SRW</code>: State read word</a></li>
-<li><a href="fuel-vm/instruction-set.html#srwq-state-read-sequential-32-byte-slots"><code>SRWQ</code>: State read sequential 32 byte slots</a></li>
-<li><a href="fuel-vm/instruction-set.html#sww-state-write-word"><code>SWW</code>: State write word</a></li>
-<li><a href="fuel-vm/instruction-set.html#swwq-state-write-sequential-32-byte-slots"><code>SWWQ</code>: State write sequential 32 byte slots</a></li>
 <li><a href="fuel-vm/instruction-set.html#time-timestamp-at-height"><code>TIME</code>: Timestamp at height</a></li>
 <li><a href="fuel-vm/instruction-set.html#tr-transfer-coins-to-contract"><code>TR</code>: Transfer coins to contract</a></li>
 <li><a href="fuel-vm/instruction-set.html#tro-transfer-coins-to-output"><code>TRO</code>: Transfer coins to output</a></li>
+<li><a href="fuel-vm/instruction-set.html#contract-state-instructions">Contract State Instructions</a>
+<ul>
+<li><a href="fuel-vm/instruction-set.html#scwq-deprecated-state-clear-sequential-32-bytes-slots"><code>SCWQ</code>: DEPRECATED State clear sequential 32 bytes slots</a></li>
+<li><a href="fuel-vm/instruction-set.html#srw-state-read-word"><code>SRW</code>: State read word</a></li>
+<li><a href="fuel-vm/instruction-set.html#srwq-deprecated-state-read-sequential-32-byte-slots"><code>SRWQ</code>: DEPRECATED State read sequential 32 byte slots</a></li>
+<li><a href="fuel-vm/instruction-set.html#sww-state-write-word"><code>SWW</code>: State write word</a></li>
+<li><a href="fuel-vm/instruction-set.html#swwq-deprecated-state-write-sequential-32-byte-slots"><code>SWWQ</code>: DEPRECATED State write sequential 32 byte slots</a></li>
+<li><a href="fuel-vm/instruction-set.html#sclr-state-clear-sequential-slots"><code>SCLR</code>: State clear sequential slots</a></li>
+<li><a href="fuel-vm/instruction-set.html#srdd-state-read-slot"><code>SRDD</code>: State read slot</a></li>
+<li><a href="fuel-vm/instruction-set.html#srdi-state-read-slot-immediate"><code>SRDI</code>: State read slot immediate</a></li>
+<li><a href="fuel-vm/instruction-set.html#swrd-state-write-slot"><code>SWRD</code>: State write slot</a></li>
+<li><a href="fuel-vm/instruction-set.html#swri-state-write-slot-immediate"><code>SWRI</code>: State write slot immediate</a></li>
+<li><a href="fuel-vm/instruction-set.html#supd-state-update-slot-partial-write"><code>SUPD</code>: State update slot (partial write)</a></li>
+<li><a href="fuel-vm/instruction-set.html#supi-state-update-slot-partial-write-immediate"><code>SUPI</code>: State update slot (partial write) immediate</a></li>
+<li><a href="fuel-vm/instruction-set.html#spld-state-preload-slot"><code>SPLD</code>: State preload slot</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="fuel-vm/instruction-set.html#blob-instructions">Blob Instructions</a>
@@ -4939,94 +4954,6 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 </tbody></table>
 </div>
 <p>In an external context, decrease <code>MEM[balanceOfStart(0), 8]</code> by <code>$rD</code>. In an internal context, decrease asset ID 0 balance of output with contract ID <code>MEM[$fp, 32]</code> by <code>$rD</code>. This modifies the <code>balanceRoot</code> field of the appropriate contract that had its' funds deducted.</p>
-<h3 id="scwq-state-clear-sequential-32-byte-slots"><a class="header" href="#scwq-state-clear-sequential-32-byte-slots"><code>SCWQ</code>: State clear sequential 32 byte slots</a></h3>
-<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>A sequential series of 32 bytes is cleared from the current contract's state.</td></tr>
-<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], 32 * $rC] = None;</code></td></tr>
-<tr><td>Syntax</td><td><code>scwq $rA, $rB, $rC</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
-<tr><td>Notes</td><td></td></tr>
-</tbody></table>
-</div>
-<p>Panic if:</p>
-<ul>
-<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$fp == 0</code> (in the script context)</li>
-</ul>
-<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range was already unset (default) and <code>true</code> if all the slots were set.</p>
-<h3 id="srw-state-read-word"><a class="header" href="#srw-state-read-word"><code>SRW</code>: State read word</a></h3>
-<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>A word is read from the current contract's state.</td></tr>
-<tr><td>Operation</td><td><code>$rA = STATE[MEM[$rC, 32]][0, 8];</code></td></tr>
-<tr><td>Syntax</td><td><code>srw $rA, $rB, $rC</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
-<tr><td>Effects</td><td>Storage read</td></tr>
-<tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
-</tbody></table>
-</div>
-<p>Panic if:</p>
-<ul>
-<li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$fp == 0</code> (in the script context)</li>
-</ul>
-<p>Register <code>$rB</code> will be set to <code>false</code> if the requested slot is unset (default) and <code>true</code> if it's set.</p>
-<h3 id="srwq-state-read-sequential-32-byte-slots"><a class="header" href="#srwq-state-read-sequential-32-byte-slots"><code>SRWQ</code>: State read sequential 32 byte slots</a></h3>
-<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>A sequential series of 32 bytes is read from the current contract's state.</td></tr>
-<tr><td>Operation</td><td><code>MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], 32 * rD];</code></td></tr>
-<tr><td>Syntax</td><td><code>srwq $rA, $rB, $rC, $rD</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
-<tr><td>Effects</td><td>Storage read</td></tr>
-<tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
-</tbody></table>
-</div>
-<p>Panic if:</p>
-<ul>
-<li><code>$rA + 32 * rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 * rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li>The memory range <code>MEM[$rA, 32 * rD]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
-<li><code>$fp == 0</code> (in the script context)</li>
-</ul>
-<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots are set.</p>
-<h3 id="sww-state-write-word"><a class="header" href="#sww-state-write-word"><code>SWW</code>: State write word</a></h3>
-<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>A word is written to the current contract's state.</td></tr>
-<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32]][0, 8] = $rC;</code><br><code>STATE[MEM[$rA, 32]][8, 24] = 0;</code></td></tr>
-<tr><td>Syntax</td><td><code>sww $rA $rB $rC</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
-<tr><td>Effects</td><td>Storage write</td></tr>
-<tr><td>Notes</td><td>Additional gas is charged when a new storage slot is created.</td></tr>
-</tbody></table>
-</div>
-<p>Panic if:</p>
-<ul>
-<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$fp == 0</code> (in the script context)</li>
-</ul>
-<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>$rB</code> will be set to the number of new slots written, i.e. <code>1</code> if the slot was previously unset, and <code>0</code> if it already contained a value.</p>
-<h3 id="swwq-state-write-sequential-32-byte-slots"><a class="header" href="#swwq-state-write-sequential-32-byte-slots"><code>SWWQ</code>: State write sequential 32 byte slots</a></h3>
-<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>Description</td><td>A sequential series of 32 bytes is written to the current contract's state.</td></tr>
-<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], 32 * $rD] = MEM[$rC, 32 * $rD];</code></td></tr>
-<tr><td>Syntax</td><td><code>swwq $rA, $rB, $rC, $rD</code></td></tr>
-<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
-<tr><td>Effects</td><td>Storage write</td></tr>
-<tr><td>Notes</td><td>Additional gas is charged when for each new storage slot created.</td></tr>
-</tbody></table>
-</div>
-<p>Panic if:</p>
-<ul>
-<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rC + 32 * $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
-<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
-<li><code>$fp == 0</code> (in the script context)</li>
-</ul>
-<p>Register <code>$rB</code> will be set to the number of storage slots that were previously unset, and were set by this operation.</p>
 <h3 id="time-timestamp-at-height"><a class="header" href="#time-timestamp-at-height"><code>TIME</code>: Timestamp at height</a></h3>
 <div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
 <tr><td>Description</td><td>Get timestamp of block at given height.</td></tr>
@@ -5115,6 +5042,238 @@ Use <a href="fuel-vm/instruction-set.html#ldc-load-code-from-an-external-contrac
 <li><code>tx.outputs[$rB].asset_id = MEM[$rD, 32]</code></li>
 </ul>
 <p>This modifies the <code>balanceRoot</code> field of the appropriate output(s).</p>
+<h2 id="contract-state-instructions"><a class="header" href="#contract-state-instructions">Contract State Instructions</a></h2>
+<h3 id="scwq-deprecated-state-clear-sequential-32-bytes-slots"><a class="header" href="#scwq-deprecated-state-clear-sequential-32-bytes-slots"><code>SCWQ</code>: DEPRECATED State clear sequential 32 bytes slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of slots cleared from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], $rC] = None;</code></td></tr>
+<tr><td>Syntax</td><td><code>scwq $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Notes</td><td>Deprecated in favor of <code>SCLR</code>, which doesn't report status making it much cheaper.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range was already unset (default) and <code>true</code> if all the slots were set.</p>
+<h3 id="srw-state-read-word"><a class="header" href="#srw-state-read-word"><code>SRW</code>: State read word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A word is read from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>$rA = STATE[MEM[$rC, 32]][imm * 8, 8];</code></td></tr>
+<tr><td>Syntax</td><td><code>srw $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC imm</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Returns zero if the state element does not exist.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$rC + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+<li><code>len(STATE[MEM[$rC, 32]]) &lt; imm * 8 + 8</code> when the slot is set (the storage slot doesn't have enough data)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if the requested slot is unset (default) and <code>true</code> if it's set.</p>
+<h3 id="srwq-deprecated-state-read-sequential-32-byte-slots"><a class="header" href="#srwq-deprecated-state-read-sequential-32-byte-slots"><code>SRWQ</code>: DEPRECATED State read sequential 32 byte slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of 32 byte slots is read from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, 32 * rD] = STATE[MEM[$rC, 32], rD];</code></td></tr>
+<tr><td>Syntax</td><td><code>srwq $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Legacy operation, unusable with variable-sized slots. Nonexistent slots read zeroes.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32 * rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 * rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li>The memory range <code>MEM[$rA, 32 * rD]</code>  does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+<li>Any accessed storage slots has length other than 32 bytes.</li>
+</ul>
+<p>Register <code>$rB</code> will be set to <code>false</code> if any storage slot in the requested range is unset (default) and <code>true</code> if all the slots are set.</p>
+<h3 id="sww-state-write-word"><a class="header" href="#sww-state-write-word"><code>SWW</code>: State write word</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A word is written to the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32]][0, 8] = $rC;</code><br><code>STATE[MEM[$rA, 32]][8, 24] = 0;</code></td></tr>
+<tr><td>Syntax</td><td><code>sww $rA $rB $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
+<tr><td>Notes</td><td>The resulting slot is zero-padded to 32 bytes. Additional gas is charged if a new storage slot is created.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>The last 24 bytes of <code>STATE[MEM[$rA, 32]]</code> are set to <code>0</code>. Register <code>$rB</code> will be set to the number of new slots written, i.e. <code>1</code> if the slot was previously unset, and <code>0</code> if it already contained a value.</p>
+<h3 id="swwq-deprecated-state-write-sequential-32-byte-slots"><a class="header" href="#swwq-deprecated-state-write-sequential-32-byte-slots"><code>SWWQ</code>: DEPRECATED State write sequential 32 byte slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of 32 byte slots is written to the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], $rD] = MEM[$rC, 32 * $rD];</code></td></tr>
+<tr><td>Syntax</td><td><code>swwq $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
+<tr><td>Notes</td><td>Legacy operation, produces 32 byte slots. Additional gas is charged for each new storage slot created.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + 32 * $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$rB</code> will be set to the number of storage slots that were previously unset, and were set by this operation.</p>
+<h3 id="sclr-state-clear-sequential-slots"><a class="header" href="#sclr-state-clear-sequential-slots"><code>SCLR</code>: State clear sequential slots</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>A sequential series of slots cleared from the current contract's state.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32], $rB] = None;</code></td></tr>
+<tr><td>Syntax</td><td><code>sclr $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<h3 id="srdd-state-read-slot"><a class="header" href="#srdd-state-read-slot"><code>SRDD</code>: State read slot</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Read storage slot contents to memory. Allows partial reads as well.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, $rD] = STATE[MEM[$rB, 32]][$rC, $rD]</code></td></tr>
+<tr><td>Syntax</td><td><code>srdd $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Gas is always charged for a full slot read.</td></tr>
+<tr><td>Panic if:</td><td></td></tr>
+</tbody></table>
+</div>
+<ul>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rA + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, $rD]</code> does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rC + $rD</code> overflows or <code>&gt; len(STATE[MEM[$rB, 32]])</code> when the slot is set</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$err</code> will be set to <code>1</code> if the slot did not exist, and <code>0</code> otherwise. If the slot didn't exist, memory is not modified.</p>
+<h3 id="srdi-state-read-slot-immediate"><a class="header" href="#srdi-state-read-slot-immediate"><code>SRDI</code>: State read slot immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Read storage slot contents to memory. Allows partial reads as well.</td></tr>
+<tr><td>Operation</td><td><code>MEM[$rA, imm] = STATE[MEM[$rB, 32]][$rC, imm]</code></td></tr>
+<tr><td>Syntax</td><td><code>srdi $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC imm</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Gas is always charged for a full slot read.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rA + imm</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li>The memory range <code>MEM[$rA, imm]</code> does not pass <a href="fuel-vm/./index.html#ownership">ownership check</a></li>
+<li><code>$rC + imm</code> overflows or <code>&gt; len(STATE[MEM[$B, 32]])</code> when the slot is set</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>Register <code>$err</code> will be set to <code>1</code> if the slot did not exist, and <code>0</code> otherwise. If the slot didn't exist, memory is not modified.</p>
+<h3 id="swrd-state-write-slot"><a class="header" href="#swrd-state-write-slot"><code>SWRD</code>: State write slot</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Write storage slot from a memory buffer.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32]] = MEM[$rB, $rC]</code></td></tr>
+<tr><td>Syntax</td><td><code>swrd $rA, $rB, $rC</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC -</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rC</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC &gt; MAX_STORAGE_SLOT_SIZE</code></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<h3 id="swri-state-write-slot-immediate"><a class="header" href="#swri-state-write-slot-immediate"><code>SWRI</code>: State write slot immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Write storage slot from a memory buffer.</td></tr>
+<tr><td>Operation</td><td><code>STATE[MEM[$rA, 32]] = MEM[$rB, imm]</code></td></tr>
+<tr><td>Syntax</td><td><code>swri $rA, $rB, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB i i</code></td></tr>
+<tr><td>Effects</td><td>Storage write</td></tr>
+<tr><td>Notes</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + imm</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>imm &gt; MAX_STORAGE_SLOT_SIZE</code></li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<h3 id="supd-state-update-slot-partial-write"><a class="header" href="#supd-state-update-slot-partial-write"><code>SUPD</code>: State update slot (partial write)</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Read storage slot, modify or extend it, and write the modified value back.</td></tr>
+<tr><td>Operation</td><td><code>key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rC==MAX?len(tmp):$rC, $rD] = MEM[$rB, $rD]; STATE[key] = tmp</code></td></tr>
+<tr><td>Syntax</td><td><code>supd $rA, $rB, $rC, $rD</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC rD</code></td></tr>
+<tr><td>Effects</td><td>Storage read and write</td></tr>
+<tr><td>Notes</td><td>Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.</td></tr>
+</tbody></table>
+</div>
+<p>An unoccupied slot is treated as zero-length for the purposes of the read. Passing in <code>u64::MAX</code> in <code>$rC</code> will cause the write to happen at the end of the slot, without needing to read the slot length first.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + $rD</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + $rD</code> overflows or <code>&gt; MAX_STORAGE_SLOT_SIZE</code> (if <code>$rC == u64::MAX</code>, read <code>$rC</code> as <code>len(STATE[MEM[$rA, 32]])</code> instead)</li>
+<li><code>$rC</code> overflows or <code>&gt; len(STATE[MEM[$rA, 32]])</code> (except when <code>$rC == u64::MAX</code>)</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<h3 id="supi-state-update-slot-partial-write-immediate"><a class="header" href="#supi-state-update-slot-partial-write-immediate"><code>SUPI</code>: State update slot (partial write) immediate</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Read storage slot, modify or extend it, and write the modified value back.</td></tr>
+<tr><td>Operation</td><td><code>key=MEM[$rA, 32]; tmp = STATE[key]; tmp[$rC==MAX?len(tmp):$rC, imm] = MEM[$rB, imm]; STATE[key] = tmp</code></td></tr>
+<tr><td>Syntax</td><td><code>supi $rA, $rB, $rC, imm</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB rC imm</code></td></tr>
+<tr><td>Effects</td><td>Storage read and write</td></tr>
+<tr><td>Notes</td><td>Charges gas for full read and write. Writing past the end extends the slot, but offset must be valid.</td></tr>
+</tbody></table>
+</div>
+<p>An unoccupied slot is treated as zero-length for the purposes of the read. Passing in <code>u64::MAX</code> in <code>$rC</code> will cause the write to happen at the end of the slot, without needing to read the slot length first.</p>
+<p>Panic if:</p>
+<ul>
+<li><code>$rA + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rB + imm</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rC + imm</code> overflows or <code>&gt; MAX_STORAGE_SLOT_SIZE</code> (if <code>$rC == u64::MAX</code>, read <code>$rC</code> as <code>len(STATE[MEM[$rA, 32]])</code> instead)</li>
+<li><code>$rC</code> overflows or <code>&gt; len(STATE[MEM[$rA, 32]])</code> (except when <code>$rC == u64::MAX</code>)</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<h3 id="spld-state-preload-slot"><a class="header" href="#spld-state-preload-slot"><code>SPLD</code>: State preload slot</a></h3>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Description</td><td>Preload a storage slot to hot storage, returning its length.</td></tr>
+<tr><td>Operation</td><td><code>STAGING = STATE[MEM[$rB, 32]]; $rA = len(STAGING)</code></td></tr>
+<tr><td>Syntax</td><td><code>spld $rA, $rB</code></td></tr>
+<tr><td>Encoding</td><td><code>0x00 rA rB - -</code></td></tr>
+<tr><td>Effects</td><td>Storage read</td></tr>
+<tr><td>Notes</td><td>Charges gas for a full read.</td></tr>
+</tbody></table>
+</div>
+<p>Panic if:</p>
+<ul>
+<li><code>$rB + 32</code> overflows or <code>&gt; VM_MAX_RAM</code></li>
+<li><code>$rA</code> is a <a href="fuel-vm/./index.html#semantics">reserved register</a>.</li>
+<li><code>$fp == 0</code> (in the script context)</li>
+</ul>
+<p>If the slot doesn't exist, sets <code>$rA = 0</code> and <code>$err = 1</code>. Otherwise <code>$rA</code> is set to the length of the slot, and <code>$err</code> to <code>0</code>.</p>
 <h2 id="blob-instructions"><a class="header" href="#blob-instructions">Blob Instructions</a></h2>
 <p>All these instructions advance the program counter <code>$pc</code> by <code>4</code> after performing their operation.</p>
 <h3 id="bsiz-blob-size"><a class="header" href="#bsiz-blob-size"><code>BSIZ</code>: Blob size</a></h3>

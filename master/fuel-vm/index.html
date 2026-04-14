@@ -284,6 +284,8 @@
 <tr><td>*</td><td></td><td></td><td>Call frame's stack.</td></tr>
 </tbody></table>
 </div>
+<h3 id="storage-cache"><a class="header" href="#storage-cache">Storage cache</a></h3>
+<p>All storage values are cached on first access. Subsequent accesses to the same slot are much cheaper than the initial one. This principle holds for both reads and writes, since the first write needs to also know slot's contents to charge for possibly increased contract state size. The cache persists across contract call boundary.</p>
 <h2 id="access-rights"><a class="header" href="#access-rights">Access rights</a></h2>
 <p>Only memory that has been allocated is accessible.
 In other words, memory between highest-ever <code>$sp</code> value and current <code>$hp</code>
